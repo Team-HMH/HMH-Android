@@ -1,6 +1,9 @@
 <resources>
-    <string name = "hmh">hmh</string>
-    <string name = "all_goal_time">목표 이용시간</string>
-    <string name = "all_left">남음</string>
-    <string name = "all_time_left">남은시간</string>
+    <string name="hmh">HMH</string>
+    <string name="all_goal_time">총 목표 이용시간</string>
+    <string name="all_left">남음</string>
+    <string name="all_time_left">남은시간</string>
+    <string name="item_usagestatic_appicon_description">image of app icon</string>
+    <string name="item_usagestatic_total_blackhole_description">image of black hole</string>
+    <string name="item_usagestatic_total_blackhole">블랙홀이\n가까워지고 있어요!</string>
 </resources>

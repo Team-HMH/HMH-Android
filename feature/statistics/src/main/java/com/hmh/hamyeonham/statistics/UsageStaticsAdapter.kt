@@ -20,15 +20,15 @@ class UsageStaticsAdapter : ListAdapter<UsageStatAndGoal, RecyclerView.ViewHolde
         viewType: Int,
     ): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        when (viewType) {
+        return when (viewType) {
             TOTAL_ITEM_TYPE -> {
                 val binding = ItemUsagestaticTotalBinding.inflate(inflater, parent, false)
-                return UsageStaticsTotalViewHolder(binding, parent.context)
+                UsageStaticsTotalViewHolder(binding, parent.context)
             }
 
             else -> {
                 val binding = ItemUsagestaticBinding.inflate(inflater, parent, false)
-                return UsageStaticsViewHolder(binding, parent.context)
+                UsageStaticsViewHolder(binding, parent.context)
             }
         }
     }
@@ -39,13 +39,13 @@ class UsageStaticsAdapter : ListAdapter<UsageStatAndGoal, RecyclerView.ViewHolde
     ) {
         when (position) {
             0 -> {
-                val holder = holder as UsageStaticsTotalViewHolder
-                holder.onBind(currentList[position])
+                val newHolder = holder as UsageStaticsTotalViewHolder
+                newHolder.onBind(currentList[position])
             }
 
             else -> {
-                val holder = holder as UsageStaticsViewHolder
-                holder.onBind(currentList[position])
+                val newHolder = holder as UsageStaticsViewHolder
+                newHolder.onBind(currentList[position])
             }
         }
     }

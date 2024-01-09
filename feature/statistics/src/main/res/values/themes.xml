@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.Material3.Light">
-        <item name="colorControlNormal">#FFFFFF</item>
-        <item name="android:background">#000000</item>
+    <style name="Widget.Hmh.ProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="trackColor">?gray7</item>
+        <item name="indicatorColor">?blue_purple_opacity_70</item>
+        <item name="trackThickness">71dp</item>
+        <item name="trackCornerRadius">6dp</item>
     </style>
 
-    <style name="AppTheme.statics.rec.progressbar" parent="AppTheme">
-        <item name="trackThickness">80dp</item>
-        <item name="trackCornerRadius">10dp</item>
-        <item name="trackColor">#202028</item>
-        <item name="indicatorColor">#4428EC</item>
-    </style>
-
-
-    <style name="AppTheme.statics.main.progressbar" parent="AppTheme">
+    <style name="Widget.Hmh.TotalProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="trackColor">?gray3</item>
+        <item name="indicatorColor">?white_btn</item>
         <item name="trackThickness">6dp</item>
-        <item name="trackCornerRadius">3dp</item>
-        <item name="trackColor">#202028</item>
-        <item name="indicatorColor">#4428EC</item>
+        <item name="trackCornerRadius">6dp</item>
     </style>
-
-
-
 </resources>

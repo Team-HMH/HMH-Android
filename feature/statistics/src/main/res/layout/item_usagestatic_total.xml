@@ -4,68 +4,80 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tv_statics_goal_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/all_goal_time"
-        android:textColor="#ffffff"
+    <ImageView
+        android:id="@+id/iv_itemusagestatic_total_blackhole"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:contentDescription="@string/item_usagestatic_total_blackhole_description"
+        android:src="@drawable/img_statics_blackhole"
+        app:layout_constraintDimensionRatio="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_statics_hour"
+        android:id="@+id/tv_itemusagestatic_total_blackhole"
+        style="?textAppearanceDisplaySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="4시간"
-        android:textColor="#ffffff"
-        app:layout_constraintStart_toStartOf="@id/tv_statics_goal_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_statics_goal_title" />
+        android:layout_marginTop="33dp"
+        android:text="@string/item_usagestatic_total_blackhole"
+        android:textColor="?white_text"
+        app:layout_constraintStart_toStartOf="@id/tv_itemusagestatic_total_goal_title"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/pb_statics"
-        style="@style/AppTheme.statics.main.progressbar"
+        android:id="@+id/pb_itemusagestatic_total"
+        style="@style/Widget.Hmh.TotalProgressIndicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:progress="30"
-        app:layout_constraintStart_toStartOf="@id/tv_statics_goal_title"
-        app:layout_constraintTop_toBottomOf="@id/tv_statics_hour" />
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="27dp"
+        android:layout_marginBottom="33dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_itemusagestatic_total_blackhole" />
 
     <TextView
-        android:id="@+id/tv_statics_left_hour"
+        android:id="@+id/tv_itemusagestatic_total_hour"
+        style="?textAppearanceDisplayMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textColor="?white_text"
+        app:layout_constraintBottom_toTopOf="@id/pb_itemusagestatic_total"
+        app:layout_constraintStart_toStartOf="@id/pb_itemusagestatic_total" />
+
+    <TextView
+        android:id="@+id/tv_itemusagestatic_total_goal_title"
+        style="?textAppearanceLabelMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/all_goal_time"
+        android:textColor="?gray1"
+        app:layout_constraintBottom_toTopOf="@id/tv_itemusagestatic_total_hour"
+        app:layout_constraintStart_toStartOf="@id/pb_itemusagestatic_total" />
+
+    <TextView
+        android:id="@+id/tv_itemusagestatic_total_time_left"
+        style="?textAppearanceBodySmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="6dp"
-        android:text="2시간 30분"
-        android:textColor="#ffffff"
-        app:layout_constraintEnd_toStartOf="@id/tv_statics_left_title"
-        app:layout_constraintTop_toBottomOf="@id/pb_statics" />
+        android:textColor="?white_text"
+        app:layout_constraintBottom_toBottomOf="@id/tv_itemusagestatic_total_time_left_title"
+        app:layout_constraintEnd_toStartOf="@id/tv_itemusagestatic_total_time_left_title"
+        app:layout_constraintTop_toTopOf="@id/tv_itemusagestatic_total_time_left_title" />
 
     <TextView
-        android:id="@+id/tv_statics_left_title"
+        android:id="@+id/tv_itemusagestatic_total_time_left_title"
+        style="?textAppearanceLabelLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="17dp"
         android:text="@string/all_left"
-        android:textColor="#ffffff"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pb_statics" />
-
-    <ImageView
-        android:id="@+id/iv_statics"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher_foreground"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_statics_left_title" />
-
-    <TextView
-        android:id="@+id/tv_statics_left_app"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/all_time_left"
-        android:textColor="#ffffff"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_statics" />
-
+        android:textColor="?gray1"
+        app:layout_constraintBottom_toTopOf="@id/pb_itemusagestatic_total"
+        app:layout_constraintEnd_toEndOf="@id/pb_itemusagestatic_total" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,9 +36,5 @@ object UsageStatsModule {
         @Binds
         @Singleton
         fun provideUsageStatusRepository(usageStatsRepository: DefaultUsageStatsRepository): UsageStatsRepository
-
-        @Binds
-        @Singleton
-        fun provideUsageGoalsRepository(usageGoalsRepository: DefaultUsageGoalsRepository): UsageGoalsRepository
     }
 }

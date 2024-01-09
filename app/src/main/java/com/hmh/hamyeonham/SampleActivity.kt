@@ -9,7 +9,7 @@ import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.databinding.ActivitySampleBinding
-import com.hmh.hamyeonham.feature.main.MainActivity
+import com.hmh.hamyeonham.statistics.StaticsActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,7 +21,8 @@ class SampleActivity : AppCompatActivity() {
         val splashScreen = installSplashScreen()
         initSplashAnimation(splashScreen)
         setContentView(binding.root)
-        startActivity(Intent(this, MainActivity::class.java))
+//        startActivity(Intent(this, OnBoardingActivity::class.java))
+        startActivity(Intent(this, StaticsActivity::class.java))
         finish()
     }
 

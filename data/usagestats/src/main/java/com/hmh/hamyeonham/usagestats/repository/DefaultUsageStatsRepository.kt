@@ -27,27 +27,35 @@ class DefaultUsageStatsRepository @Inject constructor(
             ?: 0
     }
 
-    override fun getUsageTimeForPackages(
+    override fun getUsageStatForPackages(
         startTime: Long,
         endTime: Long,
         vararg packageNames: String,
     ): List<UsageStat> {
-        val usageStatsList = getUsageStats(startTime, endTime)
-        return usageStatsList.filter {
-            packageNames.contains(it.packageName)
+        val usageStatList = getUsageStats(startTime, endTime)
+        return packageNames.map { packageName ->
+            UsageStat(
+                packageName,
+                usageStatList.find {
+                    packageName == it.packageName
+                }?.totalTimeInForeground ?: 0,
+            )
         }
     }
 
-    override fun getUsageTimeForPackages(
+    override fun getUsageStatForPackages(
         startTime: Long,
         endTime: Long,
         packageNames: List<String>,
     ): List<UsageStat> {
-        val usageStatsList = getUsageStats(startTime, endTime)
-        val newUsageStatsList =
-            usageStatsList.filter {
-                packageNames.contains(it.packageName)
-            }
-        return newUsageStatsList
+        val usageStatList = getUsageStats(startTime, endTime)
+        return packageNames.map { packageName ->
+            UsageStat(
+                packageName,
+                usageStatList.find {
+                    packageName == it.packageName
+                }?.totalTimeInForeground ?: 0,
+            )
+        }
     }
 }
