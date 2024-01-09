@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="challenge">챌린지</string>
+    <string name="total_goal_time">총 목표 이용 시간</string>
+    <string name="app_lock">앱 잠금</string>
+    <string name="delete">삭제</string>
+</resources>

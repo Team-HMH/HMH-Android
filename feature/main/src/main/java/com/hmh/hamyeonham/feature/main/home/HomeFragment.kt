@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.main.databinding.FragmentHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private val binding by viewBinding(FragmentHomeBinding::bind)

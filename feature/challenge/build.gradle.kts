@@ -1,19 +1,15 @@
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    hmh("feature")
+   hmh("feature")
 }
 
 android {
-    namespace = "com.hmh.hamyeonham.feature.main"
+    namespace = "com.hmh.hamyeonham.feature.challenge"
 }
 
 dependencies {
 
-    //Feature
-    implementation(projects.feature.challenge)
-
-    //Navigation
-    implementation(libs.bundles.navigation)
+    implementation(projects.domain.challenge)
 
     implementation(projects.core.common)
     implementation(projects.core.designsystem)
