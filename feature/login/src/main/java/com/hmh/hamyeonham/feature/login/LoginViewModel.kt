@@ -94,7 +94,6 @@ class LoginViewModel @Inject constructor(
                         }
                         _kakaoLoginEvent.emit(LoginEffect.LoginSuccess)
                     }.onFailure {
-                        // TODO : Network Error Handling 확장 함수
                         if (it is HttpException && it.code() == 403) {
                             _kakaoLoginEvent.emit(LoginEffect.RequireSignUp(token.accessToken))
                         } else {
