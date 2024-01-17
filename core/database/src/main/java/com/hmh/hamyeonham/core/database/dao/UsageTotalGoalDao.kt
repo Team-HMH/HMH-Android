@@ -10,11 +10,11 @@ import com.hmh.hamyeonham.core.database.model.UsageTotalGoalEntity
 @Dao
 interface UsageTotalGoalDao {
     @Query("SELECT * FROM usage_total_goal LIMIT 1")
-    fun getUsageTotalGoal(): UsageTotalGoalEntity
+    suspend fun getUsageTotalGoal(): UsageTotalGoalEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertUsageTotalGoal(usageTotalGoalEntity: UsageTotalGoalEntity)
+    suspend fun insertUsageTotalGoal(usageTotalGoalEntity: UsageTotalGoalEntity)
 
     @Query("DELETE FROM usage_total_goal")
-    fun deleteAll()
+    suspend fun deleteAll()
 }
