@@ -1,7 +1,8 @@
 package com.hmh.hamyeonham.usagestats.repository
 
 import com.hmh.hamyeonham.core.database.dao.UsageGoalsDao
-import com.hmh.hamyeonham.usagestats.datasource.UsageGoalsRemoteDataSource
+import com.hmh.hamyeonham.usagestats.datasource.local.UsageGoalsLocalDataSource
+import com.hmh.hamyeonham.usagestats.datasource.remote.UsageGoalsRemoteDataSource
 import com.hmh.hamyeonham.usagestats.mapper.toUsageGoal
 import com.hmh.hamyeonham.usagestats.mapper.toUsageGoalEntityList
 import com.hmh.hamyeonham.usagestats.model.UsageGoal
@@ -11,6 +12,7 @@ import javax.inject.Inject
 
 class DefaultUsageGoalsRepository @Inject constructor(
     private val usageGoalsRemoteDataSource: UsageGoalsRemoteDataSource,
+    private val usageGoalsLocalDataSource: UsageGoalsLocalDataSource,
     private val usageGoalsDao: UsageGoalsDao
 ) : UsageGoalsRepository {
 
@@ -22,10 +24,8 @@ class DefaultUsageGoalsRepository @Inject constructor(
         }
     }
 
-    override fun getUsageGoals(): Flow<List<UsageGoal>> {
-        return usageGoalsDao.getUsageGoal().map { usageGoals ->
-            usageGoals.map { it.toUsageGoal() }
-        }
+    override suspend fun getUsageGoals(): Flow<List<UsageGoal>> {
+        return usageGoalsLocalDataSource.getUsageGoal()
     }
 
     override fun getUsageGoalTimeFromMockData(packageName: String): Long {

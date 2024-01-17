@@ -1,17 +1,17 @@
 package com.hmh.hamyeonham.usagestats.repository
 
-import com.hmh.hamyeonham.usagestats.datasource.UsageStatusDataSource
+import com.hmh.hamyeonham.usagestats.datasource.local.UsageStatusLocalDataSource
 import com.hmh.hamyeonham.usagestats.model.UsageStatus
 import javax.inject.Inject
 
 class DefaultUsageStatsRepository @Inject constructor(
-    private val usageStatusDataSource: UsageStatusDataSource,
+    private val usageStatusLocalDataSource: UsageStatusLocalDataSource,
 ) : UsageStatsRepository {
     override fun getUsageStats(
         startTime: Long,
         endTime: Long,
     ): List<UsageStatus> {
-        val usageStatsList = usageStatusDataSource.getUsageStats(startTime, endTime)
+        val usageStatsList = usageStatusLocalDataSource.getUsageStats(startTime, endTime)
         return usageStatsList.map { usageStatModel ->
             UsageStatus(usageStatModel.packageName, usageStatModel.totalTimeInForeground)
         }

@@ -15,4 +15,10 @@ object DaoModule {
     fun providesUsageGoalsDao(
         database: HMHRoomDatabase,
     ) = database.usageGoalsDao()
+
+    @Provides
+    @Singleton
+    fun providesUsageTotalGoalDao(
+        database: HMHRoomDatabase,
+    ) = database.usageTotalGoalDao()
 }

@@ -3,9 +3,9 @@ package com.hmh.hamyeonham.usagestats.di
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import com.hmh.hamyeonham.core.network.usagegoal.UsageGoalService
-import com.hmh.hamyeonham.usagestats.datasource.UsageGoalsRemoteDataSource
-import com.hmh.hamyeonham.usagestats.datasource.UsageStatusDataSource
-import com.hmh.hamyeonham.usagestats.datasource.UsageStatusDataSourceImpl
+import com.hmh.hamyeonham.usagestats.datasource.remote.UsageGoalsRemoteDataSource
+import com.hmh.hamyeonham.usagestats.datasource.local.UsageStatusLocalDataSource
+import com.hmh.hamyeonham.usagestats.datasource.local.UsageStatusLocalDataSourceImpl
 import com.hmh.hamyeonham.usagestats.repository.DefaultUsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.repository.DefaultUsageStatsRepository
 import com.hmh.hamyeonham.usagestats.repository.UsageGoalsRepository
@@ -41,7 +41,7 @@ object UsageStatsModule {
     interface Binder {
         @Binds
         @Singleton
-        fun provideUsageStatusDataSource(usageStatsDataSource: UsageStatusDataSourceImpl): UsageStatusDataSource
+        fun provideUsageStatusDataSource(usageStatsDataSource: UsageStatusLocalDataSourceImpl): UsageStatusLocalDataSource
 
         @Binds
         @Singleton

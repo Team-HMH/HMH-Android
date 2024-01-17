@@ -7,5 +7,5 @@ interface UsageGoalsRepository {
     suspend fun updateUsageGoal()
     fun getUsageGoalTimeFromMockData(packageName: String): Long
     fun addUsageGoal(usageGoal: UsageGoal)
-    fun getUsageGoals(): Flow<List<UsageGoal>>
+    suspend fun getUsageGoals(): Flow<List<UsageGoal>>
 }
