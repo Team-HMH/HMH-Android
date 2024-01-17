@@ -15,9 +15,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed interface OnBoardingEffect {
-    data object SignUpSuccess : OnBoardingEffect
-    data object SignUpFail : OnBoardingEffect
+sealed interface SignUpEffect {
+    data object SignUpSuccess : SignUpEffect
+    data object SignUpFail : SignUpEffect
 }
 
 data class OnBoardingState(
@@ -38,7 +38,7 @@ class OnBoardingViewModel @Inject constructor(
     private val _onBoardingState = MutableStateFlow(OnBoardingState())
     val onBoardingState = _onBoardingState.asStateFlow()
 
-    private val _onboardEffect = MutableSharedFlow<OnBoardingEffect>()
+    private val _onboardEffect = MutableSharedFlow<SignUpEffect>()
     val onboardEffect = _onboardEffect.asSharedFlow()
 
     init {
@@ -71,24 +71,22 @@ class OnBoardingViewModel @Inject constructor(
         viewModelScope.launch {
             val token = onBoardingState.value.accessToken
             val request = onBoardingState.value.onBoardingAnswer
-            runCatching {
-                authRepository.signUp(token, request.toSignUpRequest())
-            }.onSuccess { result ->
-                val signUpUser = result.getOrNull()
-                signUpUser?.let {
-                    hmhNetworkPreference.accessToken = it.accessToken
-                    hmhNetworkPreference.refreshToken = it.refreshToken
-                    hmhNetworkPreference.userId = it.userId
-                    hmhNetworkPreference.autoLoginConfigured = true
+            authRepository.signUp(token, request.toSignUpRequest())
+                .onSuccess { signUpUser ->
+                    signUpUser.let {
+                        hmhNetworkPreference.accessToken = it.accessToken
+                        hmhNetworkPreference.refreshToken = it.refreshToken
+                        hmhNetworkPreference.userId = it.userId
+                        hmhNetworkPreference.autoLoginConfigured = true
+                    }
+                    viewModelScope.launch {
+                        _onboardEffect.emit(SignUpEffect.SignUpSuccess)
+                    }
+                }.onFailure {
+                    viewModelScope.launch {
+                        _onboardEffect.emit(SignUpEffect.SignUpFail)
+                    }
                 }
-                viewModelScope.launch {
-                    _onboardEffect.emit(OnBoardingEffect.SignUpSuccess)
-                }
-            }.onFailure {
-                viewModelScope.launch {
-                    _onboardEffect.emit(OnBoardingEffect.SignUpFail)
-                }
-            }
         }
     }
 }

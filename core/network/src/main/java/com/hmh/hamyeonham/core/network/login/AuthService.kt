@@ -18,10 +18,14 @@ interface AuthService {
     ): BaseResponse<LoginResponse>
 
     @POST("api/v1/user/logout")
-    suspend fun logout(): BaseResponse<Unit>
+    suspend fun logout(
+        @Header("Authorization") accessToken: String,
+    ): BaseResponse<Unit>
 
     @DELETE("api/v1/user")
-    suspend fun withdrawal(): BaseResponse<Unit>
+    suspend fun withdrawal(
+        @Header("Authorization") accessToken: String,
+    ): BaseResponse<Unit>
 
     @POST("api/v1/user/signup")
     suspend fun signUp(

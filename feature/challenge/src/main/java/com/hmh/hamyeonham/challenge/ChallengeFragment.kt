@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -17,11 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmh.hamyeonham.challenge.appadd.AppAddActivity
 import com.hmh.hamyeonham.challenge.calendar.ChallengeCalendarAdapter
 import com.hmh.hamyeonham.challenge.goals.ChallengeUsageGoalsAdapter
+import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.VerticalSpaceItemDecoration
 import com.hmh.hamyeonham.common.view.dp
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.core.designsystem.R
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.challenge.databinding.FragmentChallengeBinding
 import com.hmh.hamyeonham.usagestats.model.UsageGoal
@@ -39,7 +42,7 @@ class ChallengeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return FragmentChallengeBinding.inflate(inflater, container, false).root
     }
@@ -54,12 +57,30 @@ class ChallengeFragment : Fragment() {
 
     private fun collectChallengeState() {
         viewModel.challengeState.flowWithLifecycle(viewLifeCycle).onEach {
-            when (it.modifierState) {
-                ModifierState.CANCEL -> binding.tvModifierButton.text = "취소"
-                ModifierState.DELETE -> binding.tvModifierButton.text = "삭제"
-                else -> Unit
-            }
+            handleModifierButtonState(it)
         }.launchIn(viewLifeCycleScope)
+    }
+
+    private fun handleModifierButtonState(it: ChallengeState) {
+        val (text, color) = when (it.modifierState) {
+            ModifierState.CANCEL -> {
+                getString(R.string.all_cancel) to ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white_text
+                )
+            }
+
+            ModifierState.DELETE -> {
+                getString(R.string.all_delete) to ContextCompat.getColor(
+                    requireContext(),
+                    R.color.blue_purple_text
+                )
+            }
+        }
+        binding.tvModifierButton.run {
+            this.text = text
+            setTextColor(color)
+        }
     }
 
     private fun initViews() {
@@ -91,7 +112,9 @@ class ChallengeFragment : Fragment() {
         val challengeGoalsAdapter = binding.rvAppUsageGoals.adapter as? ChallengeUsageGoalsAdapter
         activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
             challengeAdapter?.submitList(it.challengeStatus.isSuccessList)
-            challengeGoalsAdapter?.submitList(it.usageGoals)
+            if (it.usageGoals.isNotEmpty()) {
+                challengeGoalsAdapter?.submitList(it.usageGoals.drop(1) + UsageGoal())
+            }
         }.launchIn(viewLifeCycleScope)
     }
 
@@ -106,15 +129,18 @@ class ChallengeFragment : Fragment() {
         appSelectionResultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
-                    val apps = result.data?.getStringArrayExtra(AppAddActivity.SELECTED_APPS)
+                    val selectedApps =
+                        result.data?.getStringArrayExtra(AppAddActivity.SELECTED_APPS)
                     val goalTime = result.data?.getLongExtra(AppAddActivity.GOAL_TIME, 0)
-                    val usageGoals = apps?.map { packageName ->
-                        UsageGoal(
-                            packageName = packageName,
-                            goalTime = goalTime ?: 0
-                        )
-                    }.orEmpty()
-                    activityViewModel.addUsageGoals(usageGoals)
+                    val apps = Apps(
+                        apps = selectedApps?.map {
+                            Apps.App(
+                                appCode = it,
+                                goalTime = (goalTime ?: 0).toInt()
+                            )
+                        } ?: return@registerForActivityResult
+                    )
+                    viewModel.addApp(apps)
                 }
             }
     }
@@ -129,12 +155,12 @@ class ChallengeFragment : Fragment() {
                 onAppItemClicked = {
                     when (viewModel.challengeState.value.modifierState) {
                         ModifierState.DELETE -> {
-                            // TODO 앱 삭제 다이얼로그 추가 및 삭제 API 호출
+                            viewModel.deleteApp(it.packageName)
                         }
 
                         else -> Unit
                     }
-                }
+                },
             )
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(VerticalSpaceItemDecoration(9.dp))

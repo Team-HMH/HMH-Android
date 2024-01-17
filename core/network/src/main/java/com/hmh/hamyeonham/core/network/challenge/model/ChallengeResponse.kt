@@ -1,13 +1,12 @@
 package com.hmh.hamyeonham.core.network.challenge.model
 
-import com.hmh.hamyeonham.core.network.usagegoal.model.UsageGoalResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ChallengeResponse(
     @SerialName("apps")
-    val apps: List<UsageGoalResponse.AppGoal>,
+    val apps: List<AppGoal>,
     @SerialName("goalTime")
     val goalTime: Int,
     @SerialName("period")
@@ -15,5 +14,13 @@ data class ChallengeResponse(
     @SerialName("statuses")
     val statuses: List<String>,
     @SerialName("todayIndex")
-    val todayIndex: Int
-)
+    val todayIndex: Int,
+) {
+    @Serializable
+    data class AppGoal(
+        @SerialName("appCode")
+        val appCode: String,
+        @SerialName("goalTime")
+        val goalTime: Long,
+    )
+}

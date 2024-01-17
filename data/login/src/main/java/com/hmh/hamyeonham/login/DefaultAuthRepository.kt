@@ -36,15 +36,17 @@ class DefaultAuthRepository @Inject constructor(
         }
     }
 
-    override suspend fun logout(): Result<Unit> {
+    override suspend fun logout(accessToken: String): Result<Unit> {
+        val bearerToken = "Bearer $accessToken"
         return runCatching {
-            authService.logout()
+            authService.logout(bearerToken)
         }
     }
 
-    override suspend fun withdrawal(): Result<Unit> {
+    override suspend fun withdrawal(accessToken: String): Result<Unit> {
+        val bearerToken = "Bearer $accessToken"
         return runCatching {
-            authService.withdrawal()
+            authService.withdrawal(bearerToken)
         }
     }
 }

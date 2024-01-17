@@ -31,10 +31,9 @@ class MyPageViewModel @Inject constructor(
 
     fun handleLogout() {
         viewModelScope.launch {
-            authRepository.logout().onSuccess {
+            authRepository.logout(hmhPreferenceAccessToken.accessToken).onSuccess {
                 _userEffect.emit(UserEffect.logoutSuccess)
                 hmhPreferenceAccessToken.clear()
-                Log.d("hmhPreferenceAccessToken", hmhPreferenceAccessToken.accessToken)
             }.onFailure {
                 _userEffect.emit(UserEffect.logoutFail)
             }
@@ -43,9 +42,9 @@ class MyPageViewModel @Inject constructor(
 
     fun handleWithdrawal() {
         viewModelScope.launch {
-            authRepository.withdrawal().onSuccess {
-                _userEffect.emit(UserEffect.withdrawalSuccess)
+            authRepository.withdrawal(hmhPreferenceAccessToken.accessToken).onSuccess {
                 hmhPreferenceAccessToken.clear()
+                _userEffect.emit(UserEffect.withdrawalSuccess)
                 Log.d("hmhPreferenceAccessToken", hmhPreferenceAccessToken.accessToken)
             }.onFailure {
                 _userEffect.emit(UserEffect.withdrawalFail)

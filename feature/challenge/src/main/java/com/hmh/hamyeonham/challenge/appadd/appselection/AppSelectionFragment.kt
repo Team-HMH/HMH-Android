@@ -40,7 +40,7 @@ class AppSelectionFragment : Fragment() {
         binding.rvAppSelection.run {
             adapter = AppSelectionAdapter(
                 onAppCheckboxClicked = ::onAppCheckboxClicked,
-                onAppCheckboxUnClicked = ::onAppCheckboxUnClicked
+                onAppCheckboxUnClicked = ::onAppCheckboxUnClicked,
             )
             layoutManager = LinearLayoutManager(requireContext())
         }

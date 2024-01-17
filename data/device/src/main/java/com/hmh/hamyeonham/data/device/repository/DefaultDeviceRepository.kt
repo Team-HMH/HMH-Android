@@ -16,6 +16,6 @@ class DefaultDeviceRepository @Inject constructor(
         val resolveInfoList = context.packageManager.queryIntentActivities(intent, 0)
         return resolveInfoList.map {
             it.activityInfo.packageName
-        }
+        }.distinct()
     }
 }

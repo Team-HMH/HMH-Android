@@ -46,7 +46,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun handleKakaoLoginSuccess() {
         viewModel.kakaoLoginEvent.flowWithLifecycle(lifecycle).onEach { state ->
-
             when (state) {
                 is LoginEffect.LoginSuccess -> moveToMainActivity()
 
@@ -59,9 +58,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setLoginViewPager() {
         val loginViewImageList = listOf(
-            R.drawable.login_sample_rectagle_viewpager,
-            R.drawable.login_sample_rectagle_viewpager,
-            R.drawable.login_sample_rectagle_viewpager,
+            R.drawable.onboarding_viewpager1,
+            R.drawable.onboarding_viewpager2,
+            R.drawable.onboarding_viewpager3,
         )
 
         loginViewPagerAdapter = LoginViewPagerAdapter(loginViewImageList)

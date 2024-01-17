@@ -1,4 +1,5 @@
-# 하면함 Android
+# 하면함 Android 
+![logo_black](https://github.com/Team-HMH/HMH-Android/assets/84266681/b3a9ba62-63c8-466b-9672-7da4ea3efd75)
 
 ## 스마트폰 중독 탈출, 너도 하면함!
 <br/>
@@ -84,6 +85,7 @@
 📁 domain
 │   📁 challenge
 │   📁 login
+│   📁 onboarding
 │   📁 usagestats
 │   📁 userinfo
 📁 feature
@@ -93,7 +95,6 @@
 │   📁 main
 │   📁 mypage
 │   📁 onboarding
-│   📁 statistics
 ```
 
 ## Progress Board 📋

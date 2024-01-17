@@ -14,8 +14,11 @@ sealed interface AppAddEffect {
 
 data class AppAddState(
     val selectedApp: List<String> = listOf(),
-    val goalTime: Long = 0
-)
+    val goalHour: Long = 0,
+    val goalMin: Long = 0,
+) {
+    val goalTime = goalHour + goalMin
+}
 
 @HiltViewModel
 class AppAddViewModel @Inject constructor() : ViewModel() {

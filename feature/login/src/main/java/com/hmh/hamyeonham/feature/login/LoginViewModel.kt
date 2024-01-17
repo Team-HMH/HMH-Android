@@ -57,10 +57,12 @@ class LoginViewModel @Inject constructor(
                 } else if (token != null) {
                     viewModelScope.launch {
                         authRepository.login(token.accessToken).onSuccess {
-                            hmhNetworkPreference.accessToken = it.accessToken
-                            hmhNetworkPreference.refreshToken = it.refreshToken
-                            hmhNetworkPreference.userId = it.userId
-                            hmhNetworkPreference.autoLoginConfigured = true
+                            hmhNetworkPreference.run {
+                                accessToken = it.accessToken
+                                refreshToken = it.refreshToken
+                                userId = it.userId
+                                autoLoginConfigured = true
+                            }
                             _kakaoLoginEvent.emit(LoginEffect.LoginSuccess)
                         }.onFailure {
                             if (it is HttpException && it.code() == 403) {

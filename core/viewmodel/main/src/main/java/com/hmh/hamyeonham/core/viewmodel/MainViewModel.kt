@@ -96,13 +96,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun addUsageGoals(usageGoal: List<UsageGoal>) {
-        // TODO 앱 추가 API
-        updateState {
-            copy(usageGoals = usageGoals + usageGoal)
-        }
-    }
-
     fun updateState(transform: suspend MainState.() -> MainState) {
         viewModelScope.launch {
             val currentState = mainState.value

@@ -10,13 +10,13 @@ data class UsageGoalResponse(
     @SerialName("goalTime")
     val goalTime: Long,
     @SerialName("apps")
-    val apps: List<AppGoal>
+    val apps: List<AppGoal>,
 ) {
     @Serializable
     data class AppGoal(
         @SerialName("appCode")
         val appCode: String,
-        @SerialName("appGoalTime")
-        val appGoalTime: Long
+        @SerialName("goalTime")
+        val goalTime: Long,
     )
 }

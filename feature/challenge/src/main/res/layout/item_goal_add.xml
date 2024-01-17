@@ -3,14 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/gray7">
+    android:background="@drawable/shape_background_radius8_gray7">
 
     <ImageView
         android:id="@+id/iv_goal_add"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginVertical="20dp"
-        android:background="@drawable/shape_background_radius8_gray7"
         android:src="@drawable/ic_plus_gray_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

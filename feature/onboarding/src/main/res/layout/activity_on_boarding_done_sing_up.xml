@@ -8,9 +8,9 @@
 
     <ImageView
         android:id="@+id/iv_onboarding_done_sing_up_image"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:background="#BBC6FF"
+        android:layout_width="164dp"
+        android:layout_height="164dp"
+        android:src="@drawable/success_signup"
         android:contentDescription="@string/onboarding_done_sing_up_image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

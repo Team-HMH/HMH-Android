@@ -8,7 +8,7 @@ data class ChallengeStatus(
 ) {
     data class AppGoal(
         val appCode: String,
-        val appGoalTime: Int,
+        val appGoalTime: Long,
     )
 }
 
