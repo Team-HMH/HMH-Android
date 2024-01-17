@@ -17,7 +17,3 @@ internal fun UsageGoalsEntity.toUsageGoal() = UsageGoal(packageName, goalTime)
 internal fun UsageGoal.toUsageGoalEntity() = UsageGoalsEntity(packageName, goalTime)
 
 internal fun List<UsageGoal>.toUsageGoalEntityList() = map { it.toUsageGoalEntity() }
-
-internal fun UsageGoalResponse.toUsageGoalEntityList() = apps.map {
-    UsageGoalsEntity(it.appCode, it.appGoalTime)
-}
