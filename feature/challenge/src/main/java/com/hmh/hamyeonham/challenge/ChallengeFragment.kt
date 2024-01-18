@@ -3,7 +3,6 @@ package com.hmh.hamyeonham.challenge
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,6 +89,11 @@ class ChallengeFragment : Fragment() {
         initModifierButton()
     }
 
+    private fun initTotalGoalTime(goalTime: Int) {
+        binding.tvTotalGoalTimeValue.text =
+            goalTime.toString() + getString(com.hmh.hamyeonham.feature.challenge.R.string.all_time)
+    }
+
     private fun initModifierButton() {
         binding.tvModifierButton.setOnClickListener {
             when (viewModel.challengeState.value.modifierState) {
@@ -127,6 +131,7 @@ class ChallengeFragment : Fragment() {
 //                tvTotalGoalTime.isVisible = !isChallengeExist
 //                rvChallengeCalendar.isVisible = !isChallengeExist
 //            }
+            initTotalGoalTime(it.goalTimeInHour)
         }.launchIn(viewLifeCycleScope)
     }
 
