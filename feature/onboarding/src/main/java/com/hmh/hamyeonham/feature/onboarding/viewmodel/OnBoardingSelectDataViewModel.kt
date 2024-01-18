@@ -1,7 +1,7 @@
 package com.hmh.hamyeonham.feature.onboarding.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.hmh.hamyeonham.feature.onboarding.OnBoardingFragmentType
+import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentType
 import com.hmh.hamyeonham.feature.onboarding.model.OnBoardingQuestion
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

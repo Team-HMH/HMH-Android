@@ -3,7 +3,6 @@ package com.hmh.hamyeonham.login.model
 data class SignRequestDomain(
     val challenge: Challenge,
     val onboarding: Onboarding,
-    val socialPlatform: String,
 ) {
     data class Onboarding(
         val averageUseTime: String,

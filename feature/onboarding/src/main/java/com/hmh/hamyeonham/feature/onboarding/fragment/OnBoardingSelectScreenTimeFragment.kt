@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.hmh.hamyeonham.common.view.setupScreentimeGoalRange
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.feature.onboarding.R
 import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingSelectScreentimeBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
+import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 
 class OnBoardingSelectScreenTimeFragment : Fragment() {
     private val binding by viewBinding(FragmentOnBoardingSelectScreentimeBinding::bind)
@@ -29,21 +31,13 @@ class OnBoardingSelectScreenTimeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.npOnboardingScreentimeGoal.setupScreentimeGoalRange(1, 6)
+        binding.npOnboardingScreentimeGoal.setupScreentimeGoalRange(2, 6)
 
         binding.npOnboardingScreentimeGoal.descendantFocusability =
             NumberPicker.FOCUS_BLOCK_DESCENDANTS
 
-
         binding.npOnboardingScreentimeGoal.setOnValueChangedListener { _, _, newTime ->
-            activityViewModel.run {
-                updateUserResponses {
-                    copy(goalTime = newTime)
-                }
-                updateState {
-                    copy(isNextButtonActive = true)
-                }
-            }
+            activityViewModel.sendEvent(OnboardEvent.UpdateScreenGoalTime(newTime))
         }
     }
 
@@ -52,5 +46,7 @@ class OnBoardingSelectScreenTimeFragment : Fragment() {
         activityViewModel.updateState {
             copy(isNextButtonActive = true)
         }
+        activityViewModel.sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_next)))
+        activityViewModel.sendEvent(OnboardEvent.visibleProgressbar(true))
     }
 }

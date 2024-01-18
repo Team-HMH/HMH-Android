@@ -10,11 +10,12 @@ android {
 dependencies {
     implementation(projects.core.common)
     implementation(projects.core.designsystem)
+    implementation(projects.core.network)
+    implementation(projects.core.network)
 
     implementation(projects.feature.main)
     implementation(projects.feature.lock)
 
     implementation(projects.domain.login)
-
-    implementation(projects.core.network)
+    implementation(projects.domain.challenge)
 }
