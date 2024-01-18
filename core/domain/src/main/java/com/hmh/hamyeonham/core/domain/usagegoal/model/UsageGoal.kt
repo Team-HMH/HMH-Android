@@ -23,4 +23,7 @@ data class UsageGoal(
                 }
             }.trim()
         }
+    companion object {
+        const val TOTAL = "total"
+    }
 }

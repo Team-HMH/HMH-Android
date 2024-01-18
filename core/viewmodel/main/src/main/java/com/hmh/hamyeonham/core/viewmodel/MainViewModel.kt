@@ -27,7 +27,7 @@ data class MainState(
     val usageGoals: List<UsageGoal> = emptyList(),
     val usageStatsList: List<UsageStatusAndGoal> = emptyList(),
     val name: String = "",
-    val point: Int = 0
+    val point: Int = 0,
 )
 
 @HiltViewModel
@@ -90,6 +90,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun getUsageGoalsExceptTotal(): List<UsageGoal> {
+        return mainState.value.usageGoals.filter { it.packageName != UsageGoal.TOTAL }
+    }
+
     fun setChallengeStatus(challengeStatus: ChallengeStatus) {
         updateState {
             copy(
@@ -105,7 +109,7 @@ class MainViewModel @Inject constructor(
         updateState {
             copy(
                 name = userInfo.name,
-                point = userInfo.point
+                point = userInfo.point,
             )
         }
     }
