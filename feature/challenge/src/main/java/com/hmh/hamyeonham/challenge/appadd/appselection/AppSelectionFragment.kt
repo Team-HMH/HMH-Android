@@ -63,7 +63,8 @@ class AppSelectionFragment : Fragment() {
         val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter
         val selectedApp = viewModel.state.value.selectedApp
         val newAppList = selectedApp.filter {
-            (context?.getAppNameFromPackageName(it) ?: "").contains(filter)
+            val appName = context?.getAppNameFromPackageName(it) ?: ""
+            !it.startsWith("com.hmh.hamyeonham") && appName.contains(filter)
         }
         appSelectionAdapter?.submitList(
             newAppList.map {
