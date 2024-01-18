@@ -83,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="3시간"
+        tools:text="3시간"
         android:textAppearance="?textAppearanceDisplayLarge"
         app:layout_constraintBottom_toTopOf="@id/rv_challenge_calendar"
         app:layout_constraintStart_toStartOf="@id/tv_total_goal_time"
