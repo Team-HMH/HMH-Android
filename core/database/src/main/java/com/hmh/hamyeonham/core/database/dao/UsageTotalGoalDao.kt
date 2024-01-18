@@ -10,7 +10,7 @@ import com.hmh.hamyeonham.core.database.model.UsageTotalGoalEntity
 @Dao
 interface UsageTotalGoalDao {
     @Query("SELECT * FROM usage_total_goal LIMIT 1")
-    suspend fun getUsageTotalGoal(): UsageTotalGoalEntity
+    suspend fun getUsageTotalGoal(): UsageTotalGoalEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUsageTotalGoal(usageTotalGoalEntity: UsageTotalGoalEntity)

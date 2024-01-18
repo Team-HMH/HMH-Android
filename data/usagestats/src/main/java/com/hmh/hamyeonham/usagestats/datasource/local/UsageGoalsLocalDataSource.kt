@@ -16,7 +16,7 @@ class UsageGoalsLocalDataSource @Inject constructor(
     suspend fun getUsageGoal(): Flow<List<UsageGoal>> {
         return flow {
             usageGoalsDao.getUsageGoal().collect { goalsList ->
-                val totalGoalTime = usageTotalGoalDao.getUsageTotalGoal().goalTime
+                val totalGoalTime = usageTotalGoalDao.getUsageTotalGoal()?.goalTime ?: 0
                 val totalGoal = UsageGoal(packageName = "total", goalTime = totalGoalTime)
                 val result = (listOf(totalGoal) + goalsList.map { it.toUsageGoal() })
                 emit(result)

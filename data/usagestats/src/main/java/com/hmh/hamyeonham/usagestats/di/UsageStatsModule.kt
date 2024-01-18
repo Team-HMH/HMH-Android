@@ -2,13 +2,13 @@ package com.hmh.hamyeonham.usagestats.di
 
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.core.network.usagegoal.UsageGoalService
 import com.hmh.hamyeonham.usagestats.datasource.remote.UsageGoalsRemoteDataSource
 import com.hmh.hamyeonham.usagestats.datasource.local.UsageStatusLocalDataSource
 import com.hmh.hamyeonham.usagestats.datasource.local.UsageStatusLocalDataSourceImpl
 import com.hmh.hamyeonham.usagestats.repository.DefaultUsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.repository.DefaultUsageStatsRepository
-import com.hmh.hamyeonham.usagestats.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.repository.UsageStatsRepository
 import dagger.Binds
 import dagger.Module

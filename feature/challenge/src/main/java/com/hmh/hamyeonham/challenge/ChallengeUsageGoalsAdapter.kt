@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.common.context.getAppIconFromPackageName
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.view.ItemDiffCallback
+import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemUsageGoalBinding
-import com.hmh.hamyeonham.usagestats.model.UsageGoal
 
 class ChallengeUsageGoalsAdapter :
     ListAdapter<UsageGoal, ChallengeUsageGoalsAdapter.ChallengeUsageGoalsViewHolder>(
