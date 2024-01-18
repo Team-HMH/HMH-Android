@@ -3,13 +3,13 @@ package com.hmh.hamyeonham.challenge
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -67,14 +67,14 @@ class ChallengeFragment : Fragment() {
             ModifierState.CANCEL -> {
                 getString(R.string.all_cancel) to ContextCompat.getColor(
                     requireContext(),
-                    R.color.white_text
+                    R.color.white_text,
                 )
             }
 
             ModifierState.DELETE -> {
                 getString(R.string.all_delete) to ContextCompat.getColor(
                     requireContext(),
-                    R.color.blue_purple_text
+                    R.color.blue_purple_text,
                 )
             }
         }
@@ -116,7 +116,7 @@ class ChallengeFragment : Fragment() {
             if (isChallengeExist) {
                 challengeAdapter?.submitList(it.isSuccessList)
                 if (it.usageGoals.isNotEmpty()) {
-                    challengeGoalsAdapter?.submitList(it.usageGoals.drop(1) + UsageGoal())
+                    challengeGoalsAdapter?.submitList(activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())
                 }
             }
 //            binding.run {
@@ -148,9 +148,9 @@ class ChallengeFragment : Fragment() {
                         apps = selectedApps?.map {
                             Apps.App(
                                 appCode = it,
-                                goalTime = goalTime ?: 0
+                                goalTime = goalTime ?: 0,
                             )
-                        } ?: return@registerForActivityResult
+                        } ?: return@registerForActivityResult,
                     )
                     viewModel.addApp(apps)
                 }
@@ -166,7 +166,7 @@ class ChallengeFragment : Fragment() {
                 },
                 onAppItemClicked = {
                     when (viewModel.challengeState.value.modifierState) {
-                        ModifierState.DELETE -> {
+                        ModifierState.CANCEL -> {
                             viewModel.deleteApp(it.packageName)
                         }
 
