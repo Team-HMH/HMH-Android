@@ -15,6 +15,5 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.designsystem)
     implementation(projects.core.domain)
-
-    implementation(libs.lifecycle.process)
+    implementation(projects.core.service)
 }

@@ -10,7 +10,7 @@
             android:theme="@style/Base.Theme.HMH" />
 
         <service
-            android:name=".LockAccessibilityService"
+            android:name="com.hmh.hamyeonham.core.service.LockAccessibilityService"
             android:exported="false"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
