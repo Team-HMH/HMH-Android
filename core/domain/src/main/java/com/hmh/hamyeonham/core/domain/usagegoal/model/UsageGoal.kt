@@ -1,4 +1,4 @@
-package com.hmh.hamyeonham.usagestats.model
+package com.hmh.hamyeonham.core.domain.usagegoal.model
 
 data class UsageGoal(
     val packageName: String = "",
