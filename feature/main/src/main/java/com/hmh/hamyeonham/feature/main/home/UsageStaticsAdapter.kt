@@ -9,15 +9,20 @@ import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticBinding
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticTotalBinding
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 
-class UsageStaticsAdapter : ListAdapter<UsageStatusAndGoal, RecyclerView.ViewHolder>(
-    ItemDiffCallback<UsageStatusAndGoal>(
-        onItemsTheSame = { old, new -> old.packageName == new.packageName },
-        onContentsTheSame = { old, new -> old == new }
-    )
+data class UsageStaticsModel(
+    val userName: String,
+    val usageStatusAndGoal: UsageStatusAndGoal,
+)
+
+class UsageStaticsAdapter : ListAdapter<UsageStaticsModel, RecyclerView.ViewHolder>(
+    ItemDiffCallback<UsageStaticsModel>(
+        onItemsTheSame = { old, new -> old.usageStatusAndGoal == new.usageStatusAndGoal },
+        onContentsTheSame = { old, new -> old == new },
+    ),
 ) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
     ): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
@@ -35,7 +40,7 @@ class UsageStaticsAdapter : ListAdapter<UsageStatusAndGoal, RecyclerView.ViewHol
 
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
-        position: Int
+        position: Int,
     ) {
         when (position) {
             0 -> {
@@ -45,9 +50,17 @@ class UsageStaticsAdapter : ListAdapter<UsageStatusAndGoal, RecyclerView.ViewHol
 
             else -> {
                 val newHolder = holder as UsageStaticsViewHolder
-                newHolder.onBind(currentList[position])
+                newHolder.onBind(currentList[position].usageStatusAndGoal)
             }
         }
+    }
+
+    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
+        if (holder.itemViewType == TOTAL_ITEM_TYPE) {
+            val newHolder = holder as UsageStaticsTotalViewHolder
+            newHolder.pause()
+        }
+        super.onViewDetachedFromWindow(holder)
     }
 
     override fun getItemViewType(position: Int): Int {

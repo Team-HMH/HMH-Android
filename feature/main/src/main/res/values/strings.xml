@@ -8,5 +8,14 @@
     <string name="all_time_left">남은시간</string>
     <string name="item_usagestatic_appicon_description">image of app icon</string>
     <string name="item_usagestatic_total_blackhole_description">image of black hole</string>
-    <string name="item_usagestatic_total_blackhole">블랙홀이\n가까워지고 있어요!</string>
+    <string name="base_blackhole_uri">vd_blackhole</string>
+    <string name="android_resource">android.resource://</string>
+    <string name="raw">/raw/</string>
+    <string name="blackhole1">님을 위한\n 우주가 생성되었어요</string>
+    <string name="blackhole2">블랙홀이 다가와요\n도파민의 유혹을 이겨내요</string>
+    <string name="blackhole3">블랙홀이 가까워졌어요\n스마트폰을 멀리해볼까요?</string>
+    <string name="blackhole4">블랙홀에 빠질 수 있어요\n스마트폰을 내려놓아요</string>
+    <string name="blackhole5">지금부터 앱을 사용하면\n챌린지를 실패해요</string>
+    <string name="blackhole6">블랙홀에 빠졌어요\n내일은 목표를 이뤄보아요</string>
+
 </resources>

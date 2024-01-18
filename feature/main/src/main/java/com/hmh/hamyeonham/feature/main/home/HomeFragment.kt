@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.transition.MaterialFadeThrough
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
@@ -22,10 +23,15 @@ class HomeFragment : Fragment() {
     private val binding by viewBinding(FragmentHomeBinding::bind)
     private val activityViewModel by activityViewModels<MainViewModel>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        exitTransition = MaterialFadeThrough()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return FragmentHomeBinding.inflate(inflater, container, false).root
     }
@@ -45,8 +51,10 @@ class HomeFragment : Fragment() {
 
     private fun collectUsageStatsList() {
         val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
-        activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
-            usageStaticsAdapter?.submitList(it.usageStatsList)
+        activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach { mainState ->
+            usageStaticsAdapter?.submitList(mainState.usageStatsList.map {
+                UsageStaticsModel(mainState.name, it)
+            })
         }.launchIn(viewLifeCycleScope)
     }
 }
