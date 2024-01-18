@@ -15,10 +15,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.challenge.appadd.AppAddActivity
 import com.hmh.hamyeonham.challenge.calendar.ChallengeCalendarAdapter
 import com.hmh.hamyeonham.challenge.goals.ChallengeUsageGoalsAdapter
 import com.hmh.hamyeonham.challenge.model.Apps
+import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
+import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.VerticalSpaceItemDecoration
@@ -172,9 +175,8 @@ class ChallengeFragment : Fragment() {
                 onAppItemClicked = {
                     when (viewModel.challengeState.value.modifierState) {
                         ModifierState.CANCEL -> {
-                            viewModel.deleteApp(it.packageName)
+                            setDeleteAppDialog(it)
                         }
-
                         else -> Unit
                     }
                 },
@@ -182,5 +184,21 @@ class ChallengeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(VerticalSpaceItemDecoration(9.dp))
         }
+    }
+
+    private fun RecyclerView.setDeleteAppDialog(it: UsageGoal) {
+        val clickedAppNameToDialog = context.getAppNameFromPackageName(it.packageName)
+        TwoButtonCommonDialog.newInstance(
+            title = "정말 $clickedAppNameToDialog 을(를) 삭제하시겠어요?",
+            description = "집계되고 있던 앱의 사용 시간은 총 사용 시간에서도 차감돼요",
+            confirmButtonText = getString(R.string.all_okay),
+            dismissButtonText = getString(R.string.all_cancel),
+        ).apply {
+            setConfirmButtonClickListener {
+                viewModel.deleteApp(it.packageName)
+            }
+            setDismissButtonClickListener {
+            }
+        }.showAllowingStateLoss(childFragmentManager)
     }
 }

@@ -29,7 +29,7 @@ class OnBoardingSelectDataFragment : Fragment() {
     private val viewModel by viewModels<OnBoardingSelectDataViewModel>()
     private val activityViewModel by activityViewModels<OnBoardingViewModel>()
 
-    private val selectedButtons = mutableSetOf<AppCompatButton>()
+    private val selectedButtons = mutableListOf<AppCompatButton>()
     private val fragmentType: OnBoardingFragmentType?
         get() = arguments?.getString(ARG_FRAGMENT_TYPE)?.toOnboardingFragmentType()
 
@@ -160,8 +160,8 @@ class OnBoardingSelectDataFragment : Fragment() {
             OnBoardingFragmentType.SELECT_DATA_PERIOD -> {
                 activityViewModel.sendEvent(
                     OnboardEvent.UpdatePeriod(
-                        firstSelected?.extractDigits() ?: 0
-                    )
+                        firstSelected?.extractDigits() ?: 0,
+                    ),
                 )
             }
 
