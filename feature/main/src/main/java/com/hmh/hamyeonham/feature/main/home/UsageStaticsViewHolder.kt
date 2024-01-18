@@ -14,24 +14,24 @@ import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 
 class UsageStaticsViewHolder(
     private val binding: ItemUsagestaticBinding,
-    private val context: Context
+    private val context: Context,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun onBind(usageStatusAndGoal: UsageStatusAndGoal) {
         binding.run {
             tvAppname.text = context.getAppNameFromPackageName(usageStatusAndGoal.packageName)
             ivAppicon.setImageDrawable(
                 context.getAppIconFromPackageName(
-                    usageStatusAndGoal.packageName
-                )
+                    usageStatusAndGoal.packageName,
+                ),
             )
             tvAppGoalTime.text = convertTimeToString(usageStatusAndGoal.goalTime)
             pbAppUsage.progress = usageStatusAndGoal.usedPercentage
         }
         context.colorSecondStrAndBindText(
-            convertTimeToString(usageStatusAndGoal.goalTime),
+            convertTimeToString(usageStatusAndGoal.timeLeft),
             getString(context, R.string.all_left),
             binding.tvAppTimeLeft,
-            com.hmh.hamyeonham.core.designsystem.R.color.gray1
+            com.hmh.hamyeonham.core.designsystem.R.color.gray1,
         )
         initAndStartProgressBarAnimation(binding.pbAppUsage, usageStatusAndGoal.usedPercentage)
     }
