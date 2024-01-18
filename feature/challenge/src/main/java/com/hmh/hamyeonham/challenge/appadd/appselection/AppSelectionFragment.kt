@@ -3,7 +3,6 @@ package com.hmh.hamyeonham.challenge.appadd.appselection
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,12 +84,13 @@ class AppSelectionFragment : Fragment() {
         viewModel.state.flowWithLifecycle(lifecycle).onEach { state ->
             val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter
             appSelectionAdapter?.submitList(
-                state.selectedApp.map {
-                    Pair(
-                        it,
-                        checkIfAppIsSelected(it),
-                    )
-                },
+                state.selectedApp.filter { !it.startsWith("com.hmh.hamyeonham") }
+                    .map {
+                        Pair(
+                            it,
+                            checkIfAppIsSelected(it),
+                        )
+                    },
             )
         }.launchIn(lifecycleScope)
     }
