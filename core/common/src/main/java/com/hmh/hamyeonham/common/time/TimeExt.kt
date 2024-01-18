@@ -66,3 +66,11 @@ fun convertTimeToString(time: Long): String {
 fun Int.timeToMs(): Long {
     return this * 60 * 1000L
 }
+
+fun Long.msToHour(): Long {
+    return TimeUnit.MILLISECONDS.toHours(this)
+}
+
+fun Int.msToHour(): Long {
+    return TimeUnit.MILLISECONDS.toHours(this.toLong())
+}

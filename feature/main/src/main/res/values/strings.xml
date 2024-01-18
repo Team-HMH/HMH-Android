@@ -18,4 +18,12 @@
     <string name="blackhole5">지금부터 앱을 사용하면\n챌린지를 실패해요</string>
     <string name="blackhole6">블랙홀에 빠졌어요\n내일은 목표를 이뤄보아요</string>
 
+    <string name="dialog_title_unlock_package">%s을(를)\n계속 사용하시겠어요?</string>
+    <string name="dialog_description_unlock_package">사용 시간을 연장하면\n챌린지를 실패해요</string>
+
+
+
+
+
+
 </resources>
