@@ -15,7 +15,7 @@ class DefaultUsageGoalsRepository @Inject constructor(
     private val usageGoalsRemoteDataSource: UsageGoalsRemoteDataSource,
     private val usageGoalsLocalDataSource: UsageGoalsLocalDataSource,
     private val usageGoalsDao: UsageGoalsDao,
-    private val usageTotalGoalDao: UsageTotalGoalDao
+    private val usageTotalGoalDao: UsageTotalGoalDao,
 ) : UsageGoalsRepository {
 
     override suspend fun updateUsageGoal() {
