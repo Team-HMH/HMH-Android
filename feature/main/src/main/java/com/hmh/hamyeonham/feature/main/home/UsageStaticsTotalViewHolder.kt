@@ -11,13 +11,13 @@ import com.hmh.hamyeonham.feature.main.R
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticTotalBinding
 import com.hmh.hamyeonham.usagestats.model.Blackhole
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
-import com.hmh.hamyeonham.userinfo.model.UserInfo
 
 class UsageStaticsTotalViewHolder(
     private val binding: ItemUsagestaticTotalBinding,
     private val context: Context,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun onBind(usageStatusAndGoal: UsageStatusAndGoal, userInfo: UserInfo?) {
+    fun onBind(usageStaticsModel: UsageStaticsModel) {
+        val usageStatusAndGoal = usageStaticsModel.usageStatusAndGoal
         binding.run {
             tvTotalGoal.text = convertTimeToString(usageStatusAndGoal.goalTime)
             pbTotalUsage.progress = usageStatusAndGoal.usedPercentage
@@ -35,13 +35,13 @@ class UsageStaticsTotalViewHolder(
             binding.pbTotalUsage,
             usageStatusAndGoal.usedPercentage,
         )
-        bindBlackhole(usageStatusAndGoal, userInfo)
+        bindBlackhole(usageStaticsModel)
         setBlackholeLoop()
     }
 
-    fun bindBlackhole(usageStatusAndGoal: UsageStatusAndGoal, userInfo: UserInfo?) {
-        bindBlackholeVideo(usageStatusAndGoal.getBlackholeUri())
-        bindBlackholeDescription(usageStatusAndGoal, userInfo)
+    fun bindBlackhole(usageStaticsModel: UsageStaticsModel) {
+        bindBlackHoleVideo(usageStaticsModel.usageStatusAndGoal.getBlackholeUri())
+        bindBlackholeDescription(usageStaticsModel.usageStatusAndGoal, usageStaticsModel.userName)
     }
 
     private fun setBlackholeLoop() {
@@ -50,7 +50,7 @@ class UsageStaticsTotalViewHolder(
         }
     }
 
-    private fun bindBlackholeVideo(uri: String) {
+    private fun bindBlackHoleVideo(uri: String) {
         val uri = Uri.parse(uri)
         binding.vvBlackhole.run {
             setVideoURI(uri)
@@ -63,10 +63,10 @@ class UsageStaticsTotalViewHolder(
 
     private fun bindBlackholeDescription(
         userStatusAndGoal: UsageStatusAndGoal,
-        userInfo: UserInfo?,
+        userName: String,
     ) {
         binding.tvBlackholeDescription.text = when (userStatusAndGoal.blackhole) {
-            Blackhole.FIRST -> userInfo?.name ?: ""
+            Blackhole.FIRST -> userName
             else -> ""
         } + userStatusAndGoal.getBlackholeDescription()
     }

@@ -8,15 +8,18 @@ import com.hmh.hamyeonham.common.view.ItemDiffCallback
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticBinding
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticTotalBinding
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
-import com.hmh.hamyeonham.userinfo.model.UserInfo
 
-class UsageStaticsAdapter : ListAdapter<UsageStatusAndGoal, RecyclerView.ViewHolder>(
-    ItemDiffCallback<UsageStatusAndGoal>(
-        onItemsTheSame = { old, new -> old.packageName == new.packageName },
+data class UsageStaticsModel(
+    val userName: String,
+    val usageStatusAndGoal: UsageStatusAndGoal,
+)
+
+class UsageStaticsAdapter : ListAdapter<UsageStaticsModel, RecyclerView.ViewHolder>(
+    ItemDiffCallback<UsageStaticsModel>(
+        onItemsTheSame = { old, new -> old.usageStatusAndGoal == new.usageStatusAndGoal },
         onContentsTheSame = { old, new -> old == new },
     ),
 ) {
-    private var currentUserInfo: UserInfo? = null
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
@@ -42,12 +45,12 @@ class UsageStaticsAdapter : ListAdapter<UsageStatusAndGoal, RecyclerView.ViewHol
         when (position) {
             0 -> {
                 val newHolder = holder as UsageStaticsTotalViewHolder
-                newHolder.onBind(currentList[position], currentUserInfo)
+                newHolder.onBind(currentList[position])
             }
 
             else -> {
                 val newHolder = holder as UsageStaticsViewHolder
-                newHolder.onBind(currentList[position])
+                newHolder.onBind(currentList[position].usageStatusAndGoal)
             }
         }
     }
@@ -62,10 +65,6 @@ class UsageStaticsAdapter : ListAdapter<UsageStatusAndGoal, RecyclerView.ViewHol
 
     override fun getItemViewType(position: Int): Int {
         return if (position == 0) TOTAL_ITEM_TYPE else APP_ITEM_TYPE
-    }
-
-    fun setUserInfo(userInfo: UserInfo) {
-        currentUserInfo = userInfo
     }
 
     companion object {
