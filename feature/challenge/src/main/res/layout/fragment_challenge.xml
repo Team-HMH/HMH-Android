@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/gray7">
@@ -48,6 +49,35 @@
         app:layout_constraintBottom_toTopOf="@id/tv_total_goal_time_value"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl_top_appbar" />
+
+    <TextView
+        android:id="@+id/tv_challenge_create_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="17dp"
+        android:text="@string/challenge_create_title"
+        android:textSize="21sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cl_top_appbar"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/btn_challenge_create"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="53dp"
+        android:text="@string/challenge_create"
+        android:textAppearance="?textAppearanceTitleMedium"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/tv_app_lock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
 
     <TextView
         android:id="@+id/tv_total_goal_time_value"
@@ -100,12 +130,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="26dp"
-        android:text="@string/delete"
         android:padding="17dp"
+        android:text="@string/delete"
         android:textAppearance="@style/TextAppearance.Hmh.TitleMedium"
         android:textColor="@color/blue_purple_text"
-        app:layout_constraintEnd_toEndOf="@id/v_bottom"
         app:layout_constraintBottom_toBottomOf="@id/tv_app_lock"
+        app:layout_constraintEnd_toEndOf="@id/v_bottom"
         app:layout_constraintTop_toTopOf="@id/tv_app_lock" />
 
     <androidx.recyclerview.widget.RecyclerView
