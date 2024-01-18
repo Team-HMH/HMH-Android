@@ -78,9 +78,7 @@ class AppSelectionFragment : Fragment() {
 
     private fun checkIfAppIsSelected(app: String): Boolean {
         val selcetedApps = activityViewModel.state.value.selectedApp
-        val isChecked = selcetedApps.find { it == app } != null
-        if (isChecked) Log.d("checked app", app)
-        return isChecked
+        return selcetedApps.find { it == app } != null
     }
 
     private fun collectState() {
@@ -111,16 +109,11 @@ class AppSelectionFragment : Fragment() {
         activityViewModel.updateState {
             copy(selectedApp = selectedApp + packageName)
         }
-        for (i in activityViewModel.state.value.selectedApp)
-            Log.d("selected apps", i)
     }
 
     private fun onAppCheckboxUnClicked(packageName: String) {
         activityViewModel.updateState {
             copy(selectedApp = selectedApp - packageName)
         }
-        Log.d("delete viewmodel", "")
-        for (i in activityViewModel.state.value.selectedApp)
-            Log.d("selected apps", i)
     }
 }
