@@ -5,6 +5,6 @@ data class Apps(
 ) {
     data class App(
         val appCode: String,
-        val goalTime: Int
+        val goalTime: Long
     )
 }
