@@ -18,10 +18,10 @@ interface UsageGoalsDao {
     fun getUsageGoal(packageName: String): UsageGoalsEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUsageGoalsList(entity: UsageGoalsEntity): Long
+    suspend fun insertUsageGoal(entity: UsageGoalsEntity): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertUsageGoalsList(entities: List<UsageGoalsEntity>): List<Long>
+    suspend fun insertUsageGoalList(entities: List<UsageGoalsEntity>): List<Long>
 
     @Update
     suspend fun updateUsageGoalsList(entity: UsageGoalsEntity): Int
