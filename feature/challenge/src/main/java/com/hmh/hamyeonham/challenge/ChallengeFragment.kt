@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -25,9 +26,9 @@ import com.hmh.hamyeonham.common.view.VerticalSpaceItemDecoration
 import com.hmh.hamyeonham.common.view.dp
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.designsystem.R
+import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.challenge.databinding.FragmentChallengeBinding
-import com.hmh.hamyeonham.usagestats.model.UsageGoal
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -111,10 +112,21 @@ class ChallengeFragment : Fragment() {
         val challengeAdapter = binding.rvChallengeCalendar.adapter as? ChallengeCalendarAdapter
         val challengeGoalsAdapter = binding.rvAppUsageGoals.adapter as? ChallengeUsageGoalsAdapter
         activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
-            challengeAdapter?.submitList(it.challengeStatus.isSuccessList)
-            if (it.usageGoals.isNotEmpty()) {
-                challengeGoalsAdapter?.submitList(it.usageGoals.drop(1) + UsageGoal())
+            val isChallengeExist = it.period != -1
+            if (isChallengeExist) {
+                challengeAdapter?.submitList(it.isSuccessList)
+                if (it.usageGoals.isNotEmpty()) {
+                    challengeGoalsAdapter?.submitList(it.usageGoals.drop(1) + UsageGoal())
+                }
             }
+//            binding.run {
+//                tvChallengeCreateTitle.isVisible = isChallengeExist
+//                btnChallengeCreate.isVisible = isChallengeExist
+//
+//                tvChallengeTitle.isVisible = !isChallengeExist
+//                tvTotalGoalTime.isVisible = !isChallengeExist
+//                rvChallengeCalendar.isVisible = !isChallengeExist
+//            }
         }.launchIn(viewLifeCycleScope)
     }
 
@@ -136,7 +148,7 @@ class ChallengeFragment : Fragment() {
                         apps = selectedApps?.map {
                             Apps.App(
                                 appCode = it,
-                                goalTime = (goalTime ?: 0).toInt()
+                                goalTime = goalTime ?: 0
                             )
                         } ?: return@registerForActivityResult
                     )

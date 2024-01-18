@@ -4,11 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
+import com.hmh.hamyeonham.challenge.model.Status
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
-import com.hmh.hamyeonham.usagestats.model.UsageGoal
+import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
-import com.hmh.hamyeonham.usagestats.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatsListUseCase
 import com.hmh.hamyeonham.userinfo.model.UserInfo
 import com.hmh.hamyeonham.userinfo.repository.UserInfoRepository
@@ -19,10 +20,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class MainState(
-    val challengeStatus: ChallengeStatus = ChallengeStatus(),
+    val appGoals: List<ChallengeStatus.AppGoal> = emptyList(),
+    val isSuccessList: List<Status> = emptyList(),
+    val goalTime: Int = 0,
+    val period: Int = 0,
     val usageGoals: List<UsageGoal> = emptyList(),
     val usageStatsList: List<UsageStatusAndGoal> = emptyList(),
-    val userInfo: UserInfo = UserInfo(),
+    val name: String = "",
+    val point: Int = 0
 )
 
 @HiltViewModel
@@ -32,48 +37,50 @@ class MainViewModel @Inject constructor(
     private val getUsageStatsListUseCase: GetUsageStatsListUseCase,
     private val userInfoRepository: UserInfoRepository,
 ) : ViewModel() {
+
     private val _mainState = MutableStateFlow(MainState())
     val mainState = _mainState.asStateFlow()
 
     init {
-        getChallengeStatus()
+        viewModelScope.launch {
+            updateGoals()
+            getChallengeStatus()
+            getUserInfo()
+        }
         getUsageGoalAndStatList()
-        getUserInfo()
     }
 
-    private fun getChallengeStatus() {
-        viewModelScope.launch {
-            challengeRepository.getChallengeData().onSuccess {
-                setChallengeStatus(it)
-            }.onFailure {
-                Log.e("challenge status error", it.toString())
-            }
+    private suspend fun updateGoals() {
+        usageGoalsRepository.updateUsageGoal()
+    }
+
+    private suspend fun getChallengeStatus() {
+        challengeRepository.getChallengeData().onSuccess {
+            setChallengeStatus(it)
+        }.onFailure {
+            Log.e("challenge status error", it.toString())
         }
     }
 
     private fun getUsageGoalAndStatList() {
         viewModelScope.launch {
-            usageGoalsRepository.getUsageGoals().onSuccess {
+            usageGoalsRepository.getUsageGoals().collect {
                 setUsageGaols(it)
-                getStatsList(it)
-            }.onFailure {
-                Log.e("usage Goal status error", it.toString())
+                getStatsList()
             }
         }
     }
 
-    private suspend fun getStatsList(usageGoals: List<UsageGoal>) {
+    private suspend fun getStatsList() {
         val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
         setUsageStatsList(getUsageStatsListUseCase(startTime, endTime))
     }
 
-    private fun getUserInfo() {
-        viewModelScope.launch {
-            userInfoRepository.getUserInfo().onSuccess {
-                setUserInfo(it)
-            }.onFailure {
-                Log.e("userInfo error", it.toString())
-            }
+    private suspend fun getUserInfo() {
+        userInfoRepository.getUserInfo().onSuccess {
+            updateUserInfo(it)
+        }.onFailure {
+            Log.e("userInfo error", it.toString())
         }
     }
 
@@ -85,13 +92,21 @@ class MainViewModel @Inject constructor(
 
     fun setChallengeStatus(challengeStatus: ChallengeStatus) {
         updateState {
-            copy(challengeStatus = challengeStatus)
+            copy(
+                appGoals = challengeStatus.appGoals,
+                isSuccessList = challengeStatus.isSuccessList,
+                goalTime = challengeStatus.goalTime,
+                period = challengeStatus.period,
+            )
         }
     }
 
-    fun setUserInfo(userInfo: UserInfo) {
+    fun updateUserInfo(userInfo: UserInfo) {
         updateState {
-            copy(userInfo = userInfo)
+            copy(
+                name = userInfo.name,
+                point = userInfo.point
+            )
         }
     }
 

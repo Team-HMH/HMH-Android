@@ -6,4 +6,7 @@
     <string name="delete">삭제</string>
     <string name="appselection_searchbar">잠금 추가할 앱을 검색해 주세요</string>
     <string name="app_selection_done">선택 완료</string>
+
+    <string name="challenge_create_title">새로운 여정을 위한\n챌린지를 생성해 주세요</string>
+    <string name="challenge_create">챌린지 생성하기</string>
 </resources>

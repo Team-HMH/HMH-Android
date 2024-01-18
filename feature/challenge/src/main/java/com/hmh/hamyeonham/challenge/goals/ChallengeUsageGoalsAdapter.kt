@@ -4,9 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.hmh.hamyeonham.common.view.ItemDiffCallback
+import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemGoalAddBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemUsageGoalBinding
-import com.hmh.hamyeonham.usagestats.model.UsageGoal
 
 class ChallengeUsageGoalsAdapter(
     private val onAppListAddClicked: () -> Unit,
