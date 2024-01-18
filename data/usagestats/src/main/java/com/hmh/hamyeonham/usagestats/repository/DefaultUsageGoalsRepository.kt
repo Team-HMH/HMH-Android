@@ -1,26 +1,48 @@
 package com.hmh.hamyeonham.usagestats.repository
 
-import com.hmh.hamyeonham.core.network.usagegoal.UsageGoalService
-import com.hmh.hamyeonham.login.mapper.toUsageGoalList
-import com.hmh.hamyeonham.usagestats.datasource.UsageGoalsRemoteDataSource
-import com.hmh.hamyeonham.usagestats.model.UsageGoal
+import com.hmh.hamyeonham.core.database.dao.UsageGoalsDao
+import com.hmh.hamyeonham.core.database.dao.UsageTotalGoalDao
+import com.hmh.hamyeonham.core.database.model.UsageTotalGoalEntity
+import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
+import com.hmh.hamyeonham.usagestats.datasource.local.UsageGoalsLocalDataSource
+import com.hmh.hamyeonham.usagestats.datasource.remote.UsageGoalsRemoteDataSource
+import com.hmh.hamyeonham.usagestats.mapper.toUsageGoalEntityList
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class DefaultUsageGoalsRepository @Inject constructor(
-    private val usageGoalService: UsageGoalService,
     private val usageGoalsRemoteDataSource: UsageGoalsRemoteDataSource,
+    private val usageGoalsLocalDataSource: UsageGoalsLocalDataSource,
+    private val usageGoalsDao: UsageGoalsDao,
+    private val usageTotalGoalDao: UsageTotalGoalDao
 ) : UsageGoalsRepository {
 
-    override suspend fun getUsageGoals(): Result<List<UsageGoal>> {
-        return runCatching { usageGoalService.getUsageGoal().data.toUsageGoalList() }
+    override suspend fun updateUsageGoal() {
+        usageGoalsRemoteDataSource.getUsageGoals().onSuccess { usageGoals ->
+            val totalTime = usageGoals.sumOf { it.goalTime }
+            usageGoalsDao.insertUsageGoalList(usageGoals.toUsageGoalEntityList())
+            usageTotalGoalDao.insertUsageTotalGoal(UsageTotalGoalEntity(goalTime = totalTime))
+        }
     }
 
-    override fun getUsageGoalTimeFromMockData(packageName: String): Long {
-        return usageGoalsRemoteDataSource.getUsageGoals()
-            .firstOrNull { it.packageName == packageName }?.goalTime ?: 0
+    override suspend fun getUsageGoals(): Flow<List<UsageGoal>> {
+        return usageGoalsLocalDataSource.getUsageGoal()
     }
 
-    override fun addUsageGoal(usageGoal: UsageGoal) {
-        usageGoalsRemoteDataSource.addUsageGoal(usageGoal)
+    override suspend fun getUsageGoalTimeFromMockData(packageName: String): Long {
+        return usageGoalsLocalDataSource.getUsageGoal(packageName).goalTime
+    }
+
+    override suspend fun addUsageGoal(usageGoal: UsageGoal) {
+        usageGoalsLocalDataSource.addUsageGoal(usageGoal)
+    }
+
+    override suspend fun addUsageGoalList(usageGoalList: List<UsageGoal>) {
+        usageGoalsLocalDataSource.addUsageGoalList(usageGoalList)
+    }
+
+    override suspend fun deleteUsageGoal(packageName: String) {
+        usageGoalsLocalDataSource.deleteUsageGoal(packageName)
     }
 }

@@ -2,6 +2,7 @@ package com.hmh.hamyeonham.feature.onboarding
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -10,9 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
 import com.hmh.hamyeonham.common.view.initAndStartProgressBarAnimation
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentStateAdapter
 import com.hmh.hamyeonham.feature.onboarding.databinding.ActivityOnBoardingBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
-import com.hmh.hamyeonham.feature.onboarding.viewmodel.SignUpEffect
+import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEffect
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -34,8 +36,9 @@ class OnBoardingActivity : AppCompatActivity() {
         setBackPressedCallback()
         collectOnboardingState()
         collectSignUpEffect()
-
+        changeOnBoardingButtonTextState()
         updateAccessToken()
+        changeProgressbarVisibleState()
     }
 
     private fun updateAccessToken() {
@@ -48,12 +51,11 @@ class OnBoardingActivity : AppCompatActivity() {
     private fun collectSignUpEffect() {
         viewModel.onboardEffect.flowWithLifecycle(lifecycle).onEach {
             when (it) {
-                is SignUpEffect.SignUpSuccess -> {
+                is OnboardEffect.OnboardSuccess -> {
                     moveToOnBoardingDoneSignUpActivity()
                 }
 
-                is SignUpEffect.SignUpFail -> {
-                }
+                is OnboardEffect.OnboardFail -> {}
             }
         }.launchIn(lifecycleScope)
     }
@@ -111,6 +113,22 @@ class OnBoardingActivity : AppCompatActivity() {
     private fun collectOnboardingState() {
         viewModel.onBoardingState.flowWithLifecycle(lifecycle).onEach {
             binding.btnOnboardingNext.isEnabled = it.isNextButtonActive
+        }.launchIn(lifecycleScope)
+    }
+
+    private fun changeOnBoardingButtonTextState() {
+        viewModel.onBoardingState.flowWithLifecycle(lifecycle).onEach {
+            binding.btnOnboardingNext.text = it.buttonText
+        }.launchIn(lifecycleScope)
+    }
+
+    private fun changeProgressbarVisibleState() {
+        viewModel.onBoardingState.flowWithLifecycle(lifecycle).onEach {
+            if (it.progressbarVisible) {
+                binding.pbOnboarding.visibility = View.VISIBLE
+            } else {
+                binding.pbOnboarding.visibility = View.GONE
+            }
         }.launchIn(lifecycleScope)
     }
 

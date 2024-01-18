@@ -13,6 +13,7 @@ dependencies {
     implementation(projects.domain.userinfo)
 
     implementation(projects.core.common)
+    implementation(projects.core.domain)
 
     // TEST
     testImplementation("androidx.arch.core:core-testing:2.2.0")

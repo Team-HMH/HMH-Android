@@ -6,7 +6,7 @@ import com.hmh.hamyeonham.core.network.challenge.model.ChallengeResponse
 internal fun ChallengeResponse.toChallengeStatus(): ChallengeStatus {
     return ChallengeStatus(
         apps.map {
-            ChallengeStatus.AppGoal(it.appCode, (it.appGoalTime / 1000 / 60 / 60).toInt())
+            ChallengeStatus.AppGoal(it.appCode, it.goalTime)
         },
         statuses.toStatusList(),
         goalTime,

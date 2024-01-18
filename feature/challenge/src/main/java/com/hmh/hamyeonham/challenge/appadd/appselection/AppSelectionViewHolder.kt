@@ -9,7 +9,7 @@ import com.hmh.hamyeonham.feature.challenge.databinding.ItemAppBinding
 class AppSelectionViewHolder(
     private val binding: ItemAppBinding,
     private val onAppCheckboxClicked: (String) -> Unit,
-    private val onAppCheckboxUnClicked: (String) -> Unit
+    private val onAppCheckboxUnClicked: (String) -> Unit,
 ) : ViewHolder(binding.root) {
     fun onBind(packageName: String) {
         binding.run {
@@ -17,16 +17,19 @@ class AppSelectionViewHolder(
             tvAppname.text = context.getAppNameFromPackageName(packageName)
             ivAppicon.setImageDrawable(context.getAppIconFromPackageName(packageName))
         }
-        setCheckBoxButtonListener(packageName)
+        initAppSelectionListener(packageName)
+        binding.cbApp.isClickable = false
     }
 
-    private fun setCheckBoxButtonListener(packageName: String) {
-        binding.cbApp.setOnClickListener {
+    private fun initAppSelectionListener(packageName: String) {
+        binding.root.setOnClickListener {
             if (adapterPosition != RecyclerView.NO_POSITION) {
                 if (binding.cbApp.isChecked) {
-                    onAppCheckboxClicked(packageName)
-                } else {
+                    binding.cbApp.isChecked = false
                     onAppCheckboxUnClicked(packageName)
+                } else {
+                    binding.cbApp.isChecked = true
+                    onAppCheckboxClicked(packageName)
                 }
             }
         }

@@ -13,7 +13,7 @@ data class AppsRequest(
         @SerialName("appCode")
         val appCode: String? = null,
         @SerialName("goalTime")
-        val goalTime: Int? = null
+        val goalTime: Long? = null
     )
 }
 

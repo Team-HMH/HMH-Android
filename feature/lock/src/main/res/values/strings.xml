@@ -1,0 +1,6 @@
+<resources>
+    <string name="target_usage_time_end">목표 사용 시간 종료</string>
+    <string name="use_it_anymore">이제 %s을(를)\n"사용할 수 없어요"</string>
+    <string name="close">닫기</string>
+    <string name="do_unlock">잠금 해제하기</string>
+</resources>

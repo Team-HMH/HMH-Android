@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="21dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="60dp"
         android:lineSpacingExtra="6sp"
         android:text="@string/onboarding_screentime_goal_title"
         android:textColor="?white_text"

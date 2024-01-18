@@ -2,10 +2,9 @@ package com.hmh.hamyeonham.feature.onboarding.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hmh.hamyeonham.common.time.timeToMs
 import com.hmh.hamyeonham.core.network.auth.datastore.HMHNetworkPreference
-import com.hmh.hamyeonham.feature.onboarding.model.OnboardingAnswer
-import com.hmh.hamyeonham.feature.onboarding.model.OnboardingPageInfo
-import com.hmh.hamyeonham.feature.onboarding.model.toSignUpRequest
+import com.hmh.hamyeonham.login.model.SignRequestDomain
 import com.hmh.hamyeonham.login.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -15,43 +14,57 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed interface SignUpEffect {
-    data object SignUpSuccess : SignUpEffect
-    data object SignUpFail : SignUpEffect
+sealed interface OnboardEvent {
+    data class UpdateUsuallyUseTime(val usuallyUseTime: String) : OnboardEvent
+    data class UpdateProblems(val problems: List<String>) : OnboardEvent
+    data class UpdatePeriod(val period: Int) : OnboardEvent
+    data class UpdateScreenGoalTime(val screeGoalTime: Int) : OnboardEvent
+    data class AddApps(val appCode: String) : OnboardEvent
+    data class DeleteApp(val appCode: String) : OnboardEvent
+    data class UpdateAppGoalTimeMinute(val goalTimeMinute: Int) : OnboardEvent
+    data class UpdateAppGoalTimeHour(val goalTimeHour: Int) : OnboardEvent
+    data class UpdateNextButtonActive(val isNextButtonActive: Boolean) : OnboardEvent
+    data class UpdateAccessToken(val accessToken: String) : OnboardEvent
+    data class changeActivityButtonText(val buttonText: String) : OnboardEvent
+    data class visibleProgressbar(val progressbarVisible: Boolean) : OnboardEvent
+
+}
+
+sealed interface OnboardEffect {
+    data object OnboardSuccess : OnboardEffect
+    data object OnboardFail : OnboardEffect
 }
 
 data class OnBoardingState(
-    val onBoardingAnswer: OnboardingAnswer = OnboardingAnswer(),
-    val pageInfo: List<OnboardingPageInfo> = emptyList(),
+    val usuallyUseTime: String = "",
+    val problems: List<String> = emptyList(),
+    val period: Int = -1,
+    val screenGoalTime: Int = 2,
+    val appCodeList: List<String> = emptyList(),
+    val appGoalTimeMinute: Int = 0,
+    val appGoalTimeHour: Int = 0,
     val isNextButtonActive: Boolean = false,
     val accessToken: String = "",
-)
+    val buttonText: String = "다음",
+    val progressbarVisible: Boolean = true,
+) {
+    val goalTime: Long
+        get() = (screenGoalTime * 60).timeToMs()
+    val appGoalTime: Long
+        get() = ((appGoalTimeHour * 60) + appGoalTimeMinute).timeToMs()
+}
 
 @HiltViewModel
 class OnBoardingViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val hmhNetworkPreference: HMHNetworkPreference,
 ) : ViewModel() {
-    private val _userResponses = MutableStateFlow(OnboardingAnswer())
-    val userResponses = _userResponses.asStateFlow()
 
     private val _onBoardingState = MutableStateFlow(OnBoardingState())
     val onBoardingState = _onBoardingState.asStateFlow()
 
-    private val _onboardEffect = MutableSharedFlow<SignUpEffect>()
+    private val _onboardEffect = MutableSharedFlow<OnboardEffect>()
     val onboardEffect = _onboardEffect.asSharedFlow()
-
-    init {
-        _onBoardingState.value = onBoardingState.value.copy(
-            pageInfo = initializeButtonInfoList(),
-        )
-    }
-
-    fun updateUserResponses(transform: OnboardingAnswer.() -> OnboardingAnswer) {
-        val currentState = userResponses.value
-        val newState = currentState.transform()
-        _userResponses.value = newState
-    }
 
     fun updateState(transform: OnBoardingState.() -> OnBoardingState) {
         val currentState = onBoardingState.value
@@ -59,19 +72,86 @@ class OnBoardingViewModel @Inject constructor(
         _onBoardingState.value = newState
     }
 
-    private fun initializeButtonInfoList(): List<OnboardingPageInfo> {
-        val buttonInfoList = mutableListOf<OnboardingPageInfo>()
-        for (index in 0..3) {
-            buttonInfoList.add(OnboardingPageInfo(index))
+    fun sendEvent(event: OnboardEvent) {
+        when (event) {
+            is OnboardEvent.UpdateUsuallyUseTime -> {
+                updateState {
+                    copy(usuallyUseTime = event.usuallyUseTime)
+                }
+            }
+
+            is OnboardEvent.UpdateProblems -> {
+                updateState {
+                    copy(problems = event.problems)
+                }
+            }
+
+            is OnboardEvent.UpdatePeriod -> {
+                updateState {
+                    copy(period = event.period)
+                }
+            }
+
+            is OnboardEvent.UpdateScreenGoalTime -> {
+                updateState {
+                    copy(screenGoalTime = event.screeGoalTime)
+                }
+            }
+
+            is OnboardEvent.AddApps -> {
+                updateState {
+                    copy(appCodeList = appCodeList + event.appCode)
+                }
+            }
+
+            is OnboardEvent.DeleteApp -> {
+                updateState {
+                    copy(appCodeList = appCodeList - event.appCode)
+                }
+            }
+
+            is OnboardEvent.UpdateAppGoalTimeMinute -> {
+                updateState {
+                    copy(appGoalTimeMinute = event.goalTimeMinute)
+                }
+            }
+
+            is OnboardEvent.UpdateAppGoalTimeHour -> {
+                updateState {
+                    copy(appGoalTimeHour = event.goalTimeHour)
+                }
+            }
+
+            is OnboardEvent.UpdateNextButtonActive -> {
+                updateState {
+                    copy(isNextButtonActive = event.isNextButtonActive)
+                }
+            }
+
+            is OnboardEvent.UpdateAccessToken -> {
+                updateState {
+                    copy(accessToken = event.accessToken)
+                }
+            }
+            is OnboardEvent.changeActivityButtonText -> {
+                updateState {
+                    copy(buttonText = event.buttonText)
+                }
+            }
+            is OnboardEvent.visibleProgressbar -> {
+                updateState {
+                    copy(progressbarVisible = event.progressbarVisible)
+                }
+            }
         }
-        return buttonInfoList
     }
 
     fun signUp() {
         viewModelScope.launch {
-            val token = onBoardingState.value.accessToken
-            val request = onBoardingState.value.onBoardingAnswer
-            authRepository.signUp(token, request.toSignUpRequest())
+            val state = onBoardingState.value
+            val token = state.accessToken
+            val request = getRequestDomain(state)
+            authRepository.signUp(token, request)
                 .onSuccess { signUpUser ->
                     signUpUser.let {
                         hmhNetworkPreference.accessToken = it.accessToken
@@ -80,13 +160,31 @@ class OnBoardingViewModel @Inject constructor(
                         hmhNetworkPreference.autoLoginConfigured = true
                     }
                     viewModelScope.launch {
-                        _onboardEffect.emit(SignUpEffect.SignUpSuccess)
+                        _onboardEffect.emit(OnboardEffect.OnboardSuccess)
                     }
                 }.onFailure {
                     viewModelScope.launch {
-                        _onboardEffect.emit(SignUpEffect.SignUpFail)
+                        _onboardEffect.emit(OnboardEffect.OnboardFail)
                     }
                 }
         }
     }
+
+    private fun getRequestDomain(state: OnBoardingState) =
+        SignRequestDomain(
+            challenge = SignRequestDomain.Challenge(
+                period = state.period,
+                app = state.appCodeList.map { appCode ->
+                    SignRequestDomain.Challenge.App(
+                        appCode = appCode,
+                        goalTime = state.appGoalTime,
+                    )
+                },
+                goalTime = state.goalTime,
+            ),
+            onboarding = SignRequestDomain.Onboarding(
+                averageUseTime = state.usuallyUseTime,
+                problem = state.problems,
+            ),
+        )
 }

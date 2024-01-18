@@ -62,11 +62,14 @@ dependencies {
     implementation(projects.feature.main)
     implementation(projects.feature.mypage)
     implementation(projects.feature.challenge)
+    implementation(projects.feature.lock)
 
     // Domain
     implementation(projects.domain.usagestats)
     implementation(projects.domain.userinfo)
     implementation(projects.domain.login)
+    implementation(projects.domain.challenge)
+    implementation(projects.domain.onboarding)
 
     // Data
     implementation(projects.data.usagestats)
@@ -74,11 +77,15 @@ dependencies {
     implementation(projects.data.login)
     implementation(projects.data.challenge)
     implementation(projects.data.device)
+    implementation(projects.data.onboarding)
 
     // Core
     implementation(projects.core.common)
     implementation(projects.core.designsystem)
     implementation(projects.core.database)
+    implementation(projects.core.domain)
+    implementation(projects.core.network)
+    implementation(projects.core.viewmodel.main)
 
     // Firebase
     implementation(platform(libs.firebase))

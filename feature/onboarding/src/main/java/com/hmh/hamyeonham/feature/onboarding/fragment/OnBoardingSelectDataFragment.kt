@@ -13,11 +13,12 @@ import com.hmh.hamyeonham.common.fragment.colorOf
 import com.hmh.hamyeonham.common.fragment.drawableOf
 import com.hmh.hamyeonham.common.primitive.extractDigits
 import com.hmh.hamyeonham.common.view.viewBinding
-import com.hmh.hamyeonham.feature.onboarding.OnBoardingFragmentType
 import com.hmh.hamyeonham.feature.onboarding.R
+import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentType
 import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingSelectDataBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingSelectDataViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
+import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -63,6 +64,8 @@ class OnBoardingSelectDataFragment : Fragment() {
         activityViewModel.updateState {
             copy(isNextButtonActive = selectedButtons.isNotEmpty())
         }
+        activityViewModel.sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_next)))
+        activityViewModel.sendEvent(OnboardEvent.visibleProgressbar(true))
     }
 
     private fun initViews() {
@@ -147,21 +150,19 @@ class OnBoardingSelectDataFragment : Fragment() {
 
         when (fragmentType) {
             OnBoardingFragmentType.SELECT_DATA_TIME -> {
-                activityViewModel.updateUserResponses {
-                    copy(usuallyUseTime = firstSelected.orEmpty())
-                }
+                activityViewModel.sendEvent(OnboardEvent.UpdateUsuallyUseTime(firstSelected.orEmpty()))
             }
 
             OnBoardingFragmentType.SELECT_DATA_PROBLEM -> {
-                activityViewModel.updateUserResponses {
-                    copy(problems = selectedQuestion)
-                }
+                activityViewModel.sendEvent(OnboardEvent.UpdateProblems(selectedQuestion))
             }
 
             OnBoardingFragmentType.SELECT_DATA_PERIOD -> {
-                activityViewModel.updateUserResponses {
-                    copy(period = firstSelected?.extractDigits() ?: 0)
-                }
+                activityViewModel.sendEvent(
+                    OnboardEvent.UpdatePeriod(
+                        firstSelected?.extractDigits() ?: 0
+                    )
+                )
             }
 
             else -> {}

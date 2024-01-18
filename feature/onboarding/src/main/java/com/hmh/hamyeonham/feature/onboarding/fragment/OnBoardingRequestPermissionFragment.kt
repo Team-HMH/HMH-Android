@@ -15,10 +15,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.hmh.hamyeonham.common.fragment.toast
 import com.hmh.hamyeonham.common.view.viewBinding
-import com.hmh.hamyeonham.feature.onboarding.OnBoardingAccessibilityService
+import com.hmh.hamyeonham.feature.lock.LockAccessibilityService
 import com.hmh.hamyeonham.feature.onboarding.R
 import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingRequestPermissionBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
+import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -71,6 +72,8 @@ class OnBoardingRequestPermissionFragment : Fragment() {
         activityViewModel.updateState {
             copy(isNextButtonActive = allPermissionIsGranted())
         }
+        activityViewModel.sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_next)))
+        activityViewModel.sendEvent(OnboardEvent.visibleProgressbar(true))
     }
 
     private fun clickRequireAccessibilityButton() {
@@ -106,28 +109,23 @@ class OnBoardingRequestPermissionFragment : Fragment() {
 
     private fun requestOverlayPermission() {
         val packageUri = Uri.parse("package:" + requireContext().packageName)
-        val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, packageUri)
-        startActivity(intent)
-        overlayPermissionLauncher.launch(intent)
+        overlayPermissionLauncher.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, packageUri))
     }
 
     private fun requestUsageAccessPermission() {
         try {
             val packageUri = Uri.parse("package:" + requireContext().packageName)
             val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS, packageUri)
-            startActivity(intent)
             usageStatsPermissionLauncher.launch(intent)
         } catch (e: Exception) {
-            val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
-            startActivity(intent)
-            usageStatsPermissionLauncher.launch(intent)
+            usageStatsPermissionLauncher.launch(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
         }
     }
 
     private fun checkAccessibilityServiceEnabled(): Boolean {
         return context?.let {
             val service =
-                it.packageName + "/" + OnBoardingAccessibilityService::class.java.canonicalName
+                it.packageName + "/" + LockAccessibilityService::class.java.canonicalName
             val enabledServicesSetting = Settings.Secure.getString(
                 it.contentResolver,
                 Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,

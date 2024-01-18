@@ -21,7 +21,7 @@ class SetGoalTimeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return FragmentSetGoalTimeBinding.inflate(inflater, container, false).root
     }
@@ -34,15 +34,13 @@ class SetGoalTimeFragment : Fragment() {
 
     private fun setNumberPickerListener() {
         binding.npUseTimeGoalHour.setOnValueChangedListener { _, _, newTime ->
-            val currentGoalTime = activityViewModel.state.value.goalTime
             activityViewModel.updateState {
-                copy(goalTime = currentGoalTime + (newTime * 60 * 60 * 1000).toLong())
+                copy(goalHour = (newTime * 60 * 60 * 1000).toLong())
             }
         }
         binding.npUseTimeGoalMinute.setOnValueChangedListener { _, _, newTime ->
-            val currentGoalTime = activityViewModel.state.value.goalTime
             activityViewModel.updateState {
-                copy(goalTime = currentGoalTime + (newTime * 60 * 1000).toLong())
+                copy(goalMin = (newTime * 60 * 1000).toLong())
             }
         }
     }

@@ -56,6 +56,6 @@ fun SignRequestDomain.toSignUpRequest(): SignUpRequest {
             averageUseTime = onboarding.averageUseTime,
             problem = onboarding.problem,
         ),
-        socialPlatform = socialPlatform,
+        socialPlatform = "KAKAO",
     )
 }

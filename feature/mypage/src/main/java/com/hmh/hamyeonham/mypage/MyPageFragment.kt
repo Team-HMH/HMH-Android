@@ -26,7 +26,6 @@ import com.hmh.hamyeonham.feature.mypage.R
 import com.hmh.hamyeonham.feature.mypage.databinding.FragmentMyPageBinding
 import com.hmh.hamyeonham.mypage.viewmodel.MyPageViewModel
 import com.hmh.hamyeonham.mypage.viewmodel.UserEffect
-import com.hmh.hamyeonham.userinfo.model.UserInfo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -122,13 +121,15 @@ class MyPageFragment : Fragment() {
 
     private fun collectMainState() {
         activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
-            bindMyPageWithUserInfo(it.userInfo)
+            bindMyPageWithUserInfo(it.name, it.point)
         }.launchIn(viewLifeCycleScope)
     }
 
-    private fun bindMyPageWithUserInfo(userInfo: UserInfo) {
-        binding.tvUserName.text = userInfo.name
-        binding.tvPoint.text = buildPointString(userInfo.point)
+    private fun bindMyPageWithUserInfo(name: String, point: Int) {
+        binding.run {
+            tvUserName.text = name
+            tvPoint.text = buildPointString(point)
+        }
     }
 
     private fun buildPointString(point: Int): SpannableStringBuilder {

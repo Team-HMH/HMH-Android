@@ -3,7 +3,8 @@ package com.hmh.hamyeonham.challenge
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.Apps
-import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
+import com.hmh.hamyeonham.challenge.usecase.AddUsageGoalsUseCase
+import com.hmh.hamyeonham.challenge.usecase.DeleteUsageGoalUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +22,8 @@ enum class ModifierState {
 
 @HiltViewModel
 class ChallengeViewModel @Inject constructor(
-    private val challengeRepository: ChallengeRepository,
+    private val addUsageGoalsUseCase: AddUsageGoalsUseCase,
+    private val deleteUsageGoalUseCase: DeleteUsageGoalUseCase,
 ) : ViewModel() {
 
     private val _challengeState = MutableStateFlow(ChallengeState())
@@ -35,13 +37,13 @@ class ChallengeViewModel @Inject constructor(
 
     fun addApp(apps: Apps) {
         viewModelScope.launch {
-            challengeRepository.postApps(apps)
+            addUsageGoalsUseCase(apps)
         }
     }
 
     fun deleteApp(packageName: String) {
         viewModelScope.launch {
-            challengeRepository.deleteApps(packageName)
+            deleteUsageGoalUseCase(packageName)
         }
     }
 }
