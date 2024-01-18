@@ -29,7 +29,7 @@ class OnBoardingSelectDataFragment : Fragment() {
     private val viewModel by viewModels<OnBoardingSelectDataViewModel>()
     private val activityViewModel by activityViewModels<OnBoardingViewModel>()
 
-    private val selectedButtons = mutableListOf<AppCompatButton>()
+    private val selectedButtons = mutableSetOf<AppCompatButton>()
     private val fragmentType: OnBoardingFragmentType?
         get() = arguments?.getString(ARG_FRAGMENT_TYPE)?.toOnboardingFragmentType()
 
