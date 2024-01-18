@@ -119,14 +119,14 @@ class ChallengeFragment : Fragment() {
                     challengeGoalsAdapter?.submitList(it.usageGoals.drop(1) + UsageGoal())
                 }
             }
-            binding.run {
-                tvChallengeCreateTitle.isVisible = isChallengeExist
-                btnChallengeCreate.isVisible = isChallengeExist
-
-                tvChallengeTitle.isVisible = !isChallengeExist
-                tvTotalGoalTime.isVisible = !isChallengeExist
-                rvChallengeCalendar.isVisible = !isChallengeExist
-            }
+//            binding.run {
+//                tvChallengeCreateTitle.isVisible = isChallengeExist
+//                btnChallengeCreate.isVisible = isChallengeExist
+//
+//                tvChallengeTitle.isVisible = !isChallengeExist
+//                tvTotalGoalTime.isVisible = !isChallengeExist
+//                rvChallengeCalendar.isVisible = !isChallengeExist
+//            }
         }.launchIn(viewLifeCycleScope)
     }
 

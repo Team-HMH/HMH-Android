@@ -78,7 +78,6 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:visibility="visible" />
 
-
     <TextView
         android:id="@+id/tv_total_goal_time_value"
         android:layout_width="wrap_content"

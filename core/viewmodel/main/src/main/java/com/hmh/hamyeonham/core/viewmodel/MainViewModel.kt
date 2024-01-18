@@ -16,7 +16,6 @@ import com.hmh.hamyeonham.userinfo.repository.UserInfoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,7 +26,8 @@ data class MainState(
     val period: Int = 0,
     val usageGoals: List<UsageGoal> = emptyList(),
     val usageStatsList: List<UsageStatusAndGoal> = emptyList(),
-    val userInfo: UserInfo = UserInfo(),
+    val name: String = "",
+    val point: Int = 0
 )
 
 @HiltViewModel
@@ -45,9 +45,9 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             updateGoals()
             getChallengeStatus()
-            getUsageGoalAndStatList()
             getUserInfo()
         }
+        getUsageGoalAndStatList()
     }
 
     private suspend fun updateGoals() {
@@ -62,10 +62,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getUsageGoalAndStatList() {
-        usageGoalsRepository.getUsageGoals().collectLatest {
-            setUsageGaols(it)
-            getStatsList()
+    private fun getUsageGoalAndStatList() {
+        viewModelScope.launch {
+            usageGoalsRepository.getUsageGoals().collect {
+                setUsageGaols(it)
+                getStatsList()
+            }
         }
     }
 
@@ -76,7 +78,7 @@ class MainViewModel @Inject constructor(
 
     private suspend fun getUserInfo() {
         userInfoRepository.getUserInfo().onSuccess {
-            setUserInfo(it)
+            updateUserInfo(it)
         }.onFailure {
             Log.e("userInfo error", it.toString())
         }
@@ -99,9 +101,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun setUserInfo(userInfo: UserInfo) {
+    fun updateUserInfo(userInfo: UserInfo) {
         updateState {
-            copy(userInfo = userInfo)
+            copy(
+                name = userInfo.name,
+                point = userInfo.point
+            )
         }
     }
 

@@ -21,19 +21,17 @@ class GetUsageStatsListUseCase @Inject constructor(
         endTime: Long,
     ): List<UsageStatusAndGoal> {
         usageGoalsRepository.getUsageGoals().first().let { usageGoals ->
-            val usageForSelectedApps =
-                getUsageStatsAndGoalsForSelectedPackages(
-                    startTime,
-                    endTime,
-                    usageGoals.filter { it.packageName != TOTAL },
-                )
+            val usageForSelectedApps = getUsageStatsAndGoalsForSelectedPackages(
+                startTime,
+                endTime,
+                usageGoals.filter { it.packageName != TOTAL },
+            )
             val totalUsage = getTotalUsage(usageForSelectedApps)
-            val totalUsageStatusAndGoal =
-                UsageStatusAndGoal(
-                    TOTAL,
-                    totalUsage,
-                    getUsageGoalForPackage(usageGoals, TOTAL),
-                )
+            val totalUsageStatusAndGoal = UsageStatusAndGoal(
+                TOTAL,
+                totalUsage,
+                getUsageGoalForPackage(usageGoals, TOTAL),
+            )
             return listOf(totalUsageStatusAndGoal) + usageForSelectedApps
         }
     }

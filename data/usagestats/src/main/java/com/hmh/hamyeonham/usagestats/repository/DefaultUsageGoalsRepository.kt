@@ -1,6 +1,8 @@
 package com.hmh.hamyeonham.usagestats.repository
 
 import com.hmh.hamyeonham.core.database.dao.UsageGoalsDao
+import com.hmh.hamyeonham.core.database.dao.UsageTotalGoalDao
+import com.hmh.hamyeonham.core.database.model.UsageTotalGoalEntity
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.datasource.local.UsageGoalsLocalDataSource
@@ -12,12 +14,15 @@ import javax.inject.Inject
 class DefaultUsageGoalsRepository @Inject constructor(
     private val usageGoalsRemoteDataSource: UsageGoalsRemoteDataSource,
     private val usageGoalsLocalDataSource: UsageGoalsLocalDataSource,
-    private val usageGoalsDao: UsageGoalsDao
+    private val usageGoalsDao: UsageGoalsDao,
+    private val usageTotalGoalDao: UsageTotalGoalDao
 ) : UsageGoalsRepository {
 
     override suspend fun updateUsageGoal() {
-        usageGoalsRemoteDataSource.getUsageGoals().onSuccess {
-            usageGoalsDao.insertUsageGoalList(it.toUsageGoalEntityList())
+        usageGoalsRemoteDataSource.getUsageGoals().onSuccess { usageGoals ->
+            val totalTime = usageGoals.sumOf { it.goalTime }
+            usageGoalsDao.insertUsageGoalList(usageGoals.toUsageGoalEntityList())
+            usageTotalGoalDao.insertUsageTotalGoal(UsageTotalGoalEntity(goalTime = totalTime))
         }
     }
 

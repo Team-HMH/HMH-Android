@@ -5,23 +5,31 @@ import com.hmh.hamyeonham.core.database.dao.UsageTotalGoalDao
 import com.hmh.hamyeonham.core.database.model.UsageGoalsEntity
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.usagestats.mapper.toUsageGoal
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class UsageGoalsLocalDataSource @Inject constructor(
     private val usageGoalsDao: UsageGoalsDao,
     private val usageTotalGoalDao: UsageTotalGoalDao,
 ) {
+    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun getUsageGoal(): Flow<List<UsageGoal>> {
-        return flow {
-            usageGoalsDao.getUsageGoal().collect { goalsList ->
-                val totalGoalTime = usageTotalGoalDao.getUsageTotalGoal()?.goalTime ?: 0
-                val totalGoal = UsageGoal(packageName = "total", goalTime = totalGoalTime)
-                val result = (listOf(totalGoal) + goalsList.map { it.toUsageGoal() })
-                emit(result)
+        return usageGoalsDao.getUsageGoal()
+            .flatMapConcat { goalsList ->
+                flow {
+                    val totalGoalTime = withContext(Dispatchers.IO) {
+                        usageTotalGoalDao.getUsageTotalGoal()?.goalTime ?: 0
+                    }
+                    val totalGoal = UsageGoal(packageName = "total", goalTime = totalGoalTime)
+                    val result = (listOf(totalGoal) + goalsList.map { it.toUsageGoal() })
+                    emit(result)
+                }
             }
-        }
     }
 
     suspend fun getUsageGoal(packageName: String): UsageGoal {
