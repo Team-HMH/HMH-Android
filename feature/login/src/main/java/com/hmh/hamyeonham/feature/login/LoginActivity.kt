@@ -50,7 +50,6 @@ class LoginActivity : AppCompatActivity() {
                 is LoginEffect.LoginSuccess -> moveToMainActivity()
                 is LoginEffect.LoginFail -> toast(getString(R.string.fail_kakao_login))
                 is LoginEffect.RequireSignUp -> moveToOnBoardingActivity(state.token)
-                else -> Unit
             }
         }.launchIn(lifecycleScope)
     }

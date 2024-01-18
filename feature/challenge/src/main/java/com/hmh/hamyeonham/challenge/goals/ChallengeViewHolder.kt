@@ -4,9 +4,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.hmh.hamyeonham.common.context.getAppIconFromPackageName
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
+import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemGoalAddBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemUsageGoalBinding
-import com.hmh.hamyeonham.usagestats.model.UsageGoal
 
 
 sealed class ChallengeViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {

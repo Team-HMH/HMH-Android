@@ -4,4 +4,8 @@ plugins {
     kotlin("jvm")
 }
 
-dependencies {}
+dependencies {
+    implementation(libs.javax.inject)
+    implementation(libs.kotlin.coroutines)
+    implementation(projects.core.domain)
+}
