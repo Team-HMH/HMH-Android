@@ -66,7 +66,7 @@ class OnBoardingAppSelectionAdapter(
                     } else {
                         binding.cbApp.isChecked = true
                         onAppCheckboxClicked(packageName)
-                        checkBoxStatus.put(adapterPosition, false)
+                        checkBoxStatus.put(adapterPosition, true)
                     }
                 }
             }
