@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.hmh.hamyeonham.common.fragment.toast
 import com.hmh.hamyeonham.common.view.viewBinding
-import com.hmh.hamyeonham.feature.lock.LockAccessibilityService
+import com.hmh.hamyeonham.core.service.lockAccessibilityServiceClassName
 import com.hmh.hamyeonham.feature.onboarding.R
 import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingRequestPermissionBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
@@ -109,7 +109,12 @@ class OnBoardingRequestPermissionFragment : Fragment() {
 
     private fun requestOverlayPermission() {
         val packageUri = Uri.parse("package:" + requireContext().packageName)
-        overlayPermissionLauncher.launch(Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, packageUri))
+        overlayPermissionLauncher.launch(
+            Intent(
+                Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                packageUri
+            )
+        )
     }
 
     private fun requestUsageAccessPermission() {
@@ -125,7 +130,7 @@ class OnBoardingRequestPermissionFragment : Fragment() {
     private fun checkAccessibilityServiceEnabled(): Boolean {
         return context?.let {
             val service =
-                it.packageName + "/" + LockAccessibilityService::class.java.canonicalName
+                it.packageName + "/" + lockAccessibilityServiceClassName
             val enabledServicesSetting = Settings.Secure.getString(
                 it.contentResolver,
                 Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
