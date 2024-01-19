@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
-import com.hmh.hamyeonham.challenge.model.Status
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
@@ -21,13 +20,14 @@ import javax.inject.Inject
 
 data class MainState(
     val appGoals: List<ChallengeStatus.AppGoal> = emptyList(),
-    val isSuccessList: List<Status> = emptyList(),
+    val isSuccessList: List<ChallengeStatus.Status> = emptyList(),
     val goalTimeInHour: Int = 0,
     val period: Int = 0,
     val usageGoals: List<UsageGoal> = emptyList(),
     val usageStatsList: List<UsageStatusAndGoal> = emptyList(),
     val name: String = "",
     val point: Int = 0,
+    val challengeSuccess: Boolean = true,
 )
 
 @HiltViewModel
@@ -101,6 +101,7 @@ class MainViewModel @Inject constructor(
                 isSuccessList = challengeStatus.isSuccessList,
                 goalTimeInHour = challengeStatus.goalTimeInHours,
                 period = challengeStatus.period,
+                challengeSuccess = challengeStatus.challengeSuccess,
             )
         }
     }

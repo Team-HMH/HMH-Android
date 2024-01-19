@@ -5,6 +5,7 @@ data class ChallengeStatus(
     val isSuccessList: List<Status> = emptyList(),
     val goalTime: Long = 0,
     val period: Int = 0,
+    val challengeSuccess: Boolean = true,
 ) {
     data class AppGoal(
         val appCode: String,
@@ -13,11 +14,11 @@ data class ChallengeStatus(
 
     val goalTimeInHours: Int
         get() = (goalTime / 1000 / 60 / 60).toInt()
-}
 
-enum class Status(val value: String) {
-    NONE("NONE"),
-    UNEARNED("UNEARNED"),
-    EARNED("EARNED"),
-    FAILURE("FAILURE"),
+    enum class Status(val value: String) {
+        NONE("NONE"),
+        UNEARNED("UNEARNED"),
+        EARNED("EARNED"),
+        FAILURE("FAILURE"),
+    }
 }

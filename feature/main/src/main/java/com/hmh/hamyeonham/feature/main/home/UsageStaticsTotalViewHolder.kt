@@ -2,6 +2,7 @@ package com.hmh.hamyeonham.feature.main.home
 
 import android.content.Context
 import android.net.Uri
+import android.view.View
 import androidx.core.content.ContextCompat.getString
 import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.common.context.colorSecondStrAndBindText
@@ -35,13 +36,23 @@ class UsageStaticsTotalViewHolder(
             binding.pbTotalUsage,
             usageStatusAndGoal.usedPercentage,
         )
-        bindBlackhole(usageStaticsModel)
+        bindBlackhole(usageStaticsModel, usageStaticsModel.challengeSuccess)
         setBlackholeLoop()
     }
 
-    fun bindBlackhole(usageStaticsModel: UsageStaticsModel) {
-        bindBlackHoleVideo(usageStaticsModel.usageStatusAndGoal.getBlackholeUri())
-        bindBlackholeDescription(usageStaticsModel.usageStatusAndGoal, usageStaticsModel.userName)
+    fun bindBlackhole(usageStaticsModel: UsageStaticsModel, challengeSucess: Boolean) {
+        if (challengeSucess) {
+            bindBlackHoleVideo(usageStaticsModel.usageStatusAndGoal.getBlackholeUri())
+            bindBlackholeDescriptionWithModel(
+                usageStaticsModel.usageStatusAndGoal,
+                usageStaticsModel.userName,
+            )
+        } else {
+            binding.vvBlackhole.visibility = View.GONE
+            bindBlackholeDescriptionWithString(
+                getString(context, R.string.blackhole_fail),
+            )
+        }
     }
 
     private fun setBlackholeLoop() {
@@ -61,7 +72,7 @@ class UsageStaticsTotalViewHolder(
         }
     }
 
-    private fun bindBlackholeDescription(
+    private fun bindBlackholeDescriptionWithModel(
         userStatusAndGoal: UsageStatusAndGoal,
         userName: String,
     ) {
@@ -69,6 +80,12 @@ class UsageStaticsTotalViewHolder(
             Blackhole.FIRST -> userName
             else -> ""
         } + userStatusAndGoal.getBlackholeDescription()
+    }
+
+    private fun bindBlackholeDescriptionWithString(
+        str: String,
+    ) {
+        binding.tvBlackholeDescription.text = str
     }
 
     fun pause() {

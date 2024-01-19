@@ -126,14 +126,6 @@ class ChallengeFragment : Fragment() {
                     challengeGoalsAdapter?.submitList(activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())
                 }
             }
-//            binding.run {
-//                tvChallengeCreateTitle.isVisible = isChallengeExist
-//                btnChallengeCreate.isVisible = isChallengeExist
-//
-//                tvChallengeTitle.isVisible = !isChallengeExist
-//                tvTotalGoalTime.isVisible = !isChallengeExist
-//                rvChallengeCalendar.isVisible = !isChallengeExist
-//            }
             initTotalGoalTime(it.goalTimeInHour)
         }.launchIn(viewLifeCycleScope)
     }
@@ -177,6 +169,7 @@ class ChallengeFragment : Fragment() {
                         ModifierState.CANCEL -> {
                             setDeleteAppDialog(it)
                         }
+
                         else -> Unit
                     }
                 },
@@ -200,5 +193,8 @@ class ChallengeFragment : Fragment() {
             setDismissButtonClickListener {
             }
         }.showAllowingStateLoss(childFragmentManager)
+        viewModel.updateState {
+            copy(modifierState = ModifierState.DELETE)
+        }
     }
 }

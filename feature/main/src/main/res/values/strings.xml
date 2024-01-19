@@ -16,6 +16,5 @@
     <string name="blackhole3">블랙홀이 가까워졌어요\n스마트폰을 멀리해볼까요?</string>
     <string name="blackhole4">블랙홀에 빠질 수 있어요\n스마트폰을 내려놓아요</string>
     <string name="blackhole5">지금부터 앱을 사용하면\n챌린지를 실패해요</string>
-    <string name="blackhole6">블랙홀에 빠졌어요\n내일은 목표를 이뤄보아요</string>
-
+    <string name="blackhole_fail">블랙홀에 빠졌어요\n내일은 목표를 이뤄보아요</string>
 </resources>
