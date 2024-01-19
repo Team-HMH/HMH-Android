@@ -4,14 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <VideoView
-        android:id="@+id/vv_blackhole"
+    <ImageView
+        android:id="@+id/iv_blackhole"
+        android:src="@drawable/img_blackhole"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:contentDescription="@string/item_usagestatic_total_blackhole_description"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pb_total_usage"
+        android:layout_marginBottom="27dp"/>
+
 
     <TextView
         android:id="@+id/tv_blackhole_description"
@@ -22,6 +26,14 @@
         android:textSize="21sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/tv_total_goal_title"
+        app:layout_constraintTop_toTopOf="parent" />
+    <VideoView
+        android:id="@+id/vv_blackhole"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:contentDescription="@string/item_usagestatic_total_blackhole_description"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -34,7 +46,7 @@
         android:layout_marginBottom="33dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/vv_blackhole" />
+        app:layout_constraintTop_toBottomOf="@id/iv_blackhole" />
 
     <TextView
         android:id="@+id/tv_total_goal"

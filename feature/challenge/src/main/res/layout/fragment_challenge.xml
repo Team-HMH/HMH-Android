@@ -1,152 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gray7">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_top_appbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray7">
 
-        <TextView
-            android:id="@+id/tv_challenge_title"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_top_appbar"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="18dp"
-            android:text="@string/challenge"
-            android:textAppearance="?textAppearanceTitleLarge"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_challenge_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="18dp"
+                android:text="@string/challenge"
+                android:textAppearance="?textAppearanceTitleLarge"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_point"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:src="@drawable/ic_challenge_point_24"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
-            android:id="@+id/iv_point"
+            android:layout_width="match_parent"
+            android:layout_height="293dp"
+            android:background="@drawable/img_calendar_background"
+            app:layout_constraintBottom_toTopOf="@id/v_bottom"
+            app:layout_constraintTop_toBottomOf="@id/cl_top_appbar" />
+
+        <TextView
+            android:id="@+id/tv_total_goal_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            android:src="@drawable/ic_challenge_point_24"
+            android:layout_marginStart="29dp"
+            android:layout_marginTop="17dp"
+            android:text="@string/total_goal_time"
+            android:textAppearance="?textAppearanceTitleSmall"
+            android:textColor="@color/gray1"
+            app:layout_constraintBottom_toTopOf="@id/tv_total_goal_time_value"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_top_appbar" />
+
+
+        <TextView
+            android:id="@+id/tv_total_goal_time_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="3시간"
+            android:textAppearance="?textAppearanceDisplayLarge"
+            app:layout_constraintBottom_toTopOf="@id/rv_challenge_calendar"
+            app:layout_constraintStart_toStartOf="@id/tv_total_goal_time"
+            app:layout_constraintTop_toBottomOf="@id/tv_total_goal_time" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_challenge_calendar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="26dp"
+            android:layout_marginTop="25dp"
+            app:layout_constraintBottom_toTopOf="@id/v_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_total_goal_time_value" />
+
+        <View
+            android:id="@+id/v_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="35dp"
+            android:background="@color/blackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rv_challenge_calendar" />
+
+        <TextView
+            android:id="@+id/tv_app_lock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/app_lock"
+            android:textAppearance="?textAppearanceTitleSmall"
+            android:textColor="@color/gray1"
+            app:layout_constraintStart_toStartOf="@id/v_bottom"
+            app:layout_constraintTop_toTopOf="@id/v_bottom" />
+
+        <TextView
+            android:id="@+id/tv_modifier_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="26dp"
+            android:padding="17dp"
+            android:text="@string/delete"
+            android:textAppearance="@style/TextAppearance.Hmh.TitleMedium"
+            android:textColor="@color/blue_purple_text"
+            app:layout_constraintBottom_toBottomOf="@id/tv_app_lock"
+            app:layout_constraintEnd_toEndOf="@id/v_bottom"
+            app:layout_constraintTop_toTopOf="@id/tv_app_lock" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_app_usage_goals"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="14dp"
+            app:layout_constraintBottom_toBottomOf="@id/v_bottom"
+            app:layout_constraintEnd_toEndOf="@id/v_bottom"
+            app:layout_constraintStart_toStartOf="@id/v_bottom"
+            app:layout_constraintTop_toBottomOf="@id/tv_modifier_button" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/tv_total_goal_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="29dp"
-        android:layout_marginTop="17dp"
-        android:text="@string/total_goal_time"
-        android:textAppearance="?textAppearanceTitleSmall"
-        android:textColor="@color/gray1"
-        app:layout_constraintBottom_toTopOf="@id/tv_total_goal_time_value"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_top_appbar" />
-
-    <TextView
-        android:id="@+id/tv_challenge_create_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="17dp"
-        android:text="@string/challenge_create_title"
-        android:textSize="21sp"
-        android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl_top_appbar"
-        tools:visibility="visible" />
-
-    <Button
-        android:id="@+id/btn_challenge_create"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="53dp"
-        android:text="@string/challenge_create"
-        android:textAppearance="?textAppearanceTitleMedium"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/tv_app_lock"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:visibility="visible" />
-
-    <TextView
-        android:id="@+id/tv_total_goal_time_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        tools:text="3시간"
-        android:textAppearance="?textAppearanceDisplayLarge"
-        app:layout_constraintBottom_toTopOf="@id/rv_challenge_calendar"
-        app:layout_constraintStart_toStartOf="@id/tv_total_goal_time"
-        app:layout_constraintTop_toBottomOf="@id/tv_total_goal_time" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_challenge_calendar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="26dp"
-        android:layout_marginTop="25dp"
-        app:layout_constraintBottom_toTopOf="@id/v_bottom"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_total_goal_time_value" />
-
-    <View
-        android:id="@+id/v_bottom"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="35dp"
-        android:background="@color/blackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rv_challenge_calendar" />
-
-    <TextView
-        android:id="@+id/tv_app_lock"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:text="@string/app_lock"
-        android:textAppearance="?textAppearanceTitleSmall"
-        android:textColor="@color/gray1"
-        app:layout_constraintStart_toStartOf="@id/v_bottom"
-        app:layout_constraintTop_toTopOf="@id/v_bottom" />
-
-    <TextView
-        android:id="@+id/tv_modifier_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="26dp"
-        android:padding="17dp"
-        android:text="@string/delete"
-        android:textAppearance="@style/TextAppearance.Hmh.TitleMedium"
-        android:textColor="@color/blue_purple_text"
-        app:layout_constraintBottom_toBottomOf="@id/tv_app_lock"
-        app:layout_constraintEnd_toEndOf="@id/v_bottom"
-        app:layout_constraintTop_toTopOf="@id/tv_app_lock" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_app_usage_goals"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="14dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/v_bottom"
-        app:layout_constraintStart_toStartOf="@id/v_bottom"
-        app:layout_constraintTop_toBottomOf="@id/tv_modifier_button" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

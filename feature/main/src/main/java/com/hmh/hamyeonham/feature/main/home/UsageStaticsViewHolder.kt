@@ -24,11 +24,11 @@ class UsageStaticsViewHolder(
                     usageStatusAndGoal.packageName,
                 ),
             )
-            tvAppGoalTime.text = convertTimeToString(usageStatusAndGoal.goalTime)
+            tvAppGoalTime.text = convertTimeToString(usageStatusAndGoal.goalTimeInMin)
             pbAppUsage.progress = usageStatusAndGoal.usedPercentage
         }
         context.colorSecondStrAndBindText(
-            convertTimeToString(usageStatusAndGoal.timeLeft),
+            convertTimeToString(usageStatusAndGoal.timeLeftInMin),
             getString(context, R.string.all_left),
             binding.tvAppTimeLeft,
             com.hmh.hamyeonham.core.designsystem.R.color.gray1,

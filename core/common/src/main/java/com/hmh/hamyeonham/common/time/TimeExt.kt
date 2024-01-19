@@ -9,7 +9,6 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
-import java.util.concurrent.TimeUnit
 
 fun Instant.Companion.systemNow(): Instant = Clock.System.now()
 
@@ -53,8 +52,8 @@ fun getCurrentDayStartEndEpochMillis(): Pair<Long, Long> {
 }
 
 fun convertTimeToString(time: Long): String {
-    val hours = TimeUnit.MILLISECONDS.toHours(time)
-    val minutes = TimeUnit.MILLISECONDS.toMinutes(time) % 60
+    val hours = (time / 60)
+    val minutes = time % 60
 
     return buildString {
         if (hours > 0) append("$hours 시간")
@@ -67,10 +66,4 @@ fun Int.timeToMs(): Long {
     return this * 60 * 1000L
 }
 
-fun Long.msToHour(): Long {
-    return TimeUnit.MILLISECONDS.toHours(this)
-}
-
-fun Int.msToHour(): Long {
-    return TimeUnit.MILLISECONDS.toHours(this.toLong())
-}
+fun Long.msToMin(): Long = this / 1000 / 60

@@ -4,14 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.hmh.hamyeonham.challenge.model.Status
+import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.common.view.ItemDiffCallback
 import com.hmh.hamyeonham.feature.challenge.R
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemChallengeStatusBinding
 
 class ChallengeCalendarAdapter :
-    ListAdapter<Status, ChallengeCalendarAdapter.ChallengeStatusViewHolder>(
-        ItemDiffCallback<Status>(
+    ListAdapter<ChallengeStatus.Status, ChallengeCalendarAdapter.ChallengeStatusViewHolder>(
+        ItemDiffCallback<ChallengeStatus.Status>(
             onItemsTheSame = { oldItem, newItem ->
                 oldItem == newItem
             },
@@ -23,7 +23,7 @@ class ChallengeCalendarAdapter :
     class ChallengeStatusViewHolder(
         private val binding: ItemChallengeStatusBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(isSuccess: Status, position: Int) {
+        fun bind(isSuccess: ChallengeStatus.Status, position: Int) {
             binding.apply {
                 val date = (position + 1).toString()
                 tvDate.text = date
@@ -31,12 +31,12 @@ class ChallengeCalendarAdapter :
             }
         }
 
-        private fun getDrawableResource(isSuccess: Status?): Int {
+        private fun getDrawableResource(isSuccess: ChallengeStatus.Status?): Int {
             return when (isSuccess) {
-                Status.UNEARNED -> R.drawable.shape_background_radius8_blackground
-                Status.EARNED -> R.drawable.ic_challenge_success_38
-                Status.FAILURE -> R.drawable.ic_challenge_fail_38
-                else -> R.drawable.shape_background_radius8_blackground
+                ChallengeStatus.Status.UNEARNED -> R.drawable.ic_challenge_success_38
+                ChallengeStatus.Status.EARNED -> R.drawable.ic_challenge_success_38
+                ChallengeStatus.Status.FAILURE -> R.drawable.ic_challenge_fail_38
+                else -> R.drawable.ic_challenge_none_38
             }
         }
     }

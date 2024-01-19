@@ -8,7 +8,7 @@ data class ChallengeResponse(
     @SerialName("apps")
     val apps: List<AppGoal>,
     @SerialName("goalTime")
-    val goalTime: Int,
+    val goalTime: Long,
     @SerialName("period")
     val period: Int,
     @SerialName("statuses")

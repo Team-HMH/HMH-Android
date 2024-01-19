@@ -17,5 +17,6 @@
     <string name="withdrawal_description">회원탈퇴 후 유저 정보는 30일 동안\n임시보관되며, 이후 영구 삭제됩니다</string>
     <string name="logout_fail">로그아웃 실패</string>
     <string name="withdrawal_fail">회원 탈퇴 실패</string>
+    <string name="mypage_withdrawal">탈퇴</string>
 
 </resources>

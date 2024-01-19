@@ -160,8 +160,8 @@ class OnBoardingSelectDataFragment : Fragment() {
             OnBoardingFragmentType.SELECT_DATA_PERIOD -> {
                 activityViewModel.sendEvent(
                     OnboardEvent.UpdatePeriod(
-                        firstSelected?.extractDigits() ?: 0
-                    )
+                        firstSelected?.extractDigits() ?: 0,
+                    ),
                 )
             }
 

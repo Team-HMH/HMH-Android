@@ -11,6 +11,7 @@ import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 
 data class UsageStaticsModel(
     val userName: String,
+    val challengeSuccess: Boolean,
     val usageStatusAndGoal: UsageStatusAndGoal,
 )
 

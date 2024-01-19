@@ -16,7 +16,9 @@
         android:drawableStart="@drawable/ic_search_24"
         android:drawablePadding="7dp"
         android:hint="@string/appselection_searchbar"
+        android:inputType="text"
         android:paddingStart="17dp"
+        android:singleLine="true"
         android:textAppearance="?textAppearanceTitleSmall"
         android:textColor="?gray2"
         android:textColorHint="?gray2"
@@ -28,8 +30,8 @@
         android:id="@+id/rv_app_selection"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_searchbar" />
 

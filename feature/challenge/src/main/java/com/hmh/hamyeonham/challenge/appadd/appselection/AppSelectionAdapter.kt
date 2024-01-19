@@ -14,14 +14,13 @@ class AppSelectionAdapter(
     private val onAppCheckboxClicked: (String) -> Unit,
     private val onAppCheckboxUnClicked: (String) -> Unit,
 ) :
-    ListAdapter<String, AppSelectionAdapter.AppSelectionViewHolder>(
+    ListAdapter<Pair<String, Boolean>, AppSelectionAdapter.AppSelectionViewHolder>(
         ItemDiffCallback(onItemsTheSame = { oldItem, newItem ->
             oldItem == newItem
         }, onContentsTheSame = { oldItem, newItem ->
             oldItem == newItem
         }),
     ) {
-
     private val checkBoxStatus = SparseBooleanArray()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppSelectionViewHolder {
@@ -34,7 +33,10 @@ class AppSelectionAdapter(
         )
     }
 
-    override fun onBindViewHolder(holder: AppSelectionViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: AppSelectionViewHolder,
+        position: Int,
+    ) {
         holder.onBind(currentList[position])
     }
 
@@ -43,16 +45,17 @@ class AppSelectionAdapter(
         private val onAppCheckboxClicked: (String) -> Unit,
         private val onAppCheckboxUnClicked: (String) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun onBind(packageName: String) {
+        fun onBind(packagePair: Pair<String, Boolean>) {
+            val packageName = packagePair.first
+            val isChecked = packagePair.second
             binding.run {
                 val context = binding.root.context
                 tvAppname.text = context.getAppNameFromPackageName(packageName)
                 ivAppicon.setImageDrawable(context.getAppIconFromPackageName(packageName))
+                cbApp.isChecked = isChecked || checkBoxStatus[adapterPosition]
                 cbApp.isClickable = false
-                cbApp.isChecked = checkBoxStatus[adapterPosition]
             }
             initAppSelectionListener(packageName)
-            binding.cbApp.isClickable = false
         }
 
         private fun initAppSelectionListener(packageName: String) {
