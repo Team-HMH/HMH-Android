@@ -18,5 +18,6 @@
     <string name="logout_fail">로그아웃 실패</string>
     <string name="withdrawal_fail">회원 탈퇴 실패</string>
     <string name="mypage_withdrawal">탈퇴</string>
+    <string name="name_default">여행자</string>
 
 </resources>
