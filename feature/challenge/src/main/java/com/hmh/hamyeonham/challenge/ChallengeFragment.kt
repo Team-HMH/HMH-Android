@@ -24,7 +24,6 @@ import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
-import com.hmh.hamyeonham.common.time.msToHour
 import com.hmh.hamyeonham.common.view.VerticalSpaceItemDecoration
 import com.hmh.hamyeonham.common.view.dp
 import com.hmh.hamyeonham.common.view.viewBinding
@@ -126,7 +125,7 @@ class ChallengeFragment : Fragment() {
                 if (it.usageGoals.isNotEmpty()) {
                     challengeGoalsAdapter?.submitList(activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())
                 }
-                val totalHour = it.goalTime.msToHour().toString()
+                val totalHour = it.goalTimeInHour.toString()
                 binding.tvTotalGoalTimeValue.text = getString(R.string.all_format_hour, totalHour)
             }
 //            binding.run {

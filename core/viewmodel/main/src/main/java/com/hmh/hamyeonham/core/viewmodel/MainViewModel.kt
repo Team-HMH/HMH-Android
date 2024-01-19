@@ -56,26 +56,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun setChallengeStatus(challengeStatus: ChallengeStatus) {
-        updateState {
-            copy(
-                appGoals = challengeStatus.appGoals,
-                isSuccessList = challengeStatus.isSuccessList,
-                goalTime = challengeStatus.goalTime,
-                period = challengeStatus.period,
-            )
-        }
-    }
-
-    fun updateUserInfo(userInfo: UserInfo) {
-        updateState {
-            copy(
-                name = userInfo.name,
-                point = userInfo.point
-            )
-        }
-    }
-
     fun updateState(transform: suspend MainState.() -> MainState) {
         viewModelScope.launch {
             val currentState = mainState.value
@@ -155,14 +135,6 @@ class MainViewModel @Inject constructor(
                 name = userInfo.name,
                 point = userInfo.point,
             )
-        }
-    }
-
-    fun updateState(transform: suspend MainState.() -> MainState) {
-        viewModelScope.launch {
-            val currentState = mainState.value
-            val newState = currentState.transform()
-            _mainState.value = newState
         }
     }
 
