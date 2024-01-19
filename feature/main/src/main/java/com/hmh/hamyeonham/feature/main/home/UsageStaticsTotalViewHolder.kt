@@ -42,7 +42,7 @@ class UsageStaticsTotalViewHolder(
 
     fun bindBlackhole(usageStaticsModel: UsageStaticsModel, challengeSucess: Boolean) {
         if (challengeSucess) {
-            bindBlackHoleVideo(usageStaticsModel.usageStatusAndGoal.getBlackholeUri())
+            bindBlackHoleVideo(usageStaticsModel.usageStatusAndGoal.getBlackHoleUri())
             bindBlackholeDescriptionWithModel(
                 usageStaticsModel.usageStatusAndGoal,
                 usageStaticsModel.userName,
@@ -80,6 +80,7 @@ class UsageStaticsTotalViewHolder(
             BlackHole.FIRST -> userName
             else -> ""
         } + userStatusAndGoal.getBlackHoleDescription()
+        binding.tvBlackholeDescription.bringToFront()
     }
 
     private fun bindBlackholeDescriptionWithString(
