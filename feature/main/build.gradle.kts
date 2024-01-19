@@ -24,4 +24,5 @@ dependencies {
     // domain
     implementation(projects.domain.usagestats)
     implementation(projects.domain.userinfo)
+    implementation(project(":core:network"))
 }

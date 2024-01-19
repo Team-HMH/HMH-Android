@@ -11,7 +11,7 @@
 
     <string name="use_time_goal_title">선택한 앱의 목표 이용 시간을\n설정해 주세요</string>
     <string name="use_time_goal_description">목표 이용 시간은 최대 1시간 59분까지\n설정할 수 있어요</string>
-    <string name="delete_app_dialog_description">집계되고 있던 앱의 사용 시간은 총 사용 시간에서도 차감돼요</string>
+    <string name="delete_app_dialog_description">정말로 삭제하시겠어요?\n조금만 힘을 더 내보아요</string>
     <string name="delete_app_dialog_title">정말 %1$s 을(를) 삭제하시겠어요?</string>
 
 </resources>

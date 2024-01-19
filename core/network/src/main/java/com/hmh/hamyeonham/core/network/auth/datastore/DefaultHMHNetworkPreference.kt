@@ -44,6 +44,13 @@ class DefaultHMHNetworkPreference @Inject constructor(
                 putBoolean("auto_login", value)
             }
         }
+    override var isUnlock: Boolean
+        get() = preferences.getBoolean("is_unlock", false)
+        set(value) {
+            preferences.edit(commit = true) {
+                putBoolean("is_unlock", value)
+            }
+        }
 
     override fun clear() {
         preferences.edit(commit = true) {
