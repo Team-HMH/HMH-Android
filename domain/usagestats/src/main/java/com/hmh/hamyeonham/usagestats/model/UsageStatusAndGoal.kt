@@ -10,7 +10,7 @@ data class UsageStatusAndGoal(
         if (challengeSuccess) goalTime - totalTimeInForeground else 0L
     }
     val usedPercentage: Int by lazy {
-        if (challengeSuccess) (totalTimeInForeground * 100 / goalTime).toInt() else 100
+        if (challengeSuccess) (totalTimeInForeground * 100 / (goalTime + 0.0001)).toInt() else 100
     }
     private val level = usedPercentage / 25 + 1
     val blackhole: Blackhole? = Blackhole.createByLevel(level)
