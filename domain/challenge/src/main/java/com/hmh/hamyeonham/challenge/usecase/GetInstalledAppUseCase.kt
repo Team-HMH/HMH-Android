@@ -7,10 +7,11 @@ import javax.inject.Inject
 
 class GetInstalledAppUseCase @Inject constructor(
     private val deviceRepository: DeviceRepository,
-    private val goalsRepository: UsageGoalsRepository
+    private val goalsRepository: UsageGoalsRepository,
 ) {
+    private val excludedAppName = "com.hmh.hamyeonham"
     suspend operator fun invoke(): List<String> {
-        val installedAppList = deviceRepository.getInstalledApps()
+        val installedAppList = deviceRepository.getInstalledApps() - excludedAppName
         val usageGoals = goalsRepository.getUsageGoals().firstOrNull()
 
         val installedPackages = installedAppList.toSet()
