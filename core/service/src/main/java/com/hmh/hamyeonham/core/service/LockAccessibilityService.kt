@@ -10,6 +10,7 @@ import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageGoalsUseCase
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatFromPackageUseCase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,14 +27,24 @@ class LockAccessibilityService : AccessibilityService() {
     @Inject
     lateinit var navigationProvider: NavigationProvider
 
+    private var checkUsageJob: Job? = null
+
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            checkUsage(event)
+        when (event.eventType) {
+            AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED, AccessibilityEvent.TYPE_VIEW_CLICKED,
+            AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> {
+                checkUsageJob?.cancel()
+                checkUsageJob = null
+                checkUsageJob = checkUsage(event)
+            }
+
+            else -> Unit
         }
     }
 
-    private fun checkUsage(event: AccessibilityEvent) {
-        val packageName = event.packageName?.toString() ?: return
+    private fun checkUsage(event: AccessibilityEvent): Job {
+        val packageName = event.packageName?.toString() ?: return Job()
+
         val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
         val usageStats = getUsageStatFromPackageUseCase(
             startTime = startTime,
@@ -41,7 +52,8 @@ class LockAccessibilityService : AccessibilityService() {
             packageName = packageName
         )
 
-        ProcessLifecycleOwner.get().lifecycleScope.launch {
+        return ProcessLifecycleOwner.get().lifecycleScope.launch {
+            // 이벤트 처리 로직
             val usageGoals = getUsageGoalsUseCase().first()
             val myGoal = usageGoals.find { it.packageName == packageName } ?: return@launch
             if (usageStats > myGoal.goalTime) {
@@ -49,7 +61,6 @@ class LockAccessibilityService : AccessibilityService() {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 }.let(::startActivity)
             }
-
         }
     }
 
