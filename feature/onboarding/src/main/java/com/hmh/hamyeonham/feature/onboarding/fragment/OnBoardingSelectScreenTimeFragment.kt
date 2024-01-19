@@ -31,22 +31,29 @@ class OnBoardingSelectScreenTimeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.npOnboardingScreentimeGoal.setupScreentimeGoalRange(2, 6)
+        setNumberPicker()
+    }
 
-        binding.npOnboardingScreentimeGoal.descendantFocusability =
-            NumberPicker.FOCUS_BLOCK_DESCENDANTS
-
-        binding.npOnboardingScreentimeGoal.setOnValueChangedListener { _, _, newTime ->
-            activityViewModel.sendEvent(OnboardEvent.UpdateScreenGoalTime(newTime))
+    private fun setNumberPicker() {
+        binding.run {
+            npOnboardingScreentimeGoal.setupScreentimeGoalRange(2, 6)
+            npOnboardingScreentimeGoal.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+            npOnboardingScreentimeGoal.setOnValueChangedListener { _, _, newTime ->
+                activityViewModel.sendEvent(OnboardEvent.UpdateScreenGoalTime(newTime))
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        activityViewModel.updateState {
-            copy(isNextButtonActive = true)
+        activityViewModel.run {
+            val screenGoalTime = activityViewModel.onBoardingState.value.screenGoalTime
+
+            binding.npOnboardingScreentimeGoal.value = screenGoalTime
+
+            updateState { copy(isNextButtonActive = true) }
+            sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_next)))
+            sendEvent(OnboardEvent.visibleProgressbar(true))
         }
-        activityViewModel.sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_next)))
-        activityViewModel.sendEvent(OnboardEvent.visibleProgressbar(true))
     }
 }

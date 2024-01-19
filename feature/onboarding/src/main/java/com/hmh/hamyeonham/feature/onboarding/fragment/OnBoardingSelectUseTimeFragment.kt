@@ -17,7 +17,6 @@ import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 class OnBoardingSelectUseTimeFragment : Fragment() {
     private val binding by viewBinding(FragmentOnBoardingSelectUseTimeBinding::bind)
     private val activityViewModel by activityViewModels<OnBoardingViewModel>()
-    private var useSelectTime: Long = 0L
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,6 +51,11 @@ class OnBoardingSelectUseTimeFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
+        val selectedHour = activityViewModel.onBoardingState.value.appGoalTimeHour
+        val selectedMinute = activityViewModel.onBoardingState.value.appGoalTimeMinute
+
+        binding.npOnboardingUseTimeGoalHour.value = selectedHour
+        binding.npOnboardingUseTimeGoalMinute.value = selectedMinute
         activityViewModel.sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_done)))
         activityViewModel.sendEvent(OnboardEvent.visibleProgressbar(true))
     }
