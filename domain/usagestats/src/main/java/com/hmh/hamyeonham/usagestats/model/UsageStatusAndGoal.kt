@@ -9,11 +9,7 @@ data class UsageStatusAndGoal(
     val totalTimeInForegroundInMin = msToMin(totalTimeInForeground)
     val goalTimeInMin = msToMin(goalTime)
     val timeLeftInMin: Long by lazy {
-        if (challengeSuccess) {
-            (goalTimeInMin - totalTimeInForegroundInMin)
-        } else {
-            0L
-        }
+        if (challengeSuccess)(goalTimeInMin - totalTimeInForegroundInMin) else 0L
     }
 
     private fun msToMin(time: Long) = time / 1000 / 60
