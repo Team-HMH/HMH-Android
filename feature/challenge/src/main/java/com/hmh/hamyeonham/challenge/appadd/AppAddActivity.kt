@@ -28,6 +28,13 @@ class AppAddActivity : AppCompatActivity() {
         initViewPager()
         initNextButton()
         collectState()
+        setOnClickBackButton()
+    }
+
+    private fun setOnClickBackButton() {
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun collectState() {
@@ -63,7 +70,6 @@ class AppAddActivity : AppCompatActivity() {
             else -> Unit
         }
     }
-
 
     private fun initViewPager() {
         binding.vpAppAdd.run {
