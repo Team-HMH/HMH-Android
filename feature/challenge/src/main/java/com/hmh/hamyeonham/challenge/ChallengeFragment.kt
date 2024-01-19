@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -22,6 +21,7 @@ import com.hmh.hamyeonham.challenge.goals.ChallengeUsageGoalsAdapter
 import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
+import com.hmh.hamyeonham.common.time.msToHour
 import com.hmh.hamyeonham.common.view.VerticalSpaceItemDecoration
 import com.hmh.hamyeonham.common.view.dp
 import com.hmh.hamyeonham.common.view.viewBinding
@@ -118,6 +118,8 @@ class ChallengeFragment : Fragment() {
                 if (it.usageGoals.isNotEmpty()) {
                     challengeGoalsAdapter?.submitList(it.usageGoals.drop(1) + UsageGoal())
                 }
+                val totalHour = it.goalTime.msToHour().toString()
+                binding.tvTotalGoalTimeValue.text = getString(R.string.all_format_hour, totalHour)
             }
 //            binding.run {
 //                tvChallengeCreateTitle.isVisible = isChallengeExist

@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-
     <application>
         <activity
             android:name=".LockActivity"
@@ -10,7 +9,7 @@
             android:theme="@style/Base.Theme.HMH" />
 
         <service
-            android:name=".LockAccessibilityService"
+            android:name="com.hmh.hamyeonham.core.service.LockAccessibilityService"
             android:exported="false"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>

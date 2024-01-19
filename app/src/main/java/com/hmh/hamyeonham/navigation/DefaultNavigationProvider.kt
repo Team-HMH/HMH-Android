@@ -3,6 +3,7 @@ package com.hmh.hamyeonham.navigation
 import android.content.Context
 import android.content.Intent
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
+import com.hmh.hamyeonham.feature.lock.LockActivity
 import com.hmh.hamyeonham.feature.login.LoginActivity
 import com.hmh.hamyeonham.feature.main.MainActivity
 import com.hmh.hamyeonham.feature.onboarding.OnBoardingActivity
@@ -22,5 +23,9 @@ class DefaultNavigationProvider @Inject constructor(
 
     override fun toMain(): Intent {
         return Intent(context, MainActivity::class.java)
+    }
+
+    override fun toLock(packageName: String): Intent {
+        return LockActivity.getIntent(context, packageName)
     }
 }
