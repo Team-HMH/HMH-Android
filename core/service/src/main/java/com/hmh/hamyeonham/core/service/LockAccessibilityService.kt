@@ -8,6 +8,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
+import com.hmh.hamyeonham.core.network.auth.datastore.HMHNetworkPreference
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageGoalsUseCase
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatFromPackageUseCase
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,11 +27,15 @@ class LockAccessibilityService : AccessibilityService() {
     lateinit var getUsageGoalsUseCase: GetUsageGoalsUseCase
 
     @Inject
+    lateinit var hmhNetworkPreference: HMHNetworkPreference
+
+    @Inject
     lateinit var navigationProvider: NavigationProvider
 
     private var checkUsageJob: Job? = null
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
+        if (hmhNetworkPreference.isUnlock) return
         when (event.eventType) {
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
                 checkUsageJob?.cancel()

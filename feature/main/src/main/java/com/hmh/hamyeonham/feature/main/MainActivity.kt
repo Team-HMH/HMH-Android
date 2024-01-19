@@ -12,15 +12,20 @@ import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.core.network.auth.datastore.HMHNetworkPreference
 import com.hmh.hamyeonham.core.service.lockAccessibilityServiceClassName
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val binding by viewBinding(ActivityMainBinding::inflate)
     private val viewModel by viewModels<MainViewModel>()
+
+    @Inject
+    lateinit var hmhNetworkPreference: HMHNetworkPreference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +67,7 @@ class MainActivity : AppCompatActivity() {
             ).apply {
                 setConfirmButtonClickListener {
                     viewModel.updateDailyChallengeFailed()
+                    hmhNetworkPreference.isUnlock = true
                     intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
                 }
                 setDismissButtonClickListener {

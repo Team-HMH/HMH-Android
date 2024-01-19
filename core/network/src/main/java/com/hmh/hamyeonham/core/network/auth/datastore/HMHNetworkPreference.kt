@@ -6,5 +6,6 @@ interface HMHNetworkPreference {
     var userName: String
     var userId: Int
     var autoLoginConfigured: Boolean
+    var isUnlock: Boolean
     fun clear()
 }

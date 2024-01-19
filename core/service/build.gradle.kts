@@ -15,4 +15,5 @@ dependencies {
     implementation(projects.domain.usagestats)
 
     implementation(libs.lifecycle.process)
+    implementation(project(":core:network"))
 }
