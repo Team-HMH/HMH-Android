@@ -19,11 +19,11 @@ class UsageStaticsTotalViewHolder(
     fun onBind(usageStaticsModel: UsageStaticsModel) {
         val usageStatusAndGoal = usageStaticsModel.usageStatusAndGoal
         binding.run {
-            tvTotalGoal.text = convertTimeToString(usageStatusAndGoal.goalTime)
+            tvTotalGoal.text = convertTimeToString(usageStatusAndGoal.goalTimeInMin)
             pbTotalUsage.progress = usageStatusAndGoal.usedPercentage
         }
         context.colorSecondStrAndBindText(
-            convertTimeToString(usageStatusAndGoal.timeLeft),
+            convertTimeToString(usageStatusAndGoal.timeLeftInMin),
             getString(
                 context,
                 R.string.all_left,
