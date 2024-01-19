@@ -1,6 +1,6 @@
 <div align="center">
   <p align="center">
-      <img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/8cb75ef2-678b-49ef-ad57-a09b9d30627c"/>
+      <img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/68a431ad-013d-4712-b9d5-ca483211a8cd"/>
   </p>
   <br />
 </div>
@@ -17,6 +17,21 @@
   </p>
   <br />
 </div>
+
+# 시연영상
+## 온보딩 및 권한 추가
+https://github.com/Team-HMH/HMH-Android/assets/84266681/d5868d2f-9fc3-4bc8-b764-85877ee8c54f
+
+## 앱 잠금 화면 및 챌린지 실패
+https://github.com/Team-HMH/HMH-Android/assets/84266681/44e4fea8-76b4-44f7-887c-ceada46b35f1
+
+## 챌린지 실패 및 사용 연장
+https://github.com/Team-HMH/HMH-Android/assets/84266681/cacde6a4-b496-4214-a74d-189a02839cc6
+
+## 앱 추가 및 삭제
+https://github.com/Team-HMH/HMH-Android/assets/84266681/a5d16efd-a870-41ba-8896-af3445e474f3
+
+
 
 <h2>Tech Stack</h2>
 
