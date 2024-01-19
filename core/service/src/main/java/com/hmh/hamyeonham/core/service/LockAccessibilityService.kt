@@ -2,6 +2,9 @@ package com.hmh.hamyeonham.core.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -43,6 +46,8 @@ class LockAccessibilityService : AccessibilityService() {
     }
 
     private fun checkUsage(event: AccessibilityEvent): Job {
+        Log.d("LockAccessibilityService", "checkUsage: ${event.packageName}")
+        Log.d("LockAccessibilityService", "checkUsage: ${event.eventType}")
         val packageName = event.packageName?.toString() ?: return Job()
 
         val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
@@ -53,9 +58,10 @@ class LockAccessibilityService : AccessibilityService() {
         )
 
         return ProcessLifecycleOwner.get().lifecycleScope.launch {
-            // 이벤트 처리 로직
             val usageGoals = getUsageGoalsUseCase().first()
             val myGoal = usageGoals.find { it.packageName == packageName } ?: return@launch
+            Log.d("LockAccessibilityService", "checkUsage: $usageStats")
+            Log.d("LockAccessibilityService", "checkUsage: ${myGoal.goalTime}")
             if (usageStats > myGoal.goalTime) {
                 navigationProvider.toLock(packageName).apply {
                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

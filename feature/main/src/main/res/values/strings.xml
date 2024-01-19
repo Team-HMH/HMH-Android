@@ -20,10 +20,4 @@
 
     <string name="dialog_title_unlock_package">%s을(를)\n계속 사용하시겠어요?</string>
     <string name="dialog_description_unlock_package">사용 시간을 연장하면\n챌린지를 실패해요</string>
-
-
-
-
-
-
 </resources>

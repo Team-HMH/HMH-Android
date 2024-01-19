@@ -2,6 +2,7 @@ package com.hmh.hamyeonham.common.context
 
 import android.app.Dialog
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Point
 import android.graphics.drawable.Drawable
@@ -9,6 +10,7 @@ import android.os.Build
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -108,7 +110,7 @@ fun Context.colorSecondStrAndBindText(
     tv: TextView,
     color: Int
 ) {
-    val mergedStr = firstStr + " " + secondStr
+    val mergedStr = "$firstStr $secondStr"
     val builder = SpannableStringBuilder(
         mergedStr
     )
@@ -124,4 +126,14 @@ fun Context.colorSecondStrAndBindText(
         Spanned.SPAN_INCLUSIVE_EXCLUSIVE
     )
     tv.text = builder
+}
+
+fun Context.isSystemPackage( packageName: String): Boolean {
+    try {
+        val packageInfo = packageManager.getPackageInfo(packageName, 0)
+        return packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+    } catch (e: PackageManager.NameNotFoundException) {
+        Log.e("isSystemPackage", e.toString())
+    }
+    return false
 }

@@ -4,6 +4,7 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.PowerManager
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -67,7 +68,6 @@ fun AppCompatActivity.hasOverlayPermission(): Boolean {
 }
 
 fun AppCompatActivity.checkAllPermissionIsGranted(classCanonicalName: String) {
-    // TODO Permission Activity
     when {
         !checkAccessibilityServiceEnabled(classCanonicalName) -> {
             requestAccessibilitySettings()
@@ -85,5 +85,20 @@ fun AppCompatActivity.checkAllPermissionIsGranted(classCanonicalName: String) {
 
 fun AppCompatActivity.allPermissionIsGranted(classCanonicalName: String): Boolean {
     return checkAccessibilityServiceEnabled(classCanonicalName) && hasUsageStatsPermission() && hasOverlayPermission()
+}
+
+fun AppCompatActivity.isBatteryOptimizationEnabled(): Boolean {
+    val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+    val packageName = packageName
+    return !powerManager.isIgnoringBatteryOptimizations(packageName)
+}
+
+fun AppCompatActivity.requestDisableBatteryOptimization() {
+    if (isBatteryOptimizationEnabled()) {
+        val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+            data = Uri.parse("package:$packageName")
+        }
+        startActivity(intent)
+    }
 }
 

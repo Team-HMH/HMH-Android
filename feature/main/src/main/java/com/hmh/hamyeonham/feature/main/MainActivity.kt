@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.hmh.hamyeonham.common.activity.checkAllPermissionIsGranted
+import com.hmh.hamyeonham.common.activity.isBatteryOptimizationEnabled
+import com.hmh.hamyeonham.common.activity.requestDisableBatteryOptimization
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
@@ -24,6 +26,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initNavHostFragment()
+        checkPowerManagerPermission()
+    }
+
+    private fun checkPowerManagerPermission() {
+        if (isBatteryOptimizationEnabled()) {
+            requestDisableBatteryOptimization()
+        }
     }
 
     override fun onResume() {
