@@ -82,13 +82,13 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
     }
 
     private fun setRecyclerViewWithFilter(filter: String) {
-        val appSelectionAdapter = binding.rvAppSelection.adapter as? OnBoardingAppSelectionAdapter
+        val onboardingAppSelectionAdapter =
+            binding.rvAppSelection.adapter as? OnBoardingAppSelectionAdapter
         val newAppList =
             viewModel.getInstalledApps().filter {
                 (context?.getAppNameFromPackageName(it) ?: "").contains(filter)
             }
-        for (i in newAppList)
-            appSelectionAdapter?.submitList(newAppList)
+        onboardingAppSelectionAdapter?.submitList(newAppList)
     }
 
     override fun onResume() {
