@@ -189,8 +189,8 @@ class ChallengeFragment : Fragment() {
     private fun RecyclerView.setDeleteAppDialog(it: UsageGoal) {
         val clickedAppNameToDialog = context.getAppNameFromPackageName(it.packageName)
         TwoButtonCommonDialog.newInstance(
-            title = "정말 $clickedAppNameToDialog 을(를) 삭제하시겠어요?",
-            description = "집계되고 있던 앱의 사용 시간은 총 사용 시간에서도 차감돼요",
+            title = getString(R.string.delete_app_dialog_title, clickedAppNameToDialog),
+            description = getString(R.string.delete_app_dialog_description),
             confirmButtonText = getString(R.string.all_okay),
             dismissButtonText = getString(R.string.all_cancel),
         ).apply {
