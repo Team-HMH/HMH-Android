@@ -20,9 +20,9 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.core.viewmodel.main)
     implementation(projects.core.service)
+    implementation(projects.core.network)
 
     // domain
     implementation(projects.domain.usagestats)
     implementation(projects.domain.userinfo)
-    implementation(project(":core:network"))
 }
