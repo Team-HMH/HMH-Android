@@ -1,15 +1,16 @@
 package com.hmh.hamyeonham.feature.onboarding.fragment
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.R
 import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingAppSelectionAdapter
@@ -18,8 +19,6 @@ import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingAppSelectionVie
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class OnBoardingAppAddSelectionFragment : Fragment() {
@@ -38,11 +37,11 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
+        initSearchBar()
     }
 
     private fun initViews() {
         initAppSelectionRecyclerAdapter()
-        collectState()
     }
 
     private fun initAppSelectionRecyclerAdapter() {
@@ -53,37 +52,43 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
             )
             layoutManager = LinearLayoutManager(requireContext())
         }
+        setViewPager()
     }
 
-    private fun collectState() {
-        viewModel.state.flowWithLifecycle(lifecycle).onEach { state ->
-            val appSelectionAdapter =
-                binding.rvAppSelection.adapter as? OnBoardingAppSelectionAdapter
-            appSelectionAdapter?.submitList(
-                viewModel.getInstalledApps().map {
-                    Pair(
-                        it,
-                        checkIfAppIsSelected(it),
-                    )
-                },
-            )
-        }.launchIn(lifecycleScope)
-    }
-
-    private fun checkIfAppIsSelected(app: String): Boolean {
-        val selcetedApps = viewModel.state.value.selectedApp
-        return selcetedApps.find { it == app } != null
+    private fun setViewPager() {
+        val onboardingAppSelectionAdapter =
+            binding.rvAppSelection.adapter as? OnBoardingAppSelectionAdapter
+        onboardingAppSelectionAdapter?.submitList(viewModel.getInstalledApps())
     }
 
     private fun onAppCheckboxClicked(packageName: String) {
         activityViewModel.sendEvent(OnboardEvent.AddApps(packageName))
-        viewModel.updateState {
-            copy(selectedApp = selectedApp + packageName)
-        }
     }
 
     private fun onAppCheckboxUnClicked(packageName: String) {
         activityViewModel.sendEvent(OnboardEvent.DeleteApp(packageName))
+    }
+
+    private fun initSearchBar() {
+        binding.etSearchbar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                setRecyclerViewWithFilter(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    private fun setRecyclerViewWithFilter(filter: String) {
+        val appSelectionAdapter = binding.rvAppSelection.adapter as? OnBoardingAppSelectionAdapter
+        val newAppList =
+            viewModel.getInstalledApps().filter {
+                (context?.getAppNameFromPackageName(it) ?: "").contains(filter)
+            }
+        for (i in newAppList)
+            appSelectionAdapter?.submitList(newAppList)
     }
 
     override fun onResume() {
