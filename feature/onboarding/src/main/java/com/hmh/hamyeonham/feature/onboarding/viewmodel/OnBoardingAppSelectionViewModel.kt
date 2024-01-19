@@ -9,7 +9,11 @@ import javax.inject.Inject
 class OnBoardingAppSelectionViewModel @Inject constructor(
     private val deviceRepository: DeviceRepository
 ) : ViewModel() {
+    private val excludedAppName = "com.hmh.hamyeonham"
+
     fun getInstalledApps(): List<String> {
-        return deviceRepository.getInstalledApps()
+        return deviceRepository.getInstalledApps().filter { packageName ->
+            packageName != excludedAppName
+        }
     }
 }

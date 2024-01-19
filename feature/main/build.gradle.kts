@@ -19,6 +19,7 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.designsystem)
     implementation(projects.core.viewmodel.main)
+    implementation(projects.core.service)
 
     // domain
     implementation(projects.domain.usagestats)

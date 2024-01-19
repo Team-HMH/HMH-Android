@@ -125,6 +125,8 @@ class ChallengeFragment : Fragment() {
                 if (it.usageGoals.isNotEmpty()) {
                     challengeGoalsAdapter?.submitList(activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())
                 }
+                val totalHour = it.goalTimeInHour.toString()
+                binding.tvTotalGoalTimeValue.text = getString(R.string.all_format_hour, totalHour)
             }
             initTotalGoalTime(it.goalTimeInHour)
         }.launchIn(viewLifeCycleScope)

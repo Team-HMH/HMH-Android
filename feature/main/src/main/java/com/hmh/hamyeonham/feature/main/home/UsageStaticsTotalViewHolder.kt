@@ -10,7 +10,7 @@ import com.hmh.hamyeonham.common.time.convertTimeToString
 import com.hmh.hamyeonham.common.view.initAndStartProgressBarAnimation
 import com.hmh.hamyeonham.feature.main.R
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticTotalBinding
-import com.hmh.hamyeonham.usagestats.model.Blackhole
+import com.hmh.hamyeonham.usagestats.model.BlackHole
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 
 class UsageStaticsTotalViewHolder(
@@ -76,10 +76,10 @@ class UsageStaticsTotalViewHolder(
         userStatusAndGoal: UsageStatusAndGoal,
         userName: String,
     ) {
-        binding.tvBlackholeDescription.text = when (userStatusAndGoal.blackhole) {
-            Blackhole.FIRST -> userName
+        binding.tvBlackholeDescription.text = when (userStatusAndGoal.blackHole) {
+            BlackHole.FIRST -> userName
             else -> ""
-        } + userStatusAndGoal.getBlackholeDescription()
+        } + userStatusAndGoal.getBlackHoleDescription()
     }
 
     private fun bindBlackholeDescriptionWithString(

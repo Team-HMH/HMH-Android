@@ -18,13 +18,13 @@ data class UsageStatusAndGoal(
     }
 
     private val level = usedPercentage / 25 + 1
-    val blackhole: Blackhole? = Blackhole.createByLevel(level)
+    val blackHole: BlackHole? = BlackHole.createByLevel(level)
 
-    fun getBlackholeUri(): String = blackhole?.getVideoUri() ?: "no blackhole exist"
-    fun getBlackholeDescription(): String = blackhole?.description ?: "no blackhole exist"
+    fun getBlackHoleUri(): String = blackHole?.getVideoUri() ?: "no blackhole exist"
+    fun getBlackHoleDescription(): String = blackHole?.description ?: "no blackhole exist"
 }
 
-enum class Blackhole(val level: Int, val description: String, val fileName: String) {
+enum class BlackHole(val level: Int, val description: String, val fileName: String) {
     FIRST(1, "님을 위한\n우주가 생성되었어요", "vd_blackhole1"),
     SECOND(2, "블랙홀이 다가와요\n도파민의 유혹을 이겨내요", "vd_blackhole2"),
     THIRD(3, "블랙홀이 가까워졌어요\n스마트폰을 멀리해볼까요?", "vd_blackhole3"),
@@ -39,7 +39,7 @@ enum class Blackhole(val level: Int, val description: String, val fileName: Stri
     companion object {
         val baseVideoUri = "android.resource://com.hmh.hamyeonham/raw/"
 
-        fun createByLevel(level: Int): Blackhole? {
+        fun createByLevel(level: Int): BlackHole? {
             return entries.find { it.level == level }
         }
     }

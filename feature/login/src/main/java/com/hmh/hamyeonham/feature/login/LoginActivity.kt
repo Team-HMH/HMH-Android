@@ -69,16 +69,16 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun moveToOnBoardingActivity(accessToken: String? = null) {
+        if (accessToken == null) {
+            toast(getString(R.string.empty_token_retry_login))
+        }
+
         val intent = navigationProvider.toOnBoarding()
         accessToken?.let {
             intent.putExtra(OnBoardingActivity.EXTRA_ACCESS_TOKEN, it)
         }
         startActivity(intent)
         finish()
-
-        if (accessToken != null) {
-            toast(getString(R.string.empty_token_retry_login))
-        }
     }
 
     private fun moveToMainActivity() {

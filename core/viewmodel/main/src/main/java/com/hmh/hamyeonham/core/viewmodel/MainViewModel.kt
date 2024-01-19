@@ -46,8 +46,32 @@ class MainViewModel @Inject constructor(
             updateGoals()
             getChallengeStatus()
             getUserInfo()
+            getUsageGoalAndStatList()
         }
-        getUsageGoalAndStatList()
+    }
+
+    fun reloadUsageStatsList() {
+        viewModelScope.launch {
+            getStatsList()
+        }
+    }
+
+    fun updateState(transform: suspend MainState.() -> MainState) {
+        viewModelScope.launch {
+            val currentState = mainState.value
+            val newState = currentState.transform()
+            _mainState.value = newState
+        }
+    }
+
+    fun updateDailyChallengeFailed() {
+        viewModelScope.launch {
+            challengeRepository.updateDailyChallengeFailed().onSuccess {
+                getChallengeStatus()
+            }.onFailure {
+                Log.e("updateDailyChallengeFailed error", it.toString())
+            }
+        }
     }
 
     private suspend fun updateGoals() {
@@ -112,14 +136,6 @@ class MainViewModel @Inject constructor(
                 name = userInfo.name,
                 point = userInfo.point,
             )
-        }
-    }
-
-    fun updateState(transform: suspend MainState.() -> MainState) {
-        viewModelScope.launch {
-            val currentState = mainState.value
-            val newState = currentState.transform()
-            _mainState.value = newState
         }
     }
 

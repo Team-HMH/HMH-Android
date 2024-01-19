@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,18 +32,42 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
+import com.hmh.hamyeonham.common.context.toast
+import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.feature.lock.ui.theme.Blackground
 import com.hmh.hamyeonham.feature.lock.ui.theme.HMHAndroidTheme
 import com.hmh.hamyeonham.feature.lock.ui.theme.HmhTypography
 import com.hmh.hamyeonham.feature.lock.ui.theme.WhiteText
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class LockActivity : ComponentActivity() {
+    @Inject
+    lateinit var navigationProvider: NavigationProvider
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val packageName = intent.getStringExtra(PACKAGE_NAME).orEmpty()
         setContent {
             HMHAndroidTheme {
-                LockScreen(packageName)
+                LockScreen(
+                    packageName = packageName,
+                    onClickClose = {
+                        killAppByPackageName(
+                            context = this,
+                            packageName = packageName
+                        )
+                        finish()
+                    },
+                    onClickUnLock = {
+                        navigationProvider.toMain().apply {
+                            putExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME, packageName)
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        }.let(::startActivity)
+                        finish()
+                    }
+                )
             }
         }
     }
@@ -62,7 +87,11 @@ class LockActivity : ComponentActivity() {
 
 
 @Composable
-fun LockScreen(packageName: String) {
+fun LockScreen(
+    packageName: String,
+    onClickClose: () -> Unit = {},
+    onClickUnLock: () -> Unit = {},
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -71,7 +100,6 @@ fun LockScreen(packageName: String) {
         val context = LocalContext.current
         val appName = context.getAppNameFromPackageName(packageName)
         val appIcon = context.packageManager.getApplicationIcon(packageName)
-
 
         Column(
             modifier = Modifier
@@ -115,21 +143,20 @@ fun LockScreen(packageName: String) {
             Button(
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3D17D3)),
                 onClick = {
-                    killAppByPackageName(
-                        context = context,
-                        packageName = packageName
-                    )
+                    onClickClose()
                 },
             ) {
                 Text(
                     text = stringResource(R.string.close),
-                    modifier = Modifier.padding(horizontal = 70.dp, vertical = 10.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 70.dp, vertical = 10.dp),
                     style = HmhTypography.titleMedium
                 )
             }
             Spacer(modifier = Modifier.height(14.dp))
             Text(
-                stringResource(R.string.do_unlock),
+                modifier = Modifier.clickable(onClick = onClickUnLock),
+                text = stringResource(R.string.do_unlock),
                 style = HmhTypography.titleSmall,
                 color = WhiteText
             )
@@ -139,10 +166,12 @@ fun LockScreen(packageName: String) {
 }
 
 fun killAppByPackageName(context: Context, packageName: String) {
+    Log.d("LockActivity", "killAppByPackageName: $packageName")
     val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as? ActivityManager
     try {
         activityManager?.killBackgroundProcesses(packageName)
     } catch (e: Exception) {
+        context.toast(context.getString(R.string.app_kill_fail))
         Log.e("LockActivity", "killAppByPackageName error : $e")
     }
 }

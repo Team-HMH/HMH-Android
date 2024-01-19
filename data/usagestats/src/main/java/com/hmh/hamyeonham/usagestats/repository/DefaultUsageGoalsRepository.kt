@@ -20,7 +20,7 @@ class DefaultUsageGoalsRepository @Inject constructor(
 
     override suspend fun updateUsageGoal() {
         usageGoalsRemoteDataSource.getUsageGoals().onSuccess { usageGoals ->
-            val totalTime = usageGoals[0].goalTime
+            val totalTime = usageGoals.firstOrNull()?.goalTime ?: 0
             usageGoalsDao.insertUsageGoalList(usageGoals.toUsageGoalEntityList())
             usageTotalGoalDao.insertUsageTotalGoal(UsageTotalGoalEntity(goalTime = totalTime))
         }
