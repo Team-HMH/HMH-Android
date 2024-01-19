@@ -1,6 +1,11 @@
-# 하면함 Android 
-![logo_black](https://github.com/Team-HMH/HMH-Android/assets/84266681/b3a9ba62-63c8-466b-9672-7da4ea3efd75)
+<div align="center">
+  <p align="center">
+      <img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/8cb75ef2-678b-49ef-ad57-a09b9d30627c"/>
+  </p>
+  <br />
+</div>
 
+# 하면함 Android 
 ## 스마트폰 중독 탈출, 너도 하면함!
 <br/>
 <div align="center">
@@ -24,8 +29,6 @@
 
 <h2>Activity Graph</h2>
 
-![Alt](https://repobeats.axiom.co/api/embed/d2c401ae723c367a03ed9fb81ea6e6e7cfbee2ea.svg "Repobeats analytics image")
-
 ## Contributors ✨
 
 하면한다는 Android 개발자
@@ -33,12 +36,12 @@
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
-<table>
+<table align="center">
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/KwakEuiJin"><img src="https://avatars.githubusercontent.com/u/93872496?v=4?s=100" width="100px;" alt="Kwak EuiJin"/><br/><sub><b>KwakEuiJin</b></sub></a><br /><a href="https://github.com/Team-HMH/HMH-Android/commits?author=KwakEuiJin" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kangyuri1114"><img src="https://avatars.githubusercontent.com/u/83583757?v=4?s=100" width="100px;" alt="Kang Yuri"/><br/><sub><b>KangYuri</b></sub></a><br /><a href="https://github.com/Team-HMH/HMH-Android/commits?author=kangyuri1114" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jihyun0v0"><img src="https://avatars.githubusercontent.com/u/84266681?v=4?s=100" width="100px;" alt="Kyoung JiHyun"/><br /><sub><b>JiHyun Kyoung</b></sub></a><br/><a href="https://github.com/Team-HMH/HMH-Android/commits?author=jihyun0v0" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/KwakEuiJin"><img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/887eb00f-69de-4618-9a1c-07b2e1665da4" width="200px;" alt="Kwak EuiJin"/><br/><sub><b>KwakEuiJin</b></sub></a><br /><a href="https://github.com/Team-HMH/HMH-Android/commits?author=KwakEuiJin" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kangyuri1114"><img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/f1d5e563-74c8-4f16-a105-96a639a20f52" width="200px;" alt="Kang Yuri"/><br/><sub><b>KangYuri</b></sub></a><br /><a href="https://github.com/Team-HMH/HMH-Android/assets/84266681/eead72e1-a883-4ed0-a282-12deea8e3782" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jihyun0v0"><img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/3c1e14bd-be7e-435c-9af1-315a73aab13f" width="200px;" alt="Kyoung JiHyun"/><br /><sub><b>JiHyun Kyoung</b></sub></a><br/><a href="https://github.com/Team-HMH/HMH-Android/commits?author=jihyun0v0" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
