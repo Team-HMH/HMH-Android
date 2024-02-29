@@ -10,9 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".LoginActivity"
-
-        >
+        tools:context=".LoginActivity">
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_login"
