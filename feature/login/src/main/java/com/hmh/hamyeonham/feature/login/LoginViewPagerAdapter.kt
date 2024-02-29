@@ -29,11 +29,8 @@ class LoginViewPagerAdapter(private val imageList: List<Int>) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun onBindView(imageInfo: Int) {
-            binding.run {
-                ivLoginViewPagerItem.load(imageInfo) {
-                    placeholder(R.drawable.load_fail)
-                    error(R.drawable.load_fail)
-                }
+            binding.ivLoginViewPagerItem.load(imageInfo) {
+                placeholder(imageInfo)
             }
         }
     }

@@ -71,17 +71,15 @@ class LoginActivity : AppCompatActivity() {
         )
 
         loginViewPagerAdapter = LoginViewPagerAdapter(loginViewImageList)
-        binding.run {
-            vpLogin.adapter = loginViewPagerAdapter
-            indicatorLoginDots.attachTo(vpLogin)
-        }
-
+        binding.vpLogin.adapter = loginViewPagerAdapter
+        binding.indicatorLoginDots.attachTo(binding.vpLogin)
         startAutoScroll()
     }
 
     private fun startAutoScroll() {
         autoScrollHandler.postDelayed(autoScrollRunnable, AUTO_SCROLL_DELAY)
     }
+
     private fun stopAutoScroll() {
         autoScrollHandler.removeCallbacks(autoScrollRunnable)
     }
@@ -103,10 +101,12 @@ class LoginActivity : AppCompatActivity() {
         startActivity(navigationProvider.toMain())
         finish()
     }
+
     override fun onDestroy() {
         super.onDestroy()
         stopAutoScroll()
     }
+
     companion object {
         private const val AUTO_SCROLL_DELAY = 2000L
     }
