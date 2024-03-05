@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SetGoalTimeFragment : Fragment() {
     private val binding by viewBinding(FragmentSetGoalTimeBinding::bind)
-    private val activityViewModel by activityViewModels<AppAddViewModel>()
+    private val viewModel by activityViewModels<AppAddViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,14 +34,10 @@ class SetGoalTimeFragment : Fragment() {
 
     private fun setNumberPickerListener() {
         binding.npUseTimeGoalHour.setOnValueChangedListener { _, _, newTime ->
-            activityViewModel.updateState {
-                copy(goalHour = (newTime * 60 * 60 * 1000).toLong())
-            }
+            viewModel.setGoalHour((newTime * 60 * 60 * 1000).toLong())
         }
         binding.npUseTimeGoalMinute.setOnValueChangedListener { _, _, newTime ->
-            activityViewModel.updateState {
-                copy(goalMin = (newTime * 60 * 1000).toLong())
-            }
+            viewModel.setGoalMin((newTime * 60 * 1000).toLong())
         }
     }
 

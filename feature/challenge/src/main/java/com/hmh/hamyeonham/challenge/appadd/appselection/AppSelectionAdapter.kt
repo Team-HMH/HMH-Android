@@ -1,6 +1,5 @@
 package com.hmh.hamyeonham.challenge.appadd.appselection
 
-import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -13,15 +12,16 @@ import com.hmh.hamyeonham.feature.challenge.databinding.ItemAppBinding
 class AppSelectionAdapter(
     private val onAppCheckboxClicked: (String) -> Unit,
     private val onAppCheckboxUnClicked: (String) -> Unit,
-) :
-    ListAdapter<Pair<String, Boolean>, AppSelectionAdapter.AppSelectionViewHolder>(
-        ItemDiffCallback(onItemsTheSame = { oldItem, newItem ->
+) : ListAdapter<AppSelectionModel, AppSelectionAdapter.AppSelectionViewHolder>(
+    ItemDiffCallback(
+        onItemsTheSame = { oldItem, newItem ->
             oldItem == newItem
-        }, onContentsTheSame = { oldItem, newItem ->
-            oldItem == newItem
-        }),
-    ) {
-    private val checkBoxStatus = SparseBooleanArray()
+        },
+        onContentsTheSame = { oldItem, newItem ->
+            oldItem.packageName == newItem.packageName
+        }
+    ),
+) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppSelectionViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -33,42 +33,38 @@ class AppSelectionAdapter(
         )
     }
 
-    override fun onBindViewHolder(
-        holder: AppSelectionViewHolder,
-        position: Int,
-    ) {
+    override fun onBindViewHolder(holder: AppSelectionViewHolder, position: Int) {
         holder.onBind(currentList[position])
     }
 
-    inner class AppSelectionViewHolder(
+    class AppSelectionViewHolder(
         private val binding: ItemAppBinding,
         private val onAppCheckboxClicked: (String) -> Unit,
         private val onAppCheckboxUnClicked: (String) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun onBind(packagePair: Pair<String, Boolean>) {
-            val packageName = packagePair.first
-            val isChecked = packagePair.second
+        fun onBind(appSelectionModel: AppSelectionModel) {
+            val packageName = appSelectionModel.packageName
             binding.run {
-                val context = binding.root.context
+                val context = root.context
                 tvAppname.text = context.getAppNameFromPackageName(packageName)
                 ivAppicon.setImageDrawable(context.getAppIconFromPackageName(packageName))
-                cbApp.isChecked = isChecked || checkBoxStatus[adapterPosition]
-                cbApp.isClickable = false
             }
-            initAppSelectionListener(packageName)
+            setListeners(appSelectionModel)
         }
 
-        private fun initAppSelectionListener(packageName: String) {
-            binding.root.setOnClickListener {
-                if (adapterPosition != RecyclerView.NO_POSITION) {
-                    if (binding.cbApp.isChecked) {
-                        binding.cbApp.isChecked = false
-                        onAppCheckboxUnClicked(packageName)
-                        checkBoxStatus.put(adapterPosition, false)
+        private fun setListeners(appSelectionModel: AppSelectionModel) {
+            binding.run {
+                cbApp.setOnCheckedChangeListener(null)
+                cbApp.isChecked = appSelectionModel.isChecked
+                root.setOnClickListener {
+                    cbApp.isChecked = !cbApp.isChecked
+                }
+
+                cbApp.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) {
+                        onAppCheckboxClicked(appSelectionModel.packageName)
                     } else {
-                        binding.cbApp.isChecked = true
-                        onAppCheckboxClicked(packageName)
-                        checkBoxStatus.put(adapterPosition, true)
+                        onAppCheckboxUnClicked(appSelectionModel.packageName)
                     }
                 }
             }
