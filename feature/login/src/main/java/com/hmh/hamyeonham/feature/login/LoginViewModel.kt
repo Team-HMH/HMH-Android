@@ -40,6 +40,10 @@ class LoginViewModel @Inject constructor(
     val loginState = _loginState.asStateFlow()
 
     init {
+        updateLoginState()
+    }
+
+    private fun updateLoginState() {
         val currentState = loginState.value
         _loginState.value = currentState.copy(
             autoLogin = hmhNetworkPreference.autoLoginConfigured,
