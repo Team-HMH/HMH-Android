@@ -1,8 +1,6 @@
 package com.hmh.hamyeonham.challenge.appadd.appselection
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -79,8 +77,8 @@ class AppSelectionFragment : Fragment() {
     private fun initAppSelectionRecyclerAdapter() {
         binding.rvAppSelection.run {
             adapter = AppSelectionAdapter(
-                onAppCheckboxClicked = viewModel::checkApp,
-                onAppCheckboxUnClicked = viewModel::unCheckApp,
+                onAppChecked = viewModel::checkApp,
+                onAppUnChecked = viewModel::unCheckApp,
             )
             layoutManager = LinearLayoutManager(requireContext())
         }

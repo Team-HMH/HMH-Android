@@ -15,13 +15,13 @@ import javax.inject.Inject
 sealed interface AppAddEffect {}
 
 data class AppAddState(
-    val installApps: List<String> = emptyList(),
+    val installedApp: List<String> = emptyList(),
     val selectedApps: List<String> = emptyList(),
     val goalHour: Long = 0,
     val goalMin: Long = 0,
 ) {
     val goalTime = goalHour + goalMin
-    val appSelectionList = installApps.map { AppSelectionModel(it, selectedApps.contains(it)) }
+    val appSelectionList = installedApp.map { AppSelectionModel(it, selectedApps.contains(it)) }
 }
 
 @HiltViewModel
@@ -36,7 +36,7 @@ class AppAddViewModel @Inject constructor(
     private val _state = MutableStateFlow(AppAddState())
     val state = _state.asStateFlow()
 
-    private val _effect = MutableSharedFlow<AppAddEffect>()
+    private val _effect = MutableSharedFlow<AppAddEffect>(1)
     val effect = _effect.asSharedFlow()
 
     private fun updateState(transform: AppAddState.() -> AppAddState) {
@@ -74,7 +74,7 @@ class AppAddViewModel @Inject constructor(
         viewModelScope.launch {
             val installApps = getInstalledAppUseCase()
             updateState {
-                copy(installApps = installApps)
+                copy(installedApp = installApps)
             }
         }
     }
