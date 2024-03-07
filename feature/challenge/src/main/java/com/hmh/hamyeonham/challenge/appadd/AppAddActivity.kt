@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class AppAddActivity : AppCompatActivity() {
+
     companion object {
         const val SELECTED_APPS = "selected_apps"
         const val GOAL_TIME = "goal_time"
@@ -25,56 +26,43 @@ class AppAddActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        initViewPager()
-        initNextButton()
+        initViews()
         collectState()
-        setOnClickBackButton()
     }
 
-    private fun setOnClickBackButton() {
-        binding.ivBack.setOnClickListener {
-            finish()
+    private fun initViews() {
+        binding.run {
+            vpAppAdd.adapter = AppAddViewPagerAdapter(this@AppAddActivity)
+            vpAppAdd.isUserInputEnabled = false
+
+            btAppSelection.setOnClickListener { handleNextClicked() }
+            ivBack.setOnClickListener { finish() }
+
         }
+
     }
 
     private fun collectState() {
-        viewModel.state.flowWithLifecycle(lifecycle).onEach {
-            binding.btAppSelection.isEnabled = it.selectedApp.isNotEmpty()
-        }.launchIn(lifecycleScope)
+        viewModel.state.flowWithLifecycle(lifecycle)
+            .onEach { binding.btAppSelection.isEnabled = it.appSelectionList.isNotEmpty() }
+            .launchIn(lifecycleScope)
     }
 
-    private fun initNextButton() {
-        binding.run {
-            btAppSelection.setOnClickListener {
-                handleNextClicked()
-            }
-        }
-    }
-
-    private fun ActivityAppAddBinding.handleNextClicked() {
-        when (vpAppAdd.currentItem) {
-            0 -> {
-                vpAppAdd.currentItem = 1
-            }
-
-            1 -> {
-                val intent = Intent().apply {
-                    val selectedApps = viewModel.state.value.selectedApp
-                    putExtra(SELECTED_APPS, selectedApps.toTypedArray())
-                    putExtra(GOAL_TIME, viewModel.state.value.goalTime)
-                }
-                setResult(RESULT_OK, intent)
-                finish()
-            }
-
-            else -> Unit
-        }
-    }
-
-    private fun initViewPager() {
+    private fun handleNextClicked() {
         binding.vpAppAdd.run {
-            adapter = AppAddViewPagerAdapter(this@AppAddActivity)
-            isUserInputEnabled = false
+            when (currentItem) {
+                0 -> currentItem = 1
+                1 -> finishWithResults()
+            }
         }
+    }
+
+    private fun finishWithResults() {
+        val intent = Intent().apply {
+            putExtra(SELECTED_APPS, viewModel.state.value.selectedApps.toTypedArray())
+            putExtra(GOAL_TIME, viewModel.state.value.goalTime)
+        }
+        setResult(RESULT_OK, intent)
+        finish()
     }
 }
