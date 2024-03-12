@@ -11,11 +11,12 @@
     <string name="base_blackhole_uri">vd_blackhole</string>
     <string name="android_resource">android.resource://</string>
     <string name="raw">/raw/</string>
-    <string name="blackhole1">님을 위한\n 우주가 생성되었어요</string>
-    <string name="blackhole2">블랙홀이 다가와요\n도파민의 유혹을 이겨내요</string>
-    <string name="blackhole3">블랙홀이 가까워졌어요\n스마트폰을 멀리해볼까요?</string>
-    <string name="blackhole4">블랙홀에 빠질 수 있어요\n스마트폰을 내려놓아요</string>
-    <string name="blackhole5">지금부터 앱을 사용하면\n챌린지를 실패해요</string>
+    <string name="blackhole0">별조각을 잘 따라가고 있어요\n오늘도 화이팅!</string>
+    <string name="blackhole1">별조각이 살짝 멀어졌어요\n조금 더 힘을 내요!</string>
+    <string name="blackhole2">이런, 별조각이 희미해요\n방향을 잃지 않게 조심하세요</string>
+    <string name="blackhole3">블랙홀이 더 가까워졌어요.\n유혹을 이겨내세요!</string>
+    <string name="blackhole4">블랙홀이 눈앞에 있어요!\n지금 더 사용하면 실패해요.</string>
+    <string name="blackhole5">헉! 블랙홀에 빠져\n별조각을 획득하지 못했어요.</string>
 
     <string name="dialog_title_unlock_package">%s을(를)\n계속 사용하시겠어요?</string>
     <string name="dialog_description_unlock_package">사용 시간을 연장하면\n챌린지를 실패해요</string>
