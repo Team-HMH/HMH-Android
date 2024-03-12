@@ -25,4 +25,7 @@ dependencies {
     // domain
     implementation(projects.domain.usagestats)
     implementation(projects.domain.userinfo)
+
+    // lottie
+    implementation(libs.lottie)
 }
