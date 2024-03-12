@@ -21,7 +21,7 @@
         android:textColor="?white_text"
         android:textSize="21sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/tv_total_goal_title"
+        app:layout_constraintStart_toStartOf="@id/tv_total_goal"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -37,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@id/lav_blackhole" />
 
     <TextView
-        android:id="@+id/tv_total_goal"
+        android:id="@+id/tv_total_usage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
@@ -47,13 +47,13 @@
         app:layout_constraintStart_toStartOf="@id/pb_total_usage" />
 
     <TextView
-        android:id="@+id/tv_total_goal_title"
+        android:id="@+id/tv_total_goal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/all_goal_time"
+        android:text="@string/total_goal_time"
         android:textAppearance="?textAppearanceLabelMedium"
         android:textColor="?gray1"
-        app:layout_constraintBottom_toTopOf="@id/tv_total_goal"
+        app:layout_constraintBottom_toTopOf="@id/tv_total_usage"
         app:layout_constraintStart_toStartOf="@id/pb_total_usage" />
 
     <TextView

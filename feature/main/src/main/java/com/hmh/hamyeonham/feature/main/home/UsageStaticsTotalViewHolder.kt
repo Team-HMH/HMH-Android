@@ -19,8 +19,19 @@ class UsageStaticsTotalViewHolder(
             tvTotalGoal.text = convertTimeToString(usageStatusAndGoal.goalTimeInMin)
             pbTotalUsage.progress = usageStatusAndGoal.usedPercentage
         }
+        bindText(usageStaticsModel)
+
+
+        initAndStartProgressBarAnimation(
+            binding.pbTotalUsage,
+            usageStatusAndGoal.usedPercentage,
+        )
+        bindBlackhole(usageStaticsModel)
+    }
+
+    private fun bindText(usageStaticsModel: UsageStaticsModel) {
         context.colorSecondStrAndBindText(
-            convertTimeToString(usageStatusAndGoal.timeLeftInMin),
+            convertTimeToString(usageStaticsModel.usageStatusAndGoal.timeLeftInMin),
             getString(
                 context,
                 R.string.all_left,
@@ -28,11 +39,14 @@ class UsageStaticsTotalViewHolder(
             binding.tvTotalTimeLeft,
             com.hmh.hamyeonham.core.designsystem.R.color.gray1,
         )
-        initAndStartProgressBarAnimation(
-            binding.pbTotalUsage,
-            usageStatusAndGoal.usedPercentage,
+        binding.tvTotalGoal.text = context.getString(
+            R.string.total_goal_time,
+            convertTimeToString(usageStaticsModel.usageStatusAndGoal.goalTimeInMin)
         )
-        bindBlackhole(usageStaticsModel)
+        binding.tvTotalUsage.text = context.getString(
+            R.string.total_used,
+            convertTimeToString(usageStaticsModel.usageStatusAndGoal.totalTimeInForegroundInMin)
+        )
     }
 
     fun bindBlackhole(usageStaticsModel: UsageStaticsModel) {
