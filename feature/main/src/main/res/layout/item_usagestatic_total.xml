@@ -17,7 +17,7 @@
         android:id="@+id/tv_blackhole_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="8dp"
         android:textColor="?white_text"
         android:textSize="21sp"
         android:textStyle="bold"
