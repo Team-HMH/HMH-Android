@@ -86,10 +86,6 @@
         <item name="backgroundTint">@color/blue_purple_button</item>
     </style>
 
-    <style name="Widget.Hmh.ProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
-        <item name="trackThickness">71dp</item>
-    </style>
-
     <style name="Widget.Hmh.TotalProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
         <item name="trackColor">?gray3</item>
         <item name="indicatorColor">?white_btn</item>
