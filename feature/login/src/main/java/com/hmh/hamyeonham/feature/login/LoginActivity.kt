@@ -65,9 +65,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setLoginViewPager() {
         val loginViewImageList = listOf(
-            R.drawable.onboarding_viewpager1,
-            R.drawable.onboarding_viewpager2,
-            R.drawable.onboarding_viewpager3,
+            R.drawable.login_viewpager1,
+            R.drawable.login_viewpager2,
+            R.drawable.login_viewpager3,
         )
 
         loginViewPagerAdapter = LoginViewPagerAdapter(loginViewImageList)
