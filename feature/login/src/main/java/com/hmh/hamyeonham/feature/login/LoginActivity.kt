@@ -48,7 +48,7 @@ class LoginActivity : AppCompatActivity() {
     private fun handleAutoLoginSuccess() {
         viewModel.loginState.flowWithLifecycle(lifecycle).onEach { state ->
             if (state.autoLogin) {
-                moveToMainActivity()
+                navigateToMainActivity()
             }
         }.launchIn(lifecycleScope)
     }
@@ -56,9 +56,9 @@ class LoginActivity : AppCompatActivity() {
     private fun handleKakaoLoginSuccess() {
         viewModel.kakaoLoginEvent.flowWithLifecycle(lifecycle).onEach { state ->
             when (state) {
-                is LoginEffect.LoginSuccess -> moveToMainActivity()
+                is LoginEffect.LoginSuccess -> navigateToMainActivity()
                 is LoginEffect.LoginFail -> toast(getString(R.string.fail_kakao_login))
-                is LoginEffect.RequireSignUp -> moveToOnBoardingActivity(state.token)
+                is LoginEffect.RequireSignUp -> navigateToOnBoardingActivity(state.token)
             }
         }.launchIn(lifecycleScope)
     }
@@ -84,7 +84,7 @@ class LoginActivity : AppCompatActivity() {
         autoScrollHandler.removeCallbacks(autoScrollRunnable)
     }
 
-    private fun moveToOnBoardingActivity(accessToken: String? = null) {
+    private fun navigateToOnBoardingActivity(accessToken: String? = null) {
         if (accessToken == null) {
             toast(getString(R.string.empty_token_retry_login))
         }
@@ -97,7 +97,7 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun moveToMainActivity() {
+    private fun navigateToMainActivity() {
         startActivity(navigationProvider.toMain())
         finish()
     }
