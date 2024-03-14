@@ -1,5 +1,6 @@
 package com.hmh.hamyeonham.feature.store
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.hmh.hamyeonham.common.view.viewBinding
@@ -11,5 +12,13 @@ class StoreActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        initStoreButton()
+    }
+
+    private fun initStoreButton() {
+        binding.tvStore.setOnClickListener {
+            setResult(RESULT_OK)
+            finish()
+        }
     }
 }
