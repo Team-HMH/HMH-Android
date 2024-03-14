@@ -1,65 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".OnBoardingDoneSingUpActivity">
+    android:layout_width="match_parent"
+    android:fillViewport="true">
 
-    <ImageView
-        android:id="@+id/iv_onboarding_done_sing_up_image"
-        android:layout_width="164dp"
-        android:layout_height="164dp"
-        android:src="@drawable/success_signup"
-        android:contentDescription="@string/onboarding_done_sing_up_image"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
 
-    <TextView
-        android:id="@+id/tv_onboarding_done_sing_up_title"
-        style="?textAppearanceDisplaySmall"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:text="@string/onboarding_done_sing_up_title"
-        android:textColor="?white_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_onboarding_done_sing_up_image" />
+        android:layout_height="match_parent"
+        tools:context=".OnBoardingDoneSingUpActivity">
+
+        <ImageView
+            android:id="@+id/iv_onboarding_done_sing_up_image"
+            android:layout_width="164dp"
+            android:layout_height="164dp"
+            android:contentDescription="@string/onboarding_done_sing_up_image"
+            android:src="@drawable/success_signup"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3" />
+
+        <TextView
+            android:id="@+id/tv_onboarding_done_sing_up_title"
+            style="?textAppearanceDisplaySmall"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_onboarding_done_sing_up_description"
+            android:gravity="center"
+            android:text="@string/onboarding_done_sing_up_title"
+            android:textColor="?white_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_onboarding_done_sing_up_image" />
 
 
-    <TextView
-        android:id="@+id/tv_onboarding_done_sing_up_description"
-        style="?textAppearanceBodyMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="@string/onboarding_done_sing_up_description"
-        android:textColor="?gray1"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_done_sing_up_title"
-        app:layout_constraintVertical_bias="0.0" />
+        <TextView
+            android:id="@+id/tv_onboarding_done_sing_up_description"
+            style="?textAppearanceBodyMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="@string/onboarding_done_sing_up_description"
+            android:textColor="?gray1"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_done_sing_up_title"
+            app:layout_constraintVertical_bias="0.0" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_onboarding_done_next"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginBottom="21dp"
-        android:background="@drawable/all_next_btn_able"
-        android:gravity="center"
-        android:text="@string/onboarding_navigate_story"
-        android:textAppearance="@style/TextAppearance.Hmh.TitleMedium"
-        android:textColor="?white_text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_onboarding_done_next"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="21dp"
+            android:background="@drawable/all_next_btn_able"
+            android:gravity="center"
+            android:text="@string/onboarding_navigate_story"
+            android:textAppearance="@style/TextAppearance.Hmh.TitleMedium"
+            android:textColor="?white_text"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
