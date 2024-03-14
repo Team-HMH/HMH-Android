@@ -128,22 +128,8 @@ class MyPageFragment : Fragment() {
     private fun bindMyPageWithUserInfo(name: String, point: Int) {
         binding.run {
             tvUserName.text = name
-            tvPoint.text = buildPointString(point)
+            tvPoint.text = getString(R.string.mypage_point, point)
         }
-    }
-
-    private fun buildPointString(point: Int): SpannableStringBuilder {
-        val builder =
-            SpannableStringBuilder(point.toString() + " " + getString(R.string.mypage_point_unit))
-        builder.setSpan(
-            ForegroundColorSpan(
-                getColor(requireContext(), com.hmh.hamyeonham.core.designsystem.R.color.gray2),
-            ),
-            builder.length - 1,
-            builder.length,
-            Spanned.SPAN_INCLUSIVE_EXCLUSIVE,
-        )
-        return builder
     }
 
     private fun initPrivacyButton() {
