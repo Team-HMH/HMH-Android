@@ -63,6 +63,7 @@ dependencies {
     implementation(projects.feature.mypage)
     implementation(projects.feature.challenge)
     implementation(projects.feature.lock)
+    implementation(projects.feature.store)
 
     // Domain
     implementation(projects.domain.usagestats)
