@@ -1,7 +1,5 @@
-@Suppress("DSL_SCOPE_VIOLATION")
-plugins {
+@Suppress("DSL_SCOPE_VIOLATION") plugins {
     hmh("feature")
-    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -10,22 +8,13 @@ android {
     defaultConfig {
         consumerProguardFiles("consumer-rules.pro")
     }
-    buildFeatures {
-        viewBinding = true
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
 }
 
 dependencies {
+    implementation(libs.fragment.ktx)
+    implementation(libs.retrofit)
+
     implementation(projects.core.common)
     implementation(projects.core.designsystem)
-    implementation(projects.core.viewmodel.main)
-    implementation(projects.core.service)
-    implementation(projects.core.network)
+
 }

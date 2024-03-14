@@ -1,15 +1,14 @@
 package com.hmh.hamyeonham.mypage
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.getColor
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -22,6 +21,7 @@ import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
+import com.hmh.hamyeonham.feature.store.StoreActivity
 import com.hmh.hamyeonham.feature.mypage.R
 import com.hmh.hamyeonham.feature.mypage.databinding.FragmentMyPageBinding
 import com.hmh.hamyeonham.mypage.viewmodel.MyPageViewModel
@@ -36,6 +36,7 @@ class MyPageFragment : Fragment() {
     private val binding by viewBinding(FragmentMyPageBinding::bind)
     private val activityViewModel by activityViewModels<MainViewModel>()
     private val viewModel by viewModels<MyPageViewModel>()
+    private lateinit var storeResultLauncher: ActivityResultLauncher<Intent>
 
     @Inject
     lateinit var navigationProvider: NavigationProvider
@@ -55,8 +56,30 @@ class MyPageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews()
         collectMainState()
+        initStoreButton()
         initPrivacyButton()
         initTermOfUseButton()
+    }
+
+    private fun initStoreButton() {
+        setStoreResultLauncher()
+        setStoreClickListener()
+    }
+
+    private fun setStoreClickListener() {
+        binding.vStore.setOnClickListener {
+            val intent = Intent(requireContext(), StoreActivity::class.java)
+            storeResultLauncher.launch(intent)
+        }
+    }
+
+    private fun setStoreResultLauncher() {
+        storeResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                when (result.resultCode) {
+                    Activity.RESULT_OK -> 0//
+                }
+            }
     }
 
     private fun initViews() {

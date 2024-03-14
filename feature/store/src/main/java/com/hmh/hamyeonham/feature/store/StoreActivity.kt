@@ -1,4 +1,4 @@
-package com.hmh.hamyeonham.feature.main
+package com.hmh.hamyeonham.feature.store
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
