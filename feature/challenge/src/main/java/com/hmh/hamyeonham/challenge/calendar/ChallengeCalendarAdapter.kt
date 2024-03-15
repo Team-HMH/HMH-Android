@@ -33,10 +33,11 @@ class ChallengeCalendarAdapter :
 
         private fun getDrawableResource(isSuccess: ChallengeStatus.Status?): Int {
             return when (isSuccess) {
-                ChallengeStatus.Status.UNEARNED -> R.drawable.ic_challenge_success_38
-                ChallengeStatus.Status.EARNED -> R.drawable.ic_challenge_success_38
-                ChallengeStatus.Status.FAILURE -> R.drawable.ic_challenge_fail_38
-                else -> R.drawable.ic_challenge_none_38
+                ChallengeStatus.Status.UNEARNED -> R.drawable.ic_challenge_success_42
+                ChallengeStatus.Status.EARNED -> R.drawable.ic_challenge_success_42
+                ChallengeStatus.Status.FAILURE -> R.drawable.ic_challenge_fail_42
+                ChallengeStatus.Status.TODAY -> R.drawable.ic_challenge_today_42
+                else -> R.drawable.ic_challenge_none_42
             }
         }
     }
