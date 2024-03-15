@@ -79,15 +79,15 @@ class ChallengeFragment : Fragment() {
 
     private fun getTextAndColorsOfModifierState(modifierState: ModifierState) =
         when (modifierState) {
-            ModifierState.CANCEL -> {
-                getString(R.string.all_cancel) to ContextCompat.getColor(
+            ModifierState.DONE -> {
+                getString(R.string.all_done) to ContextCompat.getColor(
                     requireContext(),
                     R.color.white_text,
                 )
             }
 
-            ModifierState.DELETE -> {
-                getString(R.string.all_delete) to ContextCompat.getColor(
+            ModifierState.EDIT -> {
+                getString(R.string.all_edit) to ContextCompat.getColor(
                     requireContext(),
                     R.color.blue_purple_text,
                 )
@@ -98,15 +98,15 @@ class ChallengeFragment : Fragment() {
     private fun initModifierButton() {
         binding.tvModifierButton.setOnClickListener {
             when (viewModel.challengeState.value.modifierState) {
-                ModifierState.CANCEL -> {
+                ModifierState.DONE -> {
                     viewModel.updateState {
-                        copy(modifierState = ModifierState.DELETE)
+                        copy(modifierState = ModifierState.EDIT)
                     }
                 }
 
-                ModifierState.DELETE -> {
+                ModifierState.EDIT -> {
                     viewModel.updateState {
-                        copy(modifierState = ModifierState.CANCEL)
+                        copy(modifierState = ModifierState.DONE)
                     }
                 }
             }
@@ -198,7 +198,7 @@ class ChallengeFragment : Fragment() {
                 },
                 onAppItemClicked = { usageGoal ->
                     when (viewModel.challengeState.value.modifierState) {
-                        ModifierState.CANCEL -> {
+                        ModifierState.DONE -> {
                             setDeleteAppDialog(usageGoal)
                         }
 
@@ -225,7 +225,7 @@ class ChallengeFragment : Fragment() {
             setDismissButtonClickListener {}
         }.showAllowingStateLoss(childFragmentManager)
         viewModel.updateState {
-            copy(modifierState = ModifierState.DELETE)
+            copy(modifierState = ModifierState.EDIT)
         }
     }
 }

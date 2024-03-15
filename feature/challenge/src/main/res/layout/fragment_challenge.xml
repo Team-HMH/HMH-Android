@@ -7,7 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/gray7">
+        android:background="?blackground">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_top_appbar"
@@ -24,6 +24,7 @@
                 android:layout_marginVertical="18dp"
                 android:text="@string/challenge"
                 android:textAppearance="?textAppearanceTitleLarge"
+                android:textColor="?gray1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:src="@drawable/ic_challenge_point_24"
+                android:src="@drawable/ic_chellenge_point_not_exist_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -138,9 +139,10 @@
             android:id="@+id/tv_modifier_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="26dp"
-            android:padding="17dp"
-            android:text="@string/delete"
+            android:layout_marginEnd="14dp"
+            android:paddingHorizontal="9dp"
+            android:paddingVertical="12dp"
+            android:text="@string/all_edit"
             android:textAppearance="@style/TextAppearance.Hmh.TitleMedium"
             android:textColor="@color/blue_purple_text"
             app:layout_constraintBottom_toBottomOf="@id/tv_app_lock"
@@ -151,11 +153,10 @@
             android:id="@+id/rv_app_usage_goals"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="14dp"
             app:layout_constraintBottom_toBottomOf="@id/v_bottom"
-            app:layout_constraintEnd_toEndOf="@id/v_bottom"
-            app:layout_constraintStart_toStartOf="@id/v_bottom"
+            app:layout_constraintEnd_toEndOf="@id/tv_modifier_button"
+            app:layout_constraintStart_toStartOf="@id/tv_app_lock"
             app:layout_constraintTop_toBottomOf="@id/tv_modifier_button" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

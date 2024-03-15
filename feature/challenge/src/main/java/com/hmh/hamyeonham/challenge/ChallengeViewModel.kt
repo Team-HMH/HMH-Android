@@ -12,12 +12,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ChallengeState(
-    val modifierState: ModifierState = ModifierState.DELETE,
+    val modifierState: ModifierState = ModifierState.EDIT,
 )
 
 enum class ModifierState {
-    DELETE,
-    CANCEL,
+    EDIT,
+    DONE,
 }
 
 @HiltViewModel
