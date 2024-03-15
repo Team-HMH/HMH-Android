@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -43,52 +42,79 @@
 
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="293dp"
-            android:background="@drawable/img_calendar_background"
-            app:layout_constraintBottom_toTopOf="@id/v_bottom"
+            android:layout_height="0dp"
+            android:background="@drawable/ic_calendar_background"
+            app:layout_constraintDimensionRatio="320:214"
             app:layout_constraintTop_toBottomOf="@id/cl_top_appbar" />
 
         <TextView
-            android:id="@+id/tv_total_goal_time"
+            android:id="@+id/tv_challenge_start_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="29dp"
-            android:layout_marginTop="17dp"
-            android:text="@string/total_goal_time"
-            android:textAppearance="?textAppearanceTitleSmall"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/challenge_start_date"
+            android:textAppearance="?textAppearanceDisplayMedium"
             android:textColor="@color/gray1"
-            app:layout_constraintBottom_toTopOf="@id/tv_total_goal_time_value"
+            app:layout_constraintBottom_toTopOf="@id/tv_challenge_day"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_top_appbar" />
 
 
         <TextView
-            android:id="@+id/tv_total_goal_time_value"
+            android:id="@+id/tv_challenge_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="3시간"
-            android:textAppearance="?textAppearanceDisplayLarge"
-            app:layout_constraintBottom_toTopOf="@id/rv_challenge_calendar"
-            app:layout_constraintStart_toStartOf="@id/tv_total_goal_time"
-            app:layout_constraintTop_toBottomOf="@id/tv_total_goal_time" />
+            android:layout_marginTop="3.5dp"
+            android:text="@string/challenge_day"
+            android:textColor="?white_text"
+            android:textSize="45sp"
+            app:layout_constraintStart_toStartOf="@id/tv_challenge_start_date"
+            app:layout_constraintTop_toBottomOf="@id/tv_challenge_start_date" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_challenge_calendar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="26dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="27dp"
             app:layout_constraintBottom_toTopOf="@id/v_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_total_goal_time_value" />
+            app:layout_constraintTop_toBottomOf="@id/tv_challenge_day" />
+
+        <TextView
+            android:id="@+id/tv_challenge_create_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/challenge_create_title"
+            android:textAppearance="?textAppearanceHeadlineLarge"
+            android:textColor="?white_text"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="@id/tv_challenge_start_date"
+            app:layout_constraintTop_toTopOf="@id/tv_challenge_start_date" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_challenge_create"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="54dp"
+            android:layout_marginBottom="21dp"
+            android:background="@drawable/all_btn_able"
+            android:gravity="center"
+            android:text="@string/challenge_create"
+            android:textColor="?white_text"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_challenge_create_title" />
+
 
         <View
             android:id="@+id/v_bottom"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="35dp"
             android:background="@color/blackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -131,7 +157,5 @@
             app:layout_constraintEnd_toEndOf="@id/v_bottom"
             app:layout_constraintStart_toStartOf="@id/v_bottom"
             app:layout_constraintTop_toBottomOf="@id/tv_modifier_button" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
