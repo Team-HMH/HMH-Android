@@ -168,7 +168,7 @@ class ChallengeFragment : Fragment() {
     private fun initChallengeCalendarRecyclerView() {
         binding.rvChallengeCalendar.run {
             layoutManager = GridLayoutManager(requireContext(), 7)
-            adapter = ChallengeCalendarAdapter()
+            adapter = ChallengeCalendarAdapter(context)
         }
     }
 

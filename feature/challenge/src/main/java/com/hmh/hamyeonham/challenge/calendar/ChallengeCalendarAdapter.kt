@@ -1,15 +1,18 @@
 package com.hmh.hamyeonham.challenge.calendar
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.common.view.ItemDiffCallback
+import com.hmh.hamyeonham.common.view.mapBooleanToVisibility
 import com.hmh.hamyeonham.feature.challenge.R
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemChallengeStatusBinding
 
-class ChallengeCalendarAdapter :
+class ChallengeCalendarAdapter(private val context: Context) :
     ListAdapter<ChallengeStatus.Status, ChallengeCalendarAdapter.ChallengeStatusViewHolder>(
         ItemDiffCallback<ChallengeStatus.Status>(
             onItemsTheSame = { oldItem, newItem ->
@@ -21,18 +24,34 @@ class ChallengeCalendarAdapter :
         ),
     ) {
     class ChallengeStatusViewHolder(
-        private val binding: ItemChallengeStatusBinding,
+        private val binding: ItemChallengeStatusBinding, private val context: Context
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(isSuccess: ChallengeStatus.Status, position: Int) {
+        fun bind(challengeStatus: ChallengeStatus.Status, position: Int) {
             binding.apply {
                 val date = (position + 1).toString()
                 tvDate.text = date
-                ivChallengeStatus.setImageResource(getDrawableResource(isSuccess))
+                ivChallengeStatus.setImageResource(getDrawableResource(challengeStatus))
+                tvDate.setTextColor(getColor(challengeStatus))
+                ivTodayMark.visibility = getVisibility(challengeStatus)
             }
         }
 
-        private fun getDrawableResource(isSuccess: ChallengeStatus.Status?): Int {
-            return when (isSuccess) {
+        private fun getVisibility(challengeStatus: ChallengeStatus.Status) =
+            (challengeStatus == ChallengeStatus.Status.TODAY).mapBooleanToVisibility()
+
+        private fun getColor(challengeStatus: ChallengeStatus.Status?): Int {
+            val colorId = when (challengeStatus) {
+                ChallengeStatus.Status.UNEARNED -> com.hmh.hamyeonham.core.designsystem.R.color.gray2
+                ChallengeStatus.Status.EARNED -> com.hmh.hamyeonham.core.designsystem.R.color.gray2
+                ChallengeStatus.Status.FAILURE -> com.hmh.hamyeonham.core.designsystem.R.color.gray2
+                ChallengeStatus.Status.TODAY -> com.hmh.hamyeonham.core.designsystem.R.color.white_text
+                else -> com.hmh.hamyeonham.core.designsystem.R.color.gray3
+            }
+            return ContextCompat.getColor(context, colorId)
+        }
+
+        private fun getDrawableResource(challengeStatus: ChallengeStatus.Status?): Int {
+            return when (challengeStatus) {
                 ChallengeStatus.Status.UNEARNED -> R.drawable.ic_challenge_success_42
                 ChallengeStatus.Status.EARNED -> R.drawable.ic_challenge_success_42
                 ChallengeStatus.Status.FAILURE -> R.drawable.ic_challenge_fail_42
@@ -48,7 +67,7 @@ class ChallengeCalendarAdapter :
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
-            ),
+            ), context
         )
     }
 
