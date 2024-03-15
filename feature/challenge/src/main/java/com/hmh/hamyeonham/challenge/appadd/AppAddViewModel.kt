@@ -28,6 +28,14 @@ data class AppAddState(
 class AppAddViewModel @Inject constructor(
     private val getInstalledAppUseCase: GetInstalledAppUseCase
 ) : ViewModel() {
+    private fun getInstalledApps() {
+        viewModelScope.launch {
+            val installApps = getInstalledAppUseCase()
+            updateState {
+                copy(installedApp = installApps)
+            }
+        }
+    }
 
     init {
         getInstalledApps()
@@ -70,12 +78,5 @@ class AppAddViewModel @Inject constructor(
         }
     }
 
-    private fun getInstalledApps() {
-        viewModelScope.launch {
-            val installApps = getInstalledAppUseCase()
-            updateState {
-                copy(installedApp = installApps)
-            }
-        }
-    }
+
 }
