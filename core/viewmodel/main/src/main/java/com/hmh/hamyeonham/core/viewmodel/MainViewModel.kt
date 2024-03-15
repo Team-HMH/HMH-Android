@@ -5,7 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
+import com.hmh.hamyeonham.common.time.getCurrentDateOfDefaulTimeZone
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
+import com.hmh.hamyeonham.common.time.minusDaysFromDate
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
@@ -16,19 +18,24 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
 import javax.inject.Inject
 
 data class MainState(
     val appGoals: List<ChallengeStatus.AppGoal> = emptyList(),
-    val isSuccessList: List<ChallengeStatus.Status> = emptyList(),
+    val challengeStatusList: List<ChallengeStatus.Status> = emptyList(),
     val goalTimeInHour: Int = 0,
     val period: Int = 0,
+    val todayIndex: Int = 0,
     val usageGoals: List<UsageGoal> = emptyList(),
     val usageStatsList: List<UsageStatusAndGoal> = emptyList(),
     val name: String = "",
     val point: Int = 0,
     val challengeSuccess: Boolean = true,
-)
+) {
+    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaulTimeZone(), todayIndex - 1)
+    val isChallengeExist: Boolean = period != -1
+}
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -122,9 +129,10 @@ class MainViewModel @Inject constructor(
         updateState {
             copy(
                 appGoals = challengeStatus.appGoals,
-                isSuccessList = challengeStatus.isSuccessList,
+                challengeStatusList = challengeStatus.challengeStatusList,
                 goalTimeInHour = challengeStatus.goalTimeInHours,
                 period = challengeStatus.period,
+                todayIndex = challengeStatus.todayIndex,
                 challengeSuccess = challengeStatus.challengeSuccess,
             )
         }
