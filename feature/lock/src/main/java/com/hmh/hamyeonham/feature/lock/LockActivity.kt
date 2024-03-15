@@ -14,15 +14,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
@@ -100,14 +103,15 @@ fun LockScreen(
 
         Column(
             modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth(),
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .padding(top = 132.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             AsyncImage(
                 model = R.drawable.lock_on,
                 contentDescription = "LockScreen Icon",
-                modifier = Modifier.padding(bottom = 48.dp),
+                modifier = Modifier.padding(bottom = 48.dp).size(120.dp),
             )
             Text(
                 text = stringResource(R.string.target_usage_time_end),
@@ -117,7 +121,7 @@ fun LockScreen(
             Text(
                 stringResource(R.string.use_it_anymore, appName),
                 color = Gray2,
-                style = HmhTypography.bodyMedium,
+                style = TextStyle(textAlign = TextAlign.Center).merge(HmhTypography.bodyMedium),
                 modifier = Modifier.padding(vertical = 10.dp),
             )
         }
@@ -130,7 +134,7 @@ fun LockScreen(
         ) {
             Text(
                 stringResource(R.string.remind_alarm_permission),
-                style = HmhTypography.bodySmall,
+                style = TextStyle(textAlign = TextAlign.Center).merge(HmhTypography.bodySmall),
                 color = Gray3,
                 modifier = Modifier.padding(vertical = 21.dp).align(Alignment.CenterHorizontally),
             )
@@ -139,7 +143,7 @@ fun LockScreen(
                 onClick = {
                     onClickClose()
                 },
-                shape = Shapes().medium,
+                shape = RoundedCornerShape(4.dp),
                 modifier = Modifier.padding(vertical = 14.dp),
             ) {
                 Text(
@@ -151,7 +155,8 @@ fun LockScreen(
                 )
             }
             Text(
-                modifier = Modifier.clickable(onClick = onClickUnLock).padding(vertical = 38.dp),
+                modifier = Modifier.clickable(onClick = onClickUnLock)
+                    .padding(top = 22.dp, bottom = 58.dp),
                 text = stringResource(R.string.do_unlock),
                 style = HmhTypography.titleSmall,
                 color = Gray1,
