@@ -6,7 +6,8 @@
         <activity
             android:name=".LockActivity"
             android:exported="false"
-            android:theme="@style/Base.Theme.HMH" />
+            android:theme="@style/Base.Theme.HMH"
+            android:screenOrientation="portrait" />
 
         <service
             android:name="com.hmh.hamyeonham.core.service.LockAccessibilityService"
