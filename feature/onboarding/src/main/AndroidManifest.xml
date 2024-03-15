@@ -9,12 +9,15 @@
 
     <application>
         <activity
+            android:name=".OnBoardingStoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".OnBoardingDoneSingUpActivity"
             android:exported="false" />
         <activity
             android:name=".OnBoardingActivity"
             android:exported="false"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

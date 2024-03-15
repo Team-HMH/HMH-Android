@@ -1,31 +1,32 @@
 package com.hmh.hamyeonham.feature.onboarding
 
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.databinding.ActivityOnBoardingDoneSingUpBinding
+import com.hmh.hamyeonham.feature.onboarding.databinding.ActivityOnBoardingStoryBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class OnBoardingDoneSingUpActivity : AppCompatActivity() {
-    private val binding by viewBinding(ActivityOnBoardingDoneSingUpBinding::inflate)
+class OnBoardingStoryActivity : AppCompatActivity() {
+    private val binding by viewBinding(ActivityOnBoardingStoryBinding::inflate)
 
     @Inject
     lateinit var navigationProvider: NavigationProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_on_boarding_story)
 
-        binding.btnOnboardingDoneNext.setOnClickListener {
-            navigateToMainStory()
+        binding.root.setOnClickListener {
+            navigateToMainActivity()
         }
     }
 
-    private fun navigateToMainStory() {
-        startActivity(navigationProvider.toOnBoardingStory())
+    private fun navigateToMainActivity() {
+        startActivity(navigationProvider.toMain())
         finish()
     }
 }
