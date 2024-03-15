@@ -36,4 +36,5 @@
     <string name="all_select_done">선택 완료</string>
     <string name="all_select_app">앱 선택하기</string>
     <string name="onboarding_navigate_story">탈출 스토리 보기</string>
+    <string name="story_click_to_move_text">아무데나 눌러서 이동</string>
 </resources>

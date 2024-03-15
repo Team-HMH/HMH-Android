@@ -48,7 +48,6 @@
             android:gravity="center"
             android:text="@string/onboarding_done_sing_up_description"
             android:textColor="?gray1"
-            android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_done_sing_up_title"
