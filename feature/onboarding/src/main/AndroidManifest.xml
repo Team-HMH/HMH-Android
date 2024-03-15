@@ -10,10 +10,14 @@
     <application>
         <activity
             android:name=".OnBoardingStoryActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".OnBoardingDoneSingUpActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".OnBoardingActivity"
             android:exported="false"
