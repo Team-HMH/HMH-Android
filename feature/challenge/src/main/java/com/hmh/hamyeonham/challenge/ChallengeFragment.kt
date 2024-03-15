@@ -60,14 +60,22 @@ class ChallengeFragment : Fragment() {
         initViews()
         collectMainStateAndBindViews()
         collectChallengeStateAndBindModifierButton()
+//        collectUsageGoalsAndModifierStateAndBindView()
     }
 
 
     private fun collectChallengeStateAndBindModifierButton() {
         viewModel.challengeState.flowWithLifecycle(viewLifeCycle).onEach {
             handleModifierButtonState(it)
+            bindUsageGoals(it.usageGoalsAndModifierState)
         }.launchIn(viewLifeCycleScope)
     }
+
+//    private fun collectUsageGoalsAndModifierStateAndBindView() {
+//        viewModel.usageGoalsState.flowWithLifecycle(viewLifeCycle).onEach {
+//            bindUsageGoals(it.usageGoalAndModifierStateList)
+//        }.launchIn(viewLifeCycleScope)
+//    }
 
     private fun handleModifierButtonState(it: ChallengeState) {
         val (text, color) = getTextAndColorsOfModifierState(it.modifierState)
@@ -99,13 +107,13 @@ class ChallengeFragment : Fragment() {
         binding.tvModifierButton.setOnClickListener {
             when (viewModel.challengeState.value.modifierState) {
                 ModifierState.DONE -> {
-                    viewModel.updateState {
+                    viewModel.updateChallengeState {
                         copy(modifierState = ModifierState.EDIT)
                     }
                 }
 
                 ModifierState.EDIT -> {
-                    viewModel.updateState {
+                    viewModel.updateChallengeState {
                         copy(modifierState = ModifierState.DONE)
                     }
                 }
@@ -130,7 +138,7 @@ class ChallengeFragment : Fragment() {
             if (it.isChallengeExist) {
                 bindChallengeCalendar(it.challengeStatusList)
                 bindChallengeDate(it.todayIndex, it.startDate)
-                if (it.usageGoals.isNotEmpty()) bindUsageGoals(activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())
+                if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageGoals = (activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())) }
             }
         }.launchIn(viewLifeCycleScope)
     }
@@ -145,9 +153,9 @@ class ChallengeFragment : Fragment() {
 
     private fun collectMainState() = activityViewModel.mainState.flowWithLifecycle(viewLifeCycle)
 
-    private fun bindUsageGoals(usageGoalsList: List<UsageGoal>) {
+    private fun bindUsageGoals(usageGoalAndModifierStateList: List<UsageGoalAndModifierState>) {
         val challengeGoalsAdapter = binding.rvAppUsageGoals.adapter as? ChallengeUsageGoalsAdapter
-        challengeGoalsAdapter?.submitList(usageGoalsList)
+        challengeGoalsAdapter?.submitList(usageGoalAndModifierStateList)
     }
 
     private fun bindChallengeCalendar(challengeStatusList: List<ChallengeStatus.Status>) {
@@ -196,10 +204,10 @@ class ChallengeFragment : Fragment() {
                     val intent = Intent(requireContext(), AppAddActivity::class.java)
                     appSelectionResultLauncher.launch(intent)
                 },
-                onAppItemClicked = { usageGoal ->
+                onAppItemClicked = { usagUsageGoalAndModifierState ->
                     when (viewModel.challengeState.value.modifierState) {
                         ModifierState.DONE -> {
-                            setDeleteAppDialog(usageGoal)
+                            setDeleteAppDialog(usagUsageGoalAndModifierState.usageGoal)
                         }
 
                         else -> Unit
@@ -224,7 +232,7 @@ class ChallengeFragment : Fragment() {
             }
             setDismissButtonClickListener {}
         }.showAllowingStateLoss(childFragmentManager)
-        viewModel.updateState {
+        viewModel.updateChallengeState {
             copy(modifierState = ModifierState.EDIT)
         }
     }
