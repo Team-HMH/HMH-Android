@@ -2,12 +2,14 @@
 <resources>
     <string name="challenge">챌린지</string>
     <string name="total_goal_time">총 목표 이용 시간</string>
+    <string name="challenge_start_date">%d월 %d일 시작부터</string>
+    <string name="challenge_day">%d일차</string>
     <string name="app_lock">앱 잠금</string>
     <string name="delete">삭제</string>
     <string name="appselection_searchbar">잠금 추가할 앱을 검색해 주세요</string>
     <string name="app_selection_done">선택 완료</string>
 
-    <string name="challenge_create_title">새로운 여정을 위한\n챌린지를 생성해 주세요</string>
+    <string name="challenge_create_title">별을 향한 새로운\n챌린지를 생성해 주세요</string>
     <string name="challenge_create">챌린지 생성하기</string>
     <string name="all_time"> 시간</string>
 </resources>
