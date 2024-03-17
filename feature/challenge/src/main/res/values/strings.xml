@@ -10,4 +10,5 @@
     <string name="challenge_create_title">새로운 여정을 위한\n챌린지를 생성해 주세요</string>
     <string name="challenge_create">챌린지 생성하기</string>
     <string name="all_time"> 시간</string>
+    <string name="app_add_top_bar">앱 편집</string>
 </resources>
