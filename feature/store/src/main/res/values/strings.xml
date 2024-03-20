@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="service_title">서비스 준비 중이에요</string>
-    <string name="service_sub_title">더 나은 서비스가 될테니\n조금만 기다려 주세요 :)</string>
+    <string name="service_sub_title">더 나은 서비스가 될 테니\n조금만 기다려 주세요 :)</string>
     <string name="store">우주 상점</string>
 </resources>
