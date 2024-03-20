@@ -6,8 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.hmh.hamyeonham.feature.main.MainActivity">
 
-
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rv_statics"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/my_usage_statics"
+        android:textAppearance="?textAppearanceTitleLarge"
+        android:textColor="?gray1"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_statics"

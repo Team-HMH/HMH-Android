@@ -3,7 +3,7 @@
 }
 
 android {
-    namespace = "com.hmh.hamyeonham.feature.mypage"
+    namespace = "com.hmh.hamyeonham.feature.store"
 
     defaultConfig {
         consumerProguardFiles("consumer-rules.pro")
@@ -17,11 +17,4 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.designsystem)
 
-    implementation(projects.domain.userinfo)
-    implementation(projects.domain.login)
-
-    implementation(projects.core.viewmodel.main)
-    implementation(projects.core.network)
-
-    implementation(projects.feature.store)
 }
