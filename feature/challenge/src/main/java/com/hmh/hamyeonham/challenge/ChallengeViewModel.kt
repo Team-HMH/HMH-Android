@@ -23,12 +23,8 @@ data class ChallengeState(
 
 data class UsageGoalAndModifierState(
     val usageGoal: UsageGoal = UsageGoal(),
-    val modifierState: ModifierState = ModifierState.DONE,
+    val modifierState: ModifierState = ModifierState.EDIT,
 )
-//
-//data class UsageGoalsState(
-//    val usageGoalAndModifierStateList: List<UsageGoalAndModifierState> = emptyList()
-//)
 
 
 enum class ModifierState {
@@ -44,20 +40,11 @@ class ChallengeViewModel @Inject constructor(
     private val _challengeState = MutableStateFlow(ChallengeState())
     val challengeState = _challengeState.asStateFlow()
 
-//    private val _usageGoalsState = MutableStateFlow(UsageGoalsState())
-//    val usageGoalsState = _usageGoalsState.asStateFlow()
-
     fun updateChallengeState(transform: ChallengeState.() -> ChallengeState) {
         val currentState = challengeState.value
         val newState = currentState.transform()
         _challengeState.value = newState
     }
-
-//    fun updateUsageGoalsState(transform: UsageGoalsState.() -> UsageGoalsState) {
-//        val currentState = usageGoalsState.value
-//        val newState = currentState.transform()
-//        _usageGoalsState.value = newState
-//    }
 
     fun addApp(apps: Apps) {
         viewModelScope.launch {
@@ -70,23 +57,5 @@ class ChallengeViewModel @Inject constructor(
             deleteUsageGoalUseCase(packageName)
         }
     }
-
-//    fun setUsageGoalsState(usageGoals: List<UsageGoal>) {
-//        updateUsageGoalsState {
-//            copy(usageGoalAndModifierStateList = usageGoals.map {
-//                UsageGoalAndModifierState(usageGoal = it)
-//            })
-//        }
-//    }
-//
-//    fun updateUsageGoalsStateWithModifierState(newModifierState: ModifierState) {
-//        updateUsageGoalsState {
-//            val currentList = usageGoalAndModifierStateList.toMutableList()
-//            val newList = currentList.map {
-//                it.copy(modifierState = newModifierState)
-//            }
-//            copy(usageGoalAndModifierStateList = newList)
-//        }
-//    }
 
 }
