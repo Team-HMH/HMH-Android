@@ -39,7 +39,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initStaticsRecyclerView()
-        collectUsageStatsList()
+        initUsageStatsList()
     }
 
     override fun onResume() {
@@ -54,9 +54,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun collectUsageStatsList() {
+    private fun initUsageStatsList() {
         val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
-        activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach { mainState ->
+        collectMainState().onEach { mainState ->
             usageStaticsAdapter?.submitList(
                 mainState.usageStatsList.map {
                     UsageStaticsModel(mainState.name, mainState.challengeSuccess, it)
@@ -64,4 +64,6 @@ class HomeFragment : Fragment() {
             )
         }.launchIn(viewLifeCycleScope)
     }
+
+    private fun collectMainState() = activityViewModel.mainState.flowWithLifecycle(viewLifeCycle)
 }
