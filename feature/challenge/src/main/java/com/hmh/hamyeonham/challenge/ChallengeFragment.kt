@@ -58,24 +58,32 @@ class ChallengeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAppSelectionResultLauncher()
         initViews()
-        collectMainStateAndBindViews()
-        collectChallengeStateAndBindModifierButton()
-//        collectUsageGoalsAndModifierStateAndBindView()
+        initChallengeCalendar()
+        initUsageGoalList()
     }
 
+    private fun initChallengeCalendar() {
+        collectMainState().onEach {
+            setChallengeInfoVisibility(it.isChallengeExist)
+            if (it.isChallengeExist) {
+                bindChallengeCalendar(it.challengeStatusList)
+                bindChallengeDate(it.todayIndex, it.startDate)
+                if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageGoals = (activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())) }
+            }
+        }.launchIn(viewLifeCycleScope)
+    }
 
-    private fun collectChallengeStateAndBindModifierButton() {
-        viewModel.challengeState.flowWithLifecycle(viewLifeCycle).onEach {
+    private fun collectMainState() = activityViewModel.mainState.flowWithLifecycle(viewLifeCycle)
+
+    private fun initUsageGoalList() {
+        collectChallengeState().onEach {
             handleModifierButtonState(it)
             bindUsageGoals(it.usageGoalsAndModifierState)
         }.launchIn(viewLifeCycleScope)
     }
 
-//    private fun collectUsageGoalsAndModifierStateAndBindView() {
-//        viewModel.usageGoalsState.flowWithLifecycle(viewLifeCycle).onEach {
-//            bindUsageGoals(it.usageGoalAndModifierStateList)
-//        }.launchIn(viewLifeCycleScope)
-//    }
+    private fun collectChallengeState() = viewModel.challengeState.flowWithLifecycle(viewLifeCycle)
+
 
     private fun handleModifierButtonState(it: ChallengeState) {
         val (text, color) = getTextAndColorsOfModifierState(it.modifierState)
@@ -101,7 +109,6 @@ class ChallengeFragment : Fragment() {
                 )
             }
         }
-
 
     private fun initModifierButton() {
         binding.tvModifierButton.setOnClickListener {
@@ -132,17 +139,6 @@ class ChallengeFragment : Fragment() {
         initChallengeCalendarRecyclerView()
     }
 
-    private fun collectMainStateAndBindViews() {
-        collectMainState().onEach {
-            setChallengeInfoVisibility(it.isChallengeExist)
-            if (it.isChallengeExist) {
-                bindChallengeCalendar(it.challengeStatusList)
-                bindChallengeDate(it.todayIndex, it.startDate)
-                if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageGoals = (activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())) }
-            }
-        }.launchIn(viewLifeCycleScope)
-    }
-
     private fun setChallengeInfoVisibility(isChallengeExist: Boolean) {
         binding.btnChallengeCreate.visibility = (!isChallengeExist).mapBooleanToVisibility()
         binding.tvChallengeCreateTitle.visibility = (!isChallengeExist).mapBooleanToVisibility()
@@ -150,8 +146,6 @@ class ChallengeFragment : Fragment() {
         binding.tvChallengeStartDate.visibility = isChallengeExist.mapBooleanToVisibility()
         binding.rvChallengeCalendar.visibility = isChallengeExist.mapBooleanToVisibility()
     }
-
-    private fun collectMainState() = activityViewModel.mainState.flowWithLifecycle(viewLifeCycle)
 
     private fun bindUsageGoals(usageGoalAndModifierStateList: List<UsageGoalAndModifierState>) {
         val challengeGoalsAdapter = binding.rvAppUsageGoals.adapter as? ChallengeUsageGoalsAdapter
