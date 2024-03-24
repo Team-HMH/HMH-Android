@@ -58,3 +58,8 @@ class FragmentViewBindingDelegate<F : Fragment, T : ViewBinding>(
 
 fun <T : ViewBinding> Fragment.viewBinding(viewBinder: (View) -> T) =
     FragmentViewBindingDelegate(this, viewBinder)
+
+fun Boolean.mapBooleanToVisibility(): Int = when (this) {
+    true -> View.VISIBLE
+    false -> View.INVISIBLE
+}

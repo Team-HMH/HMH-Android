@@ -3,13 +3,16 @@ package com.hmh.hamyeonham.common.time
 import android.content.Context
 import android.text.format.DateUtils
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
+val defaultTimeZone: TimeZone = TimeZone.currentSystemDefault()
 fun Instant.Companion.systemNow(): Instant = Clock.System.now()
 
 fun Instant.toDefaultLocalDate(): LocalDate = toLocalDateTime(TimeZone.currentSystemDefault()).date
@@ -44,11 +47,18 @@ fun LocalDateTime.toEpochMilliseconds(timeZone: TimeZone): Long =
 
 // 현재 날짜의 시작 시간과 종료 시간을 Epoch 밀리초로 반환하는 함수
 fun getCurrentDayStartEndEpochMillis(): Pair<Long, Long> {
-    val timeZone = TimeZone.currentSystemDefault()
-    val currentDate = Clock.System.now().toLocalDateTime(timeZone).date
-    val startOfDay = currentDate.toStartOfDay().toEpochMilliseconds(timeZone)
-    val endOfDay = currentDate.toEndOfDay().toEpochMilliseconds(timeZone)
+    val currentDate = getCurrentDateOfDefaulTimeZone()
+    val startOfDay = currentDate.toStartOfDay().toEpochMilliseconds(defaultTimeZone)
+    val endOfDay = currentDate.toEndOfDay().toEpochMilliseconds(defaultTimeZone)
     return Pair(startOfDay, endOfDay)
+}
+
+fun getCurrentDateOfDefaulTimeZone(): LocalDate {
+    return Clock.System.now().toLocalDateTime(defaultTimeZone).date
+}
+
+fun minusDaysFromDate(date: LocalDate, daysToMinus: Int): LocalDate {
+    return date.minus(daysToMinus, DateTimeUnit.DAY)
 }
 
 fun convertTimeToString(time: Long): String {

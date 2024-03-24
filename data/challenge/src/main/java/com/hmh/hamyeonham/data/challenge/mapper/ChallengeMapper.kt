@@ -8,9 +8,12 @@ internal fun ChallengeResponse.toChallengeStatus(): ChallengeStatus {
         apps.map {
             ChallengeStatus.AppGoal(it.appCode, it.goalTime)
         },
-        statuses.toStatusList(),
+        statuses.toStatusList(todayIndex),
         goalTime,
         period,
-        statuses[todayIndex] != ChallengeStatus.Status.FAILURE.value
+        todayIndex,
+        if (todayIndex > -1) {
+            statuses[todayIndex] != ChallengeStatus.Status.FAILURE.value
+        } else false
     )
 }
