@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -63,26 +62,22 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun initChallengeCalendar() {
-        collectMainState().onEach {
+        activityViewModel.collectMainState(viewLifeCycle).onEach {
             setChallengeInfoVisibility(it.isChallengeExist)
+            if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageGoals = (activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())) }
             if (it.isChallengeExist) {
                 bindChallengeCalendar(it.challengeStatusList)
                 bindChallengeDate(it.todayIndex, it.startDate)
-                if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageGoals = (activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())) }
             }
         }.launchIn(viewLifeCycleScope)
     }
 
-    private fun collectMainState() = activityViewModel.mainState.flowWithLifecycle(viewLifeCycle)
-
     private fun initUsageGoalList() {
-        collectChallengeState().onEach {
+        viewModel.collectChallengeState(viewLifeCycle).onEach {
             handleModifierButtonState(it)
             bindUsageGoals(it.usageGoalsAndModifierState)
         }.launchIn(viewLifeCycleScope)
     }
-
-    private fun collectChallengeState() = viewModel.challengeState.flowWithLifecycle(viewLifeCycle)
 
 
     private fun handleModifierButtonState(it: ChallengeState) {
@@ -129,7 +124,9 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun initChallengeCreateButton() {
-        binding.btnChallengeCreate.setOnClickListener { }
+        binding.btnChallengeCreate.setOnClickListener {
+            //TODO 챌린지 생성 기능 추가하기
+        }
     }
 
     private fun initViews() {
