@@ -45,8 +45,9 @@ sealed class ChallengeViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder
         }
 
         fun setVisibility(modifierState: ModifierState) {
-            val editMode = if (modifierState == ModifierState.EDIT) View.INVISIBLE else View.VISIBLE
-            val doneMode = if (modifierState != ModifierState.EDIT) View.INVISIBLE else View.VISIBLE
+            val editMode = getVisibilityFromMode(modifierState, ModifierState.EDIT)
+            val doneMode = getVisibilityFromMode(modifierState, ModifierState.DONE)
+
             binding.tvAppName.visibility = doneMode
             binding.tvAppUsageGoal.visibility = doneMode
 
@@ -54,6 +55,8 @@ sealed class ChallengeViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder
             binding.tvAppUsageGoalDelete.visibility = editMode
             binding.ivTrash.visibility = editMode
         }
+
+        private fun getVisibilityFromMode(state: ModifierState, mode: ModifierState) : Int = if (state == mode) View.INVISIBLE else View.VISIBLE
     }
 
     class GoalAddViewHolder(
