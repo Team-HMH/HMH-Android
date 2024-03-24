@@ -12,6 +12,8 @@ internal fun ChallengeResponse.toChallengeStatus(): ChallengeStatus {
         goalTime,
         period,
         todayIndex,
-        statuses[todayIndex] != ChallengeStatus.Status.FAILURE.value
+        if (todayIndex > -1) {
+            statuses[todayIndex] != ChallengeStatus.Status.FAILURE.value
+        } else false
     )
 }

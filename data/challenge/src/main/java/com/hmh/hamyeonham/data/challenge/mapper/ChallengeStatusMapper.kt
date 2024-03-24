@@ -12,6 +12,7 @@ internal fun List<String>.toStatusList(todayIndex: Int): List<ChallengeStatus.St
             else -> ChallengeStatus.Status.NONE
         }
     }.toMutableList().also {
-        it[todayIndex-1] = ChallengeStatus.Status.TODAY
+        if (todayIndex > -1)
+            it[todayIndex - 1] = ChallengeStatus.Status.TODAY
     }
 }
