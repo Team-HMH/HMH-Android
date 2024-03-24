@@ -1,8 +1,6 @@
 package com.hmh.hamyeonham.feature.login
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
@@ -13,8 +11,12 @@ import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.login.databinding.ActivityLoginBinding
 import com.hmh.hamyeonham.feature.onboarding.OnBoardingActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -26,12 +28,7 @@ class LoginActivity : AppCompatActivity() {
     @Inject
     lateinit var navigationProvider: NavigationProvider
 
-    private val autoScrollHandler = Handler(Looper.getMainLooper())
-    private val autoScrollRunnable = Runnable {
-        val nextPage = (binding.vpLogin.currentItem + 1) % loginViewPagerAdapter.itemCount
-        binding.vpLogin.setCurrentItem(nextPage, true)
-        startAutoScroll()
-    }
+    private lateinit var autoScrollJob: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,11 +74,19 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun startAutoScroll() {
-        autoScrollHandler.postDelayed(autoScrollRunnable, AUTO_SCROLL_DELAY)
+        autoScrollJob = lifecycleScope.launch(Dispatchers.Main) {
+            while (true) {
+                delay(AUTO_SCROLL_DELAY)
+                binding.vpLogin.setCurrentItem(
+                    (binding.vpLogin.currentItem + 1) % loginViewPagerAdapter.itemCount,
+                    false,
+                )
+            }
+        }
     }
 
     private fun stopAutoScroll() {
-        autoScrollHandler.removeCallbacks(autoScrollRunnable)
+        autoScrollJob.cancel()
     }
 
     private fun navigateToOnBoardingActivity(accessToken: String? = null) {

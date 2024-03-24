@@ -31,6 +31,7 @@ class LoginViewPagerAdapter(private val imageList: List<Int>) :
         fun onBindView(imageInfo: Int) {
             binding.ivLoginViewPagerItem.load(imageInfo) {
                 placeholder(imageInfo)
+                error(imageInfo)
             }
         }
     }
