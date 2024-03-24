@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
@@ -56,7 +55,7 @@ class HomeFragment : Fragment() {
 
     private fun initUsageStatsList() {
         val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
-        collectMainState().onEach { mainState ->
+        activityViewModel.collectMainState(viewLifeCycle).onEach { mainState ->
             usageStaticsAdapter?.submitList(
                 mainState.usageStatsList.map {
                     UsageStaticsModel(mainState.name, mainState.challengeSuccess, it)
@@ -65,5 +64,4 @@ class HomeFragment : Fragment() {
         }.launchIn(viewLifeCycleScope)
     }
 
-    private fun collectMainState() = activityViewModel.mainState.flowWithLifecycle(viewLifeCycle)
 }
