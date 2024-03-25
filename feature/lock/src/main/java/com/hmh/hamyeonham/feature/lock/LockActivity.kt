@@ -11,32 +11,34 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.feature.lock.ui.theme.Blackground
+import com.hmh.hamyeonham.feature.lock.ui.theme.BluePurpleButton
+import com.hmh.hamyeonham.feature.lock.ui.theme.Gray1
+import com.hmh.hamyeonham.feature.lock.ui.theme.Gray2
+import com.hmh.hamyeonham.feature.lock.ui.theme.Gray3
 import com.hmh.hamyeonham.feature.lock.ui.theme.HMHAndroidTheme
 import com.hmh.hamyeonham.feature.lock.ui.theme.HmhTypography
+import com.hmh.hamyeonham.feature.lock.ui.theme.WhiteBtn
 import com.hmh.hamyeonham.feature.lock.ui.theme.WhiteText
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -55,7 +57,7 @@ class LockActivity : ComponentActivity() {
                     onClickClose = {
                         killAppByPackageName(
                             context = this,
-                            packageName = packageName
+                            packageName = packageName,
                         )
                         finish()
                     },
@@ -66,7 +68,7 @@ class LockActivity : ComponentActivity() {
                             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         }.let(::startActivity)
                         finish()
-                    }
+                    },
                 )
             }
         }
@@ -85,7 +87,6 @@ class LockActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
 fun LockScreen(
     packageName: String,
@@ -95,42 +96,33 @@ fun LockScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Blackground)
+            .background(Blackground),
     ) {
         val context = LocalContext.current
         val appName = context.getAppNameFromPackageName(packageName)
-        val appIcon = context.packageManager.getApplicationIcon(packageName)
 
         Column(
             modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .padding(top = 132.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             AsyncImage(
-                model = appIcon,
-                contentDescription = "App Image"
+                model = R.drawable.lock_on,
+                contentDescription = "LockScreen Icon",
+                modifier = Modifier.padding(bottom = 48.dp).size(120.dp),
             )
-            Spacer(modifier = Modifier.height(44.dp))
             Text(
                 text = stringResource(R.string.target_usage_time_end),
-                fontSize = 20.sp,
-                style = TextStyle(
-                    fontSize = 20.sp,
-                    lineHeight = 30.sp,
-                    fontWeight = FontWeight(600),
-                    color = Color(0xFFDBDAE7),
-                )
+                style = HmhTypography.headlineMedium,
+                color = WhiteText,
             )
-            Spacer(modifier = Modifier.height(5.dp))
             Text(
                 stringResource(R.string.use_it_anymore, appName),
-                style = TextStyle(
-                    fontSize = 14.sp,
-                    lineHeight = 21.sp,
-                    fontWeight = FontWeight(400),
-                    color = Color(0xFF8D8D9F),
-                )
+                color = Gray2,
+                style = TextStyle(textAlign = TextAlign.Center).merge(HmhTypography.bodyMedium),
+                modifier = Modifier.padding(vertical = 10.dp),
             )
         }
 
@@ -138,29 +130,37 @@ fun LockScreen(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            Text(
+                stringResource(R.string.remind_alarm_permission),
+                style = TextStyle(textAlign = TextAlign.Center).merge(HmhTypography.bodySmall),
+                color = Gray3,
+                modifier = Modifier.padding(vertical = 21.dp).align(Alignment.CenterHorizontally),
+            )
             Button(
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3D17D3)),
+                colors = ButtonDefaults.buttonColors(containerColor = BluePurpleButton),
                 onClick = {
                     onClickClose()
                 },
+                shape = RoundedCornerShape(4.dp),
+                modifier = Modifier.padding(vertical = 14.dp),
             ) {
                 Text(
                     text = stringResource(R.string.close),
                     modifier = Modifier
                         .padding(horizontal = 70.dp, vertical = 10.dp),
-                    style = HmhTypography.titleMedium
+                    style = HmhTypography.titleMedium,
+                    color = WhiteBtn,
                 )
             }
-            Spacer(modifier = Modifier.height(14.dp))
             Text(
-                modifier = Modifier.clickable(onClick = onClickUnLock),
+                modifier = Modifier.clickable(onClick = onClickUnLock)
+                    .padding(top = 22.dp, bottom = 58.dp),
                 text = stringResource(R.string.do_unlock),
                 style = HmhTypography.titleSmall,
-                color = WhiteText
+                color = Gray1,
             )
-            Spacer(modifier = Modifier.height(38.dp))
         }
     }
 }
@@ -173,13 +173,5 @@ fun killAppByPackageName(context: Context, packageName: String) {
     } catch (e: Exception) {
         context.toast(context.getString(R.string.app_kill_fail))
         Log.e("LockActivity", "killAppByPackageName error : $e")
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    HMHAndroidTheme {
-        LockScreen("HHM")
     }
 }
