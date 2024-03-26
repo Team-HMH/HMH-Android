@@ -4,36 +4,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/iv_blackhole"
-        android:src="@drawable/img_blackhole"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lav_blackhole"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:contentDescription="@string/item_usagestatic_total_blackhole_description"
         app:layout_constraintDimensionRatio="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/pb_total_usage"
-        android:layout_marginBottom="27dp"/>
-
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/lottie_blackhole0" />
 
     <TextView
         android:id="@+id/tv_blackhole_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="8dp"
         android:textColor="?white_text"
         android:textSize="21sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@id/tv_total_goal_title"
-        app:layout_constraintTop_toTopOf="parent" />
-    <VideoView
-        android:id="@+id/vv_blackhole"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:contentDescription="@string/item_usagestatic_total_blackhole_description"
-        app:layout_constraintDimensionRatio="1"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tv_total_goal"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -42,39 +32,38 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="27dp"
-        android:layout_marginBottom="33dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginBottom="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_blackhole" />
+        app:layout_constraintTop_toBottomOf="@id/lav_blackhole" />
+
+    <TextView
+        android:id="@+id/tv_total_usage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="6dp"
+        android:textAppearance="?textAppearanceDisplayMedium"
+        android:textColor="?white_text"
+        app:layout_constraintBottom_toBottomOf="@id/lav_blackhole"
+        app:layout_constraintStart_toStartOf="@id/pb_total_usage" />
 
     <TextView
         android:id="@+id/tv_total_goal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:textAppearance="?textAppearanceDisplayMedium"
-        android:textColor="?white_text"
-        app:layout_constraintBottom_toTopOf="@id/pb_total_usage"
-        app:layout_constraintStart_toStartOf="@id/pb_total_usage" />
-
-    <TextView
-        android:id="@+id/tv_total_goal_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/all_goal_time"
+        android:text="@string/total_goal_time"
         android:textAppearance="?textAppearanceLabelMedium"
         android:textColor="?gray1"
-        app:layout_constraintBottom_toTopOf="@id/tv_total_goal"
+        app:layout_constraintBottom_toTopOf="@id/tv_total_usage"
         app:layout_constraintStart_toStartOf="@id/pb_total_usage" />
 
     <TextView
         android:id="@+id/tv_total_time_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         android:textAppearance="?textAppearanceBodySmall"
         android:textColor="?white_text"
-        app:layout_constraintBottom_toTopOf="@id/pb_total_usage"
+        app:layout_constraintBottom_toBottomOf="@id/tv_total_usage"
         app:layout_constraintEnd_toEndOf="@id/pb_total_usage" />
 </androidx.constraintlayout.widget.ConstraintLayout>
