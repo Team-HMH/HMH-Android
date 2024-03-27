@@ -7,6 +7,7 @@ import com.hmh.hamyeonham.feature.lock.LockActivity
 import com.hmh.hamyeonham.feature.login.LoginActivity
 import com.hmh.hamyeonham.feature.main.MainActivity
 import com.hmh.hamyeonham.feature.onboarding.OnBoardingActivity
+import com.hmh.hamyeonham.feature.onboarding.OnBoardingStoryActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -17,6 +18,9 @@ class DefaultNavigationProvider @Inject constructor(
         return Intent(context, OnBoardingActivity::class.java)
     }
 
+    override fun toOnBoardingStory(): Intent {
+        return Intent(context, OnBoardingStoryActivity::class.java)
+    }
     override fun toLogin(): Intent {
         return Intent(context, LoginActivity::class.java)
     }
