@@ -29,18 +29,23 @@ data class AppAddState(
 class AppAddViewModel @Inject constructor(
     private val getInstalledAppUseCase: GetInstalledAppUseCase
 ) : ViewModel() {
+    init {
+        getInstalledApps()
+    }
+
     private fun getInstalledApps() {
         viewModelScope.launch {
-            delay(50)
             val installApps = getInstalledAppUseCase()
-            updateState {
-                copy(installedApp = installApps)
-            }
+            updateInstalledApps(installApps)
         }
     }
 
-    init {
-        getInstalledApps()
+    private suspend fun updateInstalledApps(installApps: List<String>) {
+        if (state == null)
+            delay(10)
+        updateState {
+            copy(installedApp = installApps)
+        }
     }
 
     private val _state = MutableStateFlow(AppAddState())
@@ -59,7 +64,6 @@ class AppAddViewModel @Inject constructor(
         updateState {
             copy(selectedApps = selectedApps + packageName)
         }
-
     }
 
     fun unCheckApp(packageName: String) {
@@ -79,6 +83,4 @@ class AppAddViewModel @Inject constructor(
             copy(goalMin = goalMin)
         }
     }
-
-
 }
