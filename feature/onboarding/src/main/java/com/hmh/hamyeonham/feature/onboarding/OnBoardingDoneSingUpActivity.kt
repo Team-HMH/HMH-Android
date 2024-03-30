@@ -20,12 +20,12 @@ class OnBoardingDoneSingUpActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnOnboardingDoneNext.setOnClickListener {
-            moveToMainActivity()
+            navigateToMainStory()
         }
     }
 
-    private fun moveToMainActivity() {
-        startActivity(navigationProvider.toMain())
+    private fun navigateToMainStory() {
+        startActivity(navigationProvider.toOnBoardingStory())
         finish()
     }
 }
