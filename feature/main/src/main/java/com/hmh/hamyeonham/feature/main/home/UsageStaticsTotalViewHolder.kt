@@ -41,7 +41,7 @@ class UsageStaticsTotalViewHolder(
         }
     }
 
-    fun bindBlackHoleInfo(usageStaticsModel: UsageStaticsModel) {
+    private fun bindBlackHoleInfo(usageStaticsModel: UsageStaticsModel) {
         val blackHoleInfo =
             BlackHoleInfo.createByLevel(usageStaticsModel.usageStatusAndGoal.blackHoleLevel)
                 ?: BlackHoleInfo.LEVEL0
@@ -59,21 +59,15 @@ class UsageStaticsTotalViewHolder(
 }
 
 enum class BlackHoleInfo(val level: Int, val lottieFile: Int, val description: Int) {
-    LEVEL0(0, R.raw.lottie_blackhole0, R.string.blackhole0), LEVEL1(
-        1,
-        R.raw.lottie_blackhole1,
-        R.string.blackhole1
-    ),
+    LEVEL0(0, R.raw.lottie_blackhole0, R.string.blackhole0),
+    LEVEL1(1, R.raw.lottie_blackhole1, R.string.blackhole1),
     LEVEL2(2, R.raw.lottie_blackhole2, R.string.blackhole2), LEVEL3(
         3,
         R.raw.lottie_blackhole3,
         R.string.blackhole3
     ),
-    LEVEL4(4, R.raw.lottie_blackhole4, R.string.blackhole4), LEVEL5(
-        5,
-        R.raw.lottie_blackhole5,
-        R.string.blackhole5
-    );
+    LEVEL4(4, R.raw.lottie_blackhole4, R.string.blackhole4),
+    LEVEL5(5, R.raw.lottie_blackhole5, R.string.blackhole5);
 
     companion object {
         fun createByLevel(level: Int): BlackHoleInfo? {
