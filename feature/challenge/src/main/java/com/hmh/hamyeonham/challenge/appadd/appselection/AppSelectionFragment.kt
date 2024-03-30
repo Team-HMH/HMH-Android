@@ -69,8 +69,6 @@ class AppSelectionFragment : Fragment() {
         viewModel.state.flowWithLifecycle(viewLifeCycle).onEach { state ->
             val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter
             appSelectionAdapter?.submitList(state.appSelectionList)
-            Log.d("AppSelectionFragment", "collectState: ${state.appSelectionList}")
-            Log.d("AppSelectionFragment", "collectState: ${state.selectedApps}")
         }.launchIn(viewLifeCycleScope)
     }
 
