@@ -20,4 +20,10 @@
     <string name="mypage_withdrawal">탈퇴</string>
     <string name="name_default">여행자</string>
 
+    <string name="mypage_profile_img">프로필 이미지</string>
+    <string name="mypage_journey_button_img">지금까지의 여정 버튼 이미지</string>
+    <string name="mypage_store_button_img">우주상점 버튼 이미지</string>
+    <string name="mypage_termofuse_button_img">이용약관 버튼 이미지</string>
+    <string name="mypage_privacy_button_img">개인정보처리방침 버튼 이미지</string>
+
 </resources>
