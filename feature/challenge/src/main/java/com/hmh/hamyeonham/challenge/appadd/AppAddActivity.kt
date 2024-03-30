@@ -37,7 +37,6 @@ class AppAddActivity : AppCompatActivity() {
 
             btAppSelection.setOnClickListener { handleNextClicked() }
             ivBack.setOnClickListener { finish() }
-
         }
 
     }

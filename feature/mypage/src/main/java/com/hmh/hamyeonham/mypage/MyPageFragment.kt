@@ -3,13 +3,10 @@ package com.hmh.hamyeonham.mypage
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.getColor
+import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -36,6 +33,7 @@ class MyPageFragment : Fragment() {
     private val binding by viewBinding(FragmentMyPageBinding::bind)
     private val activityViewModel by activityViewModels<MainViewModel>()
     private val viewModel by viewModels<MyPageViewModel>()
+    private lateinit var storeResultLauncher: ActivityResultLauncher<Intent>
 
     @Inject
     lateinit var navigationProvider: NavigationProvider
@@ -55,8 +53,16 @@ class MyPageFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews()
         collectMainState()
+        initStoreButton()
         initPrivacyButton()
         initTermOfUseButton()
+    }
+
+    private fun initStoreButton() {
+        binding.vStore.setOnClickListener {
+            val intent = navigationProvider.toStore()
+            startActivity(intent)
+        }
     }
 
     private fun initViews() {
@@ -128,22 +134,8 @@ class MyPageFragment : Fragment() {
     private fun bindMyPageWithUserInfo(name: String, point: Int) {
         binding.run {
             tvUserName.text = name
-            tvPoint.text = buildPointString(point)
+            tvPoint.text = getString(R.string.mypage_point, point)
         }
-    }
-
-    private fun buildPointString(point: Int): SpannableStringBuilder {
-        val builder =
-            SpannableStringBuilder(point.toString() + " " + getString(R.string.mypage_point_unit))
-        builder.setSpan(
-            ForegroundColorSpan(
-                getColor(requireContext(), com.hmh.hamyeonham.core.designsystem.R.color.gray2),
-            ),
-            builder.length - 1,
-            builder.length,
-            Spanned.SPAN_INCLUSIVE_EXCLUSIVE,
-        )
-        return builder
     }
 
     private fun initPrivacyButton() {

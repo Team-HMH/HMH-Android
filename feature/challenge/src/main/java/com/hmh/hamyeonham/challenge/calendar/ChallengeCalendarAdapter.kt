@@ -1,16 +1,15 @@
 package com.hmh.hamyeonham.challenge.calendar
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.common.view.ItemDiffCallback
-import com.hmh.hamyeonham.feature.challenge.R
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemChallengeStatusBinding
 
-class ChallengeCalendarAdapter :
-    ListAdapter<ChallengeStatus.Status, ChallengeCalendarAdapter.ChallengeStatusViewHolder>(
+class ChallengeCalendarAdapter(private val context: Context) :
+    ListAdapter<ChallengeStatus.Status, ChallengeStatusViewHolder>(
         ItemDiffCallback<ChallengeStatus.Status>(
             onItemsTheSame = { oldItem, newItem ->
                 oldItem == newItem
@@ -20,26 +19,6 @@ class ChallengeCalendarAdapter :
             },
         ),
     ) {
-    class ChallengeStatusViewHolder(
-        private val binding: ItemChallengeStatusBinding,
-    ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(isSuccess: ChallengeStatus.Status, position: Int) {
-            binding.apply {
-                val date = (position + 1).toString()
-                tvDate.text = date
-                ivChallengeStatus.setImageResource(getDrawableResource(isSuccess))
-            }
-        }
-
-        private fun getDrawableResource(isSuccess: ChallengeStatus.Status?): Int {
-            return when (isSuccess) {
-                ChallengeStatus.Status.UNEARNED -> R.drawable.ic_challenge_success_38
-                ChallengeStatus.Status.EARNED -> R.drawable.ic_challenge_success_38
-                ChallengeStatus.Status.FAILURE -> R.drawable.ic_challenge_fail_38
-                else -> R.drawable.ic_challenge_none_38
-            }
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChallengeStatusViewHolder {
         return ChallengeStatusViewHolder(
@@ -47,7 +26,7 @@ class ChallengeCalendarAdapter :
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
-            ),
+            ), context
         )
     }
 

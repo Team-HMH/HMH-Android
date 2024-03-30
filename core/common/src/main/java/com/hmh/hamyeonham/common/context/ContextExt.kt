@@ -104,12 +104,11 @@ fun Context.getAppIconFromPackageName(packageName: String): Drawable? {
     }
 }
 
-fun Context.colorSecondStrAndBindText(
+fun Context.getSecondStrColoredString(
     firstStr: String,
     secondStr: String,
-    tv: TextView,
     color: Int
-) {
+): SpannableStringBuilder {
     val mergedStr = "$firstStr $secondStr"
     val builder = SpannableStringBuilder(
         mergedStr
@@ -125,10 +124,10 @@ fun Context.colorSecondStrAndBindText(
         mergedStr.length,
         Spanned.SPAN_INCLUSIVE_EXCLUSIVE
     )
-    tv.text = builder
+    return builder
 }
 
-fun Context.isSystemPackage( packageName: String): Boolean {
+fun Context.isSystemPackage(packageName: String): Boolean {
     try {
         val packageInfo = packageManager.getPackageInfo(packageName, 0)
         return packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.appadd.appselection.AppSelectionModel
 import com.hmh.hamyeonham.challenge.usecase.GetInstalledAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -28,9 +29,23 @@ data class AppAddState(
 class AppAddViewModel @Inject constructor(
     private val getInstalledAppUseCase: GetInstalledAppUseCase
 ) : ViewModel() {
-
     init {
         getInstalledApps()
+    }
+
+    private fun getInstalledApps() {
+        viewModelScope.launch {
+            val installApps = getInstalledAppUseCase()
+            updateInstalledApps(installApps)
+        }
+    }
+
+    private suspend fun updateInstalledApps(installApps: List<String>) {
+        if (state == null)
+            delay(10)
+        updateState {
+            copy(installedApp = installApps)
+        }
     }
 
     private val _state = MutableStateFlow(AppAddState())
@@ -49,7 +64,6 @@ class AppAddViewModel @Inject constructor(
         updateState {
             copy(selectedApps = selectedApps + packageName)
         }
-
     }
 
     fun unCheckApp(packageName: String) {
@@ -67,15 +81,6 @@ class AppAddViewModel @Inject constructor(
     fun setGoalMin(goalMin: Long) {
         updateState {
             copy(goalMin = goalMin)
-        }
-    }
-
-    private fun getInstalledApps() {
-        viewModelScope.launch {
-            val installApps = getInstalledAppUseCase()
-            updateState {
-                copy(installedApp = installApps)
-            }
         }
     }
 }

@@ -11,6 +11,7 @@
     <attr name="gray1" format="reference" />
     <attr name="white_text" format="reference" />
     <attr name="blue_purple_button" format="reference" />
+    <attr name="blue_purple_button40" format="reference" />
     <attr name="blue_purple_line" format="reference" />
     <attr name="blue_purple_progress" format="reference" />
     <attr name="blue_purple_text" format="reference" />

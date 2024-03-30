@@ -8,6 +8,7 @@ import com.hmh.hamyeonham.feature.login.LoginActivity
 import com.hmh.hamyeonham.feature.main.MainActivity
 import com.hmh.hamyeonham.feature.onboarding.OnBoardingActivity
 import com.hmh.hamyeonham.feature.onboarding.OnBoardingStoryActivity
+import com.hmh.hamyeonham.feature.store.StoreActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -21,6 +22,7 @@ class DefaultNavigationProvider @Inject constructor(
     override fun toOnBoardingStory(): Intent {
         return Intent(context, OnBoardingStoryActivity::class.java)
     }
+
     override fun toLogin(): Intent {
         return Intent(context, LoginActivity::class.java)
     }
@@ -31,5 +33,9 @@ class DefaultNavigationProvider @Inject constructor(
 
     override fun toLock(packageName: String): Intent {
         return LockActivity.getIntent(context, packageName)
+    }
+
+    override fun toStore(): Intent {
+        return Intent(context, StoreActivity::class.java)
     }
 }

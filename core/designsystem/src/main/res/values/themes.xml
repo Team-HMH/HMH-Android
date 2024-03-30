@@ -86,13 +86,6 @@
         <item name="backgroundTint">@color/blue_purple_button</item>
     </style>
 
-    <style name="Widget.Hmh.ProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
-        <item name="trackColor">?gray7</item>
-        <item name="indicatorColor">?blue_purple_opacity_70</item>
-        <item name="trackThickness">71dp</item>
-        <item name="trackCornerRadius">6dp</item>
-    </style>
-
     <style name="Widget.Hmh.TotalProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
         <item name="trackColor">?gray3</item>
         <item name="indicatorColor">?white_btn</item>
@@ -111,7 +104,7 @@
         <item name="colorControlNormal">?gray6</item>
         <item name="android:background">#00FFFFFF</item>
         <item name="android:editTextColor">?white_text</item>
-        <item name ="android:textSize">24sp</item>
+        <item name="android:textSize">24sp</item>
     </style>
 
 </resources>

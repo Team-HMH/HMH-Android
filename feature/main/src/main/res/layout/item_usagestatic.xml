@@ -5,12 +5,13 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="20dp">
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
+    <ProgressBar
         android:id="@+id/pb_app_usage"
-        style="@style/Widget.Hmh.ProgressIndicator"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="71dp"
         android:layout_marginBottom="12dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:progressDrawable="@drawable/pb_usage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +36,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="9dp"
         android:layout_marginTop="2dp"
-        android:text="Instagram"
         android:textAppearance="?textAppearanceLabelLarge"
         android:textColor="?gray1"
         app:layout_constraintStart_toEndOf="@id/iv_appicon"
