@@ -11,4 +11,9 @@
     <string name="challenge_create_title">별을 향한 새로운\n챌린지를 생성해 주세요</string>
     <string name="challenge_create">챌린지 생성하기</string>
     <string name="all_time"> 시간</string>
+
+    <string name="challenge_calendar_background_img">달력 배경 이미지</string>
+    <string name="challenge_today_mark_img">오늘 날짜 마커 이미</string>
+    <string name="challenge_status_calendar_img">챌린지 상태 달력 배경 이미지</string>
+    <string name="challenge_trash_img">쓰레기통 이미지</string>
 </resources>
