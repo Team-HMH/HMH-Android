@@ -7,4 +7,13 @@ data class Apps(
         val appCode: String,
         val goalTime: Long
     )
+
+    companion object {
+        fun createFromAppCodeListAndGoalTime(appCodeList: List<String>, goalTime: Long): Apps {
+            val appList = appCodeList.map { appCode ->
+                App(appCode, goalTime)
+            }
+            return Apps(apps = appList)
+        }
+    }
 }

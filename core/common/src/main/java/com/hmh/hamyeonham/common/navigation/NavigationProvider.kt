@@ -12,4 +12,5 @@ interface NavigationProvider {
     fun toLogin(): Intent
     fun toMain(): Intent
     fun toLock(packageName: String): Intent
+    fun toStore(): Intent
 }

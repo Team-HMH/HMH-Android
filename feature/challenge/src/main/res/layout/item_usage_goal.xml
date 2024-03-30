@@ -3,25 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/shape_background_radius8_gray7">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/iv_app_icon"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_marginVertical="13dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="40dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="1"
+        android:layout_marginVertical="16dp"
+        android:layout_marginStart="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/all_app_icon_img" />
 
     <TextView
         android:id="@+id/tv_app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="13dp"
-        android:textAppearance="?textAppearanceBodyLarge"
+        android:textAppearance="?textAppearanceTitleSmall"
         android:textColor="@color/gray2"
         app:layout_constraintBottom_toBottomOf="@id/iv_app_icon"
         app:layout_constraintStart_toEndOf="@id/iv_app_icon"
@@ -32,11 +33,48 @@
         android:id="@+id/tv_app_usage_goal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:textAppearance="?textAppearanceTitleMedium"
+        android:layout_marginEnd="6dp"
+        android:textAppearance="?textAppearanceTitleSmall"
+        android:textColor="?white_text"
         app:layout_constraintBottom_toBottomOf="@id/iv_app_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_app_icon"
         tools:text="1시간 20분" />
 
+    <TextView
+        android:id="@+id/tv_app_name_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="app_name"
+        android:textAppearance="?textAppearanceBodySmall"
+        android:textColor="?gray2"
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@id/iv_app_icon"
+        app:layout_constraintTop_toTopOf="@id/iv_app_icon" />
+
+    <TextView
+        android:id="@+id/tv_app_usage_goal_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="app_name"
+        android:textAppearance="?textAppearanceBodySmall"
+        android:textColor="?white_text"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/iv_app_icon"
+        app:layout_constraintStart_toStartOf="@id/tv_app_name_delete" />
+
+
+    <ImageView
+        android:id="@+id/iv_trash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:src="@drawable/ic_calendar_trash_red_28"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/challenge_trash_img" />
 </androidx.constraintlayout.widget.ConstraintLayout>
