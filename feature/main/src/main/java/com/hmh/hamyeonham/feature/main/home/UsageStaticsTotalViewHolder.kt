@@ -41,7 +41,7 @@ class UsageStaticsTotalViewHolder(
         }
     }
 
-    fun bindBlackHoleInfo(usageStaticsModel: UsageStaticsModel) {
+    private fun bindBlackHoleInfo(usageStaticsModel: UsageStaticsModel) {
         val blackHoleInfo =
             BlackHoleInfo.createByLevel(usageStaticsModel.usageStatusAndGoal.blackHoleLevel)
                 ?: BlackHoleInfo.LEVEL0
