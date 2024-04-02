@@ -142,6 +142,9 @@ class ChallengeFragment : Fragment() {
                     //TODO 포인트 받기 뷰로 이동
                 }
             }
+            else {
+                //TODO 챌린지 생성 기능 추가
+            }
         }
     }
 
