@@ -72,7 +72,7 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun initChallengeState(it: MainState) {
-        if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageStatusAndGoals = (activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal())) }
+        if (it.usageStatusAndGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageStatusAndGoals = (activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal())) }
     }
 
     private fun bindChallengeInfo(it: MainState) {
