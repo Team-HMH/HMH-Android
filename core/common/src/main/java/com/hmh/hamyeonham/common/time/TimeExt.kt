@@ -66,8 +66,8 @@ fun convertTimeToString(minute: Long): String {
     val minutes = minute % 60
 
     return buildString {
-        if (hours > 0) append("$hours 시간")
-        if (minutes > 0 || hours == 0L) append(" $minutes 분")
+        if (hours > 0) append(hours.toString() + "시간 ")
+        append(minutes.toString() + "분")
     }.trim()
 }
 

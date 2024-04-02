@@ -72,7 +72,7 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun initChallengeState(it: MainState) {
-        if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageStatusAndGoals = (activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal())) }
+        if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageStatusAndGoals = (activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal("com.google.android.youtube", 300000, 600000)+ UsageStatusAndGoal("com.kakao.talk", 29999, 3600000 )+ UsageStatusAndGoal())) }
     }
 
     private fun bindChallengeInfo(it: MainState) {
