@@ -23,6 +23,7 @@ import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
+import com.hmh.hamyeonham.common.fragment.toast
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.VerticalSpaceItemDecoration
@@ -156,9 +157,9 @@ class ChallengeFragment : Fragment() {
         binding.rvChallengeCalendar.visibility = challengeInfoVisibility
     }
 
-    private fun bindUsageGoals(usageStatusAndGoalAndModifierList: List<UsageStatusAndGoalAndModifier>) {
+    private fun bindUsageGoals(challengeUsageGoalList: List<ChallengeUsageGoal>) {
         val challengeGoalsAdapter = binding.rvAppUsageGoals.adapter as? ChallengeUsageGoalsAdapter
-        challengeGoalsAdapter?.submitList(usageStatusAndGoalAndModifierList)
+        challengeGoalsAdapter?.submitList(challengeUsageGoalList)
     }
 
     private fun bindChallengeCalendar(challengeStatusList: List<ChallengeStatus.Status>) {
@@ -207,10 +208,13 @@ class ChallengeFragment : Fragment() {
                     val intent = Intent(requireContext(), AppAddActivity::class.java)
                     appSelectionResultLauncher.launch(intent)
                 },
-                onAppItemClicked = { usageGoalAndModifierState ->
+                onAppItemClicked = { challengeGoal ->
                     when (viewModel.challengeState.value.modifierState) {
                         ModifierState.DONE -> {
-                            setDeleteAppDialog(usageGoalAndModifierState.usageStatusAndGoal)
+                            if (challengeGoal.isDeletable)
+                                setDeleteAppDialog(challengeGoal.usageStatusAndGoal)
+                            else
+                                toast(getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_delete))
                         }
 
                         else -> Unit
@@ -235,8 +239,5 @@ class ChallengeFragment : Fragment() {
             }
             setDismissButtonClickListener {}
         }.showAllowingStateLoss(childFragmentManager)
-        viewModel.updateChallengeState {
-            copy(modifierState = ModifierState.EDIT)
-        }
     }
 }
