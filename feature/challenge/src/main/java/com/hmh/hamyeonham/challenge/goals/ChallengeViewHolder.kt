@@ -4,24 +4,25 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.hmh.hamyeonham.challenge.ModifierState
-import com.hmh.hamyeonham.challenge.UsageGoalAndModifierState
+import com.hmh.hamyeonham.challenge.UsageStatusAndGoalAndModifier
 import com.hmh.hamyeonham.common.context.getAppIconFromPackageName
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
+import com.hmh.hamyeonham.common.time.convertTimeToString
+import com.hmh.hamyeonham.feature.challenge.R
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemGoalAddBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemUsageGoalBinding
 
 
 sealed class ChallengeViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
     enum class ChallengeViewHolderType {
-        USAGE_GOALS,
-        GOAL_ADD
+        USAGE_GOALS, GOAL_ADD
     }
 
     class UsageGoalsViewHolder(
         private val binding: ItemUsageGoalBinding,
-        private val onAppItemClicked: (UsageGoalAndModifierState) -> Unit
+        private val onAppItemClicked: (UsageStatusAndGoalAndModifier) -> Unit
     ) : ChallengeViewHolder(binding) {
-        private var item: UsageGoalAndModifierState? = null
+        private var item: UsageStatusAndGoalAndModifier? = null
 
         init {
             binding.root.setOnClickListener {
@@ -29,39 +30,55 @@ sealed class ChallengeViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder
             }
         }
 
-        fun bind(item: UsageGoalAndModifierState) {
+        fun bind(item: UsageStatusAndGoalAndModifier) {
             this.item = item
             binding.run {
-                val context = root.context
-                val packageName = item.usageGoal.packageName
-                val appName = context.getAppNameFromPackageName(packageName)
-                ivAppIcon.setImageDrawable(context.getAppIconFromPackageName(packageName))
-                tvAppName.text = appName
-                tvAppNameDelete.text = appName
-                tvAppUsageGoal.text = item.usageGoal.formattedGoalTime
-                tvAppUsageGoalDelete.text = item.usageGoal.formattedGoalTime
+                bindTextViews(item)
                 setVisibility(item.modifierState)
+                if (item.modifierState == ModifierState.EDIT) setTrashIcon(item.usageStatusAndGoal.totalTimeInForegroundInMin)
             }
         }
 
-        fun setVisibility(modifierState: ModifierState) {
+        private fun ItemUsageGoalBinding.bindTextViews(
+            item: UsageStatusAndGoalAndModifier
+        ) {
+            val context = root.context
+            val packageName = item.usageStatusAndGoal.packageName
+            val appName = context.getAppNameFromPackageName(packageName)
+            ivAppIcon.setImageDrawable(context.getAppIconFromPackageName(packageName))
+            tvAppName.text = appName
+            tvAppNameDelete.text = appName
+            tvAppUsageGoal.text =
+                convertTimeToString(item.usageStatusAndGoal.totalTimeInForegroundInMin)
+            tvAppUsageGoalDelete.text =
+                convertTimeToString(item.usageStatusAndGoal.totalTimeInForegroundInMin)
+        }
+
+        private fun ItemUsageGoalBinding.setVisibility(modifierState: ModifierState) {
             val editMode = getVisibilityFromMode(modifierState, ModifierState.EDIT)
             val doneMode = getVisibilityFromMode(modifierState, ModifierState.DONE)
 
-            binding.tvAppName.visibility = doneMode
-            binding.tvAppUsageGoal.visibility = doneMode
+            tvAppName.visibility = doneMode
+            tvAppUsageGoal.visibility = doneMode
 
-            binding.tvAppNameDelete.visibility = editMode
-            binding.tvAppUsageGoalDelete.visibility = editMode
-            binding.ivTrash.visibility = editMode
+            tvAppNameDelete.visibility = editMode
+            tvAppUsageGoalDelete.visibility = editMode
+            ivTrash.visibility = editMode
         }
 
-        private fun getVisibilityFromMode(state: ModifierState, mode: ModifierState) : Int = if (state == mode) View.INVISIBLE else View.VISIBLE
+        private fun getVisibilityFromMode(state: ModifierState, mode: ModifierState): Int =
+            if (state == mode) View.INVISIBLE else View.VISIBLE
+
+        private fun ItemUsageGoalBinding.setTrashIcon(min: Long) {
+            var trashIconId = R.drawable.ic_calendar_trash_red_28
+            if (min > 4) trashIconId = R.drawable.ic_calendar_trash_28
+            ivTrash.setImageResource(trashIconId)
+
+        }
     }
 
     class GoalAddViewHolder(
-        binding: ItemGoalAddBinding,
-        private val onAppListAddClicked: () -> Unit
+        binding: ItemGoalAddBinding, private val onAppListAddClicked: () -> Unit
     ) : ChallengeViewHolder(binding) {
         init {
             binding.root.setOnClickListener {
