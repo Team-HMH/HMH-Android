@@ -3,15 +3,15 @@ package com.hmh.hamyeonham.challenge.goals
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.hmh.hamyeonham.challenge.UsageStatusAndGoalAndModifier
+import com.hmh.hamyeonham.challenge.ChallengeUsageGoal
 import com.hmh.hamyeonham.common.view.ItemDiffCallback
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemGoalAddBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemUsageGoalBinding
 
 class ChallengeUsageGoalsAdapter(
     private val onAppListAddClicked: () -> Unit,
-    private val onAppItemClicked: (UsageStatusAndGoalAndModifier) -> Unit
-) : ListAdapter<UsageStatusAndGoalAndModifier, ChallengeViewHolder>(
+    private val onAppItemClicked: (ChallengeUsageGoal) -> Unit
+) : ListAdapter<ChallengeUsageGoal, ChallengeViewHolder>(
     ItemDiffCallback(
         onItemsTheSame = { oldItem, newItem ->
             oldItem.usageStatusAndGoal.packageName == newItem.usageStatusAndGoal.packageName

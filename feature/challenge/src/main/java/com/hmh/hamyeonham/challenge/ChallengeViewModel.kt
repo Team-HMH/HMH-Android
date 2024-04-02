@@ -20,14 +20,20 @@ data class ChallengeState(
     val usageStatusAndGoals: List<UsageStatusAndGoal> = emptyList(),
 ) {
     val usageGoalsAndModifiers = usageStatusAndGoals.map {
-        UsageStatusAndGoalAndModifier(it, modifierState)
+        ChallengeUsageGoal(it, modifierState)
     }
 }
 
-data class UsageStatusAndGoalAndModifier(
+data class ChallengeUsageGoal(
     val usageStatusAndGoal: UsageStatusAndGoal = UsageStatusAndGoal(),
     val modifierState: ModifierState = ModifierState.EDIT,
-)
+) {
+    companion object {
+        const val MAX_DELETABLE = 5
+    }
+
+    val isDeletable: Boolean = usageStatusAndGoal.totalTimeInForegroundInMin < MAX_DELETABLE
+}
 
 
 enum class ModifierState {
