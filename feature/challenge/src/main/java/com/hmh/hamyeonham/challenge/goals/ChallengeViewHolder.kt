@@ -68,7 +68,7 @@ sealed class ChallengeViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder
         }
 
         private fun getVisibilityFromMode(state: ModifierState, mode: ModifierState): Int =
-            if (state == mode) View.INVISIBLE else View.VISIBLE
+            if (state == mode) View.VISIBLE else View.INVISIBLE
 
         private fun ItemUsageGoalBinding.setTrashIcon(isDeletable: Boolean) {
             val trashIconId =

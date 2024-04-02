@@ -100,14 +100,14 @@ class ChallengeFragment : Fragment() {
 
     private fun getTextAndColorsOfModifierState(modifierState: ModifierState) =
         when (modifierState) {
-            ModifierState.DONE -> {
+            ModifierState.EDIT -> {
                 getString(R.string.all_done) to ContextCompat.getColor(
                     requireContext(),
                     R.color.white_text,
                 )
             }
 
-            ModifierState.EDIT -> {
+            ModifierState.DONE -> {
                 getString(R.string.all_edit) to ContextCompat.getColor(
                     requireContext(),
                     R.color.blue_purple_text,
@@ -210,7 +210,7 @@ class ChallengeFragment : Fragment() {
                 },
                 onAppItemClicked = { challengeGoal ->
                     when (viewModel.challengeState.value.modifierState) {
-                        ModifierState.DONE -> {
+                        ModifierState.EDIT -> {
                             if (challengeGoal.isDeletable)
                                 setDeleteAppDialog(challengeGoal.usageStatusAndGoal)
                             else
