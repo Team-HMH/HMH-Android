@@ -87,6 +87,35 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun getUsageGoalsExceptTotal(): List<UsageGoal> {
+        return mainState.value.usageGoals.filter { it.packageName != UsageGoal.TOTAL }
+    }
+
+    fun setChallengeStatus(challengeStatus: ChallengeStatus) {
+        updateState {
+            copy(
+                appGoals = challengeStatus.appGoals,
+                challengeStatusList = challengeStatus.challengeStatusList,
+                goalTimeInHour = challengeStatus.goalTimeInHours,
+                period = challengeStatus.period,
+                todayIndex = challengeStatus.todayIndex,
+                challengeSuccess = challengeStatus.challengeSuccess,
+            )
+        }
+    }
+
+    fun isPointLeftToCollect(): Boolean =
+        mainState.value.challengeStatusList.contains(ChallengeStatus.Status.UNEARNED)
+
+    fun updateUserInfo(userInfo: UserInfo) {
+        updateState {
+            copy(
+                name = userInfo.name,
+                point = userInfo.point,
+            )
+        }
+    }
+
     private suspend fun updateGoals() {
         usageGoalsRepository.updateUsageGoal()
     }
@@ -124,32 +153,6 @@ class MainViewModel @Inject constructor(
     private fun setUsageGaols(usageGoals: List<UsageGoal>) {
         updateState {
             copy(usageGoals = usageGoals)
-        }
-    }
-
-    fun getUsageGoalsExceptTotal(): List<UsageGoal> {
-        return mainState.value.usageGoals.filter { it.packageName != UsageGoal.TOTAL }
-    }
-
-    fun setChallengeStatus(challengeStatus: ChallengeStatus) {
-        updateState {
-            copy(
-                appGoals = challengeStatus.appGoals,
-                challengeStatusList = challengeStatus.challengeStatusList,
-                goalTimeInHour = challengeStatus.goalTimeInHours,
-                period = challengeStatus.period,
-                todayIndex = challengeStatus.todayIndex,
-                challengeSuccess = challengeStatus.challengeSuccess,
-            )
-        }
-    }
-
-    fun updateUserInfo(userInfo: UserInfo) {
-        updateState {
-            copy(
-                name = userInfo.name,
-                point = userInfo.point,
-            )
         }
     }
 
