@@ -33,7 +33,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_searchbar" />
+        app:layout_constraintTop_toBottomOf="@id/et_searchbar"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
