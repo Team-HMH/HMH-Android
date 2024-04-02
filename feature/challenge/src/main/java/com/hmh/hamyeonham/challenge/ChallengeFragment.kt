@@ -30,9 +30,10 @@ import com.hmh.hamyeonham.common.view.dp
 import com.hmh.hamyeonham.common.view.mapBooleanToVisibility
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.designsystem.R
-import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.viewmodel.MainState
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.challenge.databinding.FragmentChallengeBinding
+import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -57,25 +58,33 @@ class ChallengeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAppSelectionResultLauncher()
         initViews()
-        initChallengeCalendar()
-        initUsageGoalList()
+        collectAndProcessMainState()
+        collectAndProcessChallengeState()
     }
 
-    private fun initChallengeCalendar() {
+    private fun collectAndProcessMainState() {
         activityViewModel.collectMainState(viewLifeCycle).onEach {
-            setChallengeInfoVisibility(it.isChallengeExist)
-            if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageGoals = (activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())) }
-            if (it.isChallengeExist) {
-                bindChallengeCalendar(it.challengeStatusList)
-                bindChallengeDate(it.todayIndex, it.startDate)
-            }
+            setChallengeCalendarVisibility(it.isChallengeExist)
+            bindChallengeInfo(it)
+            initChallengeState(it)
         }.launchIn(viewLifeCycleScope)
     }
 
-    private fun initUsageGoalList() {
+    private fun initChallengeState(it: MainState) {
+        if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageStatusAndGoals = (activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal())) }
+    }
+
+    private fun bindChallengeInfo(it: MainState) {
+        if (it.isChallengeExist) {
+            bindChallengeCalendar(it.challengeStatusList)
+            bindChallengeDate(it.todayIndex, it.startDate)
+        }
+    }
+
+    private fun collectAndProcessChallengeState() {
         viewModel.collectChallengeState(viewLifeCycle).onEach {
             handleModifierButtonState(it)
-            bindUsageGoals(it.usageGoalsAndModifierState)
+            bindUsageGoals(it.usageGoalsAndModifiers)
         }.launchIn(viewLifeCycleScope)
     }
 
@@ -136,17 +145,20 @@ class ChallengeFragment : Fragment() {
         initChallengeCalendarRecyclerView()
     }
 
-    private fun setChallengeInfoVisibility(isChallengeExist: Boolean) {
-        binding.btnChallengeCreate.visibility = (!isChallengeExist).mapBooleanToVisibility()
-        binding.tvChallengeCreateTitle.visibility = (!isChallengeExist).mapBooleanToVisibility()
-        binding.tvChallengeDay.visibility = isChallengeExist.mapBooleanToVisibility()
-        binding.tvChallengeStartDate.visibility = isChallengeExist.mapBooleanToVisibility()
-        binding.rvChallengeCalendar.visibility = isChallengeExist.mapBooleanToVisibility()
+    private fun setChallengeCalendarVisibility(isChallengeExist: Boolean) {
+        val challengeCreateVisibility = (!isChallengeExist).mapBooleanToVisibility()
+        val challengeInfoVisibility = (isChallengeExist).mapBooleanToVisibility()
+
+        binding.btnChallengeCreate.visibility = challengeCreateVisibility
+        binding.tvChallengeCreateTitle.visibility = challengeCreateVisibility
+        binding.tvChallengeDay.visibility = challengeInfoVisibility
+        binding.tvChallengeStartDate.visibility = challengeInfoVisibility
+        binding.rvChallengeCalendar.visibility = challengeInfoVisibility
     }
 
-    private fun bindUsageGoals(usageGoalAndModifierStateList: List<UsageGoalAndModifierState>) {
+    private fun bindUsageGoals(usageStatusAndGoalAndModifierList: List<UsageStatusAndGoalAndModifier>) {
         val challengeGoalsAdapter = binding.rvAppUsageGoals.adapter as? ChallengeUsageGoalsAdapter
-        challengeGoalsAdapter?.submitList(usageGoalAndModifierStateList)
+        challengeGoalsAdapter?.submitList(usageStatusAndGoalAndModifierList)
     }
 
     private fun bindChallengeCalendar(challengeStatusList: List<ChallengeStatus.Status>) {
@@ -195,10 +207,10 @@ class ChallengeFragment : Fragment() {
                     val intent = Intent(requireContext(), AppAddActivity::class.java)
                     appSelectionResultLauncher.launch(intent)
                 },
-                onAppItemClicked = { usagUsageGoalAndModifierState ->
+                onAppItemClicked = { usageGoalAndModifierState ->
                     when (viewModel.challengeState.value.modifierState) {
                         ModifierState.DONE -> {
-                            setDeleteAppDialog(usagUsageGoalAndModifierState.usageGoal)
+                            setDeleteAppDialog(usageGoalAndModifierState.usageStatusAndGoal)
                         }
 
                         else -> Unit
@@ -210,7 +222,7 @@ class ChallengeFragment : Fragment() {
         }
     }
 
-    private fun RecyclerView.setDeleteAppDialog(it: UsageGoal) {
+    private fun RecyclerView.setDeleteAppDialog(it: UsageStatusAndGoal) {
         val clickedAppNameToDialog = context.getAppNameFromPackageName(it.packageName)
         TwoButtonCommonDialog.newInstance(
             title = getString(R.string.delete_app_dialog_title, clickedAppNameToDialog),

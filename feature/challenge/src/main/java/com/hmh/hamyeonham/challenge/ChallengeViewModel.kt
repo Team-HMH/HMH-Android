@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.usecase.AddUsageGoalsUseCase
 import com.hmh.hamyeonham.challenge.usecase.DeleteUsageGoalUseCase
-import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,15 +17,15 @@ import javax.inject.Inject
 
 data class ChallengeState(
     val modifierState: ModifierState = ModifierState.EDIT,
-    val usageGoals: List<UsageGoal> = emptyList()
+    val usageStatusAndGoals: List<UsageStatusAndGoal> = emptyList(),
 ) {
-    val usageGoalsAndModifierState = usageGoals.map {
-        UsageGoalAndModifierState(it, modifierState)
+    val usageGoalsAndModifiers = usageStatusAndGoals.map {
+        UsageStatusAndGoalAndModifier(it, modifierState)
     }
 }
 
-data class UsageGoalAndModifierState(
-    val usageGoal: UsageGoal = UsageGoal(),
+data class UsageStatusAndGoalAndModifier(
+    val usageStatusAndGoal: UsageStatusAndGoal = UsageStatusAndGoal(),
     val modifierState: ModifierState = ModifierState.EDIT,
 )
 
@@ -43,7 +43,9 @@ class ChallengeViewModel @Inject constructor(
     private val _challengeState = MutableStateFlow(ChallengeState())
     val challengeState = _challengeState.asStateFlow()
 
-    fun collectChallengeState(lifecycle: Lifecycle): Flow<ChallengeState> = challengeState.flowWithLifecycle(lifecycle)
+    fun collectChallengeState(lifecycle: Lifecycle): Flow<ChallengeState> =
+        challengeState.flowWithLifecycle(lifecycle)
+
     fun updateChallengeState(transform: ChallengeState.() -> ChallengeState) {
         val currentState = challengeState.value
         val newState = currentState.transform()
