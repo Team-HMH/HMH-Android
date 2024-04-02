@@ -31,7 +31,7 @@ data class MainState(
     val period: Int = 0,
     val todayIndex: Int = 0,
     val usageGoals: List<UsageGoal> = emptyList(),
-    val usageStatsList: List<UsageStatusAndGoal> = emptyList(),
+    val usageStatusAndGoals: List<UsageStatusAndGoal> = emptyList(),
     val name: String = "",
     val point: Int = 0,
     val challengeSuccess: Boolean = true,
@@ -65,7 +65,7 @@ class MainViewModel @Inject constructor(
 
     fun reloadUsageStatsList() {
         viewModelScope.launch {
-            getStatsList()
+            getStatusAndGoals()
         }
     }
 
@@ -103,12 +103,12 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             usageGoalsRepository.getUsageGoals().collect {
                 setUsageGaols(it)
-                getStatsList()
+                getStatusAndGoals()
             }
         }
     }
 
-    private suspend fun getStatsList() {
+    private suspend fun getStatusAndGoals() {
         val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
         setUsageStatsList(getUsageStatsListUseCase(startTime, endTime))
     }
@@ -127,11 +127,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getUsageGoalsExceptTotal(): List<UsageGoal> {
-        return mainState.value.usageGoals.filter { it.packageName != UsageGoal.TOTAL }
+    fun getUsageStatusAndGoalsExceptTotal(): List<UsageStatusAndGoal> {
+        return mainState.value.usageStatusAndGoals.filter { it.packageName != UsageGoal.TOTAL }
     }
 
-    fun setChallengeStatus(challengeStatus: ChallengeStatus) {
+    private fun setChallengeStatus(challengeStatus: ChallengeStatus) {
         updateState {
             copy(
                 appGoals = challengeStatus.appGoals,
@@ -144,7 +144,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun updateUserInfo(userInfo: UserInfo) {
+    private fun updateUserInfo(userInfo: UserInfo) {
         updateState {
             copy(
                 name = userInfo.name,
@@ -155,7 +155,7 @@ class MainViewModel @Inject constructor(
 
     private fun setUsageStatsList(usageStatsList: List<UsageStatusAndGoal>) {
         updateState {
-            copy(usageStatsList = usageStatsList)
+            copy(usageStatusAndGoals = usageStatsList)
         }
     }
 }
