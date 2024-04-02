@@ -61,9 +61,9 @@ fun minusDaysFromDate(date: LocalDate, daysToMinus: Int): LocalDate {
     return date.minus(daysToMinus, DateTimeUnit.DAY)
 }
 
-fun convertTimeToString(time: Long): String {
-    val hours = (time / 60)
-    val minutes = time % 60
+fun convertTimeToString(minute: Long): String {
+    val hours = (minute / 60)
+    val minutes = minute % 60
 
     return buildString {
         if (hours > 0) append("$hours 시간")
