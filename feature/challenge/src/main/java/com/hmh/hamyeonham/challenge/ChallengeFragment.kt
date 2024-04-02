@@ -16,6 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.hmh.hamyeonham.challenge.appadd.AppAddActivity
 import com.hmh.hamyeonham.challenge.calendar.ChallengeCalendarAdapter
 import com.hmh.hamyeonham.challenge.goals.ChallengeUsageGoalsAdapter
@@ -125,7 +126,17 @@ class ChallengeFragment : Fragment() {
 
     private fun initChallengeCreateButton() {
         binding.btnChallengeCreate.setOnClickListener {
-            //TODO 챌린지 생성 기능 추가하기
+            if (activityViewModel.isPointLeftToCollect()) {
+                Snackbar.make(
+                    binding.root,
+                    com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_create,
+                    Snackbar.LENGTH_SHORT
+                )
+                    .setAction(com.hmh.hamyeonham.feature.challenge.R.string.all_move) {
+                        //TODO 포인트 받기 뷰로 이동
+                    }
+                    .show()
+            }
         }
     }
 
