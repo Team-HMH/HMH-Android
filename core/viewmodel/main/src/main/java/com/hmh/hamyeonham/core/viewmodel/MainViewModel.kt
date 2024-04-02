@@ -27,7 +27,7 @@ import javax.inject.Inject
 data class MainState(
     val appGoals: List<ChallengeStatus.AppGoal> = emptyList(),
     val challengeStatusList: List<ChallengeStatus.Status> = emptyList(),
-    val goalTimeInHour: Int = 0,
+    val totalGoalTimeInHour: Int = 0,
     val period: Int = 0,
     val todayIndex: Int = 0,
     val usageGoals: List<UsageGoal> = emptyList(),
@@ -136,7 +136,7 @@ class MainViewModel @Inject constructor(
             copy(
                 appGoals = challengeStatus.appGoals,
                 challengeStatusList = challengeStatus.challengeStatusList,
-                goalTimeInHour = challengeStatus.goalTimeInHours,
+                totalGoalTimeInHour = challengeStatus.goalTimeInHours,
                 period = challengeStatus.period,
                 todayIndex = challengeStatus.todayIndex,
                 challengeSuccess = challengeStatus.challengeSuccess,
