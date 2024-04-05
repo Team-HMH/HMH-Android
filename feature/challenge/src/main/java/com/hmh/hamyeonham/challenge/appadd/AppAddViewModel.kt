@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.appadd.appselection.AppSelectionModel
 import com.hmh.hamyeonham.challenge.usecase.GetInstalledAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -40,9 +39,7 @@ class AppAddViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateInstalledApps(installApps: List<String>) {
-        if (state == null)
-            delay(10)
+    private fun updateInstalledApps(installApps: List<String>) {
         updateState {
             copy(installedApp = installApps)
         }
