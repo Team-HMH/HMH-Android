@@ -3,6 +3,8 @@ package com.hmh.hamyeonham.mypage.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hmh.hamyeonham.challenge.model.Apps
+import com.hmh.hamyeonham.challenge.usecase.DeleteAllDatabaseUseCase
 import com.hmh.hamyeonham.core.network.auth.datastore.DefaultHMHNetworkPreference
 import com.hmh.hamyeonham.login.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,6 +26,7 @@ sealed interface UserEffect {
 class MyPageViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val hmhPreferenceAccessToken: DefaultHMHNetworkPreference,
+    private val deleteAllDataBaseUseCase: DeleteAllDatabaseUseCase
 ) : ViewModel() {
 
     private val _userEffect = MutableSharedFlow<UserEffect>()
@@ -49,6 +52,12 @@ class MyPageViewModel @Inject constructor(
             }.onFailure {
                 _userEffect.emit(UserEffect.withdrawalFail)
             }
+        }
+    }
+
+    fun deleteAllDatabase() {
+        viewModelScope.launch {
+            deleteAllDataBaseUseCase.invoke()
         }
     }
 }
