@@ -28,6 +28,12 @@ data class AppAddState(
 class AppAddViewModel @Inject constructor(
     private val getInstalledAppUseCase: GetInstalledAppUseCase
 ) : ViewModel() {
+    private val _state = MutableStateFlow(AppAddState())
+    val state = _state.asStateFlow()
+
+    private val _effect = MutableSharedFlow<AppAddEffect>(1)
+    val effect = _effect.asSharedFlow()
+
     init {
         getInstalledApps()
     }
@@ -44,12 +50,6 @@ class AppAddViewModel @Inject constructor(
             copy(installedApp = installApps)
         }
     }
-
-    private val _state = MutableStateFlow(AppAddState())
-    val state = _state.asStateFlow()
-
-    private val _effect = MutableSharedFlow<AppAddEffect>(1)
-    val effect = _effect.asSharedFlow()
 
     private fun updateState(transform: AppAddState.() -> AppAddState) {
         val currentState = state.value
