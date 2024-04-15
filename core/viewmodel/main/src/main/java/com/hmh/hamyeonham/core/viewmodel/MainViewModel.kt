@@ -102,7 +102,7 @@ class MainViewModel @Inject constructor(
     private fun getUsageGoalAndStatList() {
         viewModelScope.launch {
             usageGoalsRepository.getUsageGoals().collect {
-                //setUsageGaols(it)
+                setUsageGaols(it)
                 getStatusAndGoals()
             }
         }
@@ -121,11 +121,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    /*private fun setUsageGaols(usageGoals: List<UsageGoal>) {
+    private fun setUsageGaols(usageGoals: List<UsageGoal>) {
         updateState {
             copy(usageGoals = usageGoals)
         }
-    }*/
+    }
 
     fun getUsageStatusAndGoalsExceptTotal(): List<UsageStatusAndGoal> {
         return mainState.value.usageStatusAndGoals.filter { it.packageName != UsageGoal.TOTAL }
