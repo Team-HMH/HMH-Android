@@ -52,10 +52,12 @@ class ChallengeViewModel @Inject constructor(
     fun collectChallengeState(lifecycle: Lifecycle): Flow<ChallengeState> =
         challengeState.flowWithLifecycle(lifecycle)
 
-    fun updateChallengeState(transform: ChallengeState.() -> ChallengeState) {
-        val currentState = challengeState.value
-        val newState = currentState.transform()
-        _challengeState.value = newState
+    fun updateUsageStatusAndGoals(newUsageStatusAndGoals: List<UsageStatusAndGoal>) {
+        updateChallengeState { copy(usageStatusAndGoals = newUsageStatusAndGoals) }
+    }
+
+    fun updateModifierState(newModifierState: ModifierState) {
+        updateChallengeState { copy(modifierState = newModifierState) }
     }
 
     fun addApp(apps: Apps) {
@@ -68,6 +70,12 @@ class ChallengeViewModel @Inject constructor(
         viewModelScope.launch {
             deleteUsageGoalUseCase(packageName)
         }
+    }
+
+    private fun updateChallengeState(transform: ChallengeState.() -> ChallengeState) {
+        val currentState = challengeState.value
+        val newState = currentState.transform()
+        _challengeState.value = newState
     }
 
 }

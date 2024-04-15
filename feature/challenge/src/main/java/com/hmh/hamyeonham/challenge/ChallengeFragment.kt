@@ -72,7 +72,9 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun initChallengeState(it: MainState) {
-        if (it.usageStatusAndGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageStatusAndGoals = (activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal())) }
+        if (it.usageStatusAndGoals.isNotEmpty()) viewModel.updateUsageStatusAndGoals(
+            activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal()
+        )
     }
 
     private fun bindChallengeInfo(it: MainState) {
@@ -119,15 +121,11 @@ class ChallengeFragment : Fragment() {
         binding.tvModifierButton.setOnClickListener {
             when (viewModel.challengeState.value.modifierState) {
                 ModifierState.DONE -> {
-                    viewModel.updateChallengeState {
-                        copy(modifierState = ModifierState.EDIT)
-                    }
+                    viewModel.updateModifierState(ModifierState.EDIT)
                 }
 
                 ModifierState.EDIT -> {
-                    viewModel.updateChallengeState {
-                        copy(modifierState = ModifierState.DONE)
-                    }
+                    viewModel.updateModifierState(ModifierState.DONE)
                 }
             }
         }
@@ -211,10 +209,8 @@ class ChallengeFragment : Fragment() {
                 onAppItemClicked = { challengeGoal ->
                     when (viewModel.challengeState.value.modifierState) {
                         ModifierState.EDIT -> {
-                            if (challengeGoal.isDeletable)
-                                setDeleteAppDialog(challengeGoal.usageStatusAndGoal)
-                            else
-                                toast(getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_delete))
+                            if (challengeGoal.isDeletable) setDeleteAppDialog(challengeGoal.usageStatusAndGoal)
+                            else toast(getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_delete))
                         }
 
                         else -> Unit
