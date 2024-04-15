@@ -134,7 +134,7 @@ class MainViewModel @Inject constructor(
     private fun setChallengeStatus(challengeStatus: ChallengeStatus) {
         updateState {
             copy(
-                //appGoals = challengeStatus.appGoals,
+                appGoals = challengeStatus.appGoals,
                 challengeStatusList = challengeStatus.challengeStatusList,
                 totalGoalTimeInHour = challengeStatus.goalTimeInHours,
                 period = challengeStatus.period,
