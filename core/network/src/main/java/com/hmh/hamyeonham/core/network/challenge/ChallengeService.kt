@@ -15,6 +15,6 @@ interface ChallengeService {
     @POST("api/v1/challenge/app")
     suspend fun postApps(@Body request: AppsRequest): BaseResponse<Unit>
 
-    @HTTP(method = "DELETE", path = "api/v1/app", hasBody = true)
+    @HTTP(method = "DELETE", path = "api/v1/challenge/app", hasBody = true)
     suspend fun deleteApps(@Body request: AppCodeRequest): BaseResponse<Unit>
 }
