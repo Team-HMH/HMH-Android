@@ -38,19 +38,18 @@ class PointAdapter() : ListAdapter<PointModel, PointAdapter.PointViewHolder>(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun onBind(pointModel: PointModel) {
             binding.run {
-                tvPointTitle.text = String.format(
-                    itemView.context.getString(R.string.tv_point_title),
-                    pointModel.pointTitle,
+                tvPointTitle.text = itemView.context.getString(
+                    R.string.tv_point_title,
+                    pointModel.pointTitle
                 )
                 tvPointWhatChallenge.text =
-                    String.format(
-                        itemView.context.getString(R.string.tv_point_what_challenge),
-                        pointModel.pointWhatChallenge,
+                    itemView.context.getString(
+                        R.string.tv_point_what_challenge,
+                        pointModel.pointWhatChallenge
                     )
-                tvPointButton.text = String.format(
-                    itemView.context.getString(R.string.point_point),
-                    pointModel.point,
-                )
+                tvPointButton.text =
+                    itemView.context.getString(R.string.point_point, pointModel.point.toString())
+
                 when (pointModel.getPointStatus) {
                     PointModel.GetPointStatus.ALREADY_GET_POINT -> {
                         tvPointButton.isEnabled = false
