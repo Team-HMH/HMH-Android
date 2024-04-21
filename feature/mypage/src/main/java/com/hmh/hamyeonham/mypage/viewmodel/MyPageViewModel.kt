@@ -57,7 +57,7 @@ class MyPageViewModel @Inject constructor(
 
     fun deleteAllDatabase() {
         viewModelScope.launch {
-            deleteAllDataBaseUseCase.invoke()
+            deleteAllDataBaseUseCase()
         }
     }
 }

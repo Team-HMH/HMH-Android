@@ -7,7 +7,7 @@ import javax.inject.Inject
 class DeleteAllDatabaseUseCase @Inject constructor(
     private val usageGoalsRepository: UsageGoalsRepository,
 ){
-    suspend fun invoke(){
+    suspend operator fun invoke(){
         usageGoalsRepository.deleteAllUsageGoal()
     }
 }
