@@ -36,6 +36,8 @@ class PointAdapter() : ListAdapter<PointModel, PointAdapter.PointViewHolder>(
     class PointViewHolder(
         private val binding: ItemPointBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+        private val context = binding.root.context
+
         fun onBind(pointModel: PointModel) {
             binding.run {
                 tvPointTitle.text = itemView.context.getString(
@@ -54,9 +56,9 @@ class PointAdapter() : ListAdapter<PointModel, PointAdapter.PointViewHolder>(
                     PointModel.GetPointStatus.ALREADY_GET_POINT -> {
                         tvPointButton.isEnabled = false
                         tvPointButton.background =
-                            itemView.context.getDrawable(R.drawable.point_button_background_already_get)
+                            context.getDrawable(R.drawable.point_button_background_already_get)
                         val textColor = ContextCompat.getColor(
-                            itemView.context,
+                            context,
                             com.hmh.hamyeonham.core.designsystem.R.color.blue_purple_opacity_70
                         )
                         tvPointButton.setTextColor(textColor)
@@ -69,9 +71,9 @@ class PointAdapter() : ListAdapter<PointModel, PointAdapter.PointViewHolder>(
                     PointModel.GetPointStatus.FAIL_CHALLENGE -> {
                         tvPointButton.isEnabled = false
                         tvPointButton.background =
-                            itemView.context.getDrawable(R.drawable.point_button_background_disable)
+                            context.getDrawable(R.drawable.point_button_background_disable)
                         val textColor = ContextCompat.getColor(
-                            itemView.context,
+                            context,
                             com.hmh.hamyeonham.core.designsystem.R.color.gray2
                         )
                         tvPointButton.setTextColor(textColor)
