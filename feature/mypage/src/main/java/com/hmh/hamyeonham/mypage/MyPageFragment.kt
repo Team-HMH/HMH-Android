@@ -74,6 +74,7 @@ class MyPageFragment : Fragment() {
             ).apply {
                 setConfirmButtonClickListener {
                     viewModel.handleLogout()
+                    viewModel.deleteAllDatabase()
                     handleLogoutSuccess()
                 }
                 setDismissButtonClickListener {
@@ -90,6 +91,7 @@ class MyPageFragment : Fragment() {
             ).apply {
                 setConfirmButtonClickListener {
                     viewModel.handleWithdrawal()
+                    viewModel.deleteAllDatabase()
                     handleWithdrawalSuccess()
                 }
                 setDismissButtonClickListener {

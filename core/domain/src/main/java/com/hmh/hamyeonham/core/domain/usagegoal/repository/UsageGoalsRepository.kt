@@ -10,4 +10,5 @@ interface UsageGoalsRepository {
     suspend fun addUsageGoal(usageGoal: UsageGoal)
     suspend fun addUsageGoalList(usageGoalList: List<UsageGoal>)
     suspend fun deleteUsageGoal(packageName: String)
+    suspend fun deleteAllUsageGoal()
 }

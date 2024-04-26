@@ -16,7 +16,10 @@
     <string name="challenge_today_mark_img">오늘 날짜 마커 이미</string>
     <string name="challenge_status_calendar_img">챌린지 상태 달력 배경 이미지</string>
     <string name="challenge_trash_img">쓰레기통 이미지</string>
-    
+    <string name="point_point">+%sP</string>
+    <string name="tv_point_what_challenge">%s일 챌린지</string>
+    <string name="tv_point_title">%s일차 보상</string>
+
     <string name="challenge_cannot_create">포인트를 다 받은 후 챌린지를 생성하세요</string>
     <string name="all_move">이동</string>
 </resources>

@@ -57,4 +57,9 @@ class UsageGoalsLocalDataSource @Inject constructor(
     suspend fun deleteUsageGoal(packageName: String) {
         usageGoalsDao.deleteByPackageName(packageName)
     }
+
+    suspend fun deleteAllUsageGoals() {
+        usageGoalsDao.deleteAll()
+        usageTotalGoalDao.deleteAll()
+    }
 }
