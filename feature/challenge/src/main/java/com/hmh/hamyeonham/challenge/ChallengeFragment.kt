@@ -129,6 +129,12 @@ class ChallengeFragment : Fragment() {
         }
     }
 
+    private fun initPointButton() {
+        val pointButtonImg =
+            if (activityViewModel.isPointLeftToCollect()) com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24 else com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
+        binding.tvPointButton.setImageResource(pointButtonImg)
+    }
+
     private fun initChallengeCreateButton() {
         binding.btnChallengeCreate.setOnClickListener {
             if (activityViewModel.isPointLeftToCollect()) {
@@ -141,8 +147,7 @@ class ChallengeFragment : Fragment() {
                 ) {
                     //TODO 포인트 받기 뷰로 이동
                 }
-            }
-            else {
+            } else {
                 //TODO 챌린지 생성 기능 추가
             }
         }
@@ -150,6 +155,7 @@ class ChallengeFragment : Fragment() {
 
     private fun initViews() {
         initModifierButton()
+        initPointButton()
         initChallengeCreateButton()
         initChallengeGoalsRecyclerView()
         initChallengeCalendarRecyclerView()
