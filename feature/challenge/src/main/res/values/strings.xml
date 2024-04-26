@@ -18,4 +18,7 @@
     <string name="challenge_trash_img">쓰레기통 이미지</string>
 
     <string name="challenge_cannot_delete">5분 넘게 사용한 앱은 삭제할 수 없어요</string>
+    <string name="point_point">+%sP</string>
+    <string name="tv_point_what_challenge">%s일 챌린지</string>
+    <string name="tv_point_title">%s일차 보상</string>
 </resources>
