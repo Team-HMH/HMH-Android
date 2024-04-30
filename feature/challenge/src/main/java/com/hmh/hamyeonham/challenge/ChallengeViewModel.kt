@@ -49,9 +49,6 @@ class ChallengeViewModel @Inject constructor(
     private val _challengeState = MutableStateFlow(ChallengeState())
     val challengeState = _challengeState.asStateFlow()
 
-    fun collectChallengeState(lifecycle: Lifecycle): Flow<ChallengeState> =
-        challengeState.flowWithLifecycle(lifecycle)
-
     fun updateUsageStatusAndGoals(newUsageStatusAndGoals: List<UsageStatusAndGoal>) {
         updateChallengeState { copy(usageStatusAndGoals = newUsageStatusAndGoals) }
     }

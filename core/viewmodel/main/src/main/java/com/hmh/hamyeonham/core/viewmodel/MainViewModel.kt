@@ -60,9 +60,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun collectMainState(lifecycle: Lifecycle): Flow<MainState> =
-        mainState.flowWithLifecycle(lifecycle)
-
     fun reloadUsageStatsList() {
         viewModelScope.launch {
             getStatusAndGoals()

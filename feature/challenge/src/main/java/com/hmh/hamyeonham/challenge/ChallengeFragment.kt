@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -59,12 +60,12 @@ class ChallengeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAppSelectionResultLauncher()
         initViews()
-        initChallengeCalendar()
-        initUsageGoalList()
+        collectMainStateAndProcess()
+        collectChallengeStateAndProcess()
     }
 
-    private fun initChallengeCalendar() {
-        activityViewModel.collectMainState(viewLifeCycle).onEach {
+    private fun collectMainStateAndProcess() {
+        activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
             bindChallengeInfo(it)
             updateUsageStatusAndGoals(it)
         }.launchIn(viewLifeCycleScope)
@@ -82,8 +83,8 @@ class ChallengeFragment : Fragment() {
         )
     }
 
-    private fun initUsageGoalList() {
-        viewModel.collectChallengeState(viewLifeCycle).onEach {
+    private fun collectChallengeStateAndProcess() {
+        viewModel.challengeState.flowWithLifecycle(viewLifeCycle).onEach {
             handleModifierButtonState(it.modifierState)
             bindUsageGoals(it.usageGoalsAndModifiers)
         }.launchIn(viewLifeCycleScope)
