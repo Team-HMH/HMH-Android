@@ -88,10 +88,6 @@ class ChallengeFragment : Fragment() {
             bindUsageGoals(it.usageGoalsAndModifiers)
         }.launchIn(viewLifeCycleScope)
     }
-//    private fun collectAndProcessChallengeState() {
-//
-//    }
-
 
     private fun handleModifierButtonState(it: ModifierState) {
         val (text, color) = getTextAndColorsOfModifierState(it)
