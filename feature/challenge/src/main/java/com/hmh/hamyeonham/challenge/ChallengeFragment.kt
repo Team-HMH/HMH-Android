@@ -59,41 +59,42 @@ class ChallengeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAppSelectionResultLauncher()
         initViews()
-        collectAndProcessMainState()
-        collectAndProcessChallengeState()
+        initChallengeCalendar()
+        initUsageGoalList()
     }
 
-    private fun collectAndProcessMainState() {
+    private fun initChallengeCalendar() {
         activityViewModel.collectMainState(viewLifeCycle).onEach {
-            setChallengeCalendarVisibility(it.isChallengeExist)
             bindChallengeInfo(it)
-            initChallengeState(it)
+            updateUsageStatusAndGoals(it)
         }.launchIn(viewLifeCycleScope)
     }
 
-    private fun initChallengeState(it: MainState) {
+    private fun bindChallengeInfo(it: MainState) {
+        setChallengeCalendarVisibility(it.isChallengeExist)
+        bindChallengeCalendar(it.challengeStatusList)
+        bindChallengeDate(it.todayIndex, it.startDate)
+    }
+
+    private fun updateUsageStatusAndGoals(it: MainState) {
         if (it.usageStatusAndGoals.isNotEmpty()) viewModel.updateUsageStatusAndGoals(
             activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal()
         )
     }
 
-    private fun bindChallengeInfo(it: MainState) {
-        if (it.isChallengeExist) {
-            bindChallengeCalendar(it.challengeStatusList)
-            bindChallengeDate(it.todayIndex, it.startDate)
-        }
-    }
-
-    private fun collectAndProcessChallengeState() {
+    private fun initUsageGoalList() {
         viewModel.collectChallengeState(viewLifeCycle).onEach {
-            handleModifierButtonState(it)
+            handleModifierButtonState(it.modifierState)
             bindUsageGoals(it.usageGoalsAndModifiers)
         }.launchIn(viewLifeCycleScope)
     }
+//    private fun collectAndProcessChallengeState() {
+//
+//    }
 
 
-    private fun handleModifierButtonState(it: ChallengeState) {
-        val (text, color) = getTextAndColorsOfModifierState(it.modifierState)
+    private fun handleModifierButtonState(it: ModifierState) {
+        val (text, color) = getTextAndColorsOfModifierState(it)
         binding.tvModifierButton.run {
             this.text = text
             setTextColor(color)
