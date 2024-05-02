@@ -1,9 +1,7 @@
 package com.hmh.hamyeonham.core.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
@@ -17,7 +15,6 @@ import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatsListUseCase
 import com.hmh.hamyeonham.userinfo.model.UserInfo
 import com.hmh.hamyeonham.userinfo.repository.UserInfoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
