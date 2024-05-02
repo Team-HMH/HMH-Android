@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.core.network.auth.api.RefreshService
-import com.hmh.hamyeonham.core.network.auth.datastore.HMHNetworkPreference
+import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.qualifiers.ApplicationContext

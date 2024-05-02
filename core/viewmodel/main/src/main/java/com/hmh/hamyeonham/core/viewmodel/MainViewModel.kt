@@ -69,14 +69,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun updateState(transform: suspend MainState.() -> MainState) {
-        viewModelScope.launch {
-            val currentState = mainState.value
-            val newState = currentState.transform()
-            _mainState.value = newState
-        }
-    }
-
     fun updateDailyChallengeFailed() {
         viewModelScope.launch {
             challengeRepository.updateDailyChallengeFailed().onSuccess {
@@ -87,11 +79,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getUsageGoalsExceptTotal(): List<UsageGoal> {
-        return mainState.value.usageGoals.filter { it.packageName != UsageGoal.TOTAL }
-    }
-
-    fun setChallengeStatus(challengeStatus: ChallengeStatus) {
+    private fun setChallengeStatus(challengeStatus: ChallengeStatus) {
         updateState {
             copy(
                 appGoals = challengeStatus.appGoals,
@@ -107,12 +95,24 @@ class MainViewModel @Inject constructor(
     fun isPointLeftToCollect(): Boolean =
         mainState.value.challengeStatusList.contains(ChallengeStatus.Status.UNEARNED)
 
-    fun updateUserInfo(userInfo: UserInfo) {
+    private fun updateUserInfo(userInfo: UserInfo) {
         updateState {
             copy(
                 name = userInfo.name,
                 point = userInfo.point,
             )
+        }
+    }
+
+    fun getUsageGoalsExceptTotal(): List<UsageGoal> {
+        return mainState.value.usageGoals.filter { it.packageName != UsageGoal.TOTAL }
+    }
+
+    private fun updateState(transform: suspend MainState.() -> MainState) {
+        viewModelScope.launch {
+            val currentState = mainState.value
+            val newState = currentState.transform()
+            _mainState.value = newState
         }
     }
 

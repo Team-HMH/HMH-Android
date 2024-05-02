@@ -3,7 +3,7 @@ package com.hmh.hamyeonham.feature.onboarding.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.common.time.timeToMs
-import com.hmh.hamyeonham.core.network.auth.datastore.HMHNetworkPreference
+import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
 import com.hmh.hamyeonham.login.model.SignRequestDomain
 import com.hmh.hamyeonham.login.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel

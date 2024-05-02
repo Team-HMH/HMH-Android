@@ -9,6 +9,6 @@ interface DailyChallengeService {
     @GET("api/v1/challenge/home")
     suspend fun getUsageGoal(): BaseResponse<UsageGoalResponse>
 
-    @PATCH("/api/v1/challene/daily/failure")
+    @PATCH("api/v1/challenge/daily/failure")
     suspend fun updateDailyChallengeFailed(): BaseResponse<Unit>
 }

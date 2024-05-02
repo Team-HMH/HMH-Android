@@ -1,4 +1,5 @@
-@Suppress("DSL_SCOPE_VIOLATION") plugins {
+@Suppress("DSL_SCOPE_VIOLATION")
+plugins {
     hmh("feature")
 }
 
