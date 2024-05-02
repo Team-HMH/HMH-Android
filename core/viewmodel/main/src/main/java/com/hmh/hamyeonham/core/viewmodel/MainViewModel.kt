@@ -84,6 +84,13 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun getUsageGoalsExceptTotal(): List<UsageGoal> {
+        return mainState.value.usageGoals.filter { it.packageName != UsageGoal.TOTAL }
+    }
+
+    fun isPointLeftToCollect(): Boolean =
+        mainState.value.challengeStatusList.contains(ChallengeStatus.Status.UNEARNED)
+
     private suspend fun updateGoals() {
         usageGoalsRepository.updateUsageGoal()
     }
