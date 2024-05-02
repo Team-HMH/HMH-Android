@@ -35,7 +35,7 @@ sealed class ChallengeViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder
             binding.run {
                 bindTextViews(item)
                 setVisibility(item.modifierState)
-                if (item.modifierState == ModifierState.DONE)
+                if (item.modifierState == ModifierState.EDIT)
                     setTrashIcon(item.isDeletable)
             }
         }

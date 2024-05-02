@@ -1,22 +1,19 @@
 package com.hmh.hamyeonham.challenge
 
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.usecase.AddUsageGoalsUseCase
 import com.hmh.hamyeonham.challenge.usecase.DeleteUsageGoalUseCase
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ChallengeState(
-    val modifierState: ModifierState = ModifierState.EDIT,
+    val modifierState: ModifierState = ModifierState.DONE,
     val usageStatusAndGoals: List<UsageStatusAndGoal> = emptyList(),
 ) {
     val usageGoalsAndModifiers = usageStatusAndGoals.map {
