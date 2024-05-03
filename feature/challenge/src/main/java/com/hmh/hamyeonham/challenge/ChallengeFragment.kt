@@ -3,7 +3,6 @@ package com.hmh.hamyeonham.challenge
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -220,14 +219,6 @@ class ChallengeFragment : Fragment() {
                     //TODO: 새로운 챌린지 추가 기능
                     val period = result.data?.getIntExtra(NewChallengeActivity.PERIOD, 0)
                     val goalTime = result.data?.getLongExtra(NewChallengeActivity.GOALTIME, 0)
-                    Log.d(
-                        "new challenge goal time",
-                        result.data?.getLongExtra(NewChallengeActivity.GOALTIME, 0).toString()
-                    )
-                    Log.d(
-                        "new challenge period",
-                        result.data?.getIntExtra(NewChallengeActivity.PERIOD, 0).toString()
-                    )
                     viewModel.generateNewChallenge(
                         NewChallenge(
                             period = period ?: 0,

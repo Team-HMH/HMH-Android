@@ -1,6 +1,5 @@
 package com.hmh.hamyeonham.challenge.newchallenge
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,7 +25,6 @@ class NewChallengeViewModel : ViewModel() {
         val currentState = state.value
         val newState = currentState.transform()
         _state.value = newState
-        Log.d("update State", newState.toString())
     }
 
     fun selectDate(date: Int) {

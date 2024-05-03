@@ -2,7 +2,6 @@ package com.hmh.hamyeonham.challenge.newchallenge
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
@@ -36,7 +35,6 @@ class NewChallengeActivity : AppCompatActivity() {
 
     private fun handleNextClicked() {
         binding.vpNewChallenge.run {
-            Log.d("next button clicked", currentItem.toString())
             when (currentItem) {
                 0 -> currentItem = 1
                 1 -> finishWithResults()
