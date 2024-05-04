@@ -68,8 +68,34 @@ class ChallengeFragment : Fragment() {
             if (it.isChallengeExist) {
                 bindChallengeCalendar(it.challengeStatusList)
                 bindChallengeDate(it.todayIndex, it.startDate)
+                if (it.period == 20 || it.period == 30) {
+                    handleCalendarToggleState()
+                } else {
+                    binding.tvCalendarToggle.visibility = View.GONE
+                }
             }
         }.launchIn(viewLifeCycleScope)
+    }
+
+    private fun handleCalendarToggleState() {
+        binding.tvCalendarToggle.setOnClickListener {
+            val newState = when (viewModel.challengeState.value.calendarToggleState) {
+                CalendarToggleState.COLLAPSED -> {
+                    binding.tvCalendarToggle.text =
+                        getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_expand)
+                    CalendarToggleState.EXPANDED
+                }
+
+                CalendarToggleState.EXPANDED -> {
+                    binding.tvCalendarToggle.text =
+                        getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_collapse)
+                    CalendarToggleState.COLLAPSED
+                }
+            }
+            viewModel.updateChallengeState {
+                copy(calendarToggleState = newState)
+            }
+        }
     }
 
     private fun initUsageGoalList() {

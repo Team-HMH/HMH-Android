@@ -17,6 +17,7 @@ import javax.inject.Inject
 
 data class ChallengeState(
     val modifierState: ModifierState = ModifierState.EDIT,
+    val calendarToggleState: CalendarToggleState = CalendarToggleState.COLLAPSED,
     val usageGoals: List<UsageGoal> = emptyList()
 ) {
     val usageGoalsAndModifierState = usageGoals.map {
@@ -29,9 +30,12 @@ data class UsageGoalAndModifierState(
     val modifierState: ModifierState = ModifierState.EDIT,
 )
 
-
 enum class ModifierState {
     EDIT, DONE,
+}
+
+enum class CalendarToggleState {
+    EXPANDED, COLLAPSED,
 }
 
 @HiltViewModel
@@ -43,7 +47,9 @@ class ChallengeViewModel @Inject constructor(
     private val _challengeState = MutableStateFlow(ChallengeState())
     val challengeState = _challengeState.asStateFlow()
 
-    fun collectChallengeState(lifecycle: Lifecycle): Flow<ChallengeState> = challengeState.flowWithLifecycle(lifecycle)
+    fun collectChallengeState(lifecycle: Lifecycle): Flow<ChallengeState> =
+        challengeState.flowWithLifecycle(lifecycle)
+
     fun updateChallengeState(transform: ChallengeState.() -> ChallengeState) {
         val currentState = challengeState.value
         val newState = currentState.transform()
