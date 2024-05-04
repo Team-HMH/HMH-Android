@@ -1,12 +1,25 @@
 package com.hmh.hamyeonham.usagestats.repository
 
+import com.hmh.hamyeonham.common.time.getTargetDayStartEndEpochMillis
+import com.hmh.hamyeonham.common.time.toEndOfDay
+import com.hmh.hamyeonham.common.time.toStartOfDay
 import com.hmh.hamyeonham.usagestats.datasource.local.UsageStatusLocalDataSource
 import com.hmh.hamyeonham.usagestats.model.UsageStatus
+import kotlinx.datetime.toLocalDate
+import kotlinx.datetime.toLocalDateTime
 import javax.inject.Inject
 
 class DefaultUsageStatsRepository @Inject constructor(
     private val usageStatusLocalDataSource: UsageStatusLocalDataSource,
 ) : UsageStatsRepository {
+    override fun getUsageStats(targetDate: String): List<UsageStatus> {
+        val (startTime, endTime) = getTargetDayStartEndEpochMillis(targetDate.toLocalDate())
+        val usageStatsList = usageStatusLocalDataSource.getUsageStats(startTime, endTime)
+        return usageStatsList.map { usageStatModel ->
+            UsageStatus(usageStatModel.packageName, usageStatModel.totalTimeInForeground)
+        }
+    }
+
     override fun getUsageStats(
         startTime: Long,
         endTime: Long,

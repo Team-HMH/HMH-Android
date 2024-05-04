@@ -21,4 +21,10 @@ object DaoModule {
     fun providesUsageTotalGoalDao(
         database: HMHRoomDatabase,
     ) = database.usageTotalGoalDao()
+
+    @Provides
+    @Singleton
+    fun providesChallengeDao(
+        database: HMHRoomDatabase,
+    ) = database.challengeDao()
 }

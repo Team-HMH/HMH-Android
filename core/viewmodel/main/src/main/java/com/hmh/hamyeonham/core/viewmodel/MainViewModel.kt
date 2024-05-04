@@ -7,7 +7,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
-import com.hmh.hamyeonham.common.time.getCurrentDateOfDefaulTimeZone
+import com.hmh.hamyeonham.common.time.getCurrentDateOfDefaultTimeZone
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
 import com.hmh.hamyeonham.common.time.minusDaysFromDate
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
@@ -36,7 +36,7 @@ data class MainState(
     val point: Int = 0,
     val challengeSuccess: Boolean = true,
 ) {
-    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaulTimeZone(), todayIndex - 1)
+    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), todayIndex - 1)
     val isChallengeExist: Boolean = todayIndex != -1
 }
 
@@ -53,10 +53,21 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            uploadSavedChallenge()
             updateGoals()
             getChallengeStatus()
             getUserInfo()
             getUsageGoalAndStatList()
+        }
+    }
+
+    private fun uploadSavedChallenge() {
+        viewModelScope.launch {
+            val challengeWithUsages =
+                challengeRepository.getChallengeWithUsage().getOrNull() ?: return@launch
+            challengeRepository.uploadSavedChallenge(challengeWithUsages).onSuccess {
+                challengeRepository.deleteAllChallengeWithUsage()
+            }
         }
     }
 

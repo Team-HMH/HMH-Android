@@ -16,4 +16,5 @@ dependencies {
     implementation(projects.core.designsystem)
 
     implementation(libs.retrofit)
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }

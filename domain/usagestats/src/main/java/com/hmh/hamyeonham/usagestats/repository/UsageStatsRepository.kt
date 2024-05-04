@@ -3,6 +3,11 @@ package com.hmh.hamyeonham.usagestats.repository
 import com.hmh.hamyeonham.usagestats.model.UsageStatus
 
 interface UsageStatsRepository {
+
+    fun getUsageStats(
+        targetDate: String
+    ): List<UsageStatus>
+
     fun getUsageStats(
         startTime: Long,
         endTime: Long,
