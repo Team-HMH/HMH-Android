@@ -16,4 +16,6 @@
     <string name="challenge_today_mark_img">오늘 날짜 마커 이미</string>
     <string name="challenge_status_calendar_img">챌린지 상태 달력 배경 이미지</string>
     <string name="challenge_trash_img">쓰레기통 이미지</string>
+    <string name="tv_calendar_toggle_collapse">접기 "\u25B2"</string>
+    <string name="tv_calendar_toggle_expand">펼치기 "\u25BC"</string>
 </resources>

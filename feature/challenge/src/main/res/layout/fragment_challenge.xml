@@ -81,84 +81,85 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="26dp"
             android:layout_marginTop="27dp"
-            app:layout_constraintBottom_toTopOf="@id/v_bottom"
+            app:layout_constraintBottom_toTopOf="@id/tv_calendar_toggle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_challenge_day" />
 
+
         <TextView
-            android:id="@+id/tv_challenge_create_title"
+            android:id="@+id/tv_calendar_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/challenge_create_title"
-            android:textAppearance="?textAppearanceHeadlineLarge"
-            android:textColor="?white_text"
-            android:visibility="invisible"
-            app:layout_constraintStart_toStartOf="@id/tv_challenge_start_date"
-            app:layout_constraintTop_toTopOf="@id/tv_challenge_start_date" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_challenge_create"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="54dp"
-            android:layout_marginBottom="21dp"
-            android:background="@drawable/all_btn_able"
-            android:gravity="center"
-            android:text="@string/challenge_create"
-            android:textColor="?white_text"
-            android:visibility="invisible"
+            android:text="@string/tv_calendar_toggle_collapse"
+            android:textAppearance="@style/TextAppearance.Hmh.BodySmall"
+            android:textColor="@color/gray2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_challenge_create_title" />
+            app:layout_constraintTop_toBottomOf="@+id/rv_challenge_calendar" />
 
 
-        <View
-            android:id="@+id/v_bottom"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@color/blackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iv_calendar_background" />
+    <TextView
+        android:id="@+id/tv_challenge_create_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/challenge_create_title"
+        android:textAppearance="?textAppearanceHeadlineLarge"
+        android:textColor="?white_text"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@id/tv_challenge_start_date"
+        app:layout_constraintTop_toTopOf="@id/tv_challenge_start_date" />
 
-        <TextView
-            android:id="@+id/tv_app_lock"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="30dp"
-            android:text="@string/app_lock"
-            android:textAppearance="?textAppearanceTitleSmall"
-            android:textColor="@color/gray1"
-            app:layout_constraintStart_toStartOf="@id/v_bottom"
-            app:layout_constraintTop_toTopOf="@id/v_bottom" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_challenge_create"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="54dp"
+        android:layout_marginBottom="21dp"
+        android:background="@drawable/all_btn_able"
+        android:gravity="center"
+        android:text="@string/challenge_create"
+        android:textColor="?white_text"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_challenge_create_title" />
 
-        <TextView
-            android:id="@+id/tv_modifier_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="14dp"
-            android:paddingHorizontal="9dp"
-            android:paddingVertical="12dp"
-            android:text="@string/all_edit"
-            android:textAppearance="@style/TextAppearance.Hmh.TitleMedium"
-            android:textColor="@color/blue_purple_text"
-            app:layout_constraintBottom_toBottomOf="@id/tv_app_lock"
-            app:layout_constraintEnd_toEndOf="@id/v_bottom"
-            app:layout_constraintTop_toTopOf="@id/tv_app_lock" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_app_usage_goals"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="14dp"
-            app:layout_constraintBottom_toBottomOf="@id/v_bottom"
-            app:layout_constraintEnd_toEndOf="@id/tv_modifier_button"
-            app:layout_constraintStart_toStartOf="@id/tv_app_lock"
-            app:layout_constraintTop_toBottomOf="@id/tv_modifier_button" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+    <TextView
+        android:id="@+id/tv_app_lock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/app_lock"
+        android:textAppearance="?textAppearanceTitleSmall"
+        android:textColor="@color/gray1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rv_challenge_calendar" />
+
+    <TextView
+        android:id="@+id/tv_modifier_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="14dp"
+        android:paddingHorizontal="9dp"
+        android:paddingVertical="12dp"
+        android:text="@string/all_edit"
+        android:textAppearance="@style/TextAppearance.Hmh.TitleMedium"
+        android:textColor="@color/blue_purple_text"
+        app:layout_constraintBottom_toBottomOf="@id/tv_app_lock"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_app_lock" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_app_usage_goals"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tv_modifier_button"
+        app:layout_constraintStart_toStartOf="@id/tv_app_lock"
+        app:layout_constraintTop_toBottomOf="@id/tv_modifier_button" />
+</androidx.constraintlayout.widget.ConstraintLayout></ScrollView>
