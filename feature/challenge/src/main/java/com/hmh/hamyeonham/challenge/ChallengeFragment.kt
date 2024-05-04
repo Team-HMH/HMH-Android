@@ -80,16 +80,21 @@ class ChallengeFragment : Fragment() {
     private fun handleCalendarToggleState() {
         binding.tvCalendarToggle.setOnClickListener {
             val newState = when (viewModel.challengeState.value.calendarToggleState) {
-                CalendarToggleState.COLLAPSED -> {
+                CalendarToggleState.COLLAPSED -> { // 접힌 상태이면
                     binding.tvCalendarToggle.text =
                         getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_expand)
                     CalendarToggleState.EXPANDED
+
+                    // TODO : 1주일치만 보이게 하기
+
                 }
 
-                CalendarToggleState.EXPANDED -> {
+                CalendarToggleState.EXPANDED -> { // 펼쳐진 상태이면
                     binding.tvCalendarToggle.text =
                         getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_collapse)
                     CalendarToggleState.COLLAPSED
+
+                    // TODO : 모두 보이게 하기
                 }
             }
             viewModel.updateChallengeState {
@@ -163,11 +168,13 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun setChallengeInfoVisibility(isChallengeExist: Boolean) {
-        binding.btnChallengeCreate.visibility = (!isChallengeExist).mapBooleanToVisibility()
-        binding.tvChallengeCreateTitle.visibility = (!isChallengeExist).mapBooleanToVisibility()
-        binding.tvChallengeDay.visibility = isChallengeExist.mapBooleanToVisibility()
-        binding.tvChallengeStartDate.visibility = isChallengeExist.mapBooleanToVisibility()
-        binding.rvChallengeCalendar.visibility = isChallengeExist.mapBooleanToVisibility()
+        binding.run {
+            btnChallengeCreate.visibility = (!isChallengeExist).mapBooleanToVisibility()
+            tvChallengeCreateTitle.visibility = (!isChallengeExist).mapBooleanToVisibility()
+            tvChallengeDay.visibility = isChallengeExist.mapBooleanToVisibility()
+            tvChallengeStartDate.visibility = isChallengeExist.mapBooleanToVisibility()
+            rvChallengeCalendar.visibility = isChallengeExist.mapBooleanToVisibility()
+        }
     }
 
     private fun bindUsageGoals(usageGoalAndModifierStateList: List<UsageGoalAndModifierState>) {
