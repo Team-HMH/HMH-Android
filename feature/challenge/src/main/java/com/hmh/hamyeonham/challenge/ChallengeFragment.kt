@@ -24,8 +24,10 @@ import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
+import com.hmh.hamyeonham.common.fragment.snackBarWithAction
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
+import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.view.VerticalSpaceItemDecoration
 import com.hmh.hamyeonham.common.view.dp
 import com.hmh.hamyeonham.common.view.mapBooleanToVisibility
@@ -38,6 +40,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.datetime.LocalDate
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChallengeFragment : Fragment() {
@@ -45,6 +48,9 @@ class ChallengeFragment : Fragment() {
     private val activityViewModel by activityViewModels<MainViewModel>()
     private val viewModel by viewModels<ChallengeViewModel>()
     private lateinit var appSelectionResultLauncher: ActivityResultLauncher<Intent>
+
+    @Inject
+    lateinit var navigationProvider: NavigationProvider
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -168,14 +174,33 @@ class ChallengeFragment : Fragment() {
         }
     }
 
+    private fun initPointButton() {
+        val pointButtonImg =
+            if (activityViewModel.isPointLeftToCollect()) com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24 else com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
+        binding.tvPointButton.setImageResource(pointButtonImg)
+    }
+
     private fun initChallengeCreateButton() {
         binding.btnChallengeCreate.setOnClickListener {
-            //TODO 챌린지 생성 기능 추가하기
+            if (activityViewModel.isPointLeftToCollect()) {
+                snackBarWithAction(
+                    anchorView = binding.root,
+                    message = getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_create),
+                    actionMessage = getString(
+                        com.hmh.hamyeonham.feature.challenge.R.string.all_move
+                    )
+                ) {
+                    //TODO 포인트 받기 뷰로 이동
+                }
+            } else {
+                //TODO 챌린지 생성 기능 추가
+            }
         }
     }
 
     private fun initViews() {
         initModifierButton()
+        initPointButton()
         initChallengeCreateButton()
         initChallengeGoalsRecyclerView()
         initChallengeCalendarRecyclerView()

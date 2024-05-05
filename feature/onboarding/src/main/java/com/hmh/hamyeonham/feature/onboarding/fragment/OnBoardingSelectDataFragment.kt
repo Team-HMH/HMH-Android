@@ -9,8 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.hmh.hamyeonham.common.fragment.colorOf
-import com.hmh.hamyeonham.common.fragment.drawableOf
 import com.hmh.hamyeonham.common.primitive.extractDigits
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.R
@@ -101,18 +99,6 @@ class OnBoardingSelectDataFragment : Fragment() {
     private fun initFragmentType() {
         fragmentType?.let {
             viewModel.initQuestionData(it)
-            if (it == OnBoardingFragmentType.SELECT_DATA_PERIOD) {
-                binding.run {
-                    btnOnboardingSelectData3.isEnabled = false
-                    btnOnboardingSelectData4.isEnabled = false
-                    btnOnboardingSelectData3.background =
-                        drawableOf(R.drawable.onboarding_select_data_disable)
-                    btnOnboardingSelectData4.background =
-                        drawableOf(R.drawable.onboarding_select_data_disable)
-                    btnOnboardingSelectData3.setTextColor(colorOf(com.hmh.hamyeonham.core.designsystem.R.color.gray5))
-                    btnOnboardingSelectData4.setTextColor(colorOf(com.hmh.hamyeonham.core.designsystem.R.color.gray5))
-                }
-            }
         }
     }
 
