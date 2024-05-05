@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -57,8 +58,8 @@ class ChallengeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAppSelectionResultLauncher()
         initViews()
-        initChallengeCalendar()
         initUsageGoalList()
+        handleCalendarView()
     }
 
     private fun initChallengeCalendar() {
@@ -80,25 +81,38 @@ class ChallengeFragment : Fragment() {
     private fun handleCalendarToggleState() {
         binding.tvCalendarToggle.setOnClickListener {
             val newState = when (viewModel.challengeState.value.calendarToggleState) {
-                CalendarToggleState.COLLAPSED -> { // 접힌 상태이면
+                CalendarToggleState.COLLAPSED -> { // 접힌 상태
                     binding.tvCalendarToggle.text =
                         getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_expand)
                     CalendarToggleState.EXPANDED
-
-                    // TODO : 1주일치만 보이게 하기
-
                 }
 
-                CalendarToggleState.EXPANDED -> { // 펼쳐진 상태이면
+                CalendarToggleState.EXPANDED -> { // 펼쳐진 상태\
                     binding.tvCalendarToggle.text =
                         getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_collapse)
                     CalendarToggleState.COLLAPSED
-
-                    // TODO : 모두 보이게 하기
                 }
             }
             viewModel.updateChallengeState {
                 copy(calendarToggleState = newState)
+            }
+        }
+    }
+
+    private fun handleCalendarView() { // TODO :
+        when (viewModel.challengeState.value.calendarToggleState) {
+            CalendarToggleState.COLLAPSED -> {
+                val layoutManager = binding.rvChallengeCalendar.layoutManager as? GridLayoutManager
+                val firstVisibleItemPosition = layoutManager?.findFirstVisibleItemPosition() ?: 0
+                val firstItemHeight =
+                    layoutManager?.findViewByPosition(firstVisibleItemPosition)?.height ?: 0
+
+                val params = binding.clLockedAppList.layoutParams as ConstraintLayout.LayoutParams
+                params.topToTop = binding.rvChallengeCalendar.id + firstItemHeight
+                binding.clLockedAppList.layoutParams = params
+            }
+
+            else -> { // 펼쳐진 게 디폴트
             }
         }
     }
@@ -165,6 +179,7 @@ class ChallengeFragment : Fragment() {
         initChallengeCreateButton()
         initChallengeGoalsRecyclerView()
         initChallengeCalendarRecyclerView()
+        initChallengeCalendar()
     }
 
     private fun setChallengeInfoVisibility(isChallengeExist: Boolean) {
@@ -178,7 +193,8 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun bindUsageGoals(usageGoalAndModifierStateList: List<UsageGoalAndModifierState>) {
-        val challengeGoalsAdapter = binding.rvAppUsageGoals.adapter as? ChallengeUsageGoalsAdapter
+        val challengeGoalsAdapter =
+            binding.rvAppUsageGoals.adapter as? ChallengeUsageGoalsAdapter
         challengeGoalsAdapter?.submitList(usageGoalAndModifierStateList)
     }
 
