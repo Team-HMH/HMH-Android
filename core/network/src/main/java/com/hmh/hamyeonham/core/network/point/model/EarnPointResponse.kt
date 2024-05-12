@@ -8,8 +8,4 @@ import kotlinx.serialization.Serializable
 data class EarnPointResponse(
     @SerialName("point")
     val point: Int? = 0
-) {
-    fun toDomain() = com.hmh.hamyeonham.domain.point.model.EarnPoint(
-        point = point ?: 0
-    )
-}
+)
