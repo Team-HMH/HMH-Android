@@ -40,9 +40,7 @@ class AppAddViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateInstalledApps(installApps: List<String>) {
-        if (state == null)
-            delay(10)
+    private fun updateInstalledApps(installApps: List<String>) {
         updateState {
             copy(installedApp = installApps)
         }

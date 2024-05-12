@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface UsageGoalsRepository {
     suspend fun updateUsageGoal()
-    suspend fun getUsageGoalTimeFromMockData(packageName: String): Long
     suspend fun getUsageGoals(): Flow<List<UsageGoal>>
     suspend fun addUsageGoal(usageGoal: UsageGoal)
     suspend fun addUsageGoalList(usageGoalList: List<UsageGoal>)

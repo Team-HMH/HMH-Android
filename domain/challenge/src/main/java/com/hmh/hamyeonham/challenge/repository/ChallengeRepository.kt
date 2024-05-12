@@ -7,5 +7,4 @@ interface ChallengeRepository {
     suspend fun getChallengeData(): Result<ChallengeStatus>
     suspend fun postApps(request: Apps): Result<Unit>
     suspend fun deleteApps(appCode: String): Result<Unit>
-    suspend fun updateDailyChallengeFailed(): Result<Unit>
 }
