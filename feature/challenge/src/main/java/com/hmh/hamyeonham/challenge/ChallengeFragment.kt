@@ -74,7 +74,8 @@ class ChallengeFragment : Fragment() {
 
     private fun initChallengeCalendar() {
         activityViewModel.collectMainState(viewLifeCycle).onEach {
-            setChallengeInfoVisibility(it.isChallengeExist)
+//            setChallengeInfoVisibility(it.isChallengeExist)
+            setChallengeInfoVisibility(false)
             if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageGoals = (activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())) }
             if (it.isChallengeExist) {
                 bindChallengeCalendar(it.challengeStatusList)

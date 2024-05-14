@@ -44,7 +44,7 @@ class NewChallengeActivity : AppCompatActivity() {
 
     private fun collectNewChallengeState() {
         viewModel.state.flowWithLifecycle(lifecycle)
-            .onEach { binding.btNewChallenge.isEnabled = it.isInitialized() }
+            .onEach { binding.btNewChallenge.isEnabled = it.isNextButtonActive }
             .launchIn(lifecycleScope)
     }
 

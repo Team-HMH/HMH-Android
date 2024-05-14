@@ -16,7 +16,7 @@ class PeriodSelectionFragment : Fragment() {
 
     private val binding by viewBinding(FragmentPeriodSelectionBinding::bind)
     private val viewModel by activityViewModels<NewChallengeViewModel>()
-    private lateinit var buttons: List<AppCompatButton>
+    private val selectedButtons = mutableSetOf<AppCompatButton>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,31 +28,49 @@ class PeriodSelectionFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttons = listOf(
+        initViews()
+    }
+
+    private fun initViews() {
+        initQuestionButton()
+    }
+
+    private fun initQuestionButton() {
+        val periodSelectionFragmentButtonList = listOf(
             binding.btnNewChallengeSevenDays,
             binding.btnNewChallengeFourteenDays,
             binding.btnNewChallengeTwentyDays,
             binding.btnNewChallengeThirtyDays,
         )
-        initQuestionButton()
-    }
 
-    private fun initQuestionButton() {
-        buttons.forEachIndexed { _, button ->
+        periodSelectionFragmentButtonList.forEachIndexed { _, button ->
             button.setOnClickListener {
-                initAllButtons(button)
+                toggleButtonSelection(button)
             }
         }
     }
 
-    private fun initAllButtons(button: AppCompatButton) {
+    private fun toggleButtonSelection(button: AppCompatButton) {
         button.isSelected = !button.isSelected
         updateSelectedButtons(button)
+        updateUserResponse(button)
     }
 
-    private fun updateSelectedButtons(selectedButton: AppCompatButton) {
-        if (selectedButton.isSelected) {
-            val period = selectedButton.text.toString().extractDigits()
+    private fun updateSelectedButtons(newSelectedButton: AppCompatButton) {
+        selectedButtons.filter { it != newSelectedButton }.forEach { it.isSelected = false }
+        selectedButtons.clear()
+
+        if (newSelectedButton.isSelected) {
+            selectedButtons.add(newSelectedButton)
+        } else {
+            selectedButtons.remove(newSelectedButton)
+        }
+        viewModel.updateState { copy(isNextButtonActive = selectedButtons.isNotEmpty()) }
+    }
+
+    private fun updateUserResponse(newSelectedButton: AppCompatButton) {
+        if (newSelectedButton.isSelected) {
+            val period = newSelectedButton.text.toString().extractDigits()
             viewModel.selectDate(period)
         } else {
             viewModel.unSelectDate()
