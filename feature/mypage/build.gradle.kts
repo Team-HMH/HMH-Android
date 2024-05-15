@@ -23,6 +23,5 @@ dependencies {
     implementation(projects.core.viewmodel.main)
     implementation(projects.core.network)
 
-    implementation(projects.feature.store)
     implementation(projects.domain.challenge)
 }
