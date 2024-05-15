@@ -12,7 +12,7 @@ data class NewChallengeState(
 ) {
     companion object {
         val NOTINITIALIZED: Int = 0
-        val DEFAULTTIME: Long = 120000
+        val DEFAULTTIME: Long = 7200000
     }
 }
 

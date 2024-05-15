@@ -8,7 +8,7 @@ import android.widget.NumberPicker
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.hmh.hamyeonham.challenge.newchallenge.NewChallengeViewModel
-import com.hmh.hamyeonham.common.time.timeToMs
+import com.hmh.hamyeonham.common.time.hourToMs
 import com.hmh.hamyeonham.common.view.setupScreentimeGoalRange
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.FragmentTimeSelectionBinding
@@ -36,7 +36,7 @@ class TimeSelectionFragment : Fragment() {
             npNewChallengeScreentimeGoal.descendantFocusability =
                 NumberPicker.FOCUS_BLOCK_DESCENDANTS
             npNewChallengeScreentimeGoal.setOnValueChangedListener { _, _, newTime ->
-                viewModel.setGoalHour(newTime.timeToMs())
+                viewModel.setGoalHour(newTime.hourToMs())
             }
         }
     }
