@@ -26,8 +26,8 @@ import com.hmh.hamyeonham.challenge.model.NewChallenge
 import com.hmh.hamyeonham.challenge.newchallenge.NewChallengeActivity
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
-import com.hmh.hamyeonham.common.fragment.toast
 import com.hmh.hamyeonham.common.fragment.snackBarWithAction
+import com.hmh.hamyeonham.common.fragment.toast
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
@@ -85,7 +85,7 @@ class ChallengeFragment : Fragment() {
     private fun bindChallengeInfo(it: MainState) {
         setChallengeCalendarVisibility(it.isChallengeExist)
         bindChallengeCalendar(it.challengeStatusList)
-        bindChallengeDate(it.todayIndex, it.startDate)
+        bindChallengeDate(it.todayIndexAsDate, it.startDate)
     }
 
     private fun updateUsageStatusAndGoals(it: MainState) {

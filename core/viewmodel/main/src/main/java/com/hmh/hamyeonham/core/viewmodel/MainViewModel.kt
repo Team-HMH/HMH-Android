@@ -33,8 +33,10 @@ data class MainState(
     val point: Int = 0,
     val challengeSuccess: Boolean = true,
 ) {
-    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaulTimeZone(), todayIndex - 1)
+    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaulTimeZone(), todayIndex)
     val isChallengeExist: Boolean = todayIndex != -1
+    //~일째를 의미하는 변수
+    val todayIndexAsDate: Int = todayIndex + 1
 }
 
 @HiltViewModel
