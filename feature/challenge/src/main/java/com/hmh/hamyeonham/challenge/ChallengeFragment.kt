@@ -215,7 +215,6 @@ class ChallengeFragment : Fragment() {
         newChallengeResultLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
-                    //TODO: 새로운 챌린지 추가 기능
                     val period = result.data?.getIntExtra(NewChallengeActivity.PERIOD, 0)
                     val goalTime = result.data?.getLongExtra(NewChallengeActivity.GOALTIME, 0)
                     viewModel.generateNewChallenge(
