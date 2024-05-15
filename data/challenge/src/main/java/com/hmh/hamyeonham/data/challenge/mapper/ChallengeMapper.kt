@@ -8,7 +8,7 @@ internal fun ChallengeResponse.toChallengeStatus(): ChallengeStatus {
         apps.map {
             ChallengeStatus.AppGoal(it.appCode, it.goalTime)
         },
-        statuses.toStatusList(todayIndex),
+        statuses.toStatusList(todayIndex, period),
         goalTime,
         period,
         todayIndex,
