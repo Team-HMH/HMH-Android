@@ -7,7 +7,6 @@ import com.hmh.hamyeonham.challenge.model.NewChallenge
 import com.hmh.hamyeonham.challenge.usecase.AddUsageGoalsUseCase
 import com.hmh.hamyeonham.challenge.usecase.DeleteUsageGoalUseCase
 import com.hmh.hamyeonham.challenge.usecase.NewChallengeUseCase
-import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -75,6 +74,7 @@ class ChallengeViewModel @Inject constructor(
             deleteUsageGoalUseCase(packageName)
         }
     }
+
     fun generateNewChallenge(newChallenge: NewChallenge) {
         viewModelScope.launch {
             newChallengeUseCase(newChallenge)
