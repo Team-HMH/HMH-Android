@@ -61,7 +61,7 @@ class MainViewModel @Inject constructor(
 
     fun reloadUsageStatsList() {
         viewModelScope.launch {
-            getStatusAndGoals()
+            getTimeAndSetUsageStatsList()
         }
     }
 
@@ -106,12 +106,12 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             usageGoalsRepository.getUsageGoals().collect {
                 setUsageGaols(it)
-                getStatusAndGoals()
+                getTimeAndSetUsageStatsList()
             }
         }
     }
 
-    private suspend fun getStatusAndGoals() {
+    private suspend fun getTimeAndSetUsageStatsList() {
         val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
         setUsageStatsList(getUsageStatsListUseCase(startTime, endTime))
     }
