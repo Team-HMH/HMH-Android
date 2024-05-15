@@ -8,8 +8,6 @@ class NewChallengeUseCase @Inject constructor(
     private val challengeRepository: ChallengeRepository
 ) {
     suspend operator fun invoke(newChallenge: NewChallenge) {
-        challengeRepository.generateNewChallenge(newChallenge).onSuccess {
-            //ToDO: local data base에 추가해야 하나?
-        }
+        challengeRepository.generateNewChallenge(newChallenge)
     }
 }
