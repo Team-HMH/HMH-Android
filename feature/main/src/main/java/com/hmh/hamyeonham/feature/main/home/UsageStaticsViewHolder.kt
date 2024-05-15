@@ -30,16 +30,19 @@ class UsageStaticsViewHolder(
                     usageStatusAndGoal.packageName,
                 ),
             )
-            tvAppGoalTime.text = convertTimeToString(usageStatusAndGoal.goalTimeInMin)
         }
     }
 
     private fun bindUsageInfo(usageStatusAndGoal: UsageStatusAndGoal) {
-        binding.pbAppUsage.progress = usageStatusAndGoal.usedPercentage
-        context.getSecondStrColoredString(
-            firstStr = convertTimeToString(usageStatusAndGoal.timeLeftInMin),
-            secondStr = getString(context, R.string.all_left),
-            color = com.hmh.hamyeonham.core.designsystem.R.color.gray1,
-        )
+        binding.run {
+            pbAppUsage.progress = usageStatusAndGoal.usedPercentage
+            tvTotalTimeInForeground.text =
+                convertTimeToString(usageStatusAndGoal.totalTimeInForegroundInMin)
+            tvAppTimeLeft.text = context.getSecondStrColoredString(
+                firstStr = convertTimeToString(usageStatusAndGoal.timeLeftInMin),
+                secondStr = getString(context, R.string.all_left),
+                color = com.hmh.hamyeonham.core.designsystem.R.color.gray1,
+            )
+        }
     }
 }
