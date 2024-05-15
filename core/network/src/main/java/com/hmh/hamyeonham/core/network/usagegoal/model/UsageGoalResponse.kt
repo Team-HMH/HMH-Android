@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UsageGoalResponse(
     @SerialName("status")
-    val accessToken: String,
+    val status: String,
     @SerialName("goalTime")
     val goalTime: Long,
     @SerialName("apps")
