@@ -16,14 +16,13 @@ internal fun List<String>.toStatusList(todayIndex: Int, period: Int): List<Chall
 
     // todayIndex가 유효한 경우
     if (todayIndex > -1) {
-        //해당 인덱스에 TODAY 상태를 설정
-        statusList[todayIndex - 1] = ChallengeStatus.Status.TODAY
         // 필요한 만큼 NONE 상태를 추가
         val additionalItemsCount = period - todayIndex
         val additionalItems = List(additionalItemsCount) { ChallengeStatus.Status.NONE }
-
         // 추가 항목을 원본 리스트에 덧붙임
         statusList.addAll(additionalItems)
+        //today 인덱스에 TODAY 상태를 설정
+        statusList[todayIndex] = ChallengeStatus.Status.TODAY
     }
     return statusList
 }
