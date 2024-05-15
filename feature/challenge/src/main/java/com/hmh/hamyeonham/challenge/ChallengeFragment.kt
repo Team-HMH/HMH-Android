@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +24,7 @@ import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
+import com.hmh.hamyeonham.common.fragment.toast
 import com.hmh.hamyeonham.common.fragment.snackBarWithAction
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
@@ -32,9 +34,10 @@ import com.hmh.hamyeonham.common.view.dp
 import com.hmh.hamyeonham.common.view.mapBooleanToVisibility
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.designsystem.R
-import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.viewmodel.MainState
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.challenge.databinding.FragmentChallengeBinding
+import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -63,31 +66,38 @@ class ChallengeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initAppSelectionResultLauncher()
         initViews()
-        initChallengeCalendar()
-        initUsageGoalList()
+        collectMainStateAndProcess()
+        collectChallengeStateAndProcess()
     }
 
-    private fun initChallengeCalendar() {
-        activityViewModel.collectMainState(viewLifeCycle).onEach {
-            setChallengeInfoVisibility(it.isChallengeExist)
-            if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageGoals = (activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())) }
-            if (it.isChallengeExist) {
-                bindChallengeCalendar(it.challengeStatusList)
-                bindChallengeDate(it.todayIndex, it.startDate)
-            }
+    private fun collectMainStateAndProcess() {
+        activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
+            bindChallengeInfo(it)
+            updateUsageStatusAndGoals(it)
         }.launchIn(viewLifeCycleScope)
     }
 
-    private fun initUsageGoalList() {
-        viewModel.collectChallengeState(viewLifeCycle).onEach {
-            handleModifierButtonState(it)
-            bindUsageGoals(it.usageGoalsAndModifierState)
+    private fun bindChallengeInfo(it: MainState) {
+        setChallengeCalendarVisibility(it.isChallengeExist)
+        bindChallengeCalendar(it.challengeStatusList)
+        bindChallengeDate(it.todayIndex, it.startDate)
+    }
+
+    private fun updateUsageStatusAndGoals(it: MainState) {
+        if (it.usageStatusAndGoals.isNotEmpty()) viewModel.updateUsageStatusAndGoals(
+            activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal()
+        )
+    }
+
+    private fun collectChallengeStateAndProcess() {
+        viewModel.challengeState.flowWithLifecycle(viewLifeCycle).onEach {
+            handleModifierButtonState(it.modifierState)
+            bindUsageGoals(it.usageGoalsAndModifiers)
         }.launchIn(viewLifeCycleScope)
     }
 
-
-    private fun handleModifierButtonState(it: ChallengeState) {
-        val (text, color) = getTextAndColorsOfModifierState(it.modifierState)
+    private fun handleModifierButtonState(it: ModifierState) {
+        val (text, color) = getTextAndColorsOfModifierState(it)
         binding.tvModifierButton.run {
             this.text = text
             setTextColor(color)
@@ -96,14 +106,14 @@ class ChallengeFragment : Fragment() {
 
     private fun getTextAndColorsOfModifierState(modifierState: ModifierState) =
         when (modifierState) {
-            ModifierState.DONE -> {
+            ModifierState.EDIT -> {
                 getString(R.string.all_done) to ContextCompat.getColor(
                     requireContext(),
                     R.color.white_text,
                 )
             }
 
-            ModifierState.EDIT -> {
+            ModifierState.DONE -> {
                 getString(R.string.all_edit) to ContextCompat.getColor(
                     requireContext(),
                     R.color.blue_purple_text,
@@ -115,15 +125,11 @@ class ChallengeFragment : Fragment() {
         binding.tvModifierButton.setOnClickListener {
             when (viewModel.challengeState.value.modifierState) {
                 ModifierState.DONE -> {
-                    viewModel.updateChallengeState {
-                        copy(modifierState = ModifierState.EDIT)
-                    }
+                    viewModel.updateModifierState(ModifierState.EDIT)
                 }
 
                 ModifierState.EDIT -> {
-                    viewModel.updateChallengeState {
-                        copy(modifierState = ModifierState.DONE)
-                    }
+                    viewModel.updateModifierState(ModifierState.DONE)
                 }
             }
         }
@@ -161,17 +167,20 @@ class ChallengeFragment : Fragment() {
         initChallengeCalendarRecyclerView()
     }
 
-    private fun setChallengeInfoVisibility(isChallengeExist: Boolean) {
-        binding.btnChallengeCreate.visibility = (!isChallengeExist).mapBooleanToVisibility()
-        binding.tvChallengeCreateTitle.visibility = (!isChallengeExist).mapBooleanToVisibility()
-        binding.tvChallengeDay.visibility = isChallengeExist.mapBooleanToVisibility()
-        binding.tvChallengeStartDate.visibility = isChallengeExist.mapBooleanToVisibility()
-        binding.rvChallengeCalendar.visibility = isChallengeExist.mapBooleanToVisibility()
+    private fun setChallengeCalendarVisibility(isChallengeExist: Boolean) {
+        val challengeCreateVisibility = (!isChallengeExist).mapBooleanToVisibility()
+        val challengeInfoVisibility = (isChallengeExist).mapBooleanToVisibility()
+
+        binding.btnChallengeCreate.visibility = challengeCreateVisibility
+        binding.tvChallengeCreateTitle.visibility = challengeCreateVisibility
+        binding.tvChallengeDay.visibility = challengeInfoVisibility
+        binding.tvChallengeStartDate.visibility = challengeInfoVisibility
+        binding.rvChallengeCalendar.visibility = challengeInfoVisibility
     }
 
-    private fun bindUsageGoals(usageGoalAndModifierStateList: List<UsageGoalAndModifierState>) {
+    private fun bindUsageGoals(challengeUsageGoalList: List<ChallengeUsageGoal>) {
         val challengeGoalsAdapter = binding.rvAppUsageGoals.adapter as? ChallengeUsageGoalsAdapter
-        challengeGoalsAdapter?.submitList(usageGoalAndModifierStateList)
+        challengeGoalsAdapter?.submitList(challengeUsageGoalList)
     }
 
     private fun bindChallengeCalendar(challengeStatusList: List<ChallengeStatus.Status>) {
@@ -220,10 +229,11 @@ class ChallengeFragment : Fragment() {
                     val intent = Intent(requireContext(), AppAddActivity::class.java)
                     appSelectionResultLauncher.launch(intent)
                 },
-                onAppItemClicked = { usagUsageGoalAndModifierState ->
+                onAppItemClicked = { challengeGoal ->
                     when (viewModel.challengeState.value.modifierState) {
-                        ModifierState.DONE -> {
-                            setDeleteAppDialog(usagUsageGoalAndModifierState.usageGoal)
+                        ModifierState.EDIT -> {
+                            if (challengeGoal.isDeletable) setDeleteAppDialog(challengeGoal.usageStatusAndGoal)
+                            else toast(getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_delete))
                         }
 
                         else -> Unit
@@ -235,7 +245,7 @@ class ChallengeFragment : Fragment() {
         }
     }
 
-    private fun RecyclerView.setDeleteAppDialog(it: UsageGoal) {
+    private fun RecyclerView.setDeleteAppDialog(it: UsageStatusAndGoal) {
         val clickedAppNameToDialog = context.getAppNameFromPackageName(it.packageName)
         TwoButtonCommonDialog.newInstance(
             title = getString(R.string.delete_app_dialog_title, clickedAppNameToDialog),
@@ -248,8 +258,5 @@ class ChallengeFragment : Fragment() {
             }
             setDismissButtonClickListener {}
         }.showAllowingStateLoss(childFragmentManager)
-        viewModel.updateChallengeState {
-            copy(modifierState = ModifierState.EDIT)
-        }
     }
 }
