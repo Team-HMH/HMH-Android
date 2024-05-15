@@ -8,6 +8,7 @@ import com.hmh.hamyeonham.core.network.challenge.AppCodeRequest
 import com.hmh.hamyeonham.core.network.challenge.ChallengeService
 import com.hmh.hamyeonham.core.network.usagegoal.DailyChallengeService
 import com.hmh.hamyeonham.data.challenge.mapper.toAppsRequest
+import com.hmh.hamyeonham.data.challenge.mapper.toChallengeResult
 import com.hmh.hamyeonham.data.challenge.mapper.toChallengeStatus
 import com.hmh.hamyeonham.data.challenge.mapper.toNewChallengeRequest
 import javax.inject.Inject
@@ -19,6 +20,10 @@ class DefaultChallengeRepository @Inject constructor(
     ChallengeRepository {
     override suspend fun getChallengeData(): Result<ChallengeStatus> {
         return runCatching { challengeService.getChallengeData().data.toChallengeStatus() }
+    }
+
+    override suspend fun getTodayResult(): Result<Boolean> {
+        return runCatching { dailyChallengeService.getUsageGoal().data.toChallengeResult() }
     }
 
     override suspend fun updateDailyChallengeFailed(): Result<Unit> {

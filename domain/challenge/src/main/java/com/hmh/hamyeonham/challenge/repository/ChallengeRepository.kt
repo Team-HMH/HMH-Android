@@ -6,6 +6,7 @@ import com.hmh.hamyeonham.challenge.model.NewChallenge
 
 interface ChallengeRepository {
     suspend fun getChallengeData(): Result<ChallengeStatus>
+    suspend fun getTodayResult(): Result<Boolean>
     suspend fun postApps(request: Apps): Result<Unit>
     suspend fun deleteApps(appCode: String): Result<Unit>
     suspend fun generateNewChallenge(request: NewChallenge): Result<Unit>

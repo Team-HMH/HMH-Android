@@ -35,6 +35,7 @@ data class MainState(
 ) {
     val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaulTimeZone(), todayIndex)
     val isChallengeExist: Boolean = todayIndex != -1
+
     //~일째를 의미하는 변수
     val todayIndexAsDate: Int = todayIndex + 1
 }
@@ -54,6 +55,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             updateGoals()
             getChallengeStatus()
+            getChallengeSuccess()
             getUserInfo()
             getUsageGoalAndStatList()
         }
@@ -61,7 +63,7 @@ class MainViewModel @Inject constructor(
 
     fun reloadUsageStatsList() {
         viewModelScope.launch {
-            getTimeAndSetUsageStatsList()
+            getTodayTimeAndSetUsageStatsList()
         }
     }
 
@@ -83,10 +85,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getUsageGoalsExceptTotal(): List<UsageGoal> {
-        return mainState.value.usageGoals.filter { it.packageName != UsageGoal.TOTAL }
-    }
-
     fun isPointLeftToCollect(): Boolean =
         mainState.value.challengeStatusList.contains(ChallengeStatus.Status.UNEARNED)
 
@@ -102,16 +100,25 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private suspend fun getChallengeSuccess() {
+        challengeRepository.getTodayResult().onSuccess {
+            updateState { copy(challengeSuccess = it) }
+        }.onFailure {
+            Log.e("getTodayResult error", it.toString())
+        }
+    }
+
     private fun getUsageGoalAndStatList() {
         viewModelScope.launch {
             usageGoalsRepository.getUsageGoals().collect {
                 setUsageGaols(it)
-                getTimeAndSetUsageStatsList()
+                getTodayTimeAndSetUsageStatsList()
             }
         }
+
     }
 
-    private suspend fun getTimeAndSetUsageStatsList() {
+    private suspend fun getTodayTimeAndSetUsageStatsList() {
         val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
         setUsageStatsList(getUsageStatsListUseCase(startTime, endTime))
     }
@@ -142,7 +149,6 @@ class MainViewModel @Inject constructor(
                 totalGoalTimeInHour = challengeStatus.goalTimeInHours,
                 period = challengeStatus.period,
                 todayIndex = challengeStatus.todayIndex,
-                challengeSuccess = challengeStatus.challengeSuccess,
             )
         }
     }
