@@ -16,6 +16,11 @@ class NewChallengeActivity : AppCompatActivity() {
     private val binding by viewBinding(ActivityNewChallengeBinding::inflate)
     private val viewModel by viewModels<NewChallengeViewModel>()
 
+    companion object {
+        const val PERIOD = "period"
+        const val GOALTIME = "goal time"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -55,10 +60,5 @@ class NewChallengeActivity : AppCompatActivity() {
         }
         setResult(RESULT_OK, intent)
         finish()
-    }
-
-    companion object {
-        const val PERIOD = "period"
-        const val GOALTIME = "goal time"
     }
 }
