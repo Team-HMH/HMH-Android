@@ -31,73 +31,64 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_new_challenge_period_selection_question" />
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_new_challenge_seven_days"
+        style="@style/TextAppearance.Hmh.TitleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="19dp"
+        android:layout_marginTop="94dp"
+        android:background="@drawable/new_challenge_selector_btn_data"
+        android:gravity="center"
+        android:text="@string/new_challenge_seven_days"
+        android:textColor="?white_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5">
+        app:layout_constraintTop_toBottomOf="@id/tv_new_challenge_period_selectionl_description" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_new_challenge_seven_days"
-            style="@style/TextAppearance.Hmh.TitleSmall"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="19dp"
-            android:background="@drawable/new_challenge_selector_btn_data"
-            android:gravity="center"
-            android:text="@string/new_challenge_seven_days"
-            android:textColor="?white_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_new_challenge_fourteen_days"
+        style="@style/TextAppearance.Hmh.TitleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="19dp"
+        android:layout_marginTop="9dp"
+        android:background="@drawable/new_challenge_selector_btn_data"
+        android:gravity="center"
+        android:text="@string/new_challenge_fourteen_days"
+        android:textColor="?white_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_new_challenge_seven_days" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_new_challenge_fourteen_days"
-            style="@style/TextAppearance.Hmh.TitleSmall"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="19dp"
-            android:layout_marginTop="9dp"
-            android:background="@drawable/new_challenge_selector_btn_data"
-            android:gravity="center"
-            android:text="@string/new_challenge_fourteen_days"
-            android:textColor="?white_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_new_challenge_seven_days" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_new_challenge_twenty_days"
+        style="@style/TextAppearance.Hmh.TitleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="19dp"
+        android:layout_marginTop="9dp"
+        android:background="@drawable/new_challenge_selector_btn_data"
+        android:gravity="center"
+        android:text="@string/new_challenge_twenty_days"
+        android:textColor="?white_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_new_challenge_fourteen_days" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_new_challenge_twenty_days"
-            style="@style/TextAppearance.Hmh.TitleSmall"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="19dp"
-            android:layout_marginTop="9dp"
-            android:background="@drawable/new_challenge_selector_btn_data"
-            android:gravity="center"
-            android:text="@string/new_challenge_twenty_days"
-            android:textColor="?white_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_new_challenge_fourteen_days" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_new_challenge_thirty_days"
-            style="@style/TextAppearance.Hmh.TitleSmall"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="19dp"
-            android:layout_marginTop="9dp"
-            android:background="@drawable/new_challenge_selector_btn_data"
-            android:gravity="center"
-            android:text="@string/new_challenge_thirty_days"
-            android:textColor="?white_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_new_challenge_twenty_days" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_new_challenge_thirty_days"
+        style="@style/TextAppearance.Hmh.TitleSmall"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="19dp"
+        android:layout_marginTop="9dp"
+        android:background="@drawable/new_challenge_selector_btn_data"
+        android:gravity="center"
+        android:text="@string/new_challenge_thirty_days"
+        android:textColor="?white_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_new_challenge_twenty_days" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
