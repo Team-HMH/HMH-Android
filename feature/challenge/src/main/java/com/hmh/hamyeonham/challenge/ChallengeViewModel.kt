@@ -57,7 +57,7 @@ class ChallengeViewModel @Inject constructor(
         updateChallengeState { copy(modifierState = newModifierState) }
     }
 
-    fun updateChallengeState(transform: ChallengeState.() -> ChallengeState) {
+    private fun updateChallengeState(transform: ChallengeState.() -> ChallengeState) {
         val currentState = challengeState.value
         val newState = currentState.transform()
         _challengeState.value = newState

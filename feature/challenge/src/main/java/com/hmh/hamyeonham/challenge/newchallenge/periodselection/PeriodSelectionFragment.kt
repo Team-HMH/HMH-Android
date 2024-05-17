@@ -65,7 +65,7 @@ class PeriodSelectionFragment : Fragment() {
         } else {
             selectedButtons.remove(newSelectedButton)
         }
-        viewModel.updateState { copy(isNextButtonActive = selectedButtons.isNotEmpty()) }
+        viewModel.updateNextButtonActivatedState(selectedButtons.isNotEmpty())
     }
 
     private fun updateUserResponse(newSelectedButton: AppCompatButton) {
