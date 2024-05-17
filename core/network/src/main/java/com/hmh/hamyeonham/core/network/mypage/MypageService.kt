@@ -1,4 +1,4 @@
-package com.hmh.hamyeonham.core.network.mypage.datasource
+package com.hmh.hamyeonham.core.network.mypage
 
 import com.hmh.hamyeonham.core.network.model.BaseResponse
 import com.hmh.hamyeonham.core.network.mypage.datasource.model.UserInfoResponse

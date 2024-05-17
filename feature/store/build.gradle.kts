@@ -4,10 +4,6 @@
 
 android {
     namespace = "com.hmh.hamyeonham.feature.store"
-
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
 }
 
 dependencies {
