@@ -41,8 +41,8 @@ class NewChallengeActivity : AppCompatActivity() {
     private fun handleNextClicked() {
         binding.vpNewChallenge.run {
             when (currentItem) {
-                0 -> currentItem = 1
-                1 -> finishWithResults()
+                FRAGMENT.PERIODSELECTION.position -> currentItem = FRAGMENT.TIMESELECTION.position
+                FRAGMENT.TIMESELECTION.position -> finishWithResults()
             }
         }
     }
