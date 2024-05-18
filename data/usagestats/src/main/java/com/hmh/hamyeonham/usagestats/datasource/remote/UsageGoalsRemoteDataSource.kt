@@ -12,8 +12,4 @@ class UsageGoalsRemoteDataSource @Inject constructor(
     suspend fun getUsageGoals(): Result<List<UsageGoal>> {
         return runCatching { dailyChallengeService.getUsageGoal().data.toUsageGoalList() }
     }
-
-    suspend fun updateDailyChallengeFailed(): Result<Unit> {
-        return runCatching { dailyChallengeService.updateDailyChallengeFailed().data }
-    }
 }

@@ -20,7 +20,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DataStoreModule {
-    private const val DEBUG_APP_PREFERNCES_NAME = "hmh_debug"
+    private const val DEBUG_APP_PREFERENCES_NAME = "hmh_debug"
     private const val APP_PREFERENCES_NAME = "hmh"
 
     @Provides
@@ -28,7 +28,7 @@ object DataStoreModule {
     fun provideAppPreferences(
         @ApplicationContext context: Context
     ): SharedPreferences = if (BuildConfig.DEBUG) {
-        context.getSharedPreferences(DEBUG_APP_PREFERNCES_NAME, Context.MODE_PRIVATE)
+        context.getSharedPreferences(DEBUG_APP_PREFERENCES_NAME, Context.MODE_PRIVATE)
     } else {
         try {
             createEncryptedSharedPreferences(APP_PREFERENCES_NAME, context)

@@ -19,7 +19,7 @@ internal fun ChallengeResponse.toChallengeStatus(): ChallengeStatus {
         period,
         todayIndex,
         if (todayIndex > -1) {
-            statuses[todayIndex] != ChallengeStatus.Status.FAILURE.value
+            statuses[todayIndex - 1] != ChallengeStatus.Status.FAILURE.value
         } else false
     )
 }
