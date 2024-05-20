@@ -96,6 +96,7 @@ dependencies {
 
     // Splash
     implementation(libs.splash.screen)
+    implementation(libs.lottie)
 
     // kakao
     implementation(libs.kakao.login)
