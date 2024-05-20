@@ -13,8 +13,11 @@ dependencies {
     implementation(projects.domain.userinfo)
     implementation(projects.domain.point)
 
+    implementation(projects.core.network)
     implementation(projects.core.common)
     implementation(projects.core.domain)
+
+    implementation(libs.retrofit)
 
     // TEST
     testImplementation("androidx.arch.core:core-testing:2.2.0")

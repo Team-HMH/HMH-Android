@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
-import com.hmh.hamyeonham.common.time.getCurrentDateOfDefaultTimeZone
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
-import com.hmh.hamyeonham.common.time.minusDaysFromDate
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.domain.point.repository.PointRepository
@@ -16,27 +14,13 @@ import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatsListUseCase
 import com.hmh.hamyeonham.userinfo.model.UserInfo
 import com.hmh.hamyeonham.userinfo.repository.UserInfoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
+import retrofit2.HttpException
 import javax.inject.Inject
-
-data class MainState(
-    val appGoals: List<ChallengeStatus.AppGoal> = emptyList(),
-    val challengeStatusList: List<ChallengeStatus.Status> = emptyList(),
-    val totalGoalTimeInHour: Int = 0,
-    val period: Int = 0,
-    val todayIndex: Int = 0,
-    val usageGoals: List<UsageGoal> = emptyList(),
-    val usageStatusAndGoals: List<UsageStatusAndGoal> = emptyList(),
-    val name: String = "",
-    val point: Int = 0,
-    val challengeSuccess: Boolean = true,
-) {
-    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), todayIndex - 1)
-    val isChallengeExist: Boolean = todayIndex != -1
-}
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
@@ -50,6 +34,9 @@ class MainViewModel @Inject constructor(
     private val _mainState = MutableStateFlow(MainState())
     val mainState = _mainState.asStateFlow()
 
+    private val _effect = MutableSharedFlow<MainEffect>()
+    val effect = _effect.asSharedFlow()
+
     init {
         viewModelScope.launch {
             uploadSavedChallenge()
@@ -57,16 +44,6 @@ class MainViewModel @Inject constructor(
             getChallengeStatus()
             getUserInfo()
             getUsageGoalAndStatList()
-        }
-    }
-
-    private fun uploadSavedChallenge() {
-        viewModelScope.launch {
-            val challengeWithUsages =
-                challengeRepository.getChallengeWithUsage().getOrNull() ?: return@launch
-            challengeRepository.uploadSavedChallenge(challengeWithUsages).onSuccess {
-                challengeRepository.deleteAllChallengeWithUsage()
-            }
         }
     }
 
@@ -80,8 +57,9 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             pointRepository.usePoint().onSuccess {
                 getChallengeStatus()
+                sendEffect(MainEffect.SuccessUsePoint)
             }.onFailure {
-                Log.e("updateDailyChallengeFailed error", it.toString())
+
             }
         }
     }
@@ -101,16 +79,40 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private fun sendEffect(effect: MainEffect) {
+        viewModelScope.launch {
+            _effect.emit(effect)
+        }
+    }
+
+    private fun uploadSavedChallenge() {
+        viewModelScope.launch {
+            val challengeWithUsages =
+                challengeRepository.getChallengeWithUsage().getOrNull() ?: return@launch
+            challengeRepository.uploadSavedChallenge(challengeWithUsages).onSuccess {
+                challengeRepository.deleteAllChallengeWithUsage()
+            }
+        }
+    }
+
     private suspend fun updateGoals() {
         usageGoalsRepository.updateUsageGoal()
     }
 
     private suspend fun getChallengeStatus() {
-        challengeRepository.getChallengeData().onSuccess {
-            setChallengeStatus(it)
-        }.onFailure {
-            Log.e("challenge status error", it.toString())
-        }
+        challengeRepository.getChallengeData()
+            .onSuccess {
+                setChallengeStatus(it)
+            }.onFailure {
+                if (it is HttpException) {
+                    when (it.code()) {
+                        400 -> {
+                            sendEffect(MainEffect.LackOfPoint)
+                        }
+                    }
+                }
+                Log.e("challenge status error", it.toString())
+            }
     }
 
     private fun getUsageGoalAndStatList() {

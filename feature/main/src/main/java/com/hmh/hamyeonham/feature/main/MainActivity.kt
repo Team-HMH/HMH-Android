@@ -3,6 +3,8 @@ package com.hmh.hamyeonham.feature.main
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.hmh.hamyeonham.challenge.worker.ChallengeDateSaveWorker
@@ -15,10 +17,13 @@ import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.service.lockAccessibilityServiceClassName
+import com.hmh.hamyeonham.core.viewmodel.MainEffect
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.ActivityMainBinding
 import com.hmh.hamyeonham.lock.SetIsUnLockUseCase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -35,18 +40,28 @@ class MainActivity : AppCompatActivity() {
         initNavHostFragment()
         checkPowerManagerPermission()
         scheduleDateSaveWorker()
-    }
-
-    private fun checkPowerManagerPermission() {
-        if (isBatteryOptimizationEnabled()) {
-            requestDisableBatteryOptimization()
-        }
+        collectEffect()
     }
 
     override fun onResume() {
         super.onResume()
         checkUnlockedPackage()
         checkAllPermissionIsGranted(lockAccessibilityServiceClassName)
+    }
+
+    private fun collectEffect() {
+        viewModel.effect.flowWithLifecycle(lifecycle).onEach { effect ->
+            when (effect) {
+                MainEffect.SuccessUsePoint -> showChallengeFailedDialog()
+                MainEffect.LackOfPoint -> showPointLackDialog()
+            }
+        }.launchIn(lifecycleScope)
+    }
+
+    private fun checkPowerManagerPermission() {
+        if (isBatteryOptimizationEnabled()) {
+            requestDisableBatteryOptimization()
+        }
     }
 
     private fun initNavHostFragment() {
