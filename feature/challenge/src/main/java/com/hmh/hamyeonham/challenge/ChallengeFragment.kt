@@ -24,8 +24,8 @@ import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
-import com.hmh.hamyeonham.common.fragment.toast
 import com.hmh.hamyeonham.common.fragment.snackBarWithAction
+import com.hmh.hamyeonham.common.fragment.toast
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
@@ -139,6 +139,10 @@ class ChallengeFragment : Fragment() {
         val pointButtonImg =
             if (activityViewModel.isPointLeftToCollect()) com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24 else com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
         binding.tvPointButton.setImageResource(pointButtonImg)
+
+        binding.tvPointButton.setOnClickListener {
+            navigationProvider.toPoint()
+        }
     }
 
     private fun initChallengeCreateButton() {
@@ -151,7 +155,7 @@ class ChallengeFragment : Fragment() {
                         com.hmh.hamyeonham.feature.challenge.R.string.all_move
                     )
                 ) {
-                    //TODO 포인트 받기 뷰로 이동
+                    navigationProvider.toPoint()
                 }
             } else {
                 //TODO 챌린지 생성 기능 추가

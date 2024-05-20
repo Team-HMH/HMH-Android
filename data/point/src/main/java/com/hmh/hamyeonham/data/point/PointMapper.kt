@@ -8,7 +8,7 @@ import com.hmh.hamyeonham.domain.point.model.UsablePoint
 import com.hmh.hamyeonham.domain.point.model.UsePoint
 
 fun EarnPointResponse.toEarnPoint() = EarnPoint(
-    point = point ?: 0
+    totalUserPoint = point ?: 0
 )
 
 fun UsablePointResponse.toUsePoint() = UsablePoint(
