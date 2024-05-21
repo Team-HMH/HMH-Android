@@ -20,6 +20,10 @@ class SampleActivity : AppCompatActivity() {
         installSplashScreen()
         setContentView(binding.root)
 
+        initLottieSplash()
+    }
+
+    private fun initLottieSplash() {
         binding.splashLottieAppLogo.playAnimation()
         val handler = Handler(
             Looper.getMainLooper()
