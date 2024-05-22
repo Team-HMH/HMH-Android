@@ -3,6 +3,7 @@ package com.hmh.hamyeonham.challenge
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,7 +66,6 @@ class ChallengeFragment : Fragment() {
         initAppSelectionResultLauncher()
         initViews()
         initUsageGoalList()
-        handleCalendarView()
     }
 
     private fun initChallengeCalendar() {
@@ -73,9 +73,10 @@ class ChallengeFragment : Fragment() {
             setChallengeInfoVisibility(it.isChallengeExist)
             if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageGoals = (activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())) }
             if (it.isChallengeExist) {
-                bindChallengeCalendar(it.challengeStatusList)
+                bindChallengeCalendar(it.challengeStatusList.take(7))
                 bindChallengeDate(it.todayIndex, it.startDate)
-                if (it.period == 20 || it.period == 30) {
+                if (it.period > 14) {
+                    binding.tvCalendarToggle.visibility = View.VISIBLE
                     handleCalendarToggleState()
                 } else {
                     binding.tvCalendarToggle.visibility = View.GONE
@@ -85,43 +86,50 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun handleCalendarToggleState() {
+        // toggleState 초기값 세팅
+        binding.tvCalendarToggle.text =
+            getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_expand)
+        viewModel.updateChallengeState {
+            copy(calendarToggleState = CalendarToggleState.EXPANDED)
+        }
+
         binding.tvCalendarToggle.setOnClickListener {
-            val newState = when (viewModel.challengeState.value.calendarToggleState) {
+            when (viewModel.challengeState.value.calendarToggleState) {
                 CalendarToggleState.COLLAPSED -> { // 접힌 상태
                     binding.tvCalendarToggle.text =
                         getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_expand)
-                    CalendarToggleState.EXPANDED
+                    viewModel.updateChallengeState {
+                        copy(calendarToggleState = CalendarToggleState.EXPANDED)
+                    }
+                    updateCalendarView(CalendarToggleState.COLLAPSED)
                 }
 
-                CalendarToggleState.EXPANDED -> { // 펼쳐진 상태\
+                CalendarToggleState.EXPANDED -> { // 펼쳐진 상태
                     binding.tvCalendarToggle.text =
                         getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_collapse)
-                    CalendarToggleState.COLLAPSED
+                    viewModel.updateChallengeState {
+                        copy(calendarToggleState = CalendarToggleState.COLLAPSED)
+                    }
+                    updateCalendarView(CalendarToggleState.EXPANDED)
                 }
             }
-            viewModel.updateChallengeState {
-                copy(calendarToggleState = newState)
-            }
         }
     }
-
-    private fun handleCalendarView() { // TODO :
-        when (viewModel.challengeState.value.calendarToggleState) {
-            CalendarToggleState.COLLAPSED -> {
-                val layoutManager = binding.rvChallengeCalendar.layoutManager as? GridLayoutManager
-                val firstVisibleItemPosition = layoutManager?.findFirstVisibleItemPosition() ?: 0
-                val firstItemHeight =
-                    layoutManager?.findViewByPosition(firstVisibleItemPosition)?.height ?: 0
-
-                val params = binding.clLockedAppList.layoutParams as ConstraintLayout.LayoutParams
-                params.topToTop = binding.rvChallengeCalendar.id + firstItemHeight
-                binding.clLockedAppList.layoutParams = params
-            }
-
-            else -> { // 펼쳐진 게 디폴트
-            }
+    private fun updateCalendarView(state: CalendarToggleState) {
+        val challengeStatusList = activityViewModel.mainState.value.challengeStatusList
+        val displayList = when (state) {
+            CalendarToggleState.COLLAPSED -> challengeStatusList.take(7)
+            CalendarToggleState.EXPANDED -> challengeStatusList
         }
+        updateChallengeCalendar(displayList)
     }
+
+    private fun updateChallengeCalendar(challengeStatusList: List<ChallengeStatus.Status>) {
+        val challengeAdapter = binding.rvChallengeCalendar.adapter as? ChallengeCalendarAdapter
+        challengeAdapter?.updateList(challengeStatusList)
+    }
+
+
 
     private fun initUsageGoalList() {
         viewModel.collectChallengeState(viewLifeCycle).onEach {
@@ -225,7 +233,7 @@ class ChallengeFragment : Fragment() {
 
     private fun bindChallengeCalendar(challengeStatusList: List<ChallengeStatus.Status>) {
         val challengeAdapter = binding.rvChallengeCalendar.adapter as? ChallengeCalendarAdapter
-        challengeAdapter?.submitList(challengeStatusList)
+        challengeAdapter?.updateList(challengeStatusList)
     }
 
     private fun bindChallengeDate(todayIndex: Int, startDate: LocalDate) {
@@ -243,6 +251,7 @@ class ChallengeFragment : Fragment() {
             layoutManager = GridLayoutManager(requireContext(), 7)
             adapter = ChallengeCalendarAdapter(context)
         }
+        initChallengeCalendar()
     }
 
     private fun initAppSelectionResultLauncher() {
