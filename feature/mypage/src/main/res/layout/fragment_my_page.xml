@@ -66,12 +66,13 @@
                 android:id="@+id/v_collections"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginHorizontal="4dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="40dp"
                 android:background="@drawable/shape_background_radius7_gray6"
                 app:layout_constraintBottom_toTopOf="@id/tv_journey"
-                app:layout_constraintEnd_toEndOf="@id/tv_point"
-                app:layout_constraintStart_toStartOf="@id/tv_point_title"
+                app:layout_constraintEnd_toEndOf="@id/tv_withdrawal"
+                app:layout_constraintStart_toStartOf="@id/tv_logout"
                 app:layout_constraintTop_toBottomOf="@id/tv_user_name" />
 
             <TextView
@@ -79,13 +80,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
-                android:layout_marginEnd="40dp"
                 android:paddingStart="14dp"
                 android:text="@string/mypage_point_title"
                 android:textAppearance="?textAppearanceBodyLarge"
                 android:textColor="?white_text"
                 app:layout_constraintBottom_toBottomOf="@id/v_collections"
-                app:layout_constraintEnd_toEndOf="@id/iv_profile"
+                app:layout_constraintStart_toStartOf="@id/v_collections"
                 app:layout_constraintTop_toTopOf="@id/v_collections" />
 
 
@@ -93,12 +93,13 @@
                 android:id="@+id/tv_point"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:paddingEnd="14dp"
-                android:text="@string/mypage_badge_collection"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="14dp"
+                android:text="@string/mypage_point"
                 android:textAppearance="?textAppearanceBodyLarge"
                 android:textColor="?white_text"
-                app:layout_constraintStart_toStartOf="@id/iv_profile"
+                app:layout_constraintEnd_toEndOf="@id/v_collections"
+                app:layout_constraintStart_toEndOf="@id/tv_point_title"
                 app:layout_constraintTop_toTopOf="@id/tv_point_title" />
 
 
