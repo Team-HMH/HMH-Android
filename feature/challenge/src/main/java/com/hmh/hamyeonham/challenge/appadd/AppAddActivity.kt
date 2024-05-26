@@ -43,7 +43,7 @@ class AppAddActivity : AppCompatActivity() {
 
     private fun collectState() {
         viewModel.state.flowWithLifecycle(lifecycle)
-            .onEach { binding.btAppSelection.isEnabled = it.appSelectionList.isNotEmpty() }
+            .onEach { binding.btAppSelection.isEnabled = it.getAppSelectionList(this).isNotEmpty() }
             .launchIn(lifecycleScope)
     }
 
