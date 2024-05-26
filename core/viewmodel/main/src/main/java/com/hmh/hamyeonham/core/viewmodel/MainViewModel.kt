@@ -34,7 +34,7 @@ data class MainState(
     val point: Int = 0,
     val challengeSuccess: Boolean = true,
 ) {
-    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaulTimeZone(), todayIndex)
+    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), todayIndex)
     val isChallengeExist: Boolean = todayIndex != -1
 
     //~일째를 의미하는 변수
@@ -45,7 +45,6 @@ data class MainState(
 class MainViewModel @Inject constructor(
     private val challengeRepository: ChallengeRepository,
     private val usageGoalsRepository: UsageGoalsRepository,
-    private val getUsageStatsListUseCase: GetUsageStatsListUseCase,
     private val userInfoRepository: UserInfoRepository,
     private val pointRepository: PointRepository,
     private val getUsageStatsListUseCase: GetUsageStatsListUseCase,
