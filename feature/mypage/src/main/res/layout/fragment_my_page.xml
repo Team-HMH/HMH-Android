@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -43,12 +44,12 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="24dp"
+                android:contentDescription="@string/mypage_profile_img"
                 android:src="@drawable/img_profile"
                 app:layout_constraintDimensionRatio="1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:contentDescription="@string/mypage_profile_img" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_user_name"
@@ -63,44 +64,48 @@
                 app:layout_constraintTop_toBottomOf="@id/iv_profile" />
 
             <View
-                android:id="@+id/v_collections"
+                android:id="@+id/v_point_background"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginHorizontal="4dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="40dp"
                 android:background="@drawable/shape_background_radius7_gray6"
-                app:layout_constraintBottom_toTopOf="@id/tv_journey"
-                app:layout_constraintEnd_toEndOf="@id/tv_withdrawal"
-                app:layout_constraintStart_toStartOf="@id/tv_logout"
-                app:layout_constraintTop_toBottomOf="@id/tv_user_name" />
+                app:layout_constraintBottom_toBottomOf="@id/tv_point_title"
+                app:layout_constraintEnd_toEndOf="@id/tv_point"
+                app:layout_constraintStart_toStartOf="@id/tv_point_title"
+                app:layout_constraintTop_toTopOf="@id/tv_point_title" />
 
             <TextView
                 android:id="@+id/tv_point_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
+                android:layout_marginTop="16dp"
+                android:paddingVertical="10dp"
                 android:paddingStart="14dp"
                 android:text="@string/mypage_point_title"
                 android:textAppearance="?textAppearanceBodyLarge"
                 android:textColor="?white_text"
-                app:layout_constraintBottom_toBottomOf="@id/v_collections"
-                app:layout_constraintStart_toStartOf="@id/v_collections"
-                app:layout_constraintTop_toTopOf="@id/v_collections" />
+                app:layout_constraintEnd_toStartOf="@id/tv_point"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_user_name" />
 
 
             <TextView
                 android:id="@+id/tv_point"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="14dp"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:paddingEnd="14dp"
                 android:text="@string/mypage_point"
                 android:textAppearance="?textAppearanceBodyLarge"
                 android:textColor="?white_text"
-                app:layout_constraintEnd_toEndOf="@id/v_collections"
+                app:layout_constraintBottom_toBottomOf="@id/tv_point_title"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_point_title"
-                app:layout_constraintTop_toTopOf="@id/tv_point_title" />
+                app:layout_constraintTop_toTopOf="@id/tv_point_title"
+                tools:text="100000000P" />
 
 
             <TextView
@@ -115,28 +120,28 @@
                 android:textColor="?gray5"
                 app:drawableStartCompat="@drawable/ic_journey_24"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_point" />
+                app:layout_constraintTop_toBottomOf="@id/tv_point_title" />
 
             <ImageView
                 android:id="@+id/iv_journey_button"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginEnd="17dp"
+                android:contentDescription="@string/mypage_journey_button_img"
                 android:src="@drawable/ic_arrow_24_gray4"
                 app:layout_constraintBottom_toBottomOf="@id/tv_journey"
                 app:layout_constraintDimensionRatio="1dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tv_journey"
-                android:contentDescription="@string/mypage_journey_button_img" />
+                app:layout_constraintTop_toTopOf="@id/tv_journey" />
 
             <View
                 android:id="@+id/v_journey"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="26dp"
+                android:layout_marginTop="36dp"
                 android:layout_marginBottom="14dp"
                 app:layout_constraintBottom_toTopOf="@id/tv_store"
-                app:layout_constraintTop_toBottomOf="@id/v_collections" />
+                app:layout_constraintTop_toBottomOf="@id/v_point_background" />
 
             <TextView
                 android:id="@+id/tv_store"
@@ -155,12 +160,12 @@
                 android:id="@+id/iv_store_button"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
+                android:contentDescription="@string/mypage_store_button_img"
                 android:src="@drawable/ic_arrow_24_gray2"
                 app:layout_constraintBottom_toBottomOf="@id/tv_store"
                 app:layout_constraintDimensionRatio="1"
                 app:layout_constraintEnd_toEndOf="@id/iv_journey_button"
-                app:layout_constraintTop_toTopOf="@id/tv_store"
-                android:contentDescription="@string/mypage_store_button_img" />
+                app:layout_constraintTop_toTopOf="@id/tv_store" />
 
             <View
                 android:id="@+id/v_store"
@@ -199,12 +204,12 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="15dp"
+                android:contentDescription="@string/mypage_termofuse_button_img"
                 android:src="@drawable/ic_arrow_24_gray2"
                 app:layout_constraintBottom_toBottomOf="@id/tv_termofuse"
                 app:layout_constraintDimensionRatio="1"
                 app:layout_constraintEnd_toEndOf="@id/iv_journey_button"
-                app:layout_constraintTop_toTopOf="@id/tv_termofuse"
-                android:contentDescription="@string/mypage_termofuse_button_img" />
+                app:layout_constraintTop_toTopOf="@id/tv_termofuse" />
 
             <View
                 android:id="@+id/v_termofuse"
@@ -231,12 +236,12 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="13dp"
                 android:layout_marginBottom="22dp"
+                android:contentDescription="@string/mypage_privacy_button_img"
                 android:src="@drawable/ic_arrow_24_gray2"
                 app:layout_constraintBottom_toBottomOf="@id/tv_privacy"
                 app:layout_constraintDimensionRatio="1"
                 app:layout_constraintEnd_toEndOf="@id/iv_journey_button"
-                app:layout_constraintTop_toTopOf="@id/tv_privacy"
-                android:contentDescription="@string/mypage_privacy_button_img" />
+                app:layout_constraintTop_toTopOf="@id/tv_privacy" />
 
             <View
                 android:id="@+id/v_privacy"
