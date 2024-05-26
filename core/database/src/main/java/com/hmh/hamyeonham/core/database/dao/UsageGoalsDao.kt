@@ -14,9 +14,6 @@ interface UsageGoalsDao {
     @Query("SELECT * FROM usage_goals")
     fun getUsageGoal(): Flow<List<UsageGoalsEntity>>
 
-    @Query("SELECT * FROM usage_goals WHERE packageName = :packageName")
-    fun getUsageGoal(packageName: String): UsageGoalsEntity
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertUsageGoal(entity: UsageGoalsEntity): Long
 

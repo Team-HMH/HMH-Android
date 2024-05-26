@@ -1,6 +1,6 @@
 package com.hmh.hamyeonham.userinfo.repository
 
-import com.hmh.hamyeonham.core.network.mypage.datasource.MypageService
+import com.hmh.hamyeonham.core.network.mypage.MypageService
 import com.hmh.hamyeonham.login.mapper.toUserInfo
 import com.hmh.hamyeonham.userinfo.model.UserInfo
 import javax.inject.Inject

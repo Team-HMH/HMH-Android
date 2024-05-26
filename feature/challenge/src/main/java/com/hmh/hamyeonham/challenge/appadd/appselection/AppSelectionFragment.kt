@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -49,7 +50,7 @@ class AppSelectionFragment : Fragment() {
     }
 
     private fun initSearchBar() {
-        binding.etSearchbar.doOnTextChanged { text, start, before, count ->
+        binding.etSearchbar.addTextChangedListener { text ->
             setRecyclerViewWithFilter(text.toString())
         }
     }
