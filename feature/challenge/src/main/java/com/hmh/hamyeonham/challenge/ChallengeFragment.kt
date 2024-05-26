@@ -89,27 +89,20 @@ class ChallengeFragment : Fragment() {
         // toggleState 초기값 세팅
         binding.tvCalendarToggle.text =
             getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_expand)
-        viewModel.updateChallengeState {
-            copy(calendarToggleState = CalendarToggleState.EXPANDED)
-        }
 
         binding.tvCalendarToggle.setOnClickListener {
             when (viewModel.challengeState.value.calendarToggleState) {
                 CalendarToggleState.COLLAPSED -> { // 접힌 상태
                     binding.tvCalendarToggle.text =
                         getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_expand)
-                    viewModel.updateChallengeState {
-                        copy(calendarToggleState = CalendarToggleState.EXPANDED)
-                    }
+                    viewModel.toggleCalendarState()
                     updateCalendarView(CalendarToggleState.COLLAPSED)
                 }
 
                 CalendarToggleState.EXPANDED -> { // 펼쳐진 상태
                     binding.tvCalendarToggle.text =
                         getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_collapse)
-                    viewModel.updateChallengeState {
-                        copy(calendarToggleState = CalendarToggleState.COLLAPSED)
-                    }
+                    viewModel.toggleCalendarState()
                     updateCalendarView(CalendarToggleState.EXPANDED)
                 }
             }

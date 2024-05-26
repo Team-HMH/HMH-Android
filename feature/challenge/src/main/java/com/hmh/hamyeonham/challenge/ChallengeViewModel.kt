@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 data class ChallengeState(
     val modifierState: ModifierState = ModifierState.EDIT,
-    val calendarToggleState: CalendarToggleState = CalendarToggleState.COLLAPSED,
+    val calendarToggleState: CalendarToggleState = CalendarToggleState.EXPANDED,
     val usageGoals: List<UsageGoal> = emptyList()
 ) {
     val usageGoalsAndModifierState = usageGoals.map {
@@ -65,6 +65,17 @@ class ChallengeViewModel @Inject constructor(
     fun deleteApp(packageName: String) {
         viewModelScope.launch {
             deleteUsageGoalUseCase(packageName)
+        }
+    }
+
+    fun toggleCalendarState() {
+        updateChallengeState {
+            copy(
+                calendarToggleState = if (calendarToggleState == CalendarToggleState.COLLAPSED)
+                    CalendarToggleState.EXPANDED
+                else
+                    CalendarToggleState.COLLAPSED
+            )
         }
     }
 
