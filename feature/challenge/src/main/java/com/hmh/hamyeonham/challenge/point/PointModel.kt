@@ -5,7 +5,7 @@ data class PointModel(
     val pointWhatChallenge: String = "",
     val point: Int = 20,
     val getPointStatus: GetPointStatus = GetPointStatus.CAN_GET_POINT,
-    val challengeDate: String
+    val currentUserPoint: Int = 0,
 ) {
     enum class GetPointStatus {
         CAN_GET_POINT,
