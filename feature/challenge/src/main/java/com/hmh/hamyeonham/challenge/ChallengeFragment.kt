@@ -22,6 +22,8 @@ import com.hmh.hamyeonham.challenge.calendar.ChallengeCalendarAdapter
 import com.hmh.hamyeonham.challenge.goals.ChallengeUsageGoalsAdapter
 import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
+import com.hmh.hamyeonham.challenge.model.NewChallenge
+import com.hmh.hamyeonham.challenge.newchallenge.NewChallengeActivity
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.fragment.snackBarWithAction
@@ -50,6 +52,8 @@ class ChallengeFragment : Fragment() {
     private val activityViewModel by activityViewModels<MainViewModel>()
     private val viewModel by viewModels<ChallengeViewModel>()
     private lateinit var appSelectionResultLauncher: ActivityResultLauncher<Intent>
+    private lateinit var newChallengeResultLauncher: ActivityResultLauncher<Intent>
+
 
     @Inject
     lateinit var navigationProvider: NavigationProvider
@@ -65,6 +69,7 @@ class ChallengeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initAppSelectionResultLauncher()
+        initNewChallengeResultLauncher()
         initViews()
         collectMainStateAndProcess()
         collectChallengeStateAndProcess()
@@ -80,7 +85,7 @@ class ChallengeFragment : Fragment() {
     private fun bindChallengeInfo(it: MainState) {
         setChallengeCalendarVisibility(it.isChallengeExist)
         bindChallengeCalendar(it.challengeStatusList)
-        bindChallengeDate(it.todayIndex, it.startDate)
+        bindChallengeDate(it.todayIndexAsDate, it.startDate)
     }
 
     private fun updateUsageStatusAndGoals(it: MainState) {
@@ -158,7 +163,8 @@ class ChallengeFragment : Fragment() {
                     navigateToPointView()
                 }
             } else {
-                //TODO 챌린지 생성 기능 추가
+                val intent = Intent(requireContext(), NewChallengeActivity::class.java)
+                newChallengeResultLauncher.launch(intent)
             }
         }
     }
@@ -219,6 +225,22 @@ class ChallengeFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                 if (result.resultCode == Activity.RESULT_OK) {
                     addSelectedApps(result)
+                }
+            }
+    }
+
+    private fun initNewChallengeResultLauncher() {
+        newChallengeResultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val period = result.data?.getIntExtra(NewChallengeActivity.PERIOD, 0)
+                    val goalTime = result.data?.getLongExtra(NewChallengeActivity.GOALTIME, 0)
+                    viewModel.generateNewChallenge(
+                        NewChallenge(
+                            period = period ?: 0,
+                            goalTime = goalTime ?: 0
+                        )
+                    )
                 }
             }
     }
