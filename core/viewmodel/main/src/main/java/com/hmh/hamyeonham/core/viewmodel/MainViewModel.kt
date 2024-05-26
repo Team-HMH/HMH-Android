@@ -106,7 +106,7 @@ class MainViewModel @Inject constructor(
             }.onFailure {
                 if (it is HttpException) {
                     when (it.code()) {
-                        400 -> {
+                        LACK_POINT_ERROR_CODE -> {
                             sendEffect(MainEffect.LackOfPoint)
                         }
                     }
@@ -173,5 +173,9 @@ class MainViewModel @Inject constructor(
         updateState {
             copy(usageStatusAndGoals = usageStatsList)
         }
+    }
+
+    companion object {
+        private const val LACK_POINT_ERROR_CODE = 400
     }
 }
