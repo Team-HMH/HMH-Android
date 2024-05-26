@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -74,11 +73,9 @@ class AppSelectionFragment : Fragment() {
 
     private fun initAppSelectionRecyclerAdapter() {
         binding.rvAppSelection.run {
-            adapter = AppSelectionAdapter(
-                onAppChecked = viewModel::checkApp,
-                onAppUnChecked = viewModel::unCheckApp,
-            )
+            adapter = AppSelectionAdapter(onAppCheckedChangeListener = viewModel::appCheckChanged)
             layoutManager = LinearLayoutManager(requireContext())
+            itemAnimator = null
         }
     }
 }

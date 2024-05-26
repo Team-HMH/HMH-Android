@@ -57,15 +57,11 @@ class AppAddViewModel @Inject constructor(
         _state.value = newState
     }
 
-    fun checkApp(packageName: String) {
-        updateState {
-            copy(selectedApps = selectedApps + packageName)
-        }
-    }
-
-    fun unCheckApp(packageName: String) {
-        updateState {
-            copy(selectedApps = selectedApps - packageName)
+    fun appCheckChanged(packageName: String, isCheck: Boolean) {
+        if (isCheck) {
+            checkApp(packageName)
+        } else {
+            unCheckApp(packageName)
         }
     }
 
@@ -78,6 +74,18 @@ class AppAddViewModel @Inject constructor(
     fun setGoalMin(goalMin: Long) {
         updateState {
             copy(goalMin = goalMin)
+        }
+    }
+
+    private fun checkApp(packageName: String) {
+        updateState {
+            copy(selectedApps = selectedApps + packageName)
+        }
+    }
+
+    private fun unCheckApp(packageName: String) {
+        updateState {
+            copy(selectedApps = selectedApps - packageName)
         }
     }
 }
