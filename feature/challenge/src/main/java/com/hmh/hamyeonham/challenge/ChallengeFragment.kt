@@ -141,7 +141,7 @@ class ChallengeFragment : Fragment() {
         binding.tvPointButton.setImageResource(pointButtonImg)
 
         binding.tvPointButton.setOnClickListener {
-            navigationProvider.toPoint()
+            navigateToPointView()
         }
     }
 
@@ -155,12 +155,17 @@ class ChallengeFragment : Fragment() {
                         com.hmh.hamyeonham.feature.challenge.R.string.all_move
                     )
                 ) {
-                    navigationProvider.toPoint()
+                    navigateToPointView()
                 }
             } else {
                 //TODO 챌린지 생성 기능 추가
             }
         }
+    }
+
+    private fun navigateToPointView() {
+        val intent = navigationProvider.toPoint()
+        startActivity(intent)
     }
 
     private fun initViews() {

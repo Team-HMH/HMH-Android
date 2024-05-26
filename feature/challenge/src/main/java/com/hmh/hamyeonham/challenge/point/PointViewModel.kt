@@ -18,10 +18,13 @@ class PointViewModel @Inject constructor(private val pointRepository: PointRepos
     private val _currentUserPoint = MutableStateFlow(0)
     val currentPointState = _currentUserPoint.asStateFlow()
 
+    private val _pointChallengeDate = MutableStateFlow("")
+    val pointChallengeDate = _pointChallengeDate.asStateFlow()
+
     //    private val _clickEarnPoint = MutableStateFlow(0)
 //    val clickEarnPoint = _clickEarnPoint.asStateFlow()
     init {
-        getCurrentUserPoint()
+        //getCurrentUserPoint()
     }
 
     private fun getCurrentUserPoint() {
@@ -33,11 +36,11 @@ class PointViewModel @Inject constructor(private val pointRepository: PointRepos
         }
     }
 
-    fun earnChallengePoint() {
+    fun earnChallengePoint(challengeDate: String) {
         viewModelScope.launch {
-            pointRepository.earnPoint().onSuccess {
+            pointRepository.earnPoint(challengeDate).onSuccess {
                 _currentUserPoint.value = it.totalUserPoint
-                PointModel(point = it.totalUserPoint)
+                //PointModel(point = it.totalUserPoint)
             }
         }
     }
