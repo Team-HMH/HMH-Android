@@ -52,8 +52,14 @@ class MainActivity : AppCompatActivity() {
     private fun collectEffect() {
         viewModel.effect.flowWithLifecycle(lifecycle).onEach { effect ->
             when (effect) {
-                MainEffect.SuccessUsePoint -> showChallengeFailedDialog()
-                MainEffect.LackOfPoint -> showPointLackDialog()
+                is MainEffect.SuccessUsePoint -> {
+                    setIsUnLockUseCase(true)
+                    intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
+                    showChallengeFailedDialog()
+                }
+
+                is MainEffect.LackOfPoint -> showPointLackDialog()
+                is MainEffect.NetworkError -> showErrorDialog()
             }
         }.launchIn(lifecycleScope)
     }
@@ -84,8 +90,6 @@ class MainActivity : AppCompatActivity() {
         ).apply {
             setConfirmButtonClickListener {
                 viewModel.updateDailyChallengeFailed()
-                setIsUnLockUseCase(true)
-                intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
             }
             setDismissButtonClickListener {
                 intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
@@ -116,6 +120,18 @@ class MainActivity : AppCompatActivity() {
             description = getString(R.string.dialog_description_point_lack),
             iconRes = R.drawable.ic_point_lack,
             confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.no),
+        ).apply {
+            setConfirmButtonClickListener {
+                dismiss()
+            }
+        }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
+    }
+
+    private fun showErrorDialog() {
+        OneButtonCommonDialog.newInstance(
+            title = getString(com.hmh.hamyeonham.core.designsystem.R.string.dialog_title_network_error),
+            description = getString(com.hmh.hamyeonham.core.designsystem.R.string.dialog_description_network_error),
+            confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
         ).apply {
             setConfirmButtonClickListener {
                 dismiss()

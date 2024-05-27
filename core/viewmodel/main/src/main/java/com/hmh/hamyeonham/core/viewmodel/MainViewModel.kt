@@ -59,17 +59,13 @@ class MainViewModel @Inject constructor(
                 getChallengeStatus()
                 sendEffect(MainEffect.SuccessUsePoint)
             }.onFailure {
-
+                sendEffect(MainEffect.NetworkError)
             }
         }
     }
 
     fun isPointLeftToCollect(): Boolean =
         mainState.value.challengeStatusList.contains(ChallengeStatus.Status.UNEARNED)
-
-    fun getUsageGoalsExceptTotal(): List<UsageGoal> {
-        return mainState.value.usageGoals.filter { it.packageName != UsageGoal.TOTAL }
-    }
 
     private fun updateState(transform: suspend MainState.() -> MainState) {
         viewModelScope.launch {
@@ -91,6 +87,9 @@ class MainViewModel @Inject constructor(
                 challengeRepository.getChallengeWithUsage().getOrNull() ?: return@launch
             challengeRepository.uploadSavedChallenge(challengeWithUsages).onSuccess {
                 challengeRepository.deleteAllChallengeWithUsage()
+            }.onFailure {
+                sendEffect(MainEffect.NetworkError)
+                Log.e("uploadSavedChallenge error", it.toString())
             }
         }
     }
@@ -109,7 +108,10 @@ class MainViewModel @Inject constructor(
                         LACK_POINT_ERROR_CODE -> {
                             sendEffect(MainEffect.LackOfPoint)
                         }
+                        else -> sendEffect(MainEffect.NetworkError)
                     }
+                } else {
+                    sendEffect(MainEffect.NetworkError)
                 }
                 Log.e("challenge status error", it.toString())
             }
@@ -133,6 +135,7 @@ class MainViewModel @Inject constructor(
         userInfoRepository.getUserInfo().onSuccess {
             updateUserInfo(it)
         }.onFailure {
+            sendEffect(MainEffect.NetworkError)
             Log.e("userInfo error", it.toString())
         }
     }
