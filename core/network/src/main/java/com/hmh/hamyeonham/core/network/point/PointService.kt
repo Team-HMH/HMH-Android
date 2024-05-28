@@ -3,6 +3,7 @@ package com.hmh.hamyeonham.core.network.point
 import com.hmh.hamyeonham.core.network.model.BaseResponse
 import com.hmh.hamyeonham.core.network.point.model.EarnPointResponse
 import com.hmh.hamyeonham.core.network.point.model.PointEarnRequest
+import com.hmh.hamyeonham.core.network.point.model.PointListResponse
 import com.hmh.hamyeonham.core.network.point.model.UsablePointResponse
 import com.hmh.hamyeonham.core.network.point.model.UsePointResponse
 import retrofit2.http.Body
@@ -26,5 +27,8 @@ interface PointService {
     suspend fun patchPoint(
         @Field("challengeDate") challengeDate: String
     ): UsePointResponse
+
+    @GET("/api/v1/point/list")
+    suspend fun getPointInfoList(): BaseResponse<PointListResponse>
 
 }

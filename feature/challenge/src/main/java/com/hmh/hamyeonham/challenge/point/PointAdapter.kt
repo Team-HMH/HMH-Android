@@ -5,15 +5,14 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.common.view.ItemDiffCallback
+import com.hmh.hamyeonham.domain.point.model.PointInfo
 import com.hmh.hamyeonham.feature.challenge.R
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemPointBinding
 
 class PointAdapter(
-    private val onButtonClick: (PointModel) -> Unit,
-    private val challengeStatus: ChallengeStatus,
-) : ListAdapter<PointModel, PointAdapter.PointViewHolder>(
+    private val onButtonClick: (PointInfo) -> Unit,
+) : ListAdapter<PointInfo, PointAdapter.PointViewHolder>(
     ItemDiffCallback(
         onItemsTheSame = { oldItem, newItem ->
             oldItem == newItem
@@ -30,64 +29,58 @@ class PointAdapter(
         return PointViewHolder(
             binding,
             onButtonClick,
-            challengeStatus
         )
     }
 
     override fun onBindViewHolder(holder: PointViewHolder, position: Int) {
-        holder.onBind(currentList[position])
+        holder.onBind(getItem(position))
     }
 
     class PointViewHolder(
         private val binding: ItemPointBinding,
-        private val onButtonClick: (PointModel) -> Unit,
-        private val challengeStatus: ChallengeStatus,
+        private val onButtonClick: (PointInfo) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
         private val context = binding.root.context
 
-        fun onBind(pointModel: PointModel) {
-
-
+        fun onBind(pointModel: PointInfo) {
             binding.run {
                 tvPointTitle.text = itemView.context.getString(
                     R.string.tv_point_title,
-                    pointModel.pointTitle
+                    (adapterPosition + 1).toString()
                 )
-                tvPointWhatChallenge.text =
-                    itemView.context.getString(
-                        R.string.tv_point_what_challenge,
-                        challengeStatus.period.toString()
-                    )
-                tvPointButton.text =
-                    itemView.context.getString(R.string.point_point, pointModel.point.toString())
+                tvPointWhatChallenge.text = itemView.context.getString(
+                    R.string.tv_point_what_challenge,
+                    pointModel.period.toString()
+                )
+                tvPointButton.text = itemView.context.getString(R.string.point_point, pointModel.challengePoint.toString())
 
-                when (pointModel.getPointStatus) {
-                    PointModel.GetPointStatus.ALREADY_GET_POINT -> {
-                        tvPointButton.isEnabled = false
-                        tvPointButton.background =
-                            context.getDrawable(R.drawable.point_button_background_already_get)
-                        val textColor = ContextCompat.getColor(
-                            context,
-                            com.hmh.hamyeonham.core.designsystem.R.color.blue_purple_opacity_70
-                        )
-                        tvPointButton.setTextColor(textColor)
+                if (pointModel.challengePointStatuses.isNotEmpty() && adapterPosition < pointModel.challengePointStatuses.size) {
+                    when (pointModel.challengePointStatuses[adapterPosition].status) {
+                        PointInfo.GetPointStatus.EARNED -> {
+                            tvPointButton.isEnabled = false
+                            tvPointButton.background = context.getDrawable(R.drawable.point_button_background_already_get)
+                            val textColor = ContextCompat.getColor(context, com.hmh.hamyeonham.core.designsystem.R.color.blue_purple_opacity_70)
+                            tvPointButton.setTextColor(textColor)
+                        }
+                        PointInfo.GetPointStatus.UNEARNED -> {
+                            tvPointButton.isEnabled = true
+                            tvPointButton.setOnClickListener { onButtonClick(pointModel) }
+                        }
+                        PointInfo.GetPointStatus.FAILURE -> {
+                            tvPointButton.isEnabled = false
+                            tvPointButton.background = context.getDrawable(R.drawable.point_button_background_disable)
+                            val textColor = ContextCompat.getColor(context, com.hmh.hamyeonham.core.designsystem.R.color.gray2)
+                            tvPointButton.setTextColor(textColor)
+                        }
+                        PointInfo.GetPointStatus.NONE -> {
+                            // do nothing
+                        }
                     }
-
-                    PointModel.GetPointStatus.CAN_GET_POINT -> {
-                        tvPointButton.isEnabled = true
-                        onButtonClick(pointModel)
-                    }
-
-                    PointModel.GetPointStatus.FAIL_CHALLENGE -> {
-                        tvPointButton.isEnabled = false
-                        tvPointButton.background =
-                            context.getDrawable(R.drawable.point_button_background_disable)
-                        val textColor = ContextCompat.getColor(
-                            context,
-                            com.hmh.hamyeonham.core.designsystem.R.color.gray2
-                        )
-                        tvPointButton.setTextColor(textColor)
-                    }
+                } else {
+                    tvPointButton.isEnabled = false
+                    tvPointButton.background = context.getDrawable(R.drawable.point_button_background_disable)
+                    val textColor = ContextCompat.getColor(context, com.hmh.hamyeonham.core.designsystem.R.color.gray2)
+                    tvPointButton.setTextColor(textColor)
                 }
             }
         }

@@ -3,6 +3,7 @@ package com.hmh.hamyeonham.challenge.point
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hmh.hamyeonham.domain.point.model.PointInfo
 import com.hmh.hamyeonham.domain.point.repository.PointRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,29 +19,31 @@ class PointViewModel @Inject constructor(private val pointRepository: PointRepos
     private val _currentUserPoint = MutableStateFlow(0)
     val currentPointState = _currentUserPoint.asStateFlow()
 
-    private val _pointChallengeDate = MutableStateFlow("")
-    val pointChallengeDate = _pointChallengeDate.asStateFlow()
+    private val _pointInfoList = MutableStateFlow(emptyList<PointInfo>())
+    val pointInfoList = _pointInfoList.asStateFlow()
 
-    //    private val _clickEarnPoint = MutableStateFlow(0)
-//    val clickEarnPoint = _clickEarnPoint.asStateFlow()
+    private val _challengePeriod = MutableStateFlow(0)
+    val challengePeriod = _challengePeriod.asStateFlow()
+
     init {
-        //getCurrentUserPoint()
-    }
-
-    private fun getCurrentUserPoint() {
-        viewModelScope.launch {
-            pointRepository.usePoint().onSuccess {
-                _currentUserPoint.value = it.userPoint
-                Log.d("PointViewModel", "getCurrentUserPoint: ${it.userPoint}")
-            }
-        }
+        getPointInfoList()
     }
 
     fun earnChallengePoint(challengeDate: String) {
         viewModelScope.launch {
             pointRepository.earnPoint(challengeDate).onSuccess {
                 _currentUserPoint.value = it.totalUserPoint
-                //PointModel(point = it.totalUserPoint)
+                //PointInfo(point = it.totalUserPoint)
+            }
+        }
+    }
+
+    private fun getPointInfoList() {
+        viewModelScope.launch {
+            pointRepository.getPointInfoList().onSuccess {
+                _pointInfoList.value = listOf(it)
+                _challengePeriod.value = it.period
+                _currentUserPoint.value = it.currentUserPoint
             }
         }
     }
