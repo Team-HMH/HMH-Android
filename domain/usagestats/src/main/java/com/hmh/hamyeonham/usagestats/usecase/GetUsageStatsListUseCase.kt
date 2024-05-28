@@ -48,7 +48,7 @@ class GetUsageStatsListUseCase @Inject constructor(
         return 0
     }
 
-    private fun getUsageStatsAndGoalsForSelectedPackages(
+    private suspend fun getUsageStatsAndGoalsForSelectedPackages(
         startTime: Long,
         endTime: Long,
         usageGoalList: List<UsageGoal>,

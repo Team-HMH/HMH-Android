@@ -14,6 +14,7 @@ import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatFromPackageUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -55,7 +56,7 @@ class LockAccessibilityService : AccessibilityService() {
                 endTime = endTime,
                 packageName = packageName
             )
-            val usageGoals = getUsageGoalsUseCase().first()
+            val usageGoals = getUsageGoalsUseCase().firstOrNull() ?: return@launch
             val myGoal = usageGoals.find { it.packageName == packageName } ?: return@launch
             Log.d("LockAccessibilityService", "checkUsage: $usageStats")
             Log.d("LockAccessibilityService", "checkUsage: ${myGoal.goalTime}")
