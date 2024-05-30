@@ -13,6 +13,7 @@ internal fun ChallengeResponse.toChallengeStatus(): ChallengeStatus {
         goalTime,
         period,
         todayIndex,
+        startDate
     )
 }
 

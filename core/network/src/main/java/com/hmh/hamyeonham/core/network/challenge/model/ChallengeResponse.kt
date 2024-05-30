@@ -15,6 +15,8 @@ data class ChallengeResponse(
     val statuses: List<String>,
     @SerialName("todayIndex")
     val todayIndex: Int,
+    @SerialName("startDate")
+    val startDate: String
 ) {
     @Serializable
     data class AppGoal(

@@ -7,7 +7,6 @@ import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
 import com.hmh.hamyeonham.common.time.getCurrentDateOfDefaultTimeZone
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
-import com.hmh.hamyeonham.common.time.minusDaysFromDate
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.domain.point.repository.PointRepository
@@ -33,8 +32,9 @@ data class MainState(
     val name: String = "",
     val point: Int = 0,
     val challengeSuccess: Boolean = true,
+    val startDate: LocalDate = getCurrentDateOfDefaultTimeZone()
 ) {
-    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), todayIndex)
+    //    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), todayIndex)
     val isChallengeExist: Boolean = todayIndex != -1
 
     //~일째를 의미하는 변수
@@ -150,6 +150,7 @@ class MainViewModel @Inject constructor(
                 totalGoalTimeInHour = challengeStatus.goalTimeInHours,
                 period = challengeStatus.period,
                 todayIndex = challengeStatus.todayIndex,
+                startDate = LocalDate.parse(challengeStatus.startDate)
             )
         }
     }
