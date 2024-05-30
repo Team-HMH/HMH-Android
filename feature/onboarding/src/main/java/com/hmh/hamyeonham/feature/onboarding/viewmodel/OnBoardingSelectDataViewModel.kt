@@ -33,7 +33,7 @@ class OnBoardingSelectDataViewModel @Inject constructor() : ViewModel() {
         val onBoardingChallengePeriod = OnBoardingQuestion(
             "챌린지 기간을 선택해주세요",
             "첫 챌린지로 가볍게 도전하기 좋은 7일을 추천해요",
-            listOf("7일", "14일", "21일", "30일"),
+            listOf("7일", "14일", "20일", "30일"),
         )
 
         _onBoardingSelectDataState.value = onBoardingSelectDataState.value.copy(
