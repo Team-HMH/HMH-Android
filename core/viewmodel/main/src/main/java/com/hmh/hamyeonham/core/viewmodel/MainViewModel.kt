@@ -34,7 +34,6 @@ data class MainState(
     val challengeSuccess: Boolean = true,
     val startDate: LocalDate = getCurrentDateOfDefaultTimeZone()
 ) {
-    //    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), todayIndex)
     val isChallengeExist: Boolean = todayIndex != -1
 
     //~일째를 의미하는 변수
