@@ -10,13 +10,25 @@ class GetInstalledAppUseCase @Inject constructor(
     private val goalsRepository: UsageGoalsRepository,
 ) {
     private val excludedAppName = "com.hmh.hamyeonham"
+    private var installedAppCache: List<String>? = null
+    private var isCacheValid: Boolean = false
+
     suspend operator fun invoke(): List<String> {
-        val installedAppList = deviceRepository.getInstalledApps() - excludedAppName
-        val usageGoals = goalsRepository.getUsageGoals().firstOrNull()
+        if (!isCacheValid) {
+            val installedAppList = deviceRepository.getInstalledApps() - excludedAppName
+            val usageGoals = goalsRepository.getUsageGoals().firstOrNull()
 
-        val installedPackages = installedAppList.toSet()
-        val goalPackages = usageGoals?.map { it.packageName }?.toSet() ?: emptySet()
+            val installedPackages = installedAppList.toSet()
+            val goalPackages = usageGoals?.map { it.packageName }?.toSet() ?: emptySet()
 
-        return (installedPackages - goalPackages).toList()
+            installedAppCache = (installedPackages - goalPackages).toList()
+            isCacheValid = true
+        }
+        return installedAppCache ?: emptyList()
+    }
+
+    fun clearCache() {
+        installedAppCache = null
+        isCacheValid = false
     }
 }
