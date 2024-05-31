@@ -44,16 +44,6 @@ class PointAdapter(
 
         fun onBind(pointModel: PointInfo) {
             binding.run {
-                tvPointTitle.text = itemView.context.getString(
-                    R.string.tv_point_title,
-                    (adapterPosition + 1).toString()
-                )
-                tvPointWhatChallenge.text = itemView.context.getString(
-                    R.string.tv_point_what_challenge,
-                    pointModel.period.toString()
-                )
-                tvPointButton.text = itemView.context.getString(R.string.point_point, pointModel.challengePoint.toString())
-
                 if (pointModel.challengePointStatuses.isNotEmpty() && adapterPosition < pointModel.challengePointStatuses.size) {
                     when (pointModel.challengePointStatuses[adapterPosition].status) {
                         PointInfo.GetPointStatus.EARNED -> {
@@ -73,7 +63,7 @@ class PointAdapter(
                             tvPointButton.setTextColor(textColor)
                         }
                         PointInfo.GetPointStatus.NONE -> {
-                            // do nothing
+                            binding.root.visibility = android.view.View.GONE
                         }
                     }
                 } else {
