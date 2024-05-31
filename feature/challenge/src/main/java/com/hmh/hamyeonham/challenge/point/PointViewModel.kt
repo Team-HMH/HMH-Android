@@ -22,8 +22,6 @@ class PointViewModel @Inject constructor(private val pointRepository: PointRepos
     private val _pointInfoList = MutableStateFlow(emptyList<PointInfo>())
     val pointInfoList = _pointInfoList.asStateFlow()
 
-    private val _challengePeriod = MutableStateFlow(0)
-    val challengePeriod = _challengePeriod.asStateFlow()
 
     init {
         getPointInfoList()
@@ -41,7 +39,6 @@ class PointViewModel @Inject constructor(private val pointRepository: PointRepos
         viewModelScope.launch {
             pointRepository.getPointInfoList().onSuccess {
                 _pointInfoList.value = listOf(it)
-                _challengePeriod.value = it.period
                 _currentUserPoint.value = it.currentUserPoint
             }
         }
