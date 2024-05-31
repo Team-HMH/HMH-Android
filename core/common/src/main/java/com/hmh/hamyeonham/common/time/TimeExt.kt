@@ -47,13 +47,13 @@ fun LocalDateTime.toEpochMilliseconds(timeZone: TimeZone): Long =
 
 // 현재 날짜의 시작 시간과 종료 시간을 Epoch 밀리초로 반환하는 함수
 fun getCurrentDayStartEndEpochMillis(): Pair<Long, Long> {
-    val currentDate = getCurrentDateOfDefaulTimeZone()
+    val currentDate = getCurrentDateOfDefaultTimeZone()
     val startOfDay = currentDate.toStartOfDay().toEpochMilliseconds(defaultTimeZone)
     val endOfDay = currentDate.toEndOfDay().toEpochMilliseconds(defaultTimeZone)
     return Pair(startOfDay, endOfDay)
 }
 
-fun getCurrentDateOfDefaulTimeZone(): LocalDate {
+fun getCurrentDateOfDefaultTimeZone(): LocalDate {
     return Clock.System.now().toLocalDateTime(defaultTimeZone).date
 }
 
@@ -61,19 +61,24 @@ fun minusDaysFromDate(date: LocalDate, daysToMinus: Int): LocalDate {
     return date.minus(daysToMinus, DateTimeUnit.DAY)
 }
 
-fun convertTimeToString(time: Long): String {
-    val hours = (time / 60)
-    val minutes = time % 60
+fun convertTimeToString(minute: Long): String {
+    val hours = (minute / 60)
+    val minutes = minute % 60
 
     return buildString {
-        if (hours > 0) append("$hours 시간")
-        if (minutes > 0 || hours == 0L) append(" $minutes 분")
+        if (hours > 0) append(hours.toString() + "시간 ")
+        append(minutes.toString() + "분")
     }.trim()
 }
 
 // 분을 ms로 바꾸는 함수
 fun Int.timeToMs(): Long {
     return this * 60 * 1000L
+}
+
+//시를 ms로 바꾸는 함수
+fun Int.hourToMs(): Long {
+    return this * 60 * 60 * 1000L
 }
 
 fun Long.msToMin(): Long = this / 1000 / 60

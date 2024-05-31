@@ -32,10 +32,6 @@ class UsageGoalsLocalDataSource @Inject constructor(
             }
     }
 
-    suspend fun getUsageGoal(packageName: String): UsageGoal {
-        return usageGoalsDao.getUsageGoal(packageName).toUsageGoal()
-    }
-
     suspend fun addUsageGoal(usageGoal: UsageGoal) {
         usageGoalsDao.insertUsageGoal(
             UsageGoalsEntity(

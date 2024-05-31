@@ -30,10 +30,6 @@ class DefaultUsageGoalsRepository @Inject constructor(
         return usageGoalsLocalDataSource.getUsageGoal()
     }
 
-    override suspend fun getUsageGoalTimeFromMockData(packageName: String): Long {
-        return usageGoalsLocalDataSource.getUsageGoal(packageName).goalTime
-    }
-
     override suspend fun addUsageGoal(usageGoal: UsageGoal) {
         usageGoalsLocalDataSource.addUsageGoal(usageGoal)
     }

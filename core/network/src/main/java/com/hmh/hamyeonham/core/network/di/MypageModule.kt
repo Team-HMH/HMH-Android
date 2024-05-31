@@ -1,7 +1,7 @@
 package com.hmh.hamyeonham.core.network.di
 
 import com.hmh.hamyeonham.common.qualifier.Secured
-import com.hmh.hamyeonham.core.network.mypage.datasource.MypageService
+import com.hmh.hamyeonham.core.network.mypage.MypageService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

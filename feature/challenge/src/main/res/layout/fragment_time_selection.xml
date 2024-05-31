@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_new_challenge_screentime_goal_title"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="21dp"
+        android:layout_marginTop="60dp"
+        android:lineSpacingExtra="6sp"
+        android:text="@string/new_challenge_screentime_goal_title"
+        android:textColor="?white_text"
+        android:textSize="21sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_new_challenge_screentime_goal_description"
+        style="@style/TextAppearance.Hmh.BodyMedium"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="7dp"
+        android:text="@string/new_challenge_screentime_goal_description"
+        android:textColor="?gray2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_new_challenge_screentime_goal_title" />
+
+    <NumberPicker
+        android:id="@+id/np_new_challenge_screentime_goal"
+        style="@style/TextAppearance.Hmh.HeadlineLarge"
+        android:layout_width="45dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:theme="@style/AppTheme.NumberPicker"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_new_challenge_screentime_goal_unit1"
+        style="@style/TextAppearance.Hmh.HeadlineSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:text="@string/all_hour"
+        android:textColor="?gray2"
+        app:layout_constraintBottom_toBottomOf="@+id/np_new_challenge_screentime_goal"
+        app:layout_constraintStart_toEndOf="@+id/np_new_challenge_screentime_goal"
+        app:layout_constraintTop_toTopOf="@+id/np_new_challenge_screentime_goal" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.appadd.appselection.AppSelectionModel
 import com.hmh.hamyeonham.challenge.usecase.GetInstalledAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -29,6 +28,12 @@ data class AppAddState(
 class AppAddViewModel @Inject constructor(
     private val getInstalledAppUseCase: GetInstalledAppUseCase
 ) : ViewModel() {
+    private val _state = MutableStateFlow(AppAddState())
+    val state = _state.asStateFlow()
+
+    private val _effect = MutableSharedFlow<AppAddEffect>(1)
+    val effect = _effect.asSharedFlow()
+
     init {
         getInstalledApps()
     }
@@ -40,19 +45,11 @@ class AppAddViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateInstalledApps(installApps: List<String>) {
-        if (state == null)
-            delay(10)
+    private fun updateInstalledApps(installApps: List<String>) {
         updateState {
             copy(installedApp = installApps)
         }
     }
-
-    private val _state = MutableStateFlow(AppAddState())
-    val state = _state.asStateFlow()
-
-    private val _effect = MutableSharedFlow<AppAddEffect>(1)
-    val effect = _effect.asSharedFlow()
 
     private fun updateState(transform: AppAddState.() -> AppAddState) {
         val currentState = state.value
