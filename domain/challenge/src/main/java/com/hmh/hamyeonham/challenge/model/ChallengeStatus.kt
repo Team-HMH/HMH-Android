@@ -6,6 +6,7 @@ data class ChallengeStatus(
     val goalTime: Long = 0,
     val period: Int = 0,
     val todayIndex: Int = 0,
+    val startDate: String = "2001-01-01"
 ) {
     data class AppGoal(
         val appCode: String,
