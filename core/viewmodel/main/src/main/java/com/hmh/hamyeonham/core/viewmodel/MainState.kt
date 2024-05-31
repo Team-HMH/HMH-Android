@@ -21,4 +21,5 @@ data class MainState(
 ) {
     val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), todayIndex - 1)
     val isChallengeExist: Boolean = todayIndex != -1
+    val todayIndexAsDate: Int = todayIndex + 1
 }
