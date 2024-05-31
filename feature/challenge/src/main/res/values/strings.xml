@@ -24,4 +24,15 @@
 
     <string name="challenge_cannot_create">포인트를 다 받은 후 챌린지를 생성하세요</string>
     <string name="all_move">이동</string>
+    
+    <string name="new_challenge_next">다음</string>
+    <string name="new_challenge_select_date_question">챌린지 기간을 선택해 주세요</string>
+    <string name="new_challenge_select_date_description">첫 챌린지로 가볍게 도전하기 좋은 7일을 추천해요</string>
+    <string name="new_challenge_seven_days">7일</string>
+    <string name="new_challenge_fourteen_days">14일</string>
+    <string name="new_challenge_twenty_days">20일</string>
+    <string name="new_challenge_thirty_days">30일</string>
+
+    <string name="new_challenge_screentime_goal_title">총 목표 사용 시간을\n설정해 주세요</string>
+    <string name="new_challenge_screentime_goal_description">목표 사용 시간은 최대 6시간까지 설정할 수 있어요</string>
 </resources>
