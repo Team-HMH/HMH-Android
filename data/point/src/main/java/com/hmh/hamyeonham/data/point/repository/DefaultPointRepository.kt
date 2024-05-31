@@ -2,7 +2,7 @@ package com.hmh.hamyeonham.data.point.repository
 
 import com.hmh.hamyeonham.common.time.getCurrentDateOfDefaultTimeZone
 import com.hmh.hamyeonham.core.network.point.PointService
-import com.hmh.hamyeonham.core.network.point.model.PointEarnRequest
+import com.hmh.hamyeonham.core.network.point.model.PointChallengeDateRequest
 import com.hmh.hamyeonham.data.point.toEarnPoint
 import com.hmh.hamyeonham.data.point.toPointStatusList
 import com.hmh.hamyeonham.data.point.toUsePoint
@@ -17,8 +17,7 @@ class DefaultPointRepository @Inject constructor(
     private val pointService: PointService
 ) : PointRepository {
     override suspend fun earnPoint(challengeDate: String): Result<EarnPoint> = runCatching {
-        // val challengeDate = getCurrentDateOfDefaultTimeZone().toString()
-        pointService.earnPoint(PointEarnRequest(challengeDate)).data.toEarnPoint()
+        pointService.earnPoint(PointChallengeDateRequest(challengeDate)).data.toEarnPoint()
     }
 
     override suspend fun getUsablePoint(): Result<UsablePoint> = runCatching {
@@ -28,7 +27,7 @@ class DefaultPointRepository @Inject constructor(
     override suspend fun usePoint(): Result<UsePoint> {
         return runCatching {
             val challengeDate = getCurrentDateOfDefaultTimeZone().toString()
-            pointService.patchPoint(challengeDate).toUsePoint()
+            pointService.patchPoint(PointChallengeDateRequest(challengeDate)).data.toUsePoint()
         }
     }
 
