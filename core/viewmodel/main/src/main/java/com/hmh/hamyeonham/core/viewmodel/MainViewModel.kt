@@ -167,7 +167,6 @@ class MainViewModel @Inject constructor(
                 totalGoalTimeInHour = challengeStatus.goalTimeInHours,
                 period = challengeStatus.period,
                 todayIndex = challengeStatus.todayIndex,
-                startDate = LocalDate.parse(challengeStatus.startDate)
             )
         }
     }
