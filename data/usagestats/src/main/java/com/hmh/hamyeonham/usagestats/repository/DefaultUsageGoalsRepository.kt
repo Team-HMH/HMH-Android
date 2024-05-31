@@ -41,7 +41,4 @@ class DefaultUsageGoalsRepository @Inject constructor(
     override suspend fun deleteUsageGoal(packageName: String) {
         usageGoalsLocalDataSource.deleteUsageGoal(packageName)
     }
-    override suspend fun deleteAllUsageGoal() {
-        usageGoalsLocalDataSource.deleteAllUsageGoals()
-    }
 }

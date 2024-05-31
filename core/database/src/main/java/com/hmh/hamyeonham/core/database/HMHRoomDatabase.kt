@@ -9,6 +9,9 @@ import com.hmh.hamyeonham.core.database.model.DailyChallengeEntity
 import com.hmh.hamyeonham.core.database.model.UsageEntity
 import com.hmh.hamyeonham.core.database.model.UsageGoalsEntity
 import com.hmh.hamyeonham.core.database.model.UsageTotalGoalEntity
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Database(
     entities = [
@@ -24,4 +27,14 @@ abstract class HMHRoomDatabase : RoomDatabase() {
     abstract fun usageGoalsDao(): UsageGoalsDao
     abstract fun usageTotalGoalDao(): UsageTotalGoalDao
     abstract fun challengeDao(): ChallengeDao
+
+    @OptIn(DelicateCoroutinesApi::class)
+    fun deleteAll() {
+        GlobalScope.launch {
+            usageGoalsDao().deleteAll()
+            usageTotalGoalDao().deleteAll()
+            challengeDao().deleteAll()
+        }
+
+    }
 }

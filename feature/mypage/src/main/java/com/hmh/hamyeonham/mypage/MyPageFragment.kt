@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -33,7 +32,6 @@ class MyPageFragment : Fragment() {
     private val binding by viewBinding(FragmentMyPageBinding::bind)
     private val activityViewModel by activityViewModels<MainViewModel>()
     private val viewModel by viewModels<MyPageViewModel>()
-    private lateinit var storeResultLauncher: ActivityResultLauncher<Intent>
 
     @Inject
     lateinit var navigationProvider: NavigationProvider
@@ -52,10 +50,11 @@ class MyPageFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        collectMainState()
         initStoreButton()
         initPrivacyButton()
         initTermOfUseButton()
+        collectMainState()
+        collectEffect()
     }
 
     private fun initStoreButton() {
@@ -74,10 +73,6 @@ class MyPageFragment : Fragment() {
             ).apply {
                 setConfirmButtonClickListener {
                     viewModel.handleLogout()
-                    viewModel.deleteAllDatabase()
-                    handleLogoutSuccess()
-                }
-                setDismissButtonClickListener {
                 }
             }.showAllowingStateLoss(childFragmentManager)
         }
@@ -91,31 +86,18 @@ class MyPageFragment : Fragment() {
             ).apply {
                 setConfirmButtonClickListener {
                     viewModel.handleWithdrawal()
-                    viewModel.deleteAllDatabase()
-                    handleWithdrawalSuccess()
-                }
-                setDismissButtonClickListener {
                 }
             }.showAllowingStateLoss(childFragmentManager)
         }
     }
 
-    private fun handleLogoutSuccess() {
+    private fun collectEffect() {
         viewModel.userEffect.flowWithLifecycle(lifecycle).onEach { state ->
             when (state) {
-                is UserEffect.logoutSuccess -> moveToLoginActivity()
-                is UserEffect.logoutFail -> toast(getString(R.string.logout_fail))
-                else -> Unit
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
-    }
-
-    private fun handleWithdrawalSuccess() {
-        viewModel.userEffect.flowWithLifecycle(lifecycle).onEach { state ->
-            when (state) {
-                is UserEffect.withdrawalSuccess -> moveToLoginActivity()
-                is UserEffect.withdrawalFail -> toast(getString(R.string.withdrawal_fail))
-                else -> Unit
+                is UserEffect.WithdrawalSuccess -> moveToLoginActivity()
+                is UserEffect.WithdrawalFail -> toast(getString(R.string.withdrawal_fail))
+                is UserEffect.LogoutSuccess -> moveToLoginActivity()
+                is UserEffect.LogoutFail -> toast(getString(R.string.logout_fail))
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
