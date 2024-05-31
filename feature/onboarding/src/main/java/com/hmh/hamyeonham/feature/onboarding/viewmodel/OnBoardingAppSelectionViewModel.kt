@@ -1,6 +1,7 @@
 package com.hmh.hamyeonham.feature.onboarding.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.hmh.hamyeonham.challenge.model.AppInfo
 import com.hmh.hamyeonham.challenge.repository.DeviceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -11,8 +12,8 @@ class OnBoardingAppSelectionViewModel @Inject constructor(
 ) : ViewModel() {
     private val excludedAppName = "com.hmh.hamyeonham"
 
-    fun getInstalledApps(): List<String> {
-        return deviceRepository.getInstalledApps().filter { packageName ->
+    fun getInstalledApps(): List<AppInfo> {
+        return deviceRepository.getInstalledApps().filter { (packageName, _) ->
             packageName != excludedAppName
         }
     }

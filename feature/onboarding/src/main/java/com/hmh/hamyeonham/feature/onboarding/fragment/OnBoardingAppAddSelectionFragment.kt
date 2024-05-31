@@ -86,7 +86,7 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
             binding.rvAppSelection.adapter as? OnBoardingAppSelectionAdapter
         val newAppList =
             viewModel.getInstalledApps().filter {
-                (context?.getAppNameFromPackageName(it) ?: "").contains(filter)
+                (context?.getAppNameFromPackageName(it.packageName) ?: "").contains(filter)
             }
         onboardingAppSelectionAdapter?.submitList(newAppList)
     }
