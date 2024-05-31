@@ -5,8 +5,8 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.hmh.hamyeonham.core.network.BuildConfig
-import com.hmh.hamyeonham.core.network.auth.datastore.DefaultHMHNetworkPreference
-import com.hmh.hamyeonham.core.network.auth.datastore.HMHNetworkPreference
+import com.hmh.hamyeonham.core.network.auth.datastore.network.DefaultHMHNetworkPreference
+import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

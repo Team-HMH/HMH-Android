@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
@@ -22,10 +21,6 @@ import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class AppSelectionFragment : Fragment() {
-
-    companion object {
-        private const val HMH_PACKAGE_NAME = "com.hmh.hamyeonham"
-    }
 
     private val binding by viewBinding(FrargmentAppSelectionBinding::bind)
     private val viewModel by activityViewModels<AppAddViewModel>()
@@ -51,34 +46,22 @@ class AppSelectionFragment : Fragment() {
 
     private fun initSearchBar() {
         binding.etSearchbar.addTextChangedListener { text ->
-            setRecyclerViewWithFilter(text.toString())
+            viewModel.onQueryChanged(text.toString())
         }
-    }
-
-    private fun setRecyclerViewWithFilter(filter: String) {
-        val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter ?: return
-        val appSelectionList = viewModel.state.value.appSelectionList
-        appSelectionList.filter {
-            val packageName = it.packageName
-            val appName = context?.getAppNameFromPackageName(packageName).orEmpty()
-            !packageName.startsWith(HMH_PACKAGE_NAME) && appName.contains(filter)
-        }.also(appSelectionAdapter::submitList)
     }
 
     private fun collectState() {
         viewModel.state.flowWithLifecycle(viewLifeCycle).onEach { state ->
             val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter
-            appSelectionAdapter?.submitList(state.appSelectionList)
+            appSelectionAdapter?.submitList(state.getAppSelectionList(requireContext()))
         }.launchIn(viewLifeCycleScope)
     }
 
     private fun initAppSelectionRecyclerAdapter() {
         binding.rvAppSelection.run {
-            adapter = AppSelectionAdapter(
-                onAppChecked = viewModel::checkApp,
-                onAppUnChecked = viewModel::unCheckApp,
-            )
+            adapter = AppSelectionAdapter(onAppCheckedChangeListener = viewModel::appCheckChanged)
             layoutManager = LinearLayoutManager(requireContext())
+            itemAnimator = null
         }
     }
 }

@@ -3,7 +3,7 @@ package com.hmh.hamyeonham.feature.login
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hmh.hamyeonham.core.network.auth.datastore.HMHNetworkPreference
+import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
 import com.hmh.hamyeonham.login.repository.AuthRepository
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause

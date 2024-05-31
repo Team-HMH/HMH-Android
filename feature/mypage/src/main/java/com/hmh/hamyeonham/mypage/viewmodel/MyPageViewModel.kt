@@ -3,9 +3,8 @@ package com.hmh.hamyeonham.mypage.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.usecase.DeleteAllDatabaseUseCase
-import com.hmh.hamyeonham.core.network.auth.datastore.DefaultHMHNetworkPreference
+import com.hmh.hamyeonham.core.network.auth.datastore.network.DefaultHMHNetworkPreference
 import com.hmh.hamyeonham.login.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

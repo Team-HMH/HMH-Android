@@ -17,11 +17,11 @@ class ChallengeStatusViewHolder(
             tvDate.text = date
             ivChallengeStatus.setImageResource(getDrawableResource(challengeStatus))
             tvDate.setTextColor(getColor(challengeStatus))
-            ivTodayMark.visibility = getVisibility(challengeStatus)
+            ivTodayMark.visibility = getChallengeStatusVisibility(challengeStatus)
         }
     }
 
-    private fun getVisibility(challengeStatus: ChallengeStatus.Status) =
+    private fun getChallengeStatusVisibility(challengeStatus: ChallengeStatus.Status) =
         (challengeStatus == ChallengeStatus.Status.TODAY).mapBooleanToVisibility()
 
     private fun getColor(challengeStatus: ChallengeStatus.Status?): Int {

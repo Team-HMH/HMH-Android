@@ -10,15 +10,14 @@ import com.hmh.hamyeonham.common.view.ItemDiffCallback
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemAppBinding
 
 class AppSelectionAdapter(
-    private val onAppChecked: (String) -> Unit,
-    private val onAppUnChecked: (String) -> Unit,
+    private val onAppCheckedChangeListener: (packageName: String, isCheck: Boolean) -> Unit,
 ) : ListAdapter<AppSelectionModel, AppSelectionAdapter.AppSelectionViewHolder>(
     ItemDiffCallback(
         onItemsTheSame = { oldItem, newItem ->
             oldItem == newItem
         },
         onContentsTheSame = { oldItem, newItem ->
-            oldItem.packageName == newItem.packageName
+            oldItem.isChecked == newItem.isChecked && oldItem.packageName == newItem.packageName
         }
     ),
 ) {
@@ -28,19 +27,18 @@ class AppSelectionAdapter(
         val binding = ItemAppBinding.inflate(inflater, parent, false)
         return AppSelectionViewHolder(
             binding,
-            onAppChecked = onAppChecked,
-            onAppUnChecked = onAppUnChecked,
+            onAppCheckedChangeListener
         )
     }
 
     override fun onBindViewHolder(holder: AppSelectionViewHolder, position: Int) {
-        holder.onBind(currentList[position])
+        val item = currentList.getOrNull(position) ?: return
+        holder.onBind(item)
     }
 
     class AppSelectionViewHolder(
         private val binding: ItemAppBinding,
-        private val onAppChecked: (String) -> Unit,
-        private val onAppUnChecked: (String) -> Unit,
+        private val onAppCheckedChangeListener: (packageName: String, isCheck: Boolean) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun onBind(appSelectionModel: AppSelectionModel) {
             val packageName = appSelectionModel.packageName
@@ -49,10 +47,10 @@ class AppSelectionAdapter(
                 tvAppname.text = context.getAppNameFromPackageName(packageName)
                 ivAppicon.setImageDrawable(context.getAppIconFromPackageName(packageName))
             }
-            updateCheckedAppListner(appSelectionModel)
+            updateCheckedAppListener(appSelectionModel)
         }
 
-        private fun updateCheckedAppListner(appSelectionModel: AppSelectionModel) {
+        private fun updateCheckedAppListener(appSelectionModel: AppSelectionModel) {
             binding.run {
                 cbApp.setOnCheckedChangeListener(null)
                 cbApp.isChecked = appSelectionModel.isChecked
@@ -61,11 +59,7 @@ class AppSelectionAdapter(
                 }
 
                 cbApp.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        onAppChecked(appSelectionModel.packageName)
-                    } else {
-                        onAppUnChecked(appSelectionModel.packageName)
-                    }
+                    onAppCheckedChangeListener(appSelectionModel.packageName, isChecked)
                 }
             }
         }

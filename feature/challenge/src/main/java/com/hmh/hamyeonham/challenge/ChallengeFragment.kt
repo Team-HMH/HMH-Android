@@ -73,6 +73,60 @@ class ChallengeFragment : Fragment() {
         initViews()
         collectMainStateAndProcess()
         collectChallengeStateAndProcess()
+        initChallengeCalendar()
+    }
+
+    private fun initChallengeCalendar() {
+        activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
+            if (it.isChallengeExist) {
+                bindChallengeCalendar(it.challengeStatusList.take(7))
+                bindChallengeDate(it.todayIndex, it.startDate)
+                if (it.period > 14) {
+                    binding.tvCalendarToggle.visibility = View.VISIBLE
+                    handleCalendarToggleState()
+                } else {
+                    binding.tvCalendarToggle.visibility = View.GONE
+                }
+            }
+        }.launchIn(viewLifeCycleScope)
+    }
+
+    private fun handleCalendarToggleState() {
+        // toggleState 초기값 세팅
+        binding.tvCalendarToggle.text =
+            getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_expand)
+
+        binding.tvCalendarToggle.setOnClickListener {
+            when (viewModel.challengeState.value.calendarToggleState) {
+                CalendarToggleState.COLLAPSED -> { // 접힌 상태
+                    binding.tvCalendarToggle.text =
+                        getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_expand)
+                    viewModel.toggleCalendarState()
+                    updateCalendarView(CalendarToggleState.COLLAPSED)
+                }
+
+                CalendarToggleState.EXPANDED -> { // 펼쳐진 상태
+                    binding.tvCalendarToggle.text =
+                        getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_collapse)
+                    viewModel.toggleCalendarState()
+                    updateCalendarView(CalendarToggleState.EXPANDED)
+                }
+            }
+        }
+    }
+
+    private fun updateCalendarView(state: CalendarToggleState) {
+        val challengeStatusList = activityViewModel.mainState.value.challengeStatusList
+        val displayList = when (state) {
+            CalendarToggleState.COLLAPSED -> challengeStatusList.take(7)
+            CalendarToggleState.EXPANDED -> challengeStatusList
+        }
+        updateChallengeCalendar(displayList)
+    }
+
+    private fun updateChallengeCalendar(challengeStatusList: List<ChallengeStatus.Status>) {
+        val challengeAdapter = binding.rvChallengeCalendar.adapter as? ChallengeCalendarAdapter
+        challengeAdapter?.updateList(challengeStatusList)
     }
 
     private fun collectMainStateAndProcess() {
@@ -144,6 +198,10 @@ class ChallengeFragment : Fragment() {
         val pointButtonImg =
             if (activityViewModel.isPointLeftToCollect()) com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24 else com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
         binding.tvPointButton.setImageResource(pointButtonImg)
+
+        binding.tvPointButton.setOnClickListener {
+            navigateToPointView()
+        }
     }
 
     private fun initChallengeCreateButton() {
@@ -156,13 +214,18 @@ class ChallengeFragment : Fragment() {
                         com.hmh.hamyeonham.feature.challenge.R.string.all_move
                     )
                 ) {
-                    //TODO 포인트 받기 뷰로 이동
+                    navigateToPointView()
                 }
             } else {
                 val intent = Intent(requireContext(), NewChallengeActivity::class.java)
                 newChallengeResultLauncher.launch(intent)
             }
         }
+    }
+
+    private fun navigateToPointView() {
+        val intent = navigationProvider.toPoint()
+        startActivity(intent)
     }
 
     private fun initViews() {
@@ -191,7 +254,7 @@ class ChallengeFragment : Fragment() {
 
     private fun bindChallengeCalendar(challengeStatusList: List<ChallengeStatus.Status>) {
         val challengeAdapter = binding.rvChallengeCalendar.adapter as? ChallengeCalendarAdapter
-        challengeAdapter?.submitList(challengeStatusList)
+        challengeAdapter?.updateList(challengeStatusList)
     }
 
     private fun bindChallengeDate(todayIndex: Int, startDate: LocalDate) {
@@ -209,6 +272,7 @@ class ChallengeFragment : Fragment() {
             layoutManager = GridLayoutManager(requireContext(), 7)
             adapter = ChallengeCalendarAdapter(context)
         }
+        initChallengeCalendar()
     }
 
     private fun initAppSelectionResultLauncher() {

@@ -8,6 +8,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
@@ -36,23 +37,36 @@ fun Long.formatNumericDate(context: Context): String =
 fun Instant.formatNumericDate(context: Context): String =
     toEpochMilliseconds().formatNumericDate(context)
 
-// LocalDate의 확장 함수로 해당 날짜의 시작 시간과 종료 시간을 LocalDateTime으로 반환
-fun LocalDate.toStartOfDay(): LocalDateTime = LocalDateTime(year, monthNumber, dayOfMonth, 0, 0)
+// LocalDate의 확장 함수로 해당 날짜의 시작 시간과 종료 시간을 LocalDateTime 으로 반환
+fun LocalDate.toStartOfDayTime(): LocalDateTime =
+    this.atStartOfDayIn(TimeZone.currentSystemDefault())
+        .toLocalDateTime(TimeZone.currentSystemDefault())
 
-fun LocalDate.toEndOfDay(): LocalDateTime = LocalDateTime(year, monthNumber, dayOfMonth, 23, 59, 59)
+fun getNowLocalDateTime(): LocalDateTime =
+    Instant.systemNow().toLocalDateTime(TimeZone.currentSystemDefault())
 
-// LocalDateTime의 확장 함수로 해당 시간을 Epoch 밀리초로 변환
+// LocalDateTime 의 확장 함수로 해당 시간을 Epoch 밀리초로 변환
 fun LocalDateTime.toEpochMilliseconds(timeZone: TimeZone): Long =
     toInstant(timeZone).toEpochMilliseconds()
 
 // 현재 날짜의 시작 시간과 종료 시간을 Epoch 밀리초로 반환하는 함수
 fun getCurrentDayStartEndEpochMillis(): Pair<Long, Long> {
     val currentDate = getCurrentDateOfDefaultTimeZone()
-    val startOfDay = currentDate.toStartOfDay().toEpochMilliseconds(defaultTimeZone)
-    val endOfDay = currentDate.toEndOfDay().toEpochMilliseconds(defaultTimeZone)
+    val startOfDayTime = currentDate.toStartOfDayTime().toEpochMilliseconds(defaultTimeZone)
+    val endOfDayTime = getNowLocalDateTime().toEpochMilliseconds(defaultTimeZone)
+    if (startOfDayTime > endOfDayTime) {
+        throw IllegalArgumentException("startOfDay is greater than endOfDay")
+    }
+    return Pair(startOfDayTime, endOfDayTime)
+}
+
+fun getTargetDayStartEndEpochMillis(targetDate: LocalDate): Pair<Long, Long> {
+    val startOfDay = targetDate.toStartOfDayTime().toEpochMilliseconds(defaultTimeZone)
+    val endOfDay = getNowLocalDateTime().toEpochMilliseconds(defaultTimeZone)
     return Pair(startOfDay, endOfDay)
 }
 
+// yyyy-MM-dd 형식의 date를 반환
 fun getCurrentDateOfDefaultTimeZone(): LocalDate {
     return Clock.System.now().toLocalDateTime(defaultTimeZone).date
 }

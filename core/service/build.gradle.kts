@@ -13,7 +13,7 @@ dependencies {
     implementation(projects.core.domain)
 
     implementation(projects.domain.usagestats)
+    implementation(projects.domain.lock)
 
     implementation(libs.lifecycle.process)
-    implementation(project(":core:network"))
 }
