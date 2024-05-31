@@ -49,10 +49,10 @@ class AppSelectionAdapter(
                 tvAppname.text = context.getAppNameFromPackageName(packageName)
                 ivAppicon.setImageDrawable(context.getAppIconFromPackageName(packageName))
             }
-            updateCheckedAppListner(appSelectionModel)
+            updateCheckedAppListener(appSelectionModel)
         }
 
-        private fun updateCheckedAppListner(appSelectionModel: AppSelectionModel) {
+        private fun updateCheckedAppListener(appSelectionModel: AppSelectionModel) {
             binding.run {
                 cbApp.setOnCheckedChangeListener(null)
                 cbApp.isChecked = appSelectionModel.isChecked

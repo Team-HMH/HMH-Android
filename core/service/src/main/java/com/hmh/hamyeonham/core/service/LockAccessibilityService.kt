@@ -8,12 +8,14 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
-import com.hmh.hamyeonham.core.network.auth.datastore.HMHNetworkPreference
+import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.lock.GetIsUnLockUseCase
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageGoalsUseCase
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatFromPackageUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,24 +29,25 @@ class LockAccessibilityService : AccessibilityService() {
     lateinit var getUsageGoalsUseCase: GetUsageGoalsUseCase
 
     @Inject
-    lateinit var hmhNetworkPreference: HMHNetworkPreference
+    lateinit var getUsageIsLockUseCase: GetIsUnLockUseCase
 
     @Inject
     lateinit var navigationProvider: NavigationProvider
 
     private var checkUsageJob: Job? = null
+    private var timerJob: Job? = null
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        if (hmhNetworkPreference.isUnlock) return
+        if (getUsageIsLockUseCase()) return
         when (event.eventType) {
-            AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
-                checkUsageJob?.cancel()
-                checkUsageJob = null
-                checkUsageJob = monitorAndLockIfExceedsUsageGoal(event)
-            }
-
+            AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> resetCheckUsageJob(event)
             else -> Unit
         }
+    }
+
+    private fun resetCheckUsageJob(event: AccessibilityEvent) {
+        releaseCheckUsageJob()
+        checkUsageJob = monitorAndLockIfExceedsUsageGoal(event)
     }
 
     private fun monitorAndLockIfExceedsUsageGoal(event: AccessibilityEvent): Job {
@@ -57,20 +60,55 @@ class LockAccessibilityService : AccessibilityService() {
                 endTime = endTime,
                 packageName = packageName
             )
-            val usageGoals = getUsageGoalsUseCase().first()
+            val usageGoals = getUsageGoalsUseCase().firstOrNull() ?: return@launch
             val myGoal = usageGoals.find { it.packageName == packageName } ?: return@launch
             Log.d("LockAccessibilityService", "checkUsage: $usageStats")
             Log.d("LockAccessibilityService", "checkUsage: ${myGoal.goalTime}")
-            if (usageStats > myGoal.goalTime) {
-                val intent = navigationProvider.toLock(packageName).apply {
-                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
-                startActivity(intent)
+            checkLockApp(usageStats, myGoal, packageName)
+        }
+    }
+
+    private fun checkLockApp(
+        usageStats: Long,
+        myGoal: UsageGoal,
+        packageName: String
+    ) {
+        if (usageStats > myGoal.goalTime) {
+            moveToLock(packageName)
+        } else {
+            releaseTimerJob()
+            timerJob = ProcessLifecycleOwner.get().lifecycleScope.launch {
+                val remainingTime = myGoal.goalTime - usageStats
+                delay(remainingTime)
+                moveToLock(packageName)
             }
         }
     }
 
+    private fun releaseCheckUsageJob() {
+        checkUsageJob?.cancel()
+        checkUsageJob = null
+    }
+
+    private fun releaseTimerJob() {
+        timerJob?.cancel()
+        timerJob = null
+    }
+
+    private fun moveToLock(packageName: String) {
+        val intent = navigationProvider.toLock(packageName).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        startActivity(intent)
+    }
+
     override fun onInterrupt() {}
+
+    override fun onDestroy() {
+        super.onDestroy()
+        releaseCheckUsageJob()
+        releaseTimerJob()
+    }
 }
 
 val lockAccessibilityServiceClassName: String =

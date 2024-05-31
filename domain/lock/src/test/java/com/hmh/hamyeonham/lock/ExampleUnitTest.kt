@@ -1,4 +1,4 @@
-package com.hmh.hamyeonham.core.domain
+package com.hmh.hamyeonham.lock
 
 import org.junit.Test
 

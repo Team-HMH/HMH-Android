@@ -28,4 +28,5 @@ dependencies {
 
     // lottie
     implementation(libs.lottie)
+    implementation(project(":domain:lock"))
 }

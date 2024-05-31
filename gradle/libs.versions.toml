@@ -80,6 +80,8 @@ dot-indicator = "5.0"
 kakao = "2.17.0"
 splash-screen = "1.0.1"
 javax-inject = "1"
+hilt-work = "1.2.0"
+work-runtime-ktx = "2.9.0"
 
 
 [libraries]
@@ -199,6 +201,9 @@ sentry = { module = "io.sentry:sentry", version.ref = "sentry-android" }
 
 zxing-core = { module = "com.google.zxing:core", version = "zxing-core" }
 zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", version.ref = "zxing-android-embedded" }
+
+androidx-hilt-common = { group = "androidx.hilt", name = "hilt-work", version.ref = "hilt-work" }
+androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-runtime-ktx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

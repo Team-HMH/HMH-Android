@@ -11,6 +11,7 @@ android {
 dependencies {
 
     implementation(projects.domain.usagestats)
+    implementation(projects.domain.lock)
 
     implementation(projects.core.common)
     implementation(projects.core.designsystem)

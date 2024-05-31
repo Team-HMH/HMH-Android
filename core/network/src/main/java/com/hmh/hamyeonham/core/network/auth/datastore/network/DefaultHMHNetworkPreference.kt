@@ -1,4 +1,4 @@
-package com.hmh.hamyeonham.core.network.auth.datastore
+package com.hmh.hamyeonham.core.network.auth.datastore.network
 
 import android.content.SharedPreferences
 import androidx.core.content.edit

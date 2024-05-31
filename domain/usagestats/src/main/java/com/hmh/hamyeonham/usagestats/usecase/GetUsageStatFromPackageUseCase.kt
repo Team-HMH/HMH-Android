@@ -6,7 +6,7 @@ import javax.inject.Inject
 class GetUsageStatFromPackageUseCase @Inject constructor(
     private val usageStatsRepository: UsageStatsRepository
 ) {
-    operator fun invoke(
+    suspend operator fun invoke(
         startTime: Long,
         endTime: Long,
         packageName: String,

@@ -3,6 +3,5 @@
     <string name="use_it_anymore">이제 %s을(를)\n"사용할 수 없어요"</string>
     <string name="close">닫기</string>
     <string name="do_unlock">잠금 해제하기</string>
-    <string name="app_kill_fail">앱을 종료하는 데 실패했습니다.</string>
     <string name="remind_alarm_permission">*알림이 오지 않는다면\n설정에서 푸시 알림 권한을 허용해 주세요</string>
 </resources>

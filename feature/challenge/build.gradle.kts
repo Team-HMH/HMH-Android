@@ -15,4 +15,7 @@ dependencies {
     implementation(projects.core.designsystem)
     implementation(projects.core.viewmodel.main)
     implementation(projects.core.domain)
+
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.work.runtime.ktx)
 }
