@@ -113,3 +113,8 @@ class LockAccessibilityService : AccessibilityService() {
 
 val lockAccessibilityServiceClassName: String =
     LockAccessibilityService::class.java.canonicalName.orEmpty()
+
+fun main() {
+    val lockAccessibilityServiceClassName = LockAccessibilityService::class.java.canonicalName.orEmpty()
+    println(lockAccessibilityServiceClassName)
+}
