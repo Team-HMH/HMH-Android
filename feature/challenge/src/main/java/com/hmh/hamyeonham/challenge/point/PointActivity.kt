@@ -1,14 +1,12 @@
 package com.hmh.hamyeonham.challenge.point
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmh.hamyeonham.common.view.viewBinding
-import com.hmh.hamyeonham.domain.point.model.PointInfo
 import com.hmh.hamyeonham.feature.challenge.databinding.ActivityPointBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn

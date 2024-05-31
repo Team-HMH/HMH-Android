@@ -1,6 +1,5 @@
 package com.hmh.hamyeonham.challenge.point
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.domain.point.model.PointInfo
@@ -19,9 +18,8 @@ class PointViewModel @Inject constructor(private val pointRepository: PointRepos
     private val _currentUserPoint = MutableStateFlow(0)
     val currentPointState = _currentUserPoint.asStateFlow()
 
-    private val _pointInfoList = MutableStateFlow(emptyList<PointInfo>())
+    private val _pointInfoList = MutableStateFlow(emptyList<PointInfo.ChallengePointStatus>())
     val pointInfoList = _pointInfoList.asStateFlow()
-
 
     init {
         getPointInfoList()
@@ -38,7 +36,7 @@ class PointViewModel @Inject constructor(private val pointRepository: PointRepos
     private fun getPointInfoList() {
         viewModelScope.launch {
             pointRepository.getPointInfoList().onSuccess {
-                _pointInfoList.value = listOf(it)
+                _pointInfoList.value = it.challengePointStatuses
                 _currentUserPoint.value = it.currentUserPoint
             }
         }

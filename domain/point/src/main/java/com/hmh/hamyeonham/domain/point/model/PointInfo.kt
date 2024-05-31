@@ -9,6 +9,8 @@ data class PointInfo(
     data class ChallengePointStatus(
         val challengeDate: String = "",
         val status: GetPointStatus = GetPointStatus.UNEARNED,
+        val period: Int,
+        val challengePoint: Int,
     )
 
     enum class GetPointStatus {

@@ -25,7 +25,7 @@ fun UsePointResponse.toUsePoint() = UsePoint(
 fun PointListResponse.toPointStatusList() = PointInfo(
     period = period ?: 0,
     currentUserPoint = point ?: 0,
-    challengePointStatuses = challengePointStatuses?.map {
+    challengePointStatuses = challengePointStatuses.map {
         PointInfo.ChallengePointStatus(
             challengeDate = it.challengeDate ?: "",
             status = when (it.status) {
@@ -33,8 +33,9 @@ fun PointListResponse.toPointStatusList() = PointInfo(
                 "EARNED" -> PointInfo.GetPointStatus.EARNED
                 "FAILURE" -> PointInfo.GetPointStatus.FAILURE
                 else -> PointInfo.GetPointStatus.NONE
-            }
+            },
+            period = this.period ?: 0,
+            challengePoint = 20
         )
-    } ?: emptyList(),
-    // challengePoint = challengePoint ?: 0 // 각 챌린지의 포인트 값
+    } ?: emptyList()
 )
