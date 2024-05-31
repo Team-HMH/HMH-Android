@@ -8,20 +8,26 @@ import com.hmh.hamyeonham.core.database.model.UsageEntity
 import com.hmh.hamyeonham.core.network.challenge.model.ChallengeResponse
 import com.hmh.hamyeonham.core.network.usagegoal.model.ChallengeWithUsageRequest
 import com.hmh.hamyeonham.usagestats.model.UsageStatus
+import com.hmh.hamyeonham.core.network.usagegoal.model.UsageGoalResponse
 
 internal fun ChallengeResponse.toChallengeStatus(): ChallengeStatus {
     return ChallengeStatus(
         apps.map {
             ChallengeStatus.AppGoal(it.appCode, it.goalTime)
         },
-        statuses.toStatusList(todayIndex),
+        statuses.toStatusList(todayIndex, period),
         goalTime,
         period,
         todayIndex,
-        if (todayIndex > -1) {
-            statuses[todayIndex - 1] != ChallengeStatus.Status.FAILURE.value
-        } else false
     )
+}
+
+internal fun UsageGoalResponse.toChallengeResult(): Boolean {
+    return when (status) {
+        ChallengeStatus.Status.NONE.value -> true
+        //FAIL일 경우
+        else -> false
+    }
 }
 
 internal fun ChallengeWithUsageEntity.toChallengeWithUsage(): ChallengeWithUsage {

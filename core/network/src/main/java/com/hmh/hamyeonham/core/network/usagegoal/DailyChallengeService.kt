@@ -1,7 +1,7 @@
 package com.hmh.hamyeonham.core.network.usagegoal
 
-import com.hmh.hamyeonham.core.network.usagegoal.model.ChallengeWithUsageRequest
 import com.hmh.hamyeonham.core.network.model.BaseResponse
+import com.hmh.hamyeonham.core.network.usagegoal.model.ChallengeWithUsageRequest
 import com.hmh.hamyeonham.core.network.usagegoal.model.UsageGoalResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -12,7 +12,7 @@ interface DailyChallengeService {
     @GET("api/v1/challenge/home")
     suspend fun getUsageGoal(): BaseResponse<UsageGoalResponse>
 
-    @PATCH("api/v1/challenge/daily/failure")
+    @PATCH("/api/v1/challenge/daily/failure")
     suspend fun updateDailyChallengeFailed(): BaseResponse<Unit>
 
     @POST("/api/v1/challenge/daily/finish")

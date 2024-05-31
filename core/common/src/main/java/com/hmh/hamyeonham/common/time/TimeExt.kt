@@ -90,4 +90,9 @@ fun Int.timeToMs(): Long {
     return this * 60 * 1000L
 }
 
+//시를 ms로 바꾸는 함수
+fun Int.hourToMs(): Long {
+    return this * 60 * 60 * 1000L
+}
+
 fun Long.msToMin(): Long = this / 1000 / 60
