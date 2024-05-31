@@ -3,14 +3,12 @@ package com.hmh.hamyeonham.challenge
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -76,13 +74,10 @@ class ChallengeFragment : Fragment() {
         collectMainStateAndProcess()
         collectChallengeStateAndProcess()
         initChallengeCalendar()
-        initUsageGoalList()
     }
 
     private fun initChallengeCalendar() {
-        activityViewModel.collectMainState(viewLifeCycle).onEach {
-            setChallengeInfoVisibility(it.isChallengeExist)
-            if (it.usageGoals.isNotEmpty()) viewModel.updateChallengeState { copy(usageGoals = (activityViewModel.getUsageGoalsExceptTotal() + UsageGoal())) }
+        activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
             if (it.isChallengeExist) {
                 bindChallengeCalendar(it.challengeStatusList.take(7))
                 bindChallengeDate(it.todayIndex, it.startDate)
@@ -119,6 +114,7 @@ class ChallengeFragment : Fragment() {
             }
         }
     }
+
     private fun updateCalendarView(state: CalendarToggleState) {
         val challengeStatusList = activityViewModel.mainState.value.challengeStatusList
         val displayList = when (state) {
@@ -131,15 +127,6 @@ class ChallengeFragment : Fragment() {
     private fun updateChallengeCalendar(challengeStatusList: List<ChallengeStatus.Status>) {
         val challengeAdapter = binding.rvChallengeCalendar.adapter as? ChallengeCalendarAdapter
         challengeAdapter?.updateList(challengeStatusList)
-    }
-
-
-
-    private fun initUsageGoalList() {
-        viewModel.collectChallengeState(viewLifeCycle).onEach {
-            handleModifierButtonState(it)
-            bindUsageGoals(it.usageGoalsAndModifierState)
-        }.launchIn(viewLifeCycleScope)
     }
 
     private fun collectMainStateAndProcess() {
