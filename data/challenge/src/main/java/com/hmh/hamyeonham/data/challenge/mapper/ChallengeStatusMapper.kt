@@ -2,7 +2,7 @@ package com.hmh.hamyeonham.data.challenge.mapper
 
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 
-internal fun List<String>.toStatusList(todayIndex: Int, period: Int): List<ChallengeStatus.Status> {
+internal fun List<String>.toStatusList(todayIndex: Int): List<ChallengeStatus.Status> {
     // 원본 리스트를 ChallengeStatus.Status 리스트로 변환
     return this.map {
         when (it) {
