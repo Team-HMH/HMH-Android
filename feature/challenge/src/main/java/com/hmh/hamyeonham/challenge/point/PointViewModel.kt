@@ -32,8 +32,7 @@ class PointViewModel @Inject constructor(private val pointRepository: PointRepos
     fun earnChallengePoint(challengeDate: String) {
         viewModelScope.launch {
             pointRepository.earnPoint(challengeDate).onSuccess {
-                _currentUserPoint.value = it.totalUserPoint
-                //PointInfo(point = it.totalUserPoint)
+                getPointInfoList()
             }
         }
     }
@@ -48,3 +47,4 @@ class PointViewModel @Inject constructor(private val pointRepository: PointRepos
         }
     }
 }
+

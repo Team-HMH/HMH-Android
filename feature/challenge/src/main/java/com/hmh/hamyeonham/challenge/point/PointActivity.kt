@@ -8,6 +8,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.domain.point.model.PointInfo
 import com.hmh.hamyeonham.feature.challenge.databinding.ActivityPointBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
@@ -23,27 +24,20 @@ class PointActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         collectPointInfo()
-        initAppSelectionRecyclerAdapter()
         collectUserPoint()
-    }
-
-    private fun initAppSelectionRecyclerAdapter() {
-
-        Log.d("PointActivity", "initAppSelectionRecyclerAdapter: ${viewModel.pointInfoList.value}")
     }
 
     private fun collectPointInfo() {
         viewModel.pointInfoList.flowWithLifecycle(lifecycle)
             .onEach { pointInfoList ->
                 val adapter = PointAdapter(
-                    onButtonClick = {
-                        // viewModel.earnChallengePoint(PointInfo(challengeDate = ))
+                    onButtonClick = { challengeDate ->
+                        viewModel.earnChallengePoint(challengeDate)
                     },
                 )
                 binding.rvPoint.adapter = adapter
                 adapter.submitList(pointInfoList)
                 binding.rvPoint.layoutManager = LinearLayoutManager(this)
-                Log.d("PointActivity", "collectPointInfo: ${viewModel.pointInfoList.value}")
             }
             .launchIn(lifecycleScope)
     }

@@ -11,7 +11,7 @@ import com.hmh.hamyeonham.feature.challenge.R
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemPointBinding
 
 class PointAdapter(
-    private val onButtonClick: (PointInfo) -> Unit,
+    private val onButtonClick: (String) -> Unit,
 ) : ListAdapter<PointInfo, PointAdapter.PointViewHolder>(
     ItemDiffCallback(
         onItemsTheSame = { oldItem, newItem ->
@@ -38,7 +38,7 @@ class PointAdapter(
 
     class PointViewHolder(
         private val binding: ItemPointBinding,
-        private val onButtonClick: (PointInfo) -> Unit,
+        private val onButtonClick: (String) -> Unit,
     ) : RecyclerView.ViewHolder(binding.root) {
         private val context = binding.root.context
 
@@ -48,28 +48,45 @@ class PointAdapter(
                     when (pointModel.challengePointStatuses[adapterPosition].status) {
                         PointInfo.GetPointStatus.EARNED -> {
                             tvPointButton.isEnabled = false
-                            tvPointButton.background = context.getDrawable(R.drawable.point_button_background_already_get)
-                            val textColor = ContextCompat.getColor(context, com.hmh.hamyeonham.core.designsystem.R.color.blue_purple_opacity_70)
+                            tvPointButton.background =
+                                context.getDrawable(R.drawable.point_button_background_already_get)
+                            val textColor = ContextCompat.getColor(
+                                context,
+                                com.hmh.hamyeonham.core.designsystem.R.color.blue_purple_opacity_70
+                            )
                             tvPointButton.setTextColor(textColor)
                         }
+
                         PointInfo.GetPointStatus.UNEARNED -> {
                             tvPointButton.isEnabled = true
-                            tvPointButton.setOnClickListener { onButtonClick(pointModel) }
+                            tvPointButton.setOnClickListener {
+                                onButtonClick(pointModel.challengePointStatuses[adapterPosition].challengeDate)
+                            }
                         }
+
                         PointInfo.GetPointStatus.FAILURE -> {
                             tvPointButton.isEnabled = false
-                            tvPointButton.background = context.getDrawable(R.drawable.point_button_background_disable)
-                            val textColor = ContextCompat.getColor(context, com.hmh.hamyeonham.core.designsystem.R.color.gray2)
+                            tvPointButton.background =
+                                context.getDrawable(R.drawable.point_button_background_disable)
+                            val textColor = ContextCompat.getColor(
+                                context,
+                                com.hmh.hamyeonham.core.designsystem.R.color.gray2
+                            )
                             tvPointButton.setTextColor(textColor)
                         }
+
                         PointInfo.GetPointStatus.NONE -> {
                             binding.root.visibility = android.view.View.GONE
                         }
                     }
                 } else {
                     tvPointButton.isEnabled = false
-                    tvPointButton.background = context.getDrawable(R.drawable.point_button_background_disable)
-                    val textColor = ContextCompat.getColor(context, com.hmh.hamyeonham.core.designsystem.R.color.gray2)
+                    tvPointButton.background =
+                        context.getDrawable(R.drawable.point_button_background_disable)
+                    val textColor = ContextCompat.getColor(
+                        context,
+                        com.hmh.hamyeonham.core.designsystem.R.color.gray2
+                    )
                     tvPointButton.setTextColor(textColor)
                 }
             }
