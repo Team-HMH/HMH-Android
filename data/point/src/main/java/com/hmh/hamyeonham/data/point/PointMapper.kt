@@ -37,5 +37,5 @@ fun PointListResponse.toPointStatusList() = PointInfo(
             period = this.period ?: 0,
             challengePoint = 20
         )
-    } ?: emptyList()
+    }
 )
