@@ -32,7 +32,7 @@ class GetUsageStatsListUseCase @Inject constructor(
                 totalUsage,
                 getUsageGoalForPackage(usageGoals, TOTAL),
             )
-            return listOf(totalUsageStatusAndGoal) + usageForSelectedApps
+            return listOf(totalUsageStatusAndGoal) + usageForSelectedApps.sortedByDescending { it.usedPercentage }
         }
     }
 
