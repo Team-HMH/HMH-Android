@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmh.hamyeonham.challenge.appadd.AppAddViewModel
-import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
@@ -55,7 +54,7 @@ class AppSelectionFragment : Fragment() {
             val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter
             appSelectionAdapter?.submitList(
                 state.getAppSelectionList(requireContext())
-                    .sortedBy { requireContext().getAppNameFromPackageName(it?.packageName ?: "") })
+            )
         }.launchIn(viewLifeCycleScope)
     }
 

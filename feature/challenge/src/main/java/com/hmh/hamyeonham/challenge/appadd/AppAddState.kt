@@ -3,6 +3,7 @@ package com.hmh.hamyeonham.challenge.appadd
 import android.content.Context
 import com.hmh.hamyeonham.challenge.appadd.appselection.AppSelectionModel
 import com.hmh.hamyeonham.challenge.model.AppInfo
+import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 
 data class AppAddState(
     val installedApps: List<AppInfo> = emptyList(),
@@ -16,5 +17,5 @@ data class AppAddState(
             return@map null
         }
         AppSelectionModel(it.packageName, selectedApps.contains(it.packageName))
-    }
+    }.sortedBy { context.getAppNameFromPackageName(it?.packageName ?: "") }
 }
