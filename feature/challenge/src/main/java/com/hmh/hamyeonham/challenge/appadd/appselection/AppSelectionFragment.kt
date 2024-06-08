@@ -53,7 +53,9 @@ class AppSelectionFragment : Fragment() {
     private fun collectState() {
         viewModel.state.flowWithLifecycle(viewLifeCycle).onEach { state ->
             val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter
-            appSelectionAdapter?.submitList(state.getAppSelectionList(requireContext()))
+            appSelectionAdapter?.submitList(
+                state.getAppSelectionList(requireContext())
+                    .sortedBy { requireContext().getAppNameFromPackageName(it?.packageName ?: "") })
         }.launchIn(viewLifeCycleScope)
     }
 
