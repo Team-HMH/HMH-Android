@@ -15,6 +15,6 @@ class OnBoardingAppSelectionViewModel @Inject constructor(
     fun getInstalledApps(): List<AppInfo> {
         return deviceRepository.getInstalledApps().filter { (packageName, _) ->
             packageName != excludedAppName
-        }
+        }.sortedBy { it.appName }
     }
 }
