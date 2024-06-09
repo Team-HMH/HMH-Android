@@ -8,6 +8,7 @@ import com.hmh.hamyeonham.challenge.usecase.AddUsageGoalsUseCase
 import com.hmh.hamyeonham.challenge.usecase.DeleteUsageGoalUseCase
 import com.hmh.hamyeonham.challenge.usecase.NewChallengeUseCase
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.viewmodel.CalendarToggleState
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,10 +40,6 @@ data class ChallengeUsageGoal(
 
 enum class ModifierState {
     EDIT, DONE,
-}
-
-enum class CalendarToggleState {
-    EXPANDED, COLLAPSED,
 }
 
 @HiltViewModel
@@ -88,13 +85,14 @@ class ChallengeViewModel @Inject constructor(
     }
 
     fun toggleCalendarState() {
-        updateChallengeState {
-            copy(
-                calendarToggleState = if (calendarToggleState == CalendarToggleState.COLLAPSED)
-                    CalendarToggleState.EXPANDED
-                else
-                    CalendarToggleState.COLLAPSED
-            )
+        when (challengeState.value.calendarToggleState) {
+            CalendarToggleState.COLLAPSED -> {
+                updateChallengeState { copy(calendarToggleState = CalendarToggleState.EXPANDED) }
+            }
+
+            CalendarToggleState.EXPANDED -> {
+                updateChallengeState { copy(calendarToggleState = CalendarToggleState.COLLAPSED) }
+            }
         }
     }
 
