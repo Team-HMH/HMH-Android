@@ -196,7 +196,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun updateChallengeList(calendarToggleState: CalendarToggleState) {
+    fun updateChallengeListWithToggleState(calendarToggleState: CalendarToggleState) {
         val challengeStatusList = challengeStatusList.value
         _challengeStatusList.value = when (calendarToggleState) {
             CalendarToggleState.EXPANDED -> {

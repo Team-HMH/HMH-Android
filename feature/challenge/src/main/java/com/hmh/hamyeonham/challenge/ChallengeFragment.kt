@@ -270,7 +270,7 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun handleCalendarToggleState(calendarToggleState: CalendarToggleState) {
-        activityViewModel.updateChallengeList(calendarToggleState)
+        activityViewModel.updateChallengeListWithToggleState(calendarToggleState)
         when (calendarToggleState) {
             CalendarToggleState.COLLAPSED -> {
                 binding.tvCalendarToggle.text =
