@@ -200,11 +200,11 @@ class MainViewModel @Inject constructor(
         val challengeStatusList = challengeStatusList.value
         _challengeStatusList.value = when (calendarToggleState) {
             CalendarToggleState.EXPANDED -> {
-                challengeStatusList.take(7)
+                rawChallengeStatusList
             }
 
             CalendarToggleState.COLLAPSED -> {
-                rawChallengeStatusList
+                challengeStatusList.take(7)
             }
         }
     }
