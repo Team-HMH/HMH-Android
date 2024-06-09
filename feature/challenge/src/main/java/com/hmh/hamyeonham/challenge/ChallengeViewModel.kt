@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ChallengeState(
-    val calendarToggleState: CalendarToggleState = CalendarToggleState.EXPANDED,
+    val calendarToggleState: CalendarToggleState = CalendarToggleState.COLLAPSED,
     val usageGoals: List<UsageGoal> = emptyList(),
     val modifierState: ModifierState = ModifierState.DONE,
     val usageStatusAndGoals: List<UsageStatusAndGoal> = emptyList(),
@@ -86,6 +86,7 @@ class ChallengeViewModel @Inject constructor(
             newChallengeUseCase(newChallenge)
         }
     }
+
     fun toggleCalendarState() {
         updateChallengeState {
             copy(
