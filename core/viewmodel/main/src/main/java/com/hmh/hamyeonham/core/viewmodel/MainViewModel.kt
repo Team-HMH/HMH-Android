@@ -22,6 +22,10 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
 
+enum class CalendarToggleState {
+    EXPANDED, COLLAPSED,
+}
+
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val challengeRepository: ChallengeRepository,
@@ -33,6 +37,10 @@ class MainViewModel @Inject constructor(
 
     private val _mainState = MutableStateFlow(MainState())
     val mainState = _mainState.asStateFlow()
+
+    private var rawChallengeStatusList: List<ChallengeStatus.Status> = emptyList()
+    private val _challengeStatusList = MutableStateFlow<List<ChallengeStatus.Status>>(emptyList())
+    val challengeStatusList = _challengeStatusList.asStateFlow()
 
     private val _effect = MutableSharedFlow<MainEffect>()
     val effect = _effect.asSharedFlow()
@@ -66,7 +74,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun isPointLeftToCollect(): Boolean =
-        mainState.value.challengeStatusList.contains(ChallengeStatus.Status.UNEARNED)
+        challengeStatusList.value.contains(ChallengeStatus.Status.UNEARNED)
 
     private fun updateState(transform: suspend MainState.() -> MainState) {
         viewModelScope.launch {
@@ -109,6 +117,7 @@ class MainViewModel @Inject constructor(
                         LACK_POINT_ERROR_CODE -> {
                             sendEffect(MainEffect.LackOfPoint)
                         }
+
                         else -> sendEffect(MainEffect.NetworkError)
                     }
                 } else {
@@ -163,12 +172,13 @@ class MainViewModel @Inject constructor(
         updateState {
             copy(
                 appGoals = challengeStatus.appGoals,
-                challengeStatusList = challengeStatus.challengeStatusList,
                 totalGoalTimeInHour = challengeStatus.goalTimeInHours,
                 period = challengeStatus.period,
                 todayIndex = challengeStatus.todayIndex,
             )
         }
+        rawChallengeStatusList = challengeStatus.challengeStatusList
+        _challengeStatusList.value = challengeStatus.challengeStatusList
     }
 
     private fun updateUserInfo(userInfo: UserInfo) {
@@ -183,6 +193,19 @@ class MainViewModel @Inject constructor(
     private fun setUsageStatsList(usageStatsList: List<UsageStatusAndGoal>) {
         updateState {
             copy(usageStatusAndGoals = usageStatsList)
+        }
+    }
+
+    fun updateChallengeList(calendarToggleState: CalendarToggleState) {
+        val challengeStatusList = challengeStatusList.value
+        _challengeStatusList.value = when (calendarToggleState) {
+            CalendarToggleState.EXPANDED -> {
+                challengeStatusList.take(7)
+            }
+
+            CalendarToggleState.COLLAPSED -> {
+                rawChallengeStatusList
+            }
         }
     }
 
