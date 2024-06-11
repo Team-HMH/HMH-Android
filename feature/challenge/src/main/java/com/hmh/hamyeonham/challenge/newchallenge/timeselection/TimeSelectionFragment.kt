@@ -32,12 +32,17 @@ class TimeSelectionFragment : Fragment() {
 
     private fun setNumberPicker() {
         binding.run {
-            npNewChallengeScreentimeGoal.setupScreentimeGoalRange(1, 6)
+            npNewChallengeScreentimeGoal.setupScreentimeGoalRange(MINTOTAL, MAXTOTAL)
             npNewChallengeScreentimeGoal.descendantFocusability =
                 NumberPicker.FOCUS_BLOCK_DESCENDANTS
             npNewChallengeScreentimeGoal.setOnValueChangedListener { _, _, newTime ->
                 viewModel.setGoalHour(newTime.hourToMs())
             }
         }
+    }
+
+    companion object {
+        val MINTOTAL = 1
+        val MAXTOTAL = 6
     }
 }

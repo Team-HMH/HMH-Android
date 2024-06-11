@@ -36,7 +36,7 @@ class OnBoardingSelectScreenTimeFragment : Fragment() {
 
     private fun setNumberPicker() {
         binding.run {
-            npOnboardingScreentimeGoal.setupScreentimeGoalRange(1, 6)
+            npOnboardingScreentimeGoal.setupScreentimeGoalRange(MINTOTAL, MAXTOTAL)
             npOnboardingScreentimeGoal.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
             npOnboardingScreentimeGoal.setOnValueChangedListener { _, _, newTime ->
                 activityViewModel.sendEvent(OnboardEvent.UpdateScreenGoalTime(newTime))
@@ -55,5 +55,10 @@ class OnBoardingSelectScreenTimeFragment : Fragment() {
             sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_next)))
             sendEvent(OnboardEvent.visibleProgressbar(true))
         }
+    }
+
+    companion object {
+        val MINTOTAL = 1
+        val MAXTOTAL = 6
     }
 }
