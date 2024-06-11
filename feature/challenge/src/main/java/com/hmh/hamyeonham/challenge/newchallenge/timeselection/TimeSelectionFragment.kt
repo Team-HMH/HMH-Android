@@ -32,7 +32,7 @@ class TimeSelectionFragment : Fragment() {
 
     private fun setNumberPicker() {
         binding.run {
-            npNewChallengeScreentimeGoal.setupScreentimeGoalRange(2, 6)
+            npNewChallengeScreentimeGoal.setupScreentimeGoalRange(1, 6)
             npNewChallengeScreentimeGoal.descendantFocusability =
                 NumberPicker.FOCUS_BLOCK_DESCENDANTS
             npNewChallengeScreentimeGoal.setOnValueChangedListener { _, _, newTime ->

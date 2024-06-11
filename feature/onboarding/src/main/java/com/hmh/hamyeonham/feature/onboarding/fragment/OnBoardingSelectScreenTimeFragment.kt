@@ -36,7 +36,7 @@ class OnBoardingSelectScreenTimeFragment : Fragment() {
 
     private fun setNumberPicker() {
         binding.run {
-            npOnboardingScreentimeGoal.setupScreentimeGoalRange(2, 6)
+            npOnboardingScreentimeGoal.setupScreentimeGoalRange(1, 6)
             npOnboardingScreentimeGoal.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
             npOnboardingScreentimeGoal.setOnValueChangedListener { _, _, newTime ->
                 activityViewModel.sendEvent(OnboardEvent.UpdateScreenGoalTime(newTime))
