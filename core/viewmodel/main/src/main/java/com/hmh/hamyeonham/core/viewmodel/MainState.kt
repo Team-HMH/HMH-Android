@@ -19,7 +19,7 @@ data class MainState(
     val point: Int = 0,
     val challengeSuccess: Boolean = true,
 ) {
-    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), todayIndex - 1)
+    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), todayIndex)
     val isChallengeExist: Boolean = todayIndex != -1
     val todayIndexAsDate: Int = todayIndex + 1
 }
