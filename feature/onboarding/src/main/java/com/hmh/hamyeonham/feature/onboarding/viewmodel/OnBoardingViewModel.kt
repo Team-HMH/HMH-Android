@@ -39,7 +39,7 @@ data class OnBoardingState(
     val usuallyUseTime: String = "",
     val problems: List<String> = emptyList(),
     val period: Int = -1,
-    val screenGoalTime: Int = 2,
+    val screenGoalTime: Int = DEFAULTSCREENTTIME,
     val appCodeList: List<String> = emptyList(),
     val appGoalTimeMinute: Int = 0,
     val appGoalTimeHour: Int = 0,
@@ -52,6 +52,9 @@ data class OnBoardingState(
         get() = (screenGoalTime * 60).timeToMs()
     val appGoalTime: Long
         get() = ((appGoalTimeHour * 60) + appGoalTimeMinute).timeToMs()
+    companion object {
+        val DEFAULTSCREENTTIME: Int = 1
+    }
 }
 
 @HiltViewModel
