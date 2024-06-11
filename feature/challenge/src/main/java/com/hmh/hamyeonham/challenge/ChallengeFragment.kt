@@ -80,7 +80,7 @@ class ChallengeFragment : Fragment() {
         activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
             if (it.isChallengeExist) {
                 bindChallengeCalendar(it.challengeStatusList.take(7))
-                bindChallengeDate(it.todayIndex, it.startDate)
+                bindChallengeDate(it.todayIndexAsDate, it.startDate)
                 if (it.period > 14) {
                     binding.tvCalendarToggle.visibility = View.VISIBLE
                     handleCalendarToggleState()
@@ -257,14 +257,14 @@ class ChallengeFragment : Fragment() {
         challengeAdapter?.updateList(challengeStatusList)
     }
 
-    private fun bindChallengeDate(todayIndex: Int, startDate: LocalDate) {
+    private fun bindChallengeDate(todayIndexAsDate: Int, startDate: LocalDate) {
         binding.tvChallengeStartDate.text = getString(
             com.hmh.hamyeonham.feature.challenge.R.string.challenge_start_date,
             startDate.monthNumber,
             startDate.dayOfMonth
         )
         binding.tvChallengeDay.text =
-            getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_day, todayIndex)
+            getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_day, todayIndexAsDate)
     }
 
     private fun initChallengeCalendarRecyclerView() {
