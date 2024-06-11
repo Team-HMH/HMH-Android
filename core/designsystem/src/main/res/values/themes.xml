@@ -87,10 +87,12 @@
     </style>
 
     <style name="Widget.Hmh.TotalProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
-        <item name="trackColor">?gray3</item>
+        <item name="trackColor">?gray5</item>
         <item name="indicatorColor">?white_btn</item>
         <item name="trackThickness">6dp</item>
-        <item name="trackCornerRadius">6dp</item>
+        <item name="trackCornerRadius">2dp</item>
+        <item name="trackStopIndicatorSize">0dp</item>
+        <item name="indicatorTrackGapSize">0dp</item>
     </style>
 
     <style name="Widget.Hmh.OnBoardingProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
