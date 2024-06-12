@@ -3,6 +3,7 @@ package com.hmh.hamyeonham.core.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.hmh.hamyeonham.core.database.dao.ChallengeDao
+import com.hmh.hamyeonham.core.database.dao.DeletedAppUsageDao
 import com.hmh.hamyeonham.core.database.dao.UsageGoalsDao
 import com.hmh.hamyeonham.core.database.dao.UsageTotalGoalDao
 import com.hmh.hamyeonham.core.database.model.DailyChallengeEntity
@@ -27,6 +28,7 @@ abstract class HMHRoomDatabase : RoomDatabase() {
     abstract fun usageGoalsDao(): UsageGoalsDao
     abstract fun usageTotalGoalDao(): UsageTotalGoalDao
     abstract fun challengeDao(): ChallengeDao
+    abstract fun deletedAppUsageDao(): DeletedAppUsageDao
 
     @OptIn(DelicateCoroutinesApi::class)
     fun deleteAll() {
@@ -34,6 +36,7 @@ abstract class HMHRoomDatabase : RoomDatabase() {
             usageGoalsDao().deleteAll()
             usageTotalGoalDao().deleteAll()
             challengeDao().deleteAll()
+            deletedAppUsageDao().deleteAll()
         }
 
     }
