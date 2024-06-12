@@ -42,8 +42,8 @@ class GetTotalUsageStatsUseCase @Inject constructor(
         usageStatusList: List<UsageStatus>,
     ): Long {
         return usageStatusList.sumOf {
-            it.totalTimeInForeground
-        }
+            it.totalTimeInForegroundInMin
+        } * 60 * 1000L
     }
 
     private fun getPackageNamesFromUsageGoals(usageGoals: List<UsageGoal>): List<String> {
