@@ -5,7 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "deleted_app_usage",
+    tableName = "deleted_goal_usage",
     foreignKeys = [
         ForeignKey(
             entity = DailyChallengeEntity::class,
@@ -15,7 +15,7 @@ import androidx.room.PrimaryKey
         )
     ]
 )
-data class DeletedAppUsageEntity(
+data class DeletedGoalUsageEntity(
     @PrimaryKey
     val challengeDate: String,
     val deletedTotalUsage: Long,
