@@ -64,12 +64,14 @@ class AppAddViewModel @Inject constructor(
         updateState {
             copy(goalHour = goalHour)
         }
+        handleNextButtonStateWithGoalTime()
     }
 
     fun setGoalMin(goalMin: Long) {
         updateState {
             copy(goalMin = goalMin)
         }
+        handleNextButtonStateWithGoalTime()
     }
 
     fun onQueryChanged(newQuery: String) {
@@ -106,11 +108,27 @@ class AppAddViewModel @Inject constructor(
         updateState {
             copy(selectedApps = selectedApps + packageName)
         }
+        handleNextButtonStateWithAppSelection()
     }
 
     private fun unCheckApp(packageName: String) {
         updateState {
             copy(selectedApps = selectedApps - packageName)
+        }
+        handleNextButtonStateWithAppSelection()
+    }
+
+    fun handleNextButtonStateWithGoalTime() {
+        val buttonState = !(state.value.goalTime == 0L)
+        updateState {
+            copy(isNextButtonActive = buttonState)
+        }
+    }
+
+    fun handleNextButtonStateWithAppSelection() {
+        val buttonState = !(state.value.selectedApps.isEmpty())
+        updateState {
+            copy(isNextButtonActive = buttonState)
         }
     }
 }

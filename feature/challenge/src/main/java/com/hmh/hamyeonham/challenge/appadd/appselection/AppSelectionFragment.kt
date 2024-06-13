@@ -53,7 +53,7 @@ class AppSelectionFragment : Fragment() {
         viewModel.state.flowWithLifecycle(viewLifeCycle).onEach { state ->
             val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter
             appSelectionAdapter?.submitList(
-                state.getAppSelectionList(requireContext())
+                state.getInstalledAppList(requireContext())
             )
         }.launchIn(viewLifeCycleScope)
     }
