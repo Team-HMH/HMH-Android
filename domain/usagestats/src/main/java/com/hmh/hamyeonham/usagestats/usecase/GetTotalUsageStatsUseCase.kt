@@ -2,9 +2,9 @@ package com.hmh.hamyeonham.usagestats.usecase
 
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
-import com.hmh.hamyeonham.usagestats.datastore.HMHDeletedAppUsagePreference
 import com.hmh.hamyeonham.usagestats.model.UsageStatus
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
+import com.hmh.hamyeonham.usagestats.repository.DeleteGoalRepository
 import com.hmh.hamyeonham.usagestats.repository.UsageStatsRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -12,7 +12,7 @@ import javax.inject.Inject
 class GetTotalUsageStatsUseCase @Inject constructor(
     private val usageStatsRepository: UsageStatsRepository,
     private val usageGoalsRepository: UsageGoalsRepository,
-    private val hmhDeletedAppUsagePreference: HMHDeletedAppUsagePreference
+    private val deleteGoalRepository: DeleteGoalRepository
 ) {
 
     companion object {
@@ -29,12 +29,12 @@ class GetTotalUsageStatsUseCase @Inject constructor(
                 endTime,
                 getPackageNamesFromUsageGoals(usageGoals)
             )
-            return calculateTotalUsage(usageStatsForSelectedPackages) + hmhDeletedAppUsagePreference.totalUsage
+            return calculateTotalUsage(usageStatsForSelectedPackages) + deleteGoalRepository.getDeletedUsageOfToday()
         }
     }
 
-    operator fun invoke(usageStatusAndGoals: List<UsageStatusAndGoal>): Long {
-        return calculateTotalUsage(usageStatusAndGoals) + hmhDeletedAppUsagePreference.totalUsage
+    suspend operator fun invoke(usageStatusAndGoals: List<UsageStatusAndGoal>): Long {
+        return calculateTotalUsage(usageStatusAndGoals) + deleteGoalRepository.getDeletedUsageOfToday()
     }
 
     private suspend fun getUsageStatsForSelectedPackages(
