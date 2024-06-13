@@ -1,4 +1,4 @@
-package datastore
+package com.hmh.hamyeonham.usagestats.datasource.local
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
