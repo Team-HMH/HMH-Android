@@ -340,7 +340,7 @@ class ChallengeFragment : Fragment() {
             dismissButtonText = getString(R.string.all_cancel),
         ).apply {
             setConfirmButtonClickListener {
-                viewModel.deleteApp(it.packageName)
+                viewModel.deleteApp(it)
             }
             setDismissButtonClickListener {}
         }.showAllowingStateLoss(childFragmentManager)
