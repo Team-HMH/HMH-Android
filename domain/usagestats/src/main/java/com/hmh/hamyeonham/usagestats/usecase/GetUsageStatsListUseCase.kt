@@ -10,6 +10,7 @@ import javax.inject.Inject
 class GetUsageStatsListUseCase @Inject constructor(
     private val usageStatsRepository: UsageStatsRepository,
     private val usageGoalsRepository: UsageGoalsRepository,
+    private val getTotalUsageStatsUseCase: GetTotalUsageStatsUseCase
 ) {
 
     companion object {
@@ -26,7 +27,7 @@ class GetUsageStatsListUseCase @Inject constructor(
                 endTime,
                 usageGoals.filter { it.packageName != TOTAL },
             )
-            val totalUsage = getTotalUsage(usageForSelectedApps)
+            val totalUsage = getTotalUsageStatsUseCase(usageForSelectedApps)
             val totalUsageStatusAndGoal = UsageStatusAndGoal(
                 TOTAL,
                 totalUsage,
@@ -62,14 +63,6 @@ class GetUsageStatsListUseCase @Inject constructor(
                     getUsageGoalForPackage(usageGoalList, it.packageName),
                 )
             }
-    }
-
-    private fun getTotalUsage(
-        usageStatusAndGoalList: List<UsageStatusAndGoal>,
-    ): Long {
-        return usageStatusAndGoalList.sumOf {
-            it.totalTimeInForegroundInMin
-        } * 60 * 1000L
     }
 
     private fun getSelectedPackageList(usageGoalList: List<UsageGoal>): List<String> =
