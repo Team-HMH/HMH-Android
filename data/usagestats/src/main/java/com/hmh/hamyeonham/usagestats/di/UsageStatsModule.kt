@@ -14,6 +14,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import datastore.DefaultHMHDeletedAppUsagePreference
+import com.hmh.hamyeonham.usagestats.datastore.HMHDeletedAppUsagePreference
 import javax.inject.Singleton
 
 @Module
@@ -40,5 +42,9 @@ object UsageStatsModule {
         @Binds
         @Singleton
         fun provideUsageGoalsRepository(usageGoalsRepository: DefaultUsageGoalsRepository): UsageGoalsRepository
+
+        @Singleton
+        @Binds
+        fun bindAppPreferences(dataStore: DefaultHMHDeletedAppUsagePreference): HMHDeletedAppUsagePreference
     }
 }
