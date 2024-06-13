@@ -2,7 +2,9 @@ package com.hmh.hamyeonham.usagestats.usecase
 
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
+import com.hmh.hamyeonham.usagestats.datastore.HMHDeletedAppUsagePreference
 import com.hmh.hamyeonham.usagestats.model.UsageStatus
+import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import com.hmh.hamyeonham.usagestats.repository.UsageStatsRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -10,6 +12,7 @@ import javax.inject.Inject
 class GetTotalUsageStatsUseCase @Inject constructor(
     private val usageStatsRepository: UsageStatsRepository,
     private val usageGoalsRepository: UsageGoalsRepository,
+    private val hmhDeletedAppUsagePreference: HMHDeletedAppUsagePreference
 ) {
 
     companion object {
@@ -26,8 +29,12 @@ class GetTotalUsageStatsUseCase @Inject constructor(
                 endTime,
                 getPackageNamesFromUsageGoals(usageGoals)
             )
-            return calculateTotalUsage(usageStatsForSelectedPackages)
+            return calculateTotalUsage(usageStatsForSelectedPackages) + hmhDeletedAppUsagePreference.totalUsage
         }
+    }
+
+    operator fun invoke(usageStatusAndGoals: List<UsageStatusAndGoal>): Long {
+        return calculateTotalUsage(usageStatusAndGoals) + hmhDeletedAppUsagePreference.totalUsage
     }
 
     private suspend fun getUsageStatsForSelectedPackages(
@@ -38,15 +45,27 @@ class GetTotalUsageStatsUseCase @Inject constructor(
         return usageStatsRepository.getUsageStatForPackages(startTime, endTime, packageNames)
     }
 
+    @JvmName("calcaulateTotalUsageFromUsageStatusList")
     private fun calculateTotalUsage(
         usageStatusList: List<UsageStatus>,
     ): Long {
-        return usageStatusList.sumOf {
+        return minToMS(usageStatusList.sumOf {
             it.totalTimeInForegroundInMin
-        } * 60 * 1000L
+        })
+    }
+
+    @JvmName("calcaulateTotalUsageFromUsageStatusAndGoalList")
+    private fun calculateTotalUsage(
+        usageStatusList: List<UsageStatusAndGoal>,
+    ): Long {
+        return minToMS(usageStatusList.sumOf {
+            it.totalTimeInForegroundInMin
+        })
     }
 
     private fun getPackageNamesFromUsageGoals(usageGoals: List<UsageGoal>): List<String> {
         return usageGoals.filter { it.packageName != TOTAL }.map { it.packageName }
     }
+
+    private fun minToMS(min: Long): Long = min * 60 * 1000L
 }
