@@ -2,6 +2,7 @@ package com.hmh.hamyeonham.core.database
 
 import android.content.Context
 import androidx.room.Room
+import com.hmh.hamyeonham.core.database.HMHRoomDatabase.Companion.MIGRATION_1_2
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,5 +21,5 @@ object DatabaseModule {
         context,
         HMHRoomDatabase::class.java,
         "hmh-android-database",
-    ).build()
+    ).addMigrations(MIGRATION_1_2).build()
 }
