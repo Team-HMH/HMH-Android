@@ -1,15 +1,12 @@
 package com.hmh.hamyeonham.usagestats.usecase
 
-import com.hmh.hamyeonham.usagestats.datastore.HMHDeletedAppUsagePreference
+import com.hmh.hamyeonham.usagestats.repository.DeleteGoalRepository
 import javax.inject.Inject
 
 class DeletedAppUsageStoreUseCase @Inject constructor(
-    private val hmhDeletedAppUsagePreference: HMHDeletedAppUsagePreference,
+    private val deleteGoalRepository: DeleteGoalRepository
 ) {
-    operator fun invoke(totalUsage: Long, packageName: String) {
-        hmhDeletedAppUsagePreference.totalUsage =
-            hmhDeletedAppUsagePreference.totalUsage + totalUsage
-        hmhDeletedAppUsagePreference.deletedPackageName =
-            hmhDeletedAppUsagePreference.deletedPackageName + packageName
+    suspend operator fun invoke(totalUsage: Long, packageName: String) {
+        deleteGoalRepository.addDeletedGoal(packageName, totalUsage)
     }
 }
