@@ -2,6 +2,7 @@ package com.hmh.hamyeonham.challenge.appadd
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
@@ -43,7 +44,7 @@ class AppAddActivity : AppCompatActivity() {
 
     private fun collectState() {
         viewModel.state.flowWithLifecycle(lifecycle)
-            .onEach { binding.btAppSelection.isEnabled = it.getAppSelectionList(this).isNotEmpty() }
+            .onEach { binding.btAppSelection.isEnabled = it.isNextButtonActive }
             .launchIn(lifecycleScope)
     }
 
