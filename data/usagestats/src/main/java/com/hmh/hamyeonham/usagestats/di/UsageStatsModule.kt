@@ -14,7 +14,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import datastore.DefaultHMHDeletedAppUsagePreference
+import com.hmh.hamyeonham.usagestats.datasource.local.DefaultHMHDeletedAppUsagePreference
 import com.hmh.hamyeonham.usagestats.datastore.HMHDeletedAppUsagePreference
 import javax.inject.Singleton
 
