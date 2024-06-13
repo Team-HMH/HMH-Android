@@ -18,6 +18,7 @@ import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.permission.PermissionActivity
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.core.service.HMHDeletedAppUsagePreferenceResetWorker
 import com.hmh.hamyeonham.core.service.lockAccessibilityServiceClassName
 import com.hmh.hamyeonham.core.viewmodel.MainEffect
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         initNavHostFragment()
         checkPowerManagerPermission()
         scheduleDateSaveWorker()
+        scheduleHMHDeletedAppUsagePreferenceResetWorker()
         collectEffect()
     }
 
@@ -103,6 +105,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun scheduleDateSaveWorker() {
         ChallengeDateSaveWorker.scheduleChallengeDateSaveWorker(this)
+    }
+
+    private fun scheduleHMHDeletedAppUsagePreferenceResetWorker() {
+        HMHDeletedAppUsagePreferenceResetWorker.scheduleHMHDeletedAppUsagePreferenceResetWorker(this)
     }
 
     private fun showChallengeFailedDialog() {
