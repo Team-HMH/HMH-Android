@@ -3,7 +3,7 @@ package com.hmh.hamyeonham.usagestats.usecase
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.model.UsageStatus
-import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
+import com.hmh.hamyeonham.usagestats.model.sumUsageStats
 import com.hmh.hamyeonham.usagestats.repository.DeleteGoalRepository
 import com.hmh.hamyeonham.usagestats.repository.UsageStatsRepository
 import kotlinx.coroutines.flow.first
@@ -29,12 +29,12 @@ class GetTotalUsageStatsUseCase @Inject constructor(
                 endTime,
                 getPackageNamesFromUsageGoals(usageGoals)
             )
-            return calculateTotalUsage(usageStatsForSelectedPackages) + deleteGoalRepository.getDeletedUsageOfToday()
+            return calculateTotalUsage(usageStatsForSelectedPackages)
         }
     }
 
-    suspend operator fun invoke(usageStatusAndGoals: List<UsageStatusAndGoal>): Long {
-        return calculateTotalUsage(usageStatusAndGoals) + deleteGoalRepository.getDeletedUsageOfToday()
+    suspend fun calculateTotalUsage(usageStats: List<UsageStatus>): Long {
+        return usageStats.sumUsageStats() + deleteGoalRepository.getDeletedUsageOfToday()
     }
 
     private suspend fun getUsageStatsForSelectedPackages(
@@ -45,27 +45,7 @@ class GetTotalUsageStatsUseCase @Inject constructor(
         return usageStatsRepository.getUsageStatForPackages(startTime, endTime, packageNames)
     }
 
-    @JvmName("calcaulateTotalUsageFromUsageStatusList")
-    private fun calculateTotalUsage(
-        usageStatusList: List<UsageStatus>,
-    ): Long {
-        return minToMS(usageStatusList.sumOf {
-            it.totalTimeInForegroundInMin
-        })
-    }
-
-    @JvmName("calcaulateTotalUsageFromUsageStatusAndGoalList")
-    private fun calculateTotalUsage(
-        usageStatusList: List<UsageStatusAndGoal>,
-    ): Long {
-        return minToMS(usageStatusList.sumOf {
-            it.totalTimeInForegroundInMin
-        })
-    }
-
     private fun getPackageNamesFromUsageGoals(usageGoals: List<UsageGoal>): List<String> {
         return usageGoals.filter { it.packageName != TOTAL }.map { it.packageName }
     }
-
-    private fun minToMS(min: Long): Long = min * 60 * 1000L
 }
