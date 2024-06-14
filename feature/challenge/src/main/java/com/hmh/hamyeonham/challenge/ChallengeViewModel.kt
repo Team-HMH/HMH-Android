@@ -9,7 +9,7 @@ import com.hmh.hamyeonham.challenge.usecase.DeleteUsageGoalUseCase
 import com.hmh.hamyeonham.challenge.usecase.NewChallengeUseCase
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
-import com.hmh.hamyeonham.usagestats.usecase.CheckAndRevertDeletedAppUsageUseCase
+import com.hmh.hamyeonham.usagestats.usecase.CheckAndDeleteDeletedAppUsageUseCase
 import com.hmh.hamyeonham.usagestats.usecase.DeletedAppUsageStoreUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,7 +53,7 @@ class ChallengeViewModel @Inject constructor(
     private val deleteUsageGoalUseCase: DeleteUsageGoalUseCase,
     private val newChallengeUseCase: NewChallengeUseCase,
     private val deletedAppUsageStoreUseCase: DeletedAppUsageStoreUseCase,
-    private val checkAndRevertDeletedAppUsageUseCase: CheckAndRevertDeletedAppUsageUseCase
+    private val checkAndDeleteDeletedAppUsageUseCase: CheckAndDeleteDeletedAppUsageUseCase
 ) : ViewModel() {
 
     private val _challengeState = MutableStateFlow(ChallengeState())
@@ -76,7 +76,7 @@ class ChallengeViewModel @Inject constructor(
     fun addApp(apps: Apps) {
         viewModelScope.launch {
             addUsageGoalsUseCase(apps)
-            checkAndRevertDeletedAppUsageUseCase(apps.apps.map { it.appCode })
+            checkAndDeleteDeletedAppUsageUseCase(apps.apps.map { it.appCode })
         }
     }
 
