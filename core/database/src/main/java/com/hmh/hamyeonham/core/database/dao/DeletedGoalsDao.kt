@@ -21,23 +21,20 @@ interface DeletedGoalsDao {
     @Query("SELECT * FROM deleted_goal_with_usages WHERE date = :date")
     suspend fun getDeletedGoalsWithUsageByDate(date: String): DeletedGoalWithUsageEntity?
 
+    @Query("SELECT * FROM deleted_usage WHERE date = :date AND packageName = :packageName")
+    suspend fun getDeletedUsageByDateAndPackage(
+        date: String,
+        packageName: String
+    ): DeletedUsageEntity?
+
     @Query("DELETE FROM deleted_usage")
     suspend fun deleteAllUsageEntities()
 
     @Query("DELETE FROM deleted_goal_with_usages")
     suspend fun deleteAllDeletedGoalsWithUsageEntities()
 
-    @Transaction
-    suspend fun deleteAll() {
-        deleteAllUsageEntities()
-        deleteAllDeletedGoalsWithUsageEntities()
-    }
-
-    @Transaction
-    suspend fun getTotalUsageByDate(date: String): Long {
-        val deletedGoalsWithUsageEntity = getDeletedGoalsWithUsageByDate(date)
-        return deletedGoalsWithUsageEntity?.totalUsage ?: 0
-    }
+    @Delete
+    suspend fun deleteDeletedUsageEntity(deletedUsageEntity: DeletedUsageEntity)
 
     @Transaction
     suspend fun addDeletedUsageToDate(date: String, newUsage: DeletedUsageEntity) {
@@ -65,6 +62,18 @@ interface DeletedGoalsDao {
     }
 
     @Transaction
+    suspend fun getTotalUsageByDate(date: String): Long {
+        val deletedGoalsWithUsageEntity = getDeletedGoalsWithUsageByDate(date)
+        return deletedGoalsWithUsageEntity?.totalUsage ?: 0
+    }
+
+    @Transaction
+    suspend fun deleteAll() {
+        deleteAllUsageEntities()
+        deleteAllDeletedGoalsWithUsageEntities()
+    }
+
+    @Transaction
     suspend fun deleteUsageEntity(date: String, packageName: String) {
         val deletedUsageEntity = getDeletedUsageByDateAndPackage(date, packageName)
         if (deletedUsageEntity != null) {
@@ -80,14 +89,5 @@ interface DeletedGoalsDao {
         }
         // else: if deletedUsageEntity is null, do nothing
     }
-
-    @Query("SELECT * FROM deleted_usage WHERE date = :date AND packageName = :packageName")
-    suspend fun getDeletedUsageByDateAndPackage(
-        date: String,
-        packageName: String
-    ): DeletedUsageEntity?
-
-    @Delete
-    suspend fun deleteDeletedUsageEntity(deletedUsageEntity: DeletedUsageEntity)
 
 }
