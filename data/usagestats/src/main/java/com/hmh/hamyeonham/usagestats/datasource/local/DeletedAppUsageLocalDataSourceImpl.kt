@@ -18,9 +18,7 @@ class DeletedAppUsageLocalDataSourceImpl @Inject constructor(
         deletedGoalsDao.addDeletedGoal(date, packageName, appUsage)
     }
 
-    override suspend fun deleteDeletedUsage(date: String, packageName: String) {
+    override suspend fun checkAndDeleteDeletedUsage(date: String, packageName: String) {
         deletedGoalsDao.deleteUsageEntity(date, packageName)
     }
-
-
 }

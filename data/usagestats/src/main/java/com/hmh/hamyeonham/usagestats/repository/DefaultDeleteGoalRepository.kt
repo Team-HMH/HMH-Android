@@ -22,6 +22,6 @@ class DefaultDeleteGoalRepository @Inject constructor(
 
     override suspend fun checkAndRevertDeletedGoal(packageName: String) {
         val today = getCurrentDateOfDefaultTimeZone().toString()
-        deletedAppUsageLocalDataSource.deleteDeletedUsage(today, packageName)
+        deletedAppUsageLocalDataSource.checkAndDeleteDeletedUsage(today, packageName)
     }
 }
