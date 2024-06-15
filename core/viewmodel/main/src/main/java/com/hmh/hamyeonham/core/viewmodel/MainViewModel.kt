@@ -48,8 +48,8 @@ class MainViewModel @Inject constructor(
     val effect = _effect.asSharedFlow()
 
     init {
+        uploadSavedChallenge()
         viewModelScope.launch {
-            uploadSavedChallenge()
             updateGoals()
             getChallengeStatus()
             getChallengeSuccess()
@@ -107,7 +107,10 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun updateGoals() {
-        usageGoalsRepository.updateUsageGoal()
+        usageGoalsRepository.updateUsageGoal().onFailure {
+            sendEffect(MainEffect.NetworkError)
+            Log.e("updateUsageGoal error", it.toString())
+        }
     }
 
     private suspend fun getChallengeStatus() {

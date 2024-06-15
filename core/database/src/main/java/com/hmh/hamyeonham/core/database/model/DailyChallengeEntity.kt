@@ -7,5 +7,4 @@ import androidx.room.PrimaryKey
 data class DailyChallengeEntity(
     @PrimaryKey
     val challengeDate: String,
-    val isUnlock: Boolean? = null
 )

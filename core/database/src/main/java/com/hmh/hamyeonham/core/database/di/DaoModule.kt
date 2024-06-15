@@ -27,4 +27,10 @@ object DaoModule {
     fun providesChallengeDao(
         database: HMHRoomDatabase,
     ) = database.challengeDao()
+
+    @Provides
+    @Singleton
+    fun providesLockDao(
+        database: HMHRoomDatabase,
+    ) = database.lockDao()
 }
