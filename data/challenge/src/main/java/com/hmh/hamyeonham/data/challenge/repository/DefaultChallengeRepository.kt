@@ -29,6 +29,9 @@ class DefaultChallengeRepository @Inject constructor(
     private val lockService: LockService
 ) : ChallengeRepository {
 
+    @Volatile
+    private var isUnLockFetching = false
+
     override suspend fun getChallengeData(): Result<ChallengeStatus> {
         return runCatching { challengeService.getChallengeData().data.toChallengeStatus() }
     }
@@ -87,9 +90,21 @@ class DefaultChallengeRepository @Inject constructor(
     }
 
     override suspend fun getDailyChallengeIsUnlock(date: String): Boolean {
+        if (isUnLockFetching) return false
         val challenge = challengeLocalDatasource.getChallengeWithUsage(date).toChallengeWithUsage()
         return runCatching {
-            challenge.isUnlock ?: (lockService.getIsLockedWithDate(date).data.isLockToday ?: false)
+            challenge.isUnlock ?: run {
+                isUnLockFetching = true
+                runCatching {
+                    (lockService.getIsLockedWithDate(date).data.isLockToday ?: false)
+                }.onSuccess { isUnLock ->
+                    setDailyChallengeIsUnlock(challenge, isUnLock)
+                }.onFailure {
+                    setDailyChallengeIsUnlock(challenge, false)
+                }.getOrDefault(false).also {
+                    isUnLockFetching = false
+                }
+            }
         }.getOrDefault(false)
     }
 
