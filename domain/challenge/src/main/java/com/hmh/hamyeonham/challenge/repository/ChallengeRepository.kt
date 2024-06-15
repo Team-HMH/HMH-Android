@@ -18,6 +18,4 @@ interface ChallengeRepository {
     suspend fun deleteChallengeWithUsage(challengeDate: String): Result<Unit>
     suspend fun deleteAllChallengeWithUsage(): Result<Unit>
     suspend fun uploadSavedChallenge(challengeWithUsages: List<ChallengeWithUsage>): Result<Unit>
-    suspend fun getDailyChallengeIsUnlock(date: String): Boolean
-    suspend fun setDailyChallengeIsUnlock(date: String, isUnLock: Boolean)
 }

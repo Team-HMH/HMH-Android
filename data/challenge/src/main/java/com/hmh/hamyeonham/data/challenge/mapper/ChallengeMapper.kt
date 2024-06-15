@@ -33,17 +33,13 @@ internal fun UsageGoalResponse.toChallengeResult(): Boolean {
 internal fun ChallengeWithUsageEntity?.toChallengeWithUsage(date: String): ChallengeWithUsage {
     return ChallengeWithUsage(
         challengeDate = date,
-        isUnlock = this?.challenge?.isUnlock,
         apps = this?.apps?.map { it.toUsage() } ?: emptyList()
     )
 }
 
 internal fun ChallengeWithUsage.toChallengeWithUsageEntity(): ChallengeWithUsageEntity {
     return ChallengeWithUsageEntity(
-        challenge = DailyChallengeEntity(
-            challengeDate = challengeDate,
-            isUnlock = isUnlock
-        ),
+        challenge = DailyChallengeEntity(challengeDate = challengeDate),
         apps = apps.map { UsageEntity(it.packageName, it.usageTime, challengeDate) }
     )
 }

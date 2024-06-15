@@ -1,7 +1,8 @@
-package com.hmh.hamyeonham.core.database
+package com.hmh.hamyeonham.core.database.di
 
 import android.content.Context
 import androidx.room.Room
+import com.hmh.hamyeonham.core.database.HMHRoomDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
