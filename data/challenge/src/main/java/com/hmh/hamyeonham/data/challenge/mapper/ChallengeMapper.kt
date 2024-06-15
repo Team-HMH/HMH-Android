@@ -7,8 +7,8 @@ import com.hmh.hamyeonham.core.database.model.DailyChallengeEntity
 import com.hmh.hamyeonham.core.database.model.UsageEntity
 import com.hmh.hamyeonham.core.network.challenge.model.ChallengeResponse
 import com.hmh.hamyeonham.core.network.usagegoal.model.ChallengeWithUsageRequest
-import com.hmh.hamyeonham.usagestats.model.UsageStatus
 import com.hmh.hamyeonham.core.network.usagegoal.model.UsageGoalResponse
+import com.hmh.hamyeonham.usagestats.model.UsageStatus
 
 internal fun ChallengeResponse.toChallengeStatus(): ChallengeStatus {
     return ChallengeStatus(
@@ -33,13 +33,17 @@ internal fun UsageGoalResponse.toChallengeResult(): Boolean {
 internal fun ChallengeWithUsageEntity.toChallengeWithUsage(): ChallengeWithUsage {
     return ChallengeWithUsage(
         challengeDate = challenge.challengeDate,
+        isUnlock = challenge.isUnlock,
         apps = apps.map { it.toUsage() }
     )
 }
 
 internal fun ChallengeWithUsage.toChallengeWithUsageEntity(): ChallengeWithUsageEntity {
     return ChallengeWithUsageEntity(
-        challenge = DailyChallengeEntity(challengeDate),
+        challenge = DailyChallengeEntity(
+            challengeDate = challengeDate,
+            isUnlock = isUnlock
+        ),
         apps = apps.map { UsageEntity(it.packageName, it.usageTime, challengeDate) }
     )
 }

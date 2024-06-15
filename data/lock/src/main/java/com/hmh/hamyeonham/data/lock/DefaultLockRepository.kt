@@ -1,18 +1,23 @@
 package com.hmh.hamyeonham.data.lock
 
-import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
+import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
+import com.hmh.hamyeonham.common.time.getNowDateNumeric
 import com.hmh.hamyeonham.lock.LockRepository
 import javax.inject.Inject
 
 class DefaultLockRepository @Inject constructor(
-    private val preference: HMHNetworkPreference
+    private val challengeRepository: ChallengeRepository,
 ) : LockRepository {
-    override fun setIsUnLock(isUnLock: Boolean) {
-        preference.isUnlock = isUnLock
+    private val date: String get() = getNowDateNumeric()
+    override suspend fun setIsUnLock(isUnLock: Boolean) {
+        challengeRepository.setDailyChallengeIsUnlock(
+            date = date,
+            isUnLock = isUnLock
+        )
     }
 
-    override fun getIsUnLock(): Boolean {
-        return preference.isUnlock
+    override suspend fun getIsUnLock(): Boolean {
+        return challengeRepository.getDailyChallengeIsUnlock(date)
     }
 
 }

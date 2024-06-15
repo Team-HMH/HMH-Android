@@ -6,5 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "daily_challenges")
 data class DailyChallengeEntity(
     @PrimaryKey
-    val challengeDate: String
+    val challengeDate: String,
+    val isUnlock: Boolean? = null
 )
