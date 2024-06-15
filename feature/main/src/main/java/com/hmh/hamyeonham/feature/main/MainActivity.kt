@@ -52,7 +52,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.effect.flowWithLifecycle(lifecycle).onEach { effect ->
             when (effect) {
                 is MainEffect.SuccessUsePoint -> {
-                    setIsUnLockUseCase(true)
                     intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
                     showChallengeFailedDialog()
                 }
