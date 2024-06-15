@@ -66,7 +66,8 @@ class DefaultChallengeRepository @Inject constructor(
 
     override suspend fun getChallengeWithUsage(challengeDate: String): Result<ChallengeWithUsage> {
         return runCatching {
-            challengeLocalDatasource.getChallengeWithUsage(challengeDate).toChallengeWithUsage()
+            challengeLocalDatasource.getChallengeWithUsage(challengeDate)
+                .toChallengeWithUsage(date = challengeDate)
         }
     }
 
@@ -91,10 +92,11 @@ class DefaultChallengeRepository @Inject constructor(
 
     override suspend fun getDailyChallengeIsUnlock(date: String): Boolean {
         if (isUnLockFetching) return false
-        val challenge = challengeLocalDatasource.getChallengeWithUsage(date).toChallengeWithUsage()
+        isUnLockFetching = true
+        val challenge =
+            challengeLocalDatasource.getChallengeWithUsage(date).toChallengeWithUsage(date)
         return runCatching {
             challenge.isUnlock ?: run {
-                isUnLockFetching = true
                 runCatching {
                     (lockService.getIsLockedWithDate(date).data.isLockToday ?: false)
                 }.onSuccess { isUnLock ->
@@ -112,7 +114,8 @@ class DefaultChallengeRepository @Inject constructor(
         date: String,
         isUnLock: Boolean
     ) {
-        val challenge = challengeLocalDatasource.getChallengeWithUsage(date).toChallengeWithUsage()
+        val challenge =
+            challengeLocalDatasource.getChallengeWithUsage(date).toChallengeWithUsage(date)
         setDailyChallengeIsUnlock(challenge, isUnLock)
     }
 
