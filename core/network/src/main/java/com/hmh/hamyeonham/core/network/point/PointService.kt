@@ -1,6 +1,7 @@
 package com.hmh.hamyeonham.core.network.point
 
 import com.hmh.hamyeonham.core.network.model.BaseResponse
+import com.hmh.hamyeonham.core.network.point.model.ChallengeDateRequest
 import com.hmh.hamyeonham.core.network.point.model.EarnPointResponse
 import com.hmh.hamyeonham.core.network.point.model.PointEarnRequest
 import com.hmh.hamyeonham.core.network.point.model.PointListResponse
@@ -22,10 +23,9 @@ interface PointService {
     @GET("/api/v1/point/use")
     suspend fun getUsablePoint(): UsablePointResponse
 
-    @FormUrlEncoded
     @PATCH("/api/v1/point/use")
     suspend fun patchPoint(
-        @Field("challengeDate") challengeDate: String
+        @Body body: ChallengeDateRequest
     ): UsePointResponse
 
     @GET("/api/v1/point/list")

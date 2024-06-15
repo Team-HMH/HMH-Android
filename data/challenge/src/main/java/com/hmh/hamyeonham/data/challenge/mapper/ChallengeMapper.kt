@@ -30,9 +30,9 @@ internal fun UsageGoalResponse.toChallengeResult(): Boolean {
     }
 }
 
-internal fun ChallengeWithUsageEntity?.toChallengeWithUsage(): ChallengeWithUsage {
+internal fun ChallengeWithUsageEntity?.toChallengeWithUsage(date: String): ChallengeWithUsage {
     return ChallengeWithUsage(
-        challengeDate = this?.challenge?.challengeDate.orEmpty(),
+        challengeDate = date,
         isUnlock = this?.challenge?.isUnlock,
         apps = this?.apps?.map { it.toUsage() } ?: emptyList()
     )
