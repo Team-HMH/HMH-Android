@@ -13,6 +13,7 @@ import com.hmh.hamyeonham.usagestats.usecase.GetUsageGoalsUseCase
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatFromPackageUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -37,10 +38,13 @@ class LockAccessibilityService : AccessibilityService() {
     private var timerJob: Job? = null
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        if (getUsageIsLockUseCase()) return
-        when (event.eventType) {
-            AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> handleFocusedChangedEvent(event)
-            else -> Unit
+        ProcessLifecycleOwner.get().lifecycleScope.launch {
+            if (getUsageIsLockUseCase()) return@launch
+            when (event.eventType) {
+                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> handleFocusedChangedEvent(event)
+                else -> Unit
+            }
+            this.cancel()
         }
     }
 
