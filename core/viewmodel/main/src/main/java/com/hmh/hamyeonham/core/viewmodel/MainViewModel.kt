@@ -55,13 +55,6 @@ class MainViewModel @Inject constructor(
             getChallengeSuccess()
             getUserInfo()
             getUsageGoalAndStatList()
-            setUnLockFlag()
-        }
-    }
-
-    private fun setUnLockFlag() {
-        viewModelScope.launch {
-            setIsUnLockUseCase()
         }
     }
 
@@ -75,6 +68,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             pointRepository.usePoint().onSuccess {
                 getChallengeStatus()
+                setIsUnLockUseCase(true)
                 sendEffect(MainEffect.SuccessUsePoint)
             }.onFailure {
                 sendEffect(MainEffect.NetworkError)
