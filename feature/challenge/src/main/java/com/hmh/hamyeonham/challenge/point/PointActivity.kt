@@ -23,6 +23,13 @@ class PointActivity : AppCompatActivity() {
 
         collectPointInfo()
         collectUserPoint()
+        backToMain()
+    }
+
+    private fun backToMain() {
+        binding.ivBack.setOnClickListener {
+            finish()
+        }
     }
 
     private fun collectPointInfo() {

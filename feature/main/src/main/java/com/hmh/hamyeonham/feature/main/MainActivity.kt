@@ -22,19 +22,14 @@ import com.hmh.hamyeonham.core.service.lockAccessibilityServiceClassName
 import com.hmh.hamyeonham.core.viewmodel.MainEffect
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.ActivityMainBinding
-import com.hmh.hamyeonham.lock.SetIsUnLockUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val binding by viewBinding(ActivityMainBinding::inflate)
     private val viewModel by viewModels<MainViewModel>()
-
-    @Inject
-    lateinit var setIsUnLockUseCase: SetIsUnLockUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +52,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.effect.flowWithLifecycle(lifecycle).onEach { effect ->
             when (effect) {
                 is MainEffect.SuccessUsePoint -> {
-                    setIsUnLockUseCase(true)
                     intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
                     showChallengeFailedDialog()
                 }
