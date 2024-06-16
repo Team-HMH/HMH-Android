@@ -71,6 +71,23 @@ class PointAdapter(
                 com.hmh.hamyeonham.core.designsystem.R.color.blue_purple_opacity_70
             )
 
+            val textColorTitle = ContextCompat.getColor(
+                context,
+                com.hmh.hamyeonham.core.designsystem.R.color.white_text
+            )
+
+            val textColorUnearned = ContextCompat.getColor(
+                context,
+                com.hmh.hamyeonham.core.designsystem.R.color.white_btn
+            )
+
+            val textColorSubscription = ContextCompat.getColor(
+                context,
+                com.hmh.hamyeonham.core.designsystem.R.color.gray2
+            )
+
+
+
             val textColorFailure = ContextCompat.getColor(
                 context,
                 com.hmh.hamyeonham.core.designsystem.R.color.gray2
@@ -79,6 +96,11 @@ class PointAdapter(
             val buttonBackgroundEarned = AppCompatResources.getDrawable(
                 context,
                 R.drawable.point_button_background_already_get
+            )
+
+            val buttonBackgroundUnearned = AppCompatResources.getDrawable(
+                context,
+                R.drawable.point_button_background_able
             )
 
             val buttonBackgroundFailure = AppCompatResources.getDrawable(
@@ -94,19 +116,26 @@ class PointAdapter(
             when (pointModel.status) {
                 // 이미 받은 경우
                 PointInfo.GetPointStatus.EARNED -> {
+                    setTextColor(textColorTitle, textColorSubscription)
                     tvPointButton.isEnabled = false
                     tvPointButton.background = buttonBackgroundEarned
                     tvPointButton.setTextColor(textColorEarned)
                 }
                 // 받을 수 있는 경우
                 PointInfo.GetPointStatus.UNEARNED -> {
+                    tvPointTitle.setTextColor(textColorTitle)
+                    tvPointWhatChallenge.setTextColor(textColorSubscription)
                     tvPointButton.isEnabled = true
+                    tvPointButton.background = buttonBackgroundUnearned
+                    tvPointButton.setTextColor(textColorUnearned)
                     tvPointButton.setOnClickListener {
                         onButtonClick(pointModel.challengeDate)
                     }
                 }
                 // 챌린지 실패로 인한 포인트 획득 불가
                 PointInfo.GetPointStatus.FAILURE -> {
+                    tvPointTitle.setTextColor(textColorTitle)
+                    tvPointWhatChallenge.setTextColor(textColorSubscription)
                     tvPointButton.isEnabled = false
                     tvPointButton.background = buttonBackgroundFailure
                     tvPointButton.setTextColor(textColorFailure)
@@ -120,6 +149,14 @@ class PointAdapter(
                     tvPointButton.setTextColor(textColorNone)
                 }
             }
+        }
+
+        private fun ItemPointBinding.setTextColor(
+            textColorTitle: Int,
+            textColorSubscription: Int
+        ) {
+            tvPointTitle.setTextColor(textColorTitle)
+            tvPointWhatChallenge.setTextColor(textColorSubscription)
         }
     }
 }
