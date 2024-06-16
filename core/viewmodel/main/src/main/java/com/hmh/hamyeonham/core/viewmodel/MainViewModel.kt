@@ -66,10 +66,13 @@ class MainViewModel @Inject constructor(
 
     fun updateDailyChallengeFailed() {
         viewModelScope.launch {
-            pointRepository.usePoint().onSuccess {
-                getChallengeStatus()
-                setIsUnLockUseCase(true)
-                sendEffect(MainEffect.SuccessUsePoint)
+            setIsUnLockUseCase(true).onSuccess {
+                pointRepository.usePoint().onSuccess {
+                    getChallengeStatus()
+                    sendEffect(MainEffect.SuccessUsePoint)
+                }.onFailure {
+                    sendEffect(MainEffect.NetworkError)
+                }
             }.onFailure {
                 sendEffect(MainEffect.NetworkError)
             }

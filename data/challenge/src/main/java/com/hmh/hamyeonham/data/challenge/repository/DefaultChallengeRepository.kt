@@ -5,6 +5,7 @@ import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.challenge.model.ChallengeWithUsage
 import com.hmh.hamyeonham.challenge.model.NewChallenge
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
+import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
 import com.hmh.hamyeonham.core.network.challenge.AppCodeRequest
 import com.hmh.hamyeonham.core.network.challenge.ChallengeService
 import com.hmh.hamyeonham.core.network.usagegoal.DailyChallengeService
@@ -16,14 +17,13 @@ import com.hmh.hamyeonham.data.challenge.mapper.toChallengeWithUsage
 import com.hmh.hamyeonham.data.challenge.mapper.toChallengeWithUsageEntity
 import com.hmh.hamyeonham.data.challenge.mapper.toNewChallengeRequest
 import com.hmh.hamyeonham.data.challenge.mapper.toRequestChallengeWithUsage
-import com.hmh.hamyeonham.data.challenge.mapper.toUsage
-import com.hmh.hamyeonham.usagestats.repository.UsageStatsRepository
+import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatsListUseCase
 import javax.inject.Inject
 
 class DefaultChallengeRepository @Inject constructor(
     private val challengeService: ChallengeService,
     private val dailyChallengeService: DailyChallengeService,
-    private val usageStatsRepository: UsageStatsRepository,
+    private val getUsageStatsListUseCase: GetUsageStatsListUseCase,
     private val challengeLocalDatasource: ChallengeLocalDatasource,
 ) : ChallengeRepository {
 
@@ -41,12 +41,21 @@ class DefaultChallengeRepository @Inject constructor(
 
     override suspend fun getChallengeWithUsage(): Result<List<ChallengeWithUsage>> {
         return runCatching {
+            val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
             challengeLocalDatasource.getChallengeWithUsage().map { entity ->
                 val challengeDate = entity.challenge.challengeDate
-                val appUsageList = usageStatsRepository.getUsageStats(challengeDate)
+                val appUsageList = getUsageStatsListUseCase(
+                    startTime = startTime,
+                    endTime = endTime,
+                )
                 ChallengeWithUsage(
                     challengeDate = challengeDate,
-                    apps = appUsageList.map { it.toUsage() }
+                    apps = appUsageList.map {
+                        ChallengeWithUsage.Usage(
+                            packageName = it.packageName,
+                            usageTime = it.totalTimeInForeground
+                        )
+                    },
                 )
             }
         }
