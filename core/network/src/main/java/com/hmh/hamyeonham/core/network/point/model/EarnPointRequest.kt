@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PointChallengeDateRequest(
+data class EarnPointRequest(
     @SerialName("challengeDate")
     val challengeDate: String,
 )
