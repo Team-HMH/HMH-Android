@@ -62,5 +62,9 @@
                     android:scheme="kakao${kakaoApiKey}" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".common.permission.PermissionActivity"
+            android:exported="false" />
     </application>
 </manifest>

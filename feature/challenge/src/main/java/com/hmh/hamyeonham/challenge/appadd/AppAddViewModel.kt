@@ -2,6 +2,7 @@ package com.hmh.hamyeonham.challenge.appadd
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hmh.hamyeonham.challenge.model.AppInfo
 import com.hmh.hamyeonham.challenge.usecase.GetInstalledAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -39,7 +40,7 @@ class AppAddViewModel @Inject constructor(
         getInstalledAppUseCase.clearCache()
     }
 
-    private fun updateInstalledApps(installApps: List<String>) {
+    private fun updateInstalledApps(installApps: List<AppInfo>) {
         updateState {
             copy(installedApps = installApps)
         }
@@ -90,7 +91,7 @@ class AppAddViewModel @Inject constructor(
             return
         }
         updateState {
-            copy(installedApps = state.value.installedApps.filter { it.contains(query) })
+            copy(installedApps = state.value.installedApps.filter { it.appName.contains(query) })
         }
     }
 
