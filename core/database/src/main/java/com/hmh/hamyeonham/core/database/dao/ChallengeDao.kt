@@ -1,7 +1,6 @@
 package com.hmh.hamyeonham.core.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
@@ -25,7 +24,7 @@ interface ChallengeDao {
 
     @Transaction
     @Query("SELECT * FROM daily_challenges WHERE challengeDate = :date")
-    suspend fun getChallengeWithUsages(date: String): ChallengeWithUsageEntity
+    suspend fun getChallengeWithUsages(date: String): ChallengeWithUsageEntity?
 
     // 특정 DailyChallenge와 연관된 모든 데이터 삭제
     @Transaction

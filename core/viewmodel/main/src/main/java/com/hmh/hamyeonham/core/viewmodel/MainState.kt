@@ -9,7 +9,6 @@ import kotlinx.datetime.LocalDate
 
 data class MainState(
     val appGoals: List<ChallengeStatus.AppGoal> = emptyList(),
-    val challengeStatusList: List<ChallengeStatus.Status> = emptyList(),
     val totalGoalTimeInHour: Int = 0,
     val period: Int = 0,
     val todayIndex: Int = 0,
