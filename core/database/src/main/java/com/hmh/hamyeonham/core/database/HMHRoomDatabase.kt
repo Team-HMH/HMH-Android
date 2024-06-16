@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
         UsageEntity::class,
         DailyChallengeEntity::class,
         DeletedGoalWithUsageEntity::class,
-        DeletedUsageEntity::class
+        DeletedUsageEntity::class,
         LockWithDateEntity::class
     ],
     version = 1,
