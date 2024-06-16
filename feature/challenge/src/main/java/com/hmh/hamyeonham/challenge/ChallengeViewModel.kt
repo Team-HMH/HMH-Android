@@ -10,6 +10,8 @@ import com.hmh.hamyeonham.challenge.usecase.NewChallengeUseCase
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.viewmodel.CalendarToggleState
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
+import com.hmh.hamyeonham.usagestats.usecase.CheckAndDeleteDeletedAppUsageUseCase
+import com.hmh.hamyeonham.usagestats.usecase.DeletedAppUsageStoreUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -46,7 +48,9 @@ enum class ModifierState {
 class ChallengeViewModel @Inject constructor(
     private val addUsageGoalsUseCase: AddUsageGoalsUseCase,
     private val deleteUsageGoalUseCase: DeleteUsageGoalUseCase,
-    private val newChallengeUseCase: NewChallengeUseCase
+    private val newChallengeUseCase: NewChallengeUseCase,
+    private val deletedAppUsageStoreUseCase: DeletedAppUsageStoreUseCase,
+    private val checkAndDeleteDeletedAppUsageUseCase: CheckAndDeleteDeletedAppUsageUseCase
 ) : ViewModel() {
 
     private val _challengeState = MutableStateFlow(ChallengeState())
@@ -69,12 +73,17 @@ class ChallengeViewModel @Inject constructor(
     fun addApp(apps: Apps) {
         viewModelScope.launch {
             addUsageGoalsUseCase(apps)
+            checkAndDeleteDeletedAppUsageUseCase(apps.apps.map { it.appCode })
         }
     }
 
-    fun deleteApp(packageName: String) {
+    fun deleteApp(usageStatusAndGoal: UsageStatusAndGoal) {
         viewModelScope.launch {
-            deleteUsageGoalUseCase(packageName)
+            deleteUsageGoalUseCase(usageStatusAndGoal.packageName)
+            deletedAppUsageStoreUseCase(
+                usageStatusAndGoal.totalTimeInForeground,
+                usageStatusAndGoal.packageName
+            )
         }
     }
 

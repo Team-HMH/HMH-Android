@@ -60,7 +60,7 @@ class HomeFragment : Fragment() {
             usageStaticsAdapter?.submitList(
                 mainState.usageStatusAndGoals.map {
                     UsageStaticsModel(mainState.name, mainState.challengeSuccess, it)
-                },
+                }
             )
         }.launchIn(viewLifeCycleScope)
     }

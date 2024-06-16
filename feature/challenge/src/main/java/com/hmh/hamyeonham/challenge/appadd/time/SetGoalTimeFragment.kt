@@ -28,8 +28,13 @@ class SetGoalTimeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViews()
         setNumberPicker()
         setNumberPickerListener()
+    }
+
+    private fun initViews() {
+        viewModel.handleNextButtonStateWithGoalTime()
     }
 
     private fun setNumberPickerListener() {

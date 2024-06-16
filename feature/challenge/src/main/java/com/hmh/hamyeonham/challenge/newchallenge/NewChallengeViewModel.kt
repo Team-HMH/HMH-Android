@@ -6,12 +6,12 @@ import kotlinx.coroutines.flow.asStateFlow
 
 data class NewChallengeState(
     val goalDate: Int = NOTINITIALIZED,
-    val goalTime: Long = DEFAULTTIME,
+    val goalTime: Long = DEFAULTSCREENTIME,
     val isNextButtonActive: Boolean = false,
 ) {
     companion object {
         val NOTINITIALIZED: Int = 0
-        val DEFAULTTIME: Long = 7200000
+        val DEFAULTSCREENTIME: Long = 3600000
     }
 }
 

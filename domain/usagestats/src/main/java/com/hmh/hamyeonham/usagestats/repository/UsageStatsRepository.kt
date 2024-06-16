@@ -30,4 +30,6 @@ interface UsageStatsRepository {
         endTime: Long,
         packageNames: List<String>,
     ): List<UsageStatus>
+
+    suspend fun getUsageStatForPackageOfToday(packageName: String): Long
 }
