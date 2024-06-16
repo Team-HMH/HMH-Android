@@ -1,6 +1,7 @@
 package com.hmh.hamyeonham.core.network.lock.api
 
 import com.hmh.hamyeonham.core.network.lock.model.LockCheckWithDate
+import com.hmh.hamyeonham.core.network.lock.model.RequestLockDate
 import com.hmh.hamyeonham.core.network.model.BaseResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -15,6 +16,6 @@ interface LockService {
 
     @POST("/api/v1/user/daily/lock")
     suspend fun postLockWithDate(
-        @Body lockCheckWithDate: LockCheckWithDate
+        @Body body: RequestLockDate
     ): BaseResponse<Unit>
 }

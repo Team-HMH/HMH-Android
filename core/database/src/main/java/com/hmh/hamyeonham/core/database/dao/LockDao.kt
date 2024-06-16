@@ -13,6 +13,9 @@ interface LockDao {
     @Query("SELECT * FROM lock_with_date WHERE date = :date")
     suspend fun getLockWithDate(date: String): LockWithDateEntity?
 
+    @Query("DELETE FROM lock_with_date WHERE date <> :date")
+    suspend fun deleteLockWithoutDate(date: String)
+
     @Query("DELETE FROM lock_with_date")
     suspend fun deleteAll()
 }
