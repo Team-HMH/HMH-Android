@@ -30,6 +30,12 @@ object DaoModule {
 
     @Provides
     @Singleton
+    fun providesDeletedGoalDao(
+        database: HMHRoomDatabase,
+    ) = database.deletedGoalsDao()
+
+    @Provides
+    @Singleton
     fun providesLockDao(
         database: HMHRoomDatabase,
     ) = database.lockDao()

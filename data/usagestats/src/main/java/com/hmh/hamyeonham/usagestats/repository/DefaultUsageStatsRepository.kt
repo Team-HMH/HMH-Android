@@ -1,5 +1,6 @@
 package com.hmh.hamyeonham.usagestats.repository
 
+import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
 import com.hmh.hamyeonham.common.time.getTargetDayStartEndEpochMillis
 import com.hmh.hamyeonham.usagestats.datasource.local.UsageStatusLocalDataSource
 import com.hmh.hamyeonham.usagestats.model.UsageStatus
@@ -67,5 +68,10 @@ class DefaultUsageStatsRepository @Inject constructor(
                 }?.totalTimeInForeground ?: 0,
             )
         }
+    }
+
+    override suspend fun getUsageStatForPackageOfToday(packageName: String): Long {
+        val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
+        return getUsageTimeForPackage(startTime, endTime, packageName)
     }
 }
