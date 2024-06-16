@@ -10,7 +10,9 @@ android {
 dependencies {
 
     implementation(projects.domain.lock)
+    implementation(projects.domain.challenge)
 
     implementation(projects.core.common)
     implementation(projects.core.network)
+    implementation(projects.core.database)
 }
