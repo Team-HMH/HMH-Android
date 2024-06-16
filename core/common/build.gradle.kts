@@ -2,6 +2,7 @@
 plugins {
     hmh("feature")
     hmh("compose")
+    hmh("test")
 }
 
 android {

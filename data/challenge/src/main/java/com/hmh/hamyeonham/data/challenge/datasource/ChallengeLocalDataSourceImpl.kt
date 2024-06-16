@@ -11,7 +11,7 @@ class ChallengeLocalDataSourceImpl @Inject constructor(
         return challengeDao.getChallengeWithUsages()
     }
 
-    override suspend fun getChallengeWithUsage(challengeDate: String): ChallengeWithUsageEntity {
+    override suspend fun getChallengeWithUsage(challengeDate: String): ChallengeWithUsageEntity? {
         return challengeDao.getChallengeWithUsages(challengeDate)
     }
 
