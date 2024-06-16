@@ -56,7 +56,7 @@ class ChallengeDateSaveWorker @AssistedInject constructor(
         val currentDate = getCurrentDateOfDefaultTimeZone()
         val challengeWithUsage = ChallengeWithUsage(
             challengeDate = currentDate.toString(),
-            apps = emptyList()
+            apps = emptyList(),
         )
         challengeRepository.insertChallengeWithUsage(challengeWithUsage)
         return Result.success()

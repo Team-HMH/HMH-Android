@@ -1,6 +1,7 @@
 package com.hmh.hamyeonham.core.network.point
 
 import com.hmh.hamyeonham.core.network.model.BaseResponse
+import com.hmh.hamyeonham.core.network.point.model.ChallengeDateRequest
 import com.hmh.hamyeonham.core.network.point.model.EarnPointResponse
 import com.hmh.hamyeonham.core.network.point.model.PointChallengeDateRequest
 import com.hmh.hamyeonham.core.network.point.model.PointListResponse
@@ -15,7 +16,7 @@ interface PointService {
 
     @PATCH("/api/v1/point/earn")
     suspend fun earnPoint(
-        @Body request: PointChallengeDateRequest,
+        @Body request: PointEarnRequest,
     ): BaseResponse<EarnPointResponse>
 
     @GET("/api/v1/point/use")
@@ -23,8 +24,8 @@ interface PointService {
 
     @PATCH("/api/v1/point/use")
     suspend fun patchPoint(
-        @Body request: PointChallengeDateRequest,
-    ): BaseResponse<UsePointResponse>
+        @Body body: ChallengeDateRequest
+    ): UsePointResponse
 
     @GET("/api/v1/point/list")
     suspend fun getPointInfoList(): BaseResponse<PointListResponse>

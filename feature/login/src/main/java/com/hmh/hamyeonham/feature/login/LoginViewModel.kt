@@ -3,6 +3,7 @@ package com.hmh.hamyeonham.feature.login
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hmh.hamyeonham.core.database.manger.DatabaseManager
 import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
 import com.hmh.hamyeonham.login.repository.AuthRepository
 import com.kakao.sdk.common.model.ClientError
@@ -31,6 +32,7 @@ data class LoginState(
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val hmhNetworkPreference: HMHNetworkPreference,
+    private val databaseManager: DatabaseManager,
 ) : ViewModel() {
 
     private val _kakaoLoginEvent = MutableSharedFlow<LoginEffect>()
@@ -70,6 +72,8 @@ class LoginViewModel @Inject constructor(
                             _kakaoLoginEvent.emit(LoginEffect.LoginSuccess)
                         }.onFailure {
                             if (it is HttpException && it.code() == 403) {
+                                hmhNetworkPreference.clear()
+                                databaseManager.deleteAll()
                                 _kakaoLoginEvent.emit(LoginEffect.RequireSignUp(token.accessToken))
                             } else {
                                 _kakaoLoginEvent.emit(LoginEffect.LoginFail)
@@ -99,6 +103,8 @@ class LoginViewModel @Inject constructor(
                         _kakaoLoginEvent.emit(LoginEffect.LoginSuccess)
                     }.onFailure {
                         if (it is HttpException && it.code() == 403) {
+                            hmhNetworkPreference.clear()
+                            databaseManager.deleteAll()
                             _kakaoLoginEvent.emit(LoginEffect.RequireSignUp(token.accessToken))
                         } else {
                             _kakaoLoginEvent.emit(LoginEffect.LoginFail)

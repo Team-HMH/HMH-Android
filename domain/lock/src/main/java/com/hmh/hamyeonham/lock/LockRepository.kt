@@ -1,6 +1,6 @@
 package com.hmh.hamyeonham.lock
 
 interface LockRepository {
-    fun setIsUnLock(isUnLock: Boolean)
-    fun getIsUnLock(): Boolean
+    suspend fun setIsUnLock(isUnLock: Boolean): Result<Unit>
+    suspend fun getIsUnLock(): Boolean
 }

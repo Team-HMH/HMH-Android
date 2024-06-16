@@ -2,7 +2,6 @@ package com.hmh.hamyeonham.core.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
-import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -14,6 +13,7 @@ import com.hmh.hamyeonham.usagestats.usecase.GetUsageGoalsUseCase
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatFromPackageUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -38,15 +38,19 @@ class LockAccessibilityService : AccessibilityService() {
     private var timerJob: Job? = null
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        if (getUsageIsLockUseCase()) return
-        when (event.eventType) {
-            AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> resetCheckUsageJob(event)
-            else -> Unit
+        ProcessLifecycleOwner.get().lifecycleScope.launch {
+            if (getUsageIsLockUseCase()) return@launch
+            when (event.eventType) {
+                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> handleFocusedChangedEvent(event)
+                else -> Unit
+            }
+            this.cancel()
         }
     }
 
-    private fun resetCheckUsageJob(event: AccessibilityEvent) {
+    private fun handleFocusedChangedEvent(event: AccessibilityEvent) {
         releaseCheckUsageJob()
+        releaseTimerJob()
         checkUsageJob = monitorAndLockIfExceedsUsageGoal(event)
     }
 
@@ -62,8 +66,6 @@ class LockAccessibilityService : AccessibilityService() {
             )
             val usageGoals = getUsageGoalsUseCase().firstOrNull() ?: return@launch
             val myGoal = usageGoals.find { it.packageName == packageName } ?: return@launch
-            Log.d("LockAccessibilityService", "checkUsage: $usageStats")
-            Log.d("LockAccessibilityService", "checkUsage: ${myGoal.goalTime}")
             checkLockApp(usageStats, myGoal, packageName)
         }
     }

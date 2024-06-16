@@ -67,22 +67,6 @@ fun AppCompatActivity.hasOverlayPermission(): Boolean {
     return Settings.canDrawOverlays(this)
 }
 
-fun AppCompatActivity.checkAllPermissionIsGranted(classCanonicalName: String) {
-    when {
-        !checkAccessibilityServiceEnabled(classCanonicalName) -> {
-            requestAccessibilitySettings()
-        }
-
-        !hasUsageStatsPermission() -> {
-            requestUsageAccessPermission()
-        }
-
-        !hasOverlayPermission() -> {
-            requestOverlayPermission()
-        }
-    }
-}
-
 fun AppCompatActivity.allPermissionIsGranted(classCanonicalName: String): Boolean {
     return checkAccessibilityServiceEnabled(classCanonicalName) && hasUsageStatsPermission() && hasOverlayPermission()
 }

@@ -32,7 +32,7 @@ class OnBoardingRequestPermissionFragment : Fragment() {
             ActivityResultContracts.StartActivityForResult(),
         ) {
             if (checkAccessibilityServiceEnabled()) {
-                toast(getString(R.string.success_accessibility_settings))
+                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_accessibility_settings))
             }
         }
 
@@ -41,7 +41,7 @@ class OnBoardingRequestPermissionFragment : Fragment() {
             ActivityResultContracts.StartActivityForResult(),
         ) {
             if (hasOverlayPermission()) {
-                toast(getString(R.string.success_overlay_permission))
+                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_overlay_permission))
             }
         }
 
@@ -50,7 +50,7 @@ class OnBoardingRequestPermissionFragment : Fragment() {
             ActivityResultContracts.StartActivityForResult(),
         ) {
             if (hasUsageStatsPermission()) {
-                toast(getString(R.string.success_usage_stats_permission))
+                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_usage_stats_permission))
             }
         }
 
@@ -80,21 +80,21 @@ class OnBoardingRequestPermissionFragment : Fragment() {
         binding.run {
             clOnboardingPermission1.setOnClickListener {
                 if (checkAccessibilityServiceEnabled()) {
-                    toast(getString(R.string.already_accessibility_settings))
+                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_accessibility_settings))
                 } else {
                     requestAccessibilitySettings()
                 }
             }
             clOnboardingPermission2.setOnClickListener {
                 if (hasUsageStatsPermission()) {
-                    toast(getString(R.string.already_usage_stats_permission))
+                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_usage_stats_permission))
                 } else {
                     requestUsageAccessPermission()
                 }
             }
             clOnboardingPermission3.setOnClickListener {
                 if (hasOverlayPermission()) {
-                    toast(getString(R.string.already_overlay_permission))
+                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_overlay_permission))
                 } else {
                     requestOverlayPermission()
                 }

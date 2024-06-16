@@ -2,18 +2,6 @@
     <string name="accessibility_service_description">화면 동작 감지</string>
     <string name="all_next">다음</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="onboarding_request_permission_title">스크린타임 권한 허용이 필요해요</string>
-    <string name="onboarding_request_permission_description">언제든지 설정에서 스크린타임 권한을\n변경할 수 있어요</string>
-    <string name="onboarding_permission1_title">접근성 허용</string>
-    <string name="onboarding_permission1_description">현재 실행중인 앱을 제한합니다</string>
-    <string name="onboarding_permission1_content_description">onboarding_permission1_next_button</string>
-    <string name="onboarding_permission2_title">사용 정보 접근 허용</string>
-    <string name="onboarding_permission2_description">현재 실행 중인 앱을 조회합니다</string>
-    <string name="onboarding_permission2_content_description">onboarding_permission2_next_button</string>
-    <string name="onboarding_permission3_title">다른 앱 위에 그리기 허용</string>
-    <string name="onboarding_permission3_description">잠금 기능 사용 시 화면에 잠금 화면을 표시합니다</string>
-    <string name="onboarding_permission3_content_description">onboarding_permission2_next_button</string>
     <string name="onboarding_select_app_title">중독에서 탈출하고 싶은\n앱을 선택해 주세요</string>
     <string name="onboarding_select_app_description">목표 이용 시간이 지나면 앱이 잠겨요\n선택하고 싶은 앱은 언제든지 추가할 수 있어요</string>
     <string name="onboarding_screentime_goal_description">목표 이용 시간은 최대 6시간까지 설정할 수 있어요</string>
@@ -24,14 +12,6 @@
     <string name="onboarding_done_sing_up_description">하면함의 챌린저가 되신 걸 환영해요\n그럼, 블랙홀 탈출 스토리부터 알아볼까요?</string>
     <string name="onboarding_select_data_question">하루 평균 휴대폰을 \n얼마나 사용하시나요?</string>
     <string name="onboarding_select_data_description">해당 문항은 최대 2개까지 선택할 수 있어요</string>
-    <string name="success_accessibility_settings">접근성 허용이 승인되었습니다</string>
-    <string name="success_overlay_permission">다른 앱 위에 그리기 허용이 승인되었습니다</string>
-    <string name="success_usage_stats_permission">사용 정보 접근 허용이 승인되었습니다</string>
-    <string name="already_accessibility_settings">이미 권한이 허용되어 있습니다</string>
-    <string name="already_usage_stats_permission">이미 권한이 허용되어 있습니다</string>
-    <string name="already_overlay_permission">이미 권한이 허용되어 있습니다</string>
-    <string name="api_description_title">* 접근성 기능(AccessibilityService API) 사용안내</string>
-    <string name="api_description_contents">하면함 앱은 아래와 같은 이유로 접근성을 사용하며 이용자가 희망하는 경우, 해당 기능을 사용하지 않을 수 있으며 다른 기능 동작에 영향을 주지 않습니다.\n\n· 접근성은 잠금 중, 멀티/팝업 윈도우로 앱을 사용할 수 없도록 방지하기 위해 사용됩니다\n· 접근성을 통해 전달되는 데이터는 별도로 수집, 가공, 저장, 전송하지 않습니다</string>
     <string name="all_done">완료</string>
     <string name="all_select_done">선택 완료</string>
     <string name="all_select_app">앱 선택하기</string>

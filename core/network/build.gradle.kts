@@ -17,4 +17,6 @@ dependencies {
     implementation(libs.process.phoenix)
     implementation(projects.domain.login)
     implementation(libs.kakao.login)
+
+    implementation(projects.core.database)
 }
