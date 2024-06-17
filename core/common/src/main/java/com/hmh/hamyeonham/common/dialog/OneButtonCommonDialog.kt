@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
+import androidx.core.view.isGone
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.hmh.hamyeonham.common.context.dialogWidthPercent
@@ -55,7 +56,9 @@ class OneButtonCommonDialog : DialogFragment() {
         with(binding) {
             tvDialogTitle.text = title
             tvDialogDescription.text = description
-            iconRes?.let { ivDialogIcon.setImageResource(it) }
+            iconRes?.let { ivDialogIcon.setImageResource(it) } ?: run {
+                ivDialogIcon.isGone = true
+            }
             tvConfirmButton.text = confirmButtonText
         }
     }
