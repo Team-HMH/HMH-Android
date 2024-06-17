@@ -2,6 +2,7 @@ package com.hmh.hamyeonham.core.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -47,25 +48,28 @@ class LockAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         ProcessLifecycleOwner.get().lifecycleScope.launch {
+            val myEventType = event.eventType
+            val myPackageName = event.packageName?.toString() ?: return@launch
             if (getUsageIsLockUseCase()) return@launch
-            when (event.eventType) {
-                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> handleFocusedChangedEvent(event)
+            when (myEventType) {
+                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
+                    handleFocusedChangedEvent(myPackageName)
+                }
+
                 else -> Unit
             }
             this.cancel()
         }
     }
 
-    private fun handleFocusedChangedEvent(event: AccessibilityEvent) {
+    private fun handleFocusedChangedEvent(packageName: String) {
         releaseCheckUsageJob()
         releaseTimerJob()
-        checkUsageJob = monitorAndLockIfExceedsUsageGoal(event)
+        checkUsageJob = monitorAndLockIfExceedsUsageGoal(packageName)
     }
 
-    private fun monitorAndLockIfExceedsUsageGoal(event: AccessibilityEvent): Job {
+    private fun monitorAndLockIfExceedsUsageGoal(packageName: String): Job {
         return ProcessLifecycleOwner.get().lifecycleScope.launch {
-            val packageName = event.packageName?.toString() ?: return@launch
-
             val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
             val usageStats = getUsageStatFromPackageUseCase(
                 startTime = startTime,
