@@ -1,6 +1,5 @@
 package com.hmh.hamyeonham.data.lock
 
-import android.util.Log
 import com.hmh.hamyeonham.common.time.getNowDateNumeric
 import com.hmh.hamyeonham.core.database.dao.LockDao
 import com.hmh.hamyeonham.core.database.model.LockWithDateEntity
@@ -13,8 +12,6 @@ class DefaultLockRepository @Inject constructor(
     private val lockService: LockService,
     private val lockDao: LockDao,
 ) : LockRepository {
-    @Volatile
-    private var isUnLockFetching = false
     private val date: String get() = getNowDateNumeric()
 
     override suspend fun setIsUnLock(isUnLock: Boolean): Result<Unit> {
@@ -23,36 +20,39 @@ class DefaultLockRepository @Inject constructor(
             isUnLock = isUnLock
         )
         return runCatching {
-            lockService.postLockWithDate(RequestLockDate(date))
-            lockDao.insertLockWithDateEntity(entity)
+            runCatching {
+                lockService.postLockWithDate(RequestLockDate(date))
+            }.onSuccess {
+                lockDao.insertLockWithDateEntity(entity)
+            }.onFailure {
+                throw it
+            }
         }
     }
 
     override suspend fun getIsUnLock(): Boolean {
-        return getDailyChallengeIsUnlock(date)
+        return lockDao.getLockWithDate(date)?.isUnLock ?: false
     }
 
-    private suspend fun getDailyChallengeIsUnlock(date: String): Boolean {
-        if (isUnLockFetching) return false
-        isUnLockFetching = true
-        val isUnLock = lockDao.getLockWithDate(date)?.isUnLock
+    override suspend fun updateIsUnLock(): Result<Unit> {
         return runCatching {
-            isUnLock ?: run {
-                runCatching {
-                    (lockService.getIsLockedWithDate(date).data.isLockToday ?: false)
-                }.onSuccess { isUnLock ->
-                    val lockWithDateEntity = LockWithDateEntity(
+            runCatching {
+                lockService.getIsLockedWithDate(date)
+            }.onSuccess {
+                lockDao.insertLockWithDateEntity(
+                    LockWithDateEntity(
                         date = date,
-                        isUnLock = isUnLock
+                        isUnLock = it.data.isLockToday ?: false
                     )
-                    lockDao.insertLockWithDateEntity(lockWithDateEntity)
-                    lockDao.deleteLockWithoutDate(date)
-                }.onFailure {
-                    Log.e("LockRepository", "getDailyChallengeIsUnlock: $it")
-                }.getOrDefault(false).also {
-                    isUnLockFetching = false
-                }
+                )
+            }.onFailure {
+                lockDao.insertLockWithDateEntity(
+                    LockWithDateEntity(
+                        date = date,
+                        isUnLock = false
+                    )
+                )
             }
-        }.getOrDefault(false)
+        }
     }
 }
