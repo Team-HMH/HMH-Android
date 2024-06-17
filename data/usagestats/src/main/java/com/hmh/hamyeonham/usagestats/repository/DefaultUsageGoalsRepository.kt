@@ -21,11 +21,13 @@ class DefaultUsageGoalsRepository @Inject constructor(
     override suspend fun updateUsageGoal(): Result<Unit> {
         return runCatching {
             usageGoalsRemoteDataSource.getUsageGoals().onSuccess { usageGoals ->
-                val totalTime = usageGoals.firstOrNull()?.goalTime ?: 0
-                usageGoalsDao.insertUsageGoalList(
-                    usageGoals.subList(1, usageGoals.size).toUsageGoalEntityList()
-                )
-                usageTotalGoalDao.insertUsageTotalGoal(UsageTotalGoalEntity(totalGoalTime = totalTime))
+                usageGoalsDao.insertUsageGoalList(usageGoals.toUsageGoalEntityList())
+            }.onFailure {
+                throw it
+            }
+
+            usageGoalsRemoteDataSource.getTotalUsageGoal().onSuccess { totalUsageGoal ->
+                usageTotalGoalDao.insertUsageTotalGoal(UsageTotalGoalEntity(totalGoalTime = totalUsageGoal.goalTime))
             }.onFailure {
                 throw it
             }
