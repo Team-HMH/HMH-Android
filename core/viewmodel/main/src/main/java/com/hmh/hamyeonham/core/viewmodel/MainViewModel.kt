@@ -10,6 +10,7 @@ import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.domain.point.repository.PointRepository
 import com.hmh.hamyeonham.lock.SetIsUnLockUseCase
+import com.hmh.hamyeonham.lock.UpdateIsUnLockUseCase
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatsListUseCase
 import com.hmh.hamyeonham.userinfo.model.UserInfo
@@ -34,7 +35,8 @@ class MainViewModel @Inject constructor(
     private val userInfoRepository: UserInfoRepository,
     private val pointRepository: PointRepository,
     private val getUsageStatsListUseCase: GetUsageStatsListUseCase,
-    private val setIsUnLockUseCase: SetIsUnLockUseCase
+    private val setIsUnLockUseCase: SetIsUnLockUseCase,
+    private val updateIsUnLockUseCase: UpdateIsUnLockUseCase,
 ) : ViewModel() {
 
     private val _mainState = MutableStateFlow(MainState())
@@ -49,6 +51,11 @@ class MainViewModel @Inject constructor(
 
     init {
         uploadSavedChallenge()
+
+        viewModelScope.launch {
+            updateIsUnLockUseCase()
+        }
+
         viewModelScope.launch {
             updateGoals()
             getChallengeStatus()
