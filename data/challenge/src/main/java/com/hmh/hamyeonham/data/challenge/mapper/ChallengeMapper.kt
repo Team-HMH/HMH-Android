@@ -24,9 +24,9 @@ internal fun ChallengeResponse.toChallengeStatus(): ChallengeStatus {
 
 internal fun UsageGoalResponse.toChallengeResult(): Boolean {
     return when (status) {
-        ChallengeStatus.Status.NONE.value -> true
+        ChallengeStatus.Status.FAILURE.value -> false
         //FAIL일 경우
-        else -> false
+        else -> true
     }
 }
 
