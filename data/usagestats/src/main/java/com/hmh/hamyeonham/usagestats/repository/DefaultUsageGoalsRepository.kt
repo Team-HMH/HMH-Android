@@ -22,7 +22,9 @@ class DefaultUsageGoalsRepository @Inject constructor(
         return runCatching {
             usageGoalsRemoteDataSource.getUsageGoals().onSuccess { usageGoals ->
                 val totalTime = usageGoals.firstOrNull()?.goalTime ?: 0
-                usageGoalsDao.insertUsageGoalList(usageGoals.toUsageGoalEntityList())
+                usageGoalsDao.insertUsageGoalList(
+                    usageGoals.subList(1, usageGoals.size).toUsageGoalEntityList()
+                )
                 usageTotalGoalDao.insertUsageTotalGoal(UsageTotalGoalEntity(totalGoalTime = totalTime))
             }.onFailure {
                 throw it
