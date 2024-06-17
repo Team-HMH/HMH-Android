@@ -73,26 +73,26 @@ class MainViewModel @Inject constructor(
 
     fun updateDailyChallengeFailed() {
         viewModelScope.launch {
-            setIsUnLockUseCase(true).onSuccess {
-                pointRepository.usePoint().onSuccess {
+            pointRepository.usePoint().onSuccess {
+                setIsUnLockUseCase(true).onSuccess {
                     getChallengeStatus()
                     sendEffect(MainEffect.SuccessUsePoint)
                 }.onFailure {
-                    if (it is HttpException) {
-                        when (it.code()) {
-                            LACK_POINT_ERROR_CODE -> {
-                                sendEffect(MainEffect.LackOfPoint)
-                            }
-
-                            else -> sendEffect(MainEffect.NetworkError)
-                        }
-                    } else {
-                        sendEffect(MainEffect.NetworkError)
-                    }
+                    Log.e("setIsUnLock error", it.toString())
+                    sendEffect(MainEffect.NetworkError)
                 }
             }.onFailure {
-                Log.e("setIsUnLock error", it.toString())
-                sendEffect(MainEffect.NetworkError)
+                if (it is HttpException) {
+                    when (it.code()) {
+                        LACK_POINT_ERROR_CODE -> {
+                            sendEffect(MainEffect.LackOfPoint)
+                        }
+
+                        else -> sendEffect(MainEffect.NetworkError)
+                    }
+                } else {
+                    sendEffect(MainEffect.NetworkError)
+                }
             }
         }
     }
