@@ -9,7 +9,6 @@ import kotlinx.datetime.LocalDate
 
 data class MainState(
     val appGoals: List<ChallengeStatus.AppGoal> = emptyList(),
-    val challengeStatusList: List<ChallengeStatus.Status> = emptyList(),
     val totalGoalTimeInHour: Int = 0,
     val period: Int = 0,
     val todayIndex: Int = 0,
@@ -19,7 +18,7 @@ data class MainState(
     val point: Int = 0,
     val challengeSuccess: Boolean = true,
 ) {
-    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), todayIndex - 1)
+    val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), todayIndex)
     val isChallengeExist: Boolean = todayIndex != -1
     val todayIndexAsDate: Int = todayIndex + 1
 }

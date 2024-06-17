@@ -18,11 +18,17 @@ class DefaultUsageGoalsRepository @Inject constructor(
     private val usageTotalGoalDao: UsageTotalGoalDao,
 ) : UsageGoalsRepository {
 
-    override suspend fun updateUsageGoal() {
-        usageGoalsRemoteDataSource.getUsageGoals().onSuccess { usageGoals ->
-            val totalTime = usageGoals.firstOrNull()?.goalTime ?: 0
-            usageGoalsDao.insertUsageGoalList(usageGoals.toUsageGoalEntityList())
-            usageTotalGoalDao.insertUsageTotalGoal(UsageTotalGoalEntity(totalGoalTime = totalTime))
+    override suspend fun updateUsageGoal(): Result<Unit> {
+        return runCatching {
+            usageGoalsRemoteDataSource.getUsageGoals().onSuccess { usageGoals ->
+                val totalTime = usageGoals.firstOrNull()?.goalTime ?: 0
+                usageGoalsDao.insertUsageGoalList(
+                    usageGoals.subList(1, usageGoals.size).toUsageGoalEntityList()
+                )
+                usageTotalGoalDao.insertUsageTotalGoal(UsageTotalGoalEntity(totalGoalTime = totalTime))
+            }.onFailure {
+                throw it
+            }
         }
     }
 

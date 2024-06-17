@@ -10,10 +10,13 @@ import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.lock.GetIsUnLockUseCase
+import com.hmh.hamyeonham.usagestats.usecase.GetTotalUsageGoalUseCase
+import com.hmh.hamyeonham.usagestats.usecase.GetTotalUsageStatsUseCase
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageGoalsUseCase
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatFromPackageUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
@@ -34,51 +37,72 @@ class LockAccessibilityService : AccessibilityService() {
     @Inject
     lateinit var navigationProvider: NavigationProvider
 
+    @Inject
+    lateinit var getTotalUsageStatsUseCase: GetTotalUsageStatsUseCase
+
+    @Inject
+    lateinit var getTotalUsageGoalUseCase: GetTotalUsageGoalUseCase
+
     private var checkUsageJob: Job? = null
     private var timerJob: Job? = null
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        if (getUsageIsLockUseCase()) return
-        when (event.eventType) {
-            AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> resetCheckUsageJob(event)
-            else -> Unit
+        ProcessLifecycleOwner.get().lifecycleScope.launch {
+            val myEventType = event.eventType
+            val myPackageName = event.packageName?.toString() ?: return@launch
+            if (getUsageIsLockUseCase()) return@launch
+            when (myEventType) {
+                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
+                    handleFocusedChangedEvent(myPackageName)
+                }
+
+                else -> Unit
+            }
+            this.cancel()
         }
     }
 
-    private fun resetCheckUsageJob(event: AccessibilityEvent) {
+    private fun handleFocusedChangedEvent(packageName: String) {
         releaseCheckUsageJob()
-        checkUsageJob = monitorAndLockIfExceedsUsageGoal(event)
+        releaseTimerJob()
+        checkUsageJob = monitorAndLockIfExceedsUsageGoal(packageName)
     }
 
-    private fun monitorAndLockIfExceedsUsageGoal(event: AccessibilityEvent): Job {
+    private fun monitorAndLockIfExceedsUsageGoal(packageName: String): Job {
         return ProcessLifecycleOwner.get().lifecycleScope.launch {
-            val packageName = event.packageName?.toString() ?: return@launch
-
             val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
             val usageStats = getUsageStatFromPackageUseCase(
                 startTime = startTime,
                 endTime = endTime,
                 packageName = packageName
             )
+            val totalUsageStats = getTotalUsageStatsUseCase(
+                startTime = startTime,
+                endTime = endTime,
+            )
             val usageGoals = getUsageGoalsUseCase().firstOrNull() ?: return@launch
             val myGoal = usageGoals.find { it.packageName == packageName } ?: return@launch
-            Log.d("LockAccessibilityService", "checkUsage: $usageStats")
-            Log.d("LockAccessibilityService", "checkUsage: ${myGoal.goalTime}")
-            checkLockApp(usageStats, myGoal, packageName)
+            val totalGoal = getTotalUsageGoalUseCase()
+            checkLockApp(usageStats, myGoal, packageName, totalUsageStats, totalGoal)
         }
     }
 
     private fun checkLockApp(
         usageStats: Long,
         myGoal: UsageGoal,
-        packageName: String
+        packageName: String,
+        totalUsageStats: Long,
+        totalUsageGoal: UsageGoal
     ) {
-        if (usageStats > myGoal.goalTime) {
+        if (usageStats > myGoal.goalTime || totalUsageStats > totalUsageGoal.goalTime) {
             moveToLock(packageName)
         } else {
             releaseTimerJob()
             timerJob = ProcessLifecycleOwner.get().lifecycleScope.launch {
-                val remainingTime = myGoal.goalTime - usageStats
+                val appRemainingTime = myGoal.goalTime - usageStats
+                val totalRemainingTime = totalUsageGoal.goalTime - totalUsageStats
+                val remainingTime =
+                    if (appRemainingTime < totalRemainingTime) appRemainingTime else totalRemainingTime
                 delay(remainingTime)
                 moveToLock(packageName)
             }
@@ -113,8 +137,3 @@ class LockAccessibilityService : AccessibilityService() {
 
 val lockAccessibilityServiceClassName: String =
     LockAccessibilityService::class.java.canonicalName.orEmpty()
-
-fun main() {
-    val lockAccessibilityServiceClassName = LockAccessibilityService::class.java.canonicalName.orEmpty()
-    println(lockAccessibilityServiceClassName)
-}

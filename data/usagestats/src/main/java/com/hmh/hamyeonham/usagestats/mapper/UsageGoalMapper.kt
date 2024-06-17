@@ -7,9 +7,9 @@ import com.hmh.hamyeonham.core.network.usagegoal.model.UsageGoalResponse
 private const val TOTAL = "total"
 
 internal fun UsageGoalResponse.toUsageGoalList(): List<UsageGoal> {
-    return listOf(UsageGoal(TOTAL, goalTime)) + apps.map {
-        UsageGoal(it.appCode, it.goalTime)
-    }
+    return listOf(UsageGoal(TOTAL, goalTime ?: 0)) + (apps?.map {
+        UsageGoal(it.appCode.orEmpty(), it.goalTime ?: 0)
+    } ?: emptyList())
 }
 
 internal fun UsageGoalsEntity.toUsageGoal() = UsageGoal(packageName, goalTime)

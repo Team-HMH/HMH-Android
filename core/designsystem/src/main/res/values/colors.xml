@@ -14,7 +14,7 @@
 
     <!-- Blue Purple Colors -->
     <color name="blue_purple_button">#3D17D3</color>
-    <color name="blue_purple_button40">#3D17D366</color>
+    <color name="blue_purple_button40">#663D17D3</color>
     <color name="blue_purple_line">#461EE7</color>
     <color name="blue_purple_progress">#4428EC</color>
     <color name="blue_purple_text">#3726F8</color>
