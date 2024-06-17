@@ -16,4 +16,6 @@ dependencies {
     implementation(projects.domain.lock)
 
     implementation(libs.lifecycle.process)
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.work.runtime.ktx)
 }

@@ -210,7 +210,7 @@ class ChallengeFragment : Fragment() {
         challengeAdapter?.updateList(challengeStatusList)
     }
 
-    private fun bindChallengeDate(todayIndex: Int, startDate: LocalDate) {
+    private fun bindChallengeDate(todayIndexAsDate: Int, startDate: LocalDate) {
         binding.run {
             tvChallengeStartDate.text = getString(
                 com.hmh.hamyeonham.feature.challenge.R.string.challenge_start_date,
@@ -218,7 +218,7 @@ class ChallengeFragment : Fragment() {
                 startDate.dayOfMonth
             )
             tvChallengeDay.text =
-                getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_day, todayIndex)
+                getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_day, todayIndexAsDate)
         }
     }
 
@@ -324,7 +324,7 @@ class ChallengeFragment : Fragment() {
             dismissButtonText = getString(R.string.all_cancel),
         ).apply {
             setConfirmButtonClickListener {
-                viewModel.deleteApp(it.packageName)
+                viewModel.deleteApp(it)
             }
             setDismissButtonClickListener {}
         }.showAllowingStateLoss(childFragmentManager)
