@@ -7,5 +7,5 @@ import androidx.room.PrimaryKey
 data class LockWithDateEntity(
     @PrimaryKey
     val date: String,
-    val isUnLock: Boolean? = null
+    val isUnLock: Boolean
 )
