@@ -2,12 +2,13 @@ package com.hmh.hamyeonham.core.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.hmh.hamyeonham.core.database.model.LockWithDateEntity
 
 @Dao
 interface LockDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertLockWithDateEntity(lockWithDateEntity: LockWithDateEntity): Long
 
     @Query("SELECT * FROM lock_with_date WHERE date = :date")

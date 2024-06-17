@@ -78,9 +78,20 @@ class MainViewModel @Inject constructor(
                     getChallengeStatus()
                     sendEffect(MainEffect.SuccessUsePoint)
                 }.onFailure {
-                    sendEffect(MainEffect.NetworkError)
+                    if (it is HttpException) {
+                        when (it.code()) {
+                            LACK_POINT_ERROR_CODE -> {
+                                sendEffect(MainEffect.LackOfPoint)
+                            }
+
+                            else -> sendEffect(MainEffect.NetworkError)
+                        }
+                    } else {
+                        sendEffect(MainEffect.NetworkError)
+                    }
                 }
             }.onFailure {
+                Log.e("setIsUnLock error", it.toString())
                 sendEffect(MainEffect.NetworkError)
             }
         }
