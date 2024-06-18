@@ -82,6 +82,7 @@ splash-screen = "1.0.1"
 javax-inject = "1"
 hilt-work = "1.2.0"
 work-runtime-ktx = "2.9.0"
+timber = "5.0.1"
 
 
 [libraries]
@@ -194,6 +195,9 @@ coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }
 dot-indicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dot-indicator" }
 
 kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
+
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+
 
 javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javax-inject" }
 
