@@ -74,6 +74,7 @@ class OnBoardingRequestPermissionFragment : Fragment() {
         }
         activityViewModel.sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_next)))
         activityViewModel.sendEvent(OnboardEvent.visibleProgressbar(true))
+        setPermissionToggleState()
     }
 
     private fun clickRequireAccessibilityButton() {
@@ -81,6 +82,7 @@ class OnBoardingRequestPermissionFragment : Fragment() {
             clOnboardingPermission1.setOnClickListener {
                 if (checkAccessibilityServiceEnabled()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_accessibility_settings))
+                    tgOnboardingPermission1.isChecked = true
                 } else {
                     requestAccessibilitySettings()
                 }
@@ -88,6 +90,7 @@ class OnBoardingRequestPermissionFragment : Fragment() {
             clOnboardingPermission2.setOnClickListener {
                 if (hasUsageStatsPermission()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_usage_stats_permission))
+                    tgOnboardingPermission2.isChecked = true
                 } else {
                     requestUsageAccessPermission()
                 }
@@ -95,10 +98,22 @@ class OnBoardingRequestPermissionFragment : Fragment() {
             clOnboardingPermission3.setOnClickListener {
                 if (hasOverlayPermission()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_overlay_permission))
+                    tgOnboardingPermission3.isChecked = true
                 } else {
                     requestOverlayPermission()
                 }
             }
+        }
+    }
+
+    private fun setPermissionToggleState() {
+        binding.run {
+            tgOnboardingPermission1.isClickable = false
+            tgOnboardingPermission2.isClickable = false
+            tgOnboardingPermission3.isClickable = false
+            tgOnboardingPermission1.isChecked = checkAccessibilityServiceEnabled()
+            tgOnboardingPermission2.isChecked = hasUsageStatsPermission()
+            tgOnboardingPermission3.isChecked = hasOverlayPermission()
         }
     }
 
