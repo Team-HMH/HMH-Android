@@ -43,10 +43,13 @@ class UsageStaticsTotalViewHolder(
 
     private fun bindBlackHoleInfo(usageStaticsModel: UsageStaticsModel) {
         val blackHoleInfo =
-            if (usageStaticsModel.challengeSuccess) BlackHoleInfo.createByPercentage(
-                usageStaticsModel.usageStatusAndGoal.usedPercentage
-            )
-                ?: BlackHoleInfo.LEVEL0 else BlackHoleInfo.LEVEL5
+            if (usageStaticsModel.challengeSuccess) {
+                BlackHoleInfo.createByPercentage(
+                    usageStaticsModel.usageStatusAndGoal.usedPercentage
+                ) ?: BlackHoleInfo.LEVEL0
+            } else {
+                BlackHoleInfo.LEVEL5
+            }
         setBlackHoleAnimation(blackHoleInfo)
         bindBlackHoleDiscription(blackHoleInfo)
     }
