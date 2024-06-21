@@ -61,26 +61,26 @@ class PermissionActivity : AppCompatActivity() {
 
     private fun initViews() {
         binding.run {
-            clOnboardingPermission1.setOnClickListener {
+            clAccessibilityPermission.setOnClickListener {
                 if (checkAccessibilityServiceEnabled()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_accessibility_settings))
-                    tgPermission1.isChecked = true
+                    tgAccessibilityPermission.isChecked = true
                 } else {
                     requestAccessibilitySettings()
                 }
             }
-            clOnboardingPermission2.setOnClickListener {
+            clUsageinfoPermission.setOnClickListener {
                 if (hasUsageStatsPermission()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_usage_stats_permission))
-                    tgPermission2.isChecked = true
+                    tgUsageinfoPermission.isChecked = true
                 } else {
                     requestUsageAccessPermission()
                 }
             }
-            clOnboardingPermission3.setOnClickListener {
+            clDrawoverPermission.setOnClickListener {
                 if (hasOverlayPermission()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_overlay_permission))
-                    tgPermission3.isChecked = true
+                    tgDrawoverPermission.isChecked = true
                 } else {
                     requestOverlayPermission()
                 }
@@ -90,12 +90,12 @@ class PermissionActivity : AppCompatActivity() {
 
     private fun setPermissionToggleState() {
         binding.run {
-            tgPermission1.isClickable = false
-            tgPermission2.isClickable = false
-            tgPermission3.isClickable = false
-            tgPermission1.isChecked = checkAccessibilityServiceEnabled()
-            tgPermission2.isChecked = hasUsageStatsPermission()
-            tgPermission3.isChecked = hasOverlayPermission()
+            tgAccessibilityPermission.isClickable = false
+            tgUsageinfoPermission.isClickable = false
+            tgDrawoverPermission.isClickable = false
+            tgAccessibilityPermission.isChecked = checkAccessibilityServiceEnabled()
+            tgUsageinfoPermission.isChecked = hasUsageStatsPermission()
+            tgDrawoverPermission.isChecked = hasOverlayPermission()
         }
     }
 
