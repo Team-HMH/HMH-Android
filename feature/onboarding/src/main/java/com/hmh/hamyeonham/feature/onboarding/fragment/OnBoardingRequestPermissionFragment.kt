@@ -74,31 +74,46 @@ class OnBoardingRequestPermissionFragment : Fragment() {
         }
         activityViewModel.sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_next)))
         activityViewModel.sendEvent(OnboardEvent.visibleProgressbar(true))
+        setPermissionToggleState()
     }
 
     private fun clickRequireAccessibilityButton() {
         binding.run {
-            clOnboardingPermission1.setOnClickListener {
+            clOnboardingAccessibilityPermission.setOnClickListener {
                 if (checkAccessibilityServiceEnabled()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_accessibility_settings))
+                    tgOnboardingAccessibilityPermission.isChecked = true
                 } else {
                     requestAccessibilitySettings()
                 }
             }
-            clOnboardingPermission2.setOnClickListener {
+            clOnboardingUsageinfoPermission.setOnClickListener {
                 if (hasUsageStatsPermission()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_usage_stats_permission))
+                    tgOnboardingUsageinfoPermission.isChecked = true
                 } else {
                     requestUsageAccessPermission()
                 }
             }
-            clOnboardingPermission3.setOnClickListener {
+            clOnboardingDrawoverPermission.setOnClickListener {
                 if (hasOverlayPermission()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_overlay_permission))
+                    tgOnboardingDrawoverPermission.isChecked = true
                 } else {
                     requestOverlayPermission()
                 }
             }
+        }
+    }
+
+    private fun setPermissionToggleState() {
+        binding.run {
+            tgOnboardingAccessibilityPermission.isClickable = false
+            tgOnboardingUsageinfoPermission.isClickable = false
+            tgOnboardingDrawoverPermission.isClickable = false
+            tgOnboardingAccessibilityPermission.isChecked = checkAccessibilityServiceEnabled()
+            tgOnboardingUsageinfoPermission.isChecked = hasUsageStatsPermission()
+            tgOnboardingDrawoverPermission.isChecked = hasOverlayPermission()
         }
     }
 

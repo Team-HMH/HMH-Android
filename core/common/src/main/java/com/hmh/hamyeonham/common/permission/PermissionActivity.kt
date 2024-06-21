@@ -56,31 +56,46 @@ class PermissionActivity : AppCompatActivity() {
         if (allPermissionIsGranted()) {
             finish()
         }
+        setPermissionToggleState()
     }
 
     private fun initViews() {
         binding.run {
-            clOnboardingPermission1.setOnClickListener {
+            clAccessibilityPermission.setOnClickListener {
                 if (checkAccessibilityServiceEnabled()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_accessibility_settings))
+                    tgAccessibilityPermission.isChecked = true
                 } else {
                     requestAccessibilitySettings()
                 }
             }
-            clOnboardingPermission2.setOnClickListener {
+            clUsageinfoPermission.setOnClickListener {
                 if (hasUsageStatsPermission()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_usage_stats_permission))
+                    tgUsageinfoPermission.isChecked = true
                 } else {
                     requestUsageAccessPermission()
                 }
             }
-            clOnboardingPermission3.setOnClickListener {
+            clDrawoverPermission.setOnClickListener {
                 if (hasOverlayPermission()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_overlay_permission))
+                    tgDrawoverPermission.isChecked = true
                 } else {
                     requestOverlayPermission()
                 }
             }
+        }
+    }
+
+    private fun setPermissionToggleState() {
+        binding.run {
+            tgAccessibilityPermission.isClickable = false
+            tgUsageinfoPermission.isClickable = false
+            tgDrawoverPermission.isClickable = false
+            tgAccessibilityPermission.isChecked = checkAccessibilityServiceEnabled()
+            tgUsageinfoPermission.isChecked = hasUsageStatsPermission()
+            tgDrawoverPermission.isChecked = hasOverlayPermission()
         }
     }
 
