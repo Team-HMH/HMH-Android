@@ -30,7 +30,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_request_permission_title" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_onboarding_permission1"
+        android:id="@+id/cl_accessibility_permission"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
@@ -41,7 +41,7 @@
         app:layout_constraintVertical_bias="0.5">
 
         <TextView
-            android:id="@+id/tv_onboarding_permission1_title"
+            android:id="@+id/tv_accessibility_permission_title"
             style="?textAppearanceTitleSmall"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -52,7 +52,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_onboarding_permission1_description"
+            android:id="@+id/tv_accessibility_permission_description"
             style="@style/TextAppearance.Hmh.BodyMedium"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -61,10 +61,10 @@
             android:text="@string/onboarding_permission1_description"
             android:textColor="?gray3"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_permission1_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_accessibility_permission_title" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/tg_permission1"
+            android:id="@+id/tg_accessibility_permission"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="28dp"
@@ -79,27 +79,27 @@
 
 
     <View
-        android:id="@+id/view_onboarding_permission1"
+        android:id="@+id/view_permission1"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_centerInParent="true"
         android:background="?gray7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_onboarding_permission1" />
+        app:layout_constraintTop_toBottomOf="@+id/cl_accessibility_permission" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_onboarding_permission2"
+        android:id="@+id/cl_usageinfo_permission"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:paddingVertical="19dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_onboarding_permission1"
+        app:layout_constraintTop_toBottomOf="@+id/view_permission1"
         app:layout_constraintVertical_bias="0.5">
 
         <TextView
-            android:id="@+id/tv_onboarding_permission2_title"
+            android:id="@+id/tv_usageinfo_permission_title"
             style="?textAppearanceTitleSmall"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -110,7 +110,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_onboarding_permission2_description"
+            android:id="@+id/tv_usageinfo_permission_description"
             style="@style/TextAppearance.Hmh.BodyMedium"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -119,10 +119,10 @@
             android:text="@string/onboarding_permission2_description"
             android:textColor="?gray3"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_permission2_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_usageinfo_permission_title" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/tg_permission2"
+            android:id="@+id/tg_usageinfo_permission"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="28dp"
@@ -143,10 +143,10 @@
         android:background="?gray7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_onboarding_permission2" />
+        app:layout_constraintTop_toBottomOf="@+id/cl_usageinfo_permission" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_onboarding_permission3"
+        android:id="@+id/cl_drawover_permission"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:paddingVertical="19dp"
@@ -156,7 +156,7 @@
         app:layout_constraintVertical_bias="0.5">
 
         <TextView
-            android:id="@+id/tv_onboarding_permission3_title"
+            android:id="@+id/tv_drawover_permission_title"
             style="?textAppearanceTitleSmall"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -168,7 +168,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_onboarding_permission3_description"
+            android:id="@+id/tv_drawover_permission_description"
             style="@style/TextAppearance.Hmh.BodyMedium"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -177,10 +177,10 @@
             android:text="@string/onboarding_permission3_description"
             android:textColor="?gray3"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_permission3_title" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_drawover_permission_title" />
 
         <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/tg_permission3"
+            android:id="@+id/tg_drawover_permission"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginEnd="28dp"
@@ -201,7 +201,7 @@
         android:background="?gray7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_onboarding_permission3" />
+        app:layout_constraintTop_toBottomOf="@+id/cl_drawover_permission" />
 
 
     <TextView
