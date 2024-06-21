@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.OnBoardingSpecifyPermissionFragment">
+
+
+    <TextView
+        android:id="@+id/tv_onboarding_specify_permission_title"
+        android:layout_width="match_parent"
+        android:textStyle="bold"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="21dp"
+        android:textSize="21sp"
+        android:layout_marginTop="60dp"
+        android:text="@string/onboarding_specify_permission_title"
+        android:textColor="?white_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_onboarding_specify_permission_description"
+        android:textAppearance="@style/TextAppearance.Hmh.BodyMedium"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/onboarding_specify_permission_description"
+        android:textColor="?gray2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_specify_permission_title" />
+
+    <TextView
+        android:id="@+id/tv_onboarding_specify_permission_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="?gray2"
+        android:textAppearance="@style/TextAppearance.Hmh.BodyMedium"
+        app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_specify_permission_description"
+        android:layout_marginTop="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="20dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@color/gray7"
+        android:text="@string/onboarding_specify_permission_list"
+        />
+    <TextView
+        android:id="@+id/tv_api_description_contents"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/specify_how_to_before_description"
+        android:gravity="center"
+        android:textColor="?gray3"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textAppearance="@style/TextAppearance.Hmh.LabelLarge"
+        android:layout_marginBottom="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginHorizontal="21dp"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
