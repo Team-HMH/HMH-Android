@@ -56,6 +56,7 @@ class PermissionActivity : AppCompatActivity() {
         if (allPermissionIsGranted()) {
             finish()
         }
+        setPermissionToggleState()
     }
 
     private fun initViews() {
@@ -63,6 +64,7 @@ class PermissionActivity : AppCompatActivity() {
             clOnboardingPermission1.setOnClickListener {
                 if (checkAccessibilityServiceEnabled()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_accessibility_settings))
+                    tgPermission1.isChecked = true
                 } else {
                     requestAccessibilitySettings()
                 }
@@ -70,6 +72,7 @@ class PermissionActivity : AppCompatActivity() {
             clOnboardingPermission2.setOnClickListener {
                 if (hasUsageStatsPermission()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_usage_stats_permission))
+                    tgPermission2.isChecked = true
                 } else {
                     requestUsageAccessPermission()
                 }
@@ -77,10 +80,22 @@ class PermissionActivity : AppCompatActivity() {
             clOnboardingPermission3.setOnClickListener {
                 if (hasOverlayPermission()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_overlay_permission))
+                    tgPermission3.isChecked = true
                 } else {
                     requestOverlayPermission()
                 }
             }
+        }
+    }
+
+    private fun setPermissionToggleState() {
+        binding.run {
+            tgPermission1.isClickable = false
+            tgPermission2.isClickable = false
+            tgPermission3.isClickable = false
+            tgPermission1.isChecked = checkAccessibilityServiceEnabled()
+            tgPermission2.isChecked = hasUsageStatsPermission()
+            tgPermission3.isChecked = hasOverlayPermission()
         }
     }
 

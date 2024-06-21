@@ -63,17 +63,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_permission1_title" />
 
-        <ImageView
-            android:id="@+id/iv_onboarding_permission1"
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/tg_permission1"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginVertical="10dp"
             android:layout_marginEnd="28dp"
-            android:contentDescription="@string/onboarding_permission1_content_description"
-            android:src="@drawable/all_next_icon_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:thumbTint="@color/white_text"
+            app:trackTint="@drawable/toggle_selector"
+            app:trackDecorationTint="@drawable/toggle_selector" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -121,17 +121,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_permission2_title" />
 
-        <ImageView
-            android:id="@+id/iv_onboarding_permission2"
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/tg_permission2"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginVertical="10dp"
             android:layout_marginEnd="28dp"
-            android:contentDescription="@string/onboarding_permission2_content_description"
-            android:src="@drawable/all_next_icon_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:thumbTint="@color/white_text"
+            app:trackTint="@drawable/toggle_selector"
+            app:trackDecorationTint="@drawable/toggle_selector" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -179,17 +179,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_permission3_title" />
 
-        <ImageView
-            android:id="@+id/iv_onboarding_permission3"
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/tg_permission3"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginVertical="10dp"
             android:layout_marginEnd="28dp"
-            android:contentDescription="@string/onboarding_permission3_content_description"
-            android:src="@drawable/all_next_icon_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:thumbTint="@color/white_text"
+            app:trackTint="@drawable/toggle_selector"
+            app:trackDecorationTint="@drawable/toggle_selector" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
