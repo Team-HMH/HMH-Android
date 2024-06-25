@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.OnBoardingSelectAppFragment">
+
+    <TextView
+        android:id="@+id/tv_onboarding_select_app_title"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="21dp"
+        android:layout_marginTop="60dp"
+        android:text="@string/onboarding_select_app_title"
+        android:textColor="?white_text"
+        android:textStyle="bold"
+        android:textSize="21sp"
+        android:lineSpacingExtra="6sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_onboarding_select_app_description"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginTop="7dp"
+        style="?textAppearanceBodyMedium"
+        android:textColor="?gray2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_select_app_title"
+        android:text="@string/onboarding_select_app_description" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

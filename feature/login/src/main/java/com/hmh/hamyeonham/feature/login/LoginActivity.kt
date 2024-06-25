@@ -1,99 +1,118 @@
 package com.hmh.hamyeonham.feature.login
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
-import com.hmh.hamyeonham.feature.login.data.DummyImage
+import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.login.databinding.ActivityLoginBinding
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.model.ClientError
-import com.kakao.sdk.common.model.ClientErrorCause
-import com.kakao.sdk.user.UserApiClient
+import com.hmh.hamyeonham.feature.onboarding.OnBoardingActivity
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityLoginBinding
-
-    private val loginViewModel: LoginViewModel by viewModels()
+    private val binding by viewBinding(ActivityLoginBinding::inflate)
+    private val viewModel by viewModels<LoginViewModel>()
     private lateinit var loginViewPagerAdapter: LoginViewPagerAdapter
 
     @Inject
     lateinit var navigationProvider: NavigationProvider
 
-    // 삭제 예정
-    private val dummyImageList = listOf(
-        DummyImage(
-            Image = R.drawable.login_sample_rectagle_viewpager,
-        ),
-        DummyImage(
-            Image = R.drawable.login_sample_rectagle_viewpager,
-        ),
-        DummyImage(
-            Image = R.drawable.login_sample_rectagle_viewpager,
-        ),
-    )
-
-    private val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-        when {
-            error != null -> {
-            }
-
-            token != null -> {
-                moveToUserInfoActivity()
-            }
-        }
-    }
+    private lateinit var autoScrollJob: Job
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        binding = ActivityLoginBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        binding.btnLogin.setOnClickListener {
-            loginWithKakaoApp()
+        binding.ivKakaoLogin.setOnClickListener {
+            viewModel.loginWithKakaoApp(this)
         }
         setLoginViewPager()
+        handleKakaoLoginSuccess()
+        handleAutoLoginSuccess()
+    }
+
+    private fun handleAutoLoginSuccess() {
+        viewModel.loginState.flowWithLifecycle(lifecycle).onEach { state ->
+            if (state.autoLogin) {
+                navigateToMainActivity()
+            }
+        }.launchIn(lifecycleScope)
+    }
+
+    private fun handleKakaoLoginSuccess() {
+        viewModel.kakaoLoginEvent.flowWithLifecycle(lifecycle).onEach { state ->
+            when (state) {
+                is LoginEffect.LoginSuccess -> navigateToMainActivity()
+                is LoginEffect.LoginFail -> toast(getString(R.string.fail_kakao_login))
+                is LoginEffect.RequireSignUp -> navigateToOnBoardingActivity(state.token)
+            }
+        }.launchIn(lifecycleScope)
     }
 
     private fun setLoginViewPager() {
-        loginViewPagerAdapter = LoginViewPagerAdapter(dummyImageList)
-        binding.run {
-            vpLogin.adapter = loginViewPagerAdapter
-            indicatorLoginDots.attachTo(binding.vpLogin)
-        }
+        val loginViewImageList = listOf(
+            R.drawable.login_viewpager1,
+            R.drawable.login_viewpager2,
+            R.drawable.login_viewpager3,
+        )
+
+        loginViewPagerAdapter = LoginViewPagerAdapter(loginViewImageList)
+        binding.vpLogin.adapter = loginViewPagerAdapter
+        binding.indicatorLoginDots.attachTo(binding.vpLogin)
+        startAutoScroll()
     }
 
-    private fun loginWithKakaoApp() {
-        if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-            UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
-                if (error != null) {
-                    toast("카카오 로그인 실패")
-                    if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                        toast("다시 로그인 해주세요.")
-                        return@loginWithKakaoTalk
-                    }
-                    loginWithKakaoAccount()
-                } else if (token != null) {
-                    toast("카카오 로그인 성공")
-                    moveToUserInfoActivity()
-                }
+    private fun startAutoScroll() {
+        autoScrollJob = lifecycleScope.launch(Dispatchers.Main) {
+            while (true) {
+                delay(AUTO_SCROLL_DELAY)
+                binding.vpLogin.setCurrentItem(
+                    (binding.vpLogin.currentItem + 1) % loginViewPagerAdapter.itemCount,
+                    false,
+                )
             }
-        } else {
-            loginWithKakaoAccount()
         }
     }
 
-    private fun loginWithKakaoAccount() {
-        UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
+    private fun stopAutoScroll() {
+        autoScrollJob.cancel()
     }
 
-    private fun moveToUserInfoActivity() {
-        startActivity(navigationProvider.toStatics())
+    private fun navigateToOnBoardingActivity(accessToken: String? = null) {
+        if (accessToken == null) {
+            toast(getString(R.string.empty_token_retry_login))
+        }
+
+        val intent = navigationProvider.toOnBoarding()
+        accessToken?.let {
+            intent.putExtra(OnBoardingActivity.EXTRA_ACCESS_TOKEN, it)
+        }
+        startActivity(intent)
         finish()
+    }
+
+    private fun navigateToMainActivity() {
+        startActivity(navigationProvider.toMain())
+        finish()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopAutoScroll()
+    }
+
+    companion object {
+        private const val AUTO_SCROLL_DELAY = 2000L
     }
 }

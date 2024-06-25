@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.Checkbox" parent="Theme.MaterialComponents.Light.NoActionBar">
+        ...
+        <item name="colorOnSurface">?white_text</item>
+        <item name="colorSecondary">?blue_purple_text</item>
+    </style>
+</resources>

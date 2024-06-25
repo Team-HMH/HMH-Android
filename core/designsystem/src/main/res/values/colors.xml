@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Basic Colors -->
+    <color name="blackground">#17171B</color>
+    <color name="gray8">#1B1B23</color>
+    <color name="gray7">#202028</color>
+    <color name="gray6">#272934</color>
+    <color name="gray5">#363948</color>
+    <color name="gray4">#3D3F4D</color>
+    <color name="gray3">#50505E</color>
+    <color name="gray2">#8D8D9F</color>
+    <color name="gray1">#A5A5BB</color>
+    <color name="white_text">#DBDAE7</color>
+
+    <!-- Blue Purple Colors -->
+    <color name="blue_purple_button">#3D17D3</color>
+    <color name="blue_purple_button40">#663D17D3</color>
+    <color name="blue_purple_line">#461EE7</color>
+    <color name="blue_purple_progress">#4428EC</color>
+    <color name="blue_purple_text">#3726F8</color>
+
+    <!-- Blue Purple Opacities -->
+    <color name="blue_purple_opacity_70">#B33D17D3</color> <!-- 70% opacity -->
+    <color name="blue_purple_opacity_22">#382B1DD6</color> <!-- 22% opacity -->
+
+    <!-- Other Colors -->
+    <color name="white_btn">#EBECF4</color>
+</resources>

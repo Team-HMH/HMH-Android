@@ -1,23 +1,34 @@
 package com.hmh.hamyeonham.usagestats.repository
 
-import com.hmh.hamyeonham.usagestats.datasource.UsageStatsDataSource
-import com.hmh.hamyeonham.usagestats.model.UsageStat
+import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
+import com.hmh.hamyeonham.common.time.getTargetDayStartEndEpochMillis
+import com.hmh.hamyeonham.usagestats.datasource.local.UsageStatusLocalDataSource
+import com.hmh.hamyeonham.usagestats.model.UsageStatus
+import kotlinx.datetime.toLocalDate
 import javax.inject.Inject
 
 class DefaultUsageStatsRepository @Inject constructor(
-    private val usageStatsDataSource: UsageStatsDataSource,
+    private val usageStatusLocalDataSource: UsageStatusLocalDataSource,
 ) : UsageStatsRepository {
-    override fun getUsageStats(
-        startTime: Long,
-        endTime: Long,
-    ): List<UsageStat> {
-        val usageStatsList = usageStatsDataSource.getUsageStats(startTime, endTime)
+    override suspend fun getUsageStats(targetDate: String): List<UsageStatus> {
+        val (startTime, endTime) = getTargetDayStartEndEpochMillis(targetDate.toLocalDate())
+        val usageStatsList = usageStatusLocalDataSource.getUsageStats(startTime, endTime)
         return usageStatsList.map { usageStatModel ->
-            UsageStat(usageStatModel.packageName, usageStatModel.totalTimeInForeground)
+            UsageStatus(usageStatModel.packageName, usageStatModel.totalTimeInForeground)
         }
     }
 
-    override fun getUsageTimeForPackage(
+    override suspend fun getUsageStats(
+        startTime: Long,
+        endTime: Long,
+    ): List<UsageStatus> {
+        val usageStatsList = usageStatusLocalDataSource.getUsageStats(startTime, endTime)
+        return usageStatsList.map { usageStatModel ->
+            UsageStatus(usageStatModel.packageName, usageStatModel.totalTimeInForeground)
+        }
+    }
+
+    override suspend fun getUsageTimeForPackage(
         startTime: Long,
         endTime: Long,
         packageName: String,
@@ -27,27 +38,40 @@ class DefaultUsageStatsRepository @Inject constructor(
             ?: 0
     }
 
-    override fun getUsageTimeForPackages(
+    override suspend fun getUsageStatForPackages(
         startTime: Long,
         endTime: Long,
         vararg packageNames: String,
-    ): List<UsageStat> {
-        val usageStatsList = getUsageStats(startTime, endTime)
-        return usageStatsList.filter {
-            packageNames.contains(it.packageName)
+    ): List<UsageStatus> {
+        val usageStatList = getUsageStats(startTime, endTime)
+        return packageNames.map { packageName ->
+            UsageStatus(
+                packageName,
+                usageStatList.find {
+                    packageName == it.packageName
+                }?.totalTimeInForeground ?: 0,
+            )
         }
     }
 
-    override fun getUsageTimeForPackages(
+    override suspend fun getUsageStatForPackages(
         startTime: Long,
         endTime: Long,
         packageNames: List<String>,
-    ): List<UsageStat> {
-        val usageStatsList = getUsageStats(startTime, endTime)
-        val newUsageStatsList =
-            usageStatsList.filter {
-                packageNames.contains(it.packageName)
-            }
-        return newUsageStatsList
+    ): List<UsageStatus> {
+        val usageStatList = getUsageStats(startTime, endTime)
+        return packageNames.map { packageName ->
+            UsageStatus(
+                packageName,
+                usageStatList.find {
+                    packageName == it.packageName
+                }?.totalTimeInForeground ?: 0,
+            )
+        }
+    }
+
+    override suspend fun getUsageStatForPackageOfToday(packageName: String): Long {
+        val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
+        return getUsageTimeForPackage(startTime, endTime, packageName)
     }
 }

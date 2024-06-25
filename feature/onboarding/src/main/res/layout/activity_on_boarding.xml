@@ -6,43 +6,51 @@
     android:layout_height="match_parent"
     tools:context=".OnBoardingActivity">
 
-    <Button
-        android:id="@+id/btn_accessibility"
+    <ImageView
+        android:id="@+id/iv_onboarding_back"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="접근성 허용하러 가기"
-        app:layout_constraintBottom_toTopOf="@+id/btn_usage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:paddingVertical="5dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="9dp"
+        android:src="@drawable/all_back_btn_medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_usage"
-        android:layout_width="wrap_content"
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/pb_onboarding"
+        style="@style/Widget.Hmh.OnBoardingProgressIndicator"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="사용 정보접근 허용하러 가기"
-        app:layout_constraintBottom_toTopOf="@+id/btn_draw_on_others"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="3dp"
+        android:progress="14"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_onboarding_back" />
 
-    <Button
-        android:id="@+id/btn_draw_on_others"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="다른 앱 위에 그리기허용하러 가기"
-        app:layout_constraintBottom_toTopOf="@id/btn_login"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp_onboarding_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_onboarding_next"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_onboarding_back" />
 
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:text="로그인하러 가기"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_onboarding_next"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="21dp"
+        android:background="@drawable/onboarding_selector_btn_next"
+        android:gravity="center"
+        android:text="@string/all_next"
+        android:textColor="?white_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,29 @@
+<resources>
+    <string name="mypage_title">마이페이지</string>
+    <string name="mypage_point_title">내 포인트</string>
+    <string name="mypage_point">%dP</string>
+    <string name="mypage_badge_collection">배지 컬렉션</string>
+    <string name="mypage_journey">지금까지의 여정</string>
+    <string name="mypage_store">우주 상점</string>
+    <string name="mypage_info">정보</string>
+    <string name="mypage_termofuse">이용약관</string>
+    <string name="mypage_privacy">개인정보처리방침</string>
+    <string name="logout_description">하면함을 로그아웃 하시겠어요?</string>
+    <string name="privacy_url">"https://www.notion.so/hmhteam/4219063a635e4eec8d8b9719c6c2a6fa"</string>
+    <string name="term_of_use_url">"https://www.notion.so/hmhteam/33acb29be57245f394eb93ddb2e3b8cc"</string>
+    <string name="mypage_logout">로그아웃</string>
+    <string name="mypage_withdraw">회원탈퇴</string>
+    <string name="withdrawal_title">정말 하면함을 탈퇴하시겠어요?</string>
+    <string name="withdrawal_description">회원탈퇴 후 유저 정보는 30일 동안\n임시보관되며, 이후 영구 삭제됩니다</string>
+    <string name="logout_fail">로그아웃 실패</string>
+    <string name="withdrawal_fail">회원 탈퇴 실패</string>
+    <string name="mypage_withdrawal">탈퇴</string>
+    <string name="name_default">여행자</string>
+
+    <string name="mypage_profile_img">프로필 이미지</string>
+    <string name="mypage_journey_button_img">지금까지의 여정 버튼 이미지</string>
+    <string name="mypage_store_button_img">우주상점 버튼 이미지</string>
+    <string name="mypage_termofuse_button_img">이용약관 버튼 이미지</string>
+    <string name="mypage_privacy_button_img">개인정보처리방침 버튼 이미지</string>
+
+</resources>

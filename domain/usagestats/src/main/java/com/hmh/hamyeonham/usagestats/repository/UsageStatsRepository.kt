@@ -1,19 +1,35 @@
 package com.hmh.hamyeonham.usagestats.repository
 
-import com.hmh.hamyeonham.usagestats.model.UsageStat
+import com.hmh.hamyeonham.usagestats.model.UsageStatus
 
 interface UsageStatsRepository {
-    fun getUsageStats(startTime: Long, endTime: Long): List<UsageStat>
-    fun getUsageTimeForPackage(startTime: Long, endTime: Long, packageName: String): Long
-    fun getUsageTimeForPackages(
+
+    suspend fun getUsageStats(
+        targetDate: String
+    ): List<UsageStatus>
+
+    suspend fun getUsageStats(
+        startTime: Long,
+        endTime: Long,
+    ): List<UsageStatus>
+
+    suspend fun getUsageTimeForPackage(
+        startTime: Long,
+        endTime: Long,
+        packageName: String,
+    ): Long
+
+    suspend fun getUsageStatForPackages(
         startTime: Long,
         endTime: Long,
         vararg packageNames: String,
-    ): List<UsageStat>
+    ): List<UsageStatus>
 
-    fun getUsageTimeForPackages(
+    suspend fun getUsageStatForPackages(
         startTime: Long,
         endTime: Long,
         packageNames: List<String>,
-    ): List<UsageStat>
+    ): List<UsageStatus>
+
+    suspend fun getUsageStatForPackageOfToday(packageName: String): Long
 }

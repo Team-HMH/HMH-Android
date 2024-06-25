@@ -1,6 +1,0 @@
-<resources>
-    <string name = "hmh">hmh</string>
-    <string name = "all_goal_time">목표 이용시간</string>
-    <string name = "all_left">남음</string>
-    <string name = "all_time_left">남은시간</string>
-</resources>

@@ -9,6 +9,9 @@ android {
 
 dependencies {
 
+    // Domain
+    implementation(projects.domain.login)
+
     // Common
     implementation(projects.core.common)
 
@@ -20,4 +23,10 @@ dependencies {
 
     // dot indicator
     implementation(libs.dot.indicator)
+
+    implementation(projects.core.designsystem)
+    implementation(projects.core.network)
+    implementation(projects.core.database)
+
+    implementation(projects.feature.onboarding)
 }

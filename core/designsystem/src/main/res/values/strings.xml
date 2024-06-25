@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="all_hour">시간</string>
+    <string name="all_format_hour">%s시간</string>
+
+    <string name="all_minute">분</string>
+
+    <string name="all_okay">확인</string>
+    <string name="all_cancel">취소</string>
+    <string name="all_delete">삭제</string>
+
+    <string name="all_edit">편집</string>
+    <string name="all_done">완료</string>
+
+    <string name="no">아니요</string>
+
+    <string name="dialog_title_network_error">네트워크 에러가 발생했습니다.</string>
+    <string name="dialog_description_network_error">다시 한번 시도해주세요</string>
+
+    <string name="use_time_goal_title">선택한 앱의 목표 이용 시간을\n설정해 주세요</string>
+    <string name="use_time_goal_description">목표 이용 시간은 최대 1시간 59분까지\n설정할 수 있어요</string>
+    <string name="delete_app_dialog_description">집계되고 있던 앱의 사용 시간은\n총 사용 시간에서도 차감돼요</string>
+    <string name="delete_app_dialog_title">정말 %1$s 을(를) 삭제하시겠어요?</string>
+
+    <string name="onboarding_request_permission_title">스크린타임 권한 허용이 필요해요</string>
+    <string name="onboarding_request_permission_description">언제든지 설정에서 스크린타임 권한을\n변경할 수 있어요</string>
+    <string name="onboarding_permission1_title">접근성 허용</string>
+    <string name="onboarding_permission1_description">현재 실행중인 앱을 제한합니다</string>
+    <string name="onboarding_permission1_content_description">onboarding_permission1_next_button</string>
+    <string name="onboarding_permission2_title">사용 정보 접근 허용</string>
+    <string name="onboarding_permission2_description">현재 실행 중인 앱을 조회합니다</string>
+    <string name="onboarding_permission2_content_description">onboarding_permission2_next_button</string>
+    <string name="onboarding_permission3_title">다른 앱 위에 그리기 허용</string>
+    <string name="onboarding_permission3_description">잠금 기능 사용 시 화면에 잠금 화면을 표시합니다</string>
+    <string name="onboarding_permission3_content_description">onboarding_permission3_content_description</string>
+
+    <string name="success_accessibility_settings">접근성 허용이 승인되었습니다</string>
+    <string name="success_overlay_permission">다른 앱 위에 그리기 허용이 승인되었습니다</string>
+    <string name="success_usage_stats_permission">사용 정보 접근 허용이 승인되었습니다</string>
+    <string name="already_accessibility_settings">이미 권한이 허용되어 있습니다</string>
+    <string name="already_usage_stats_permission">이미 권한이 허용되어 있습니다</string>
+    <string name="already_overlay_permission">이미 권한이 허용되어 있습니다</string>
+
+    <string name="api_description_title">* 접근성 기능(AccessibilityService API) 사용안내</string>
+    <string name="api_description_contents">하면함 앱은 아래와 같은 이유로 접근성을 사용하며 이용자가 희망하는 경우, 해당 기능을 사용하지 않을 수 있으며 다른 기능 동작에 영향을 주지 않습니다.\n\n· 접근성은 잠금 중, 멀티/팝업 윈도우로 앱을 사용할 수 없도록 방지하기 위해 사용됩니다\n· 접근성을 통해 전달되는 데이터는 별도로 수집, 가공, 저장, 전송하지 않습니다</string>
+
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="blackground" format="reference" />
+    <attr name="gray8" format="reference" />
+    <attr name="gray7" format="reference" />
+    <attr name="gray6" format="reference" />
+    <attr name="gray5" format="reference" />
+    <attr name="gray4" format="reference" />
+    <attr name="gray3" format="reference" />
+    <attr name="gray2" format="reference" />
+    <attr name="gray1" format="reference" />
+    <attr name="white_text" format="reference" />
+    <attr name="blue_purple_button" format="reference" />
+    <attr name="blue_purple_button40" format="reference" />
+    <attr name="blue_purple_line" format="reference" />
+    <attr name="blue_purple_progress" format="reference" />
+    <attr name="blue_purple_text" format="reference" />
+    <attr name="blue_purple_opacity_70" format="reference" />
+    <attr name="blue_purple_opacity_22" format="reference" />
+    <attr name="white_btn" format="reference" />
+</resources>

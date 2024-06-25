@@ -4,12 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="com.hmh.hamyeonham.feature.main.MainActivity">
 
     <TextView
-        android:text="home"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/rv_statics"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/my_usage_statics"
+        android:textAppearance="?textAppearanceTitleLarge"
+        android:textColor="?gray1"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_statics"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="66dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
