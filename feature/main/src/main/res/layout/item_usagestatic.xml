@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="20dp">
+
+    <ProgressBar
+        android:id="@+id/pb_app_usage"
+        android:layout_width="0dp"
+        android:layout_height="71dp"
+        android:layout_marginBottom="12dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:progressDrawable="@drawable/pb_usage"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_appicon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="17dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/item_usagestatic_appicon_description"
+        app:layout_constraintBottom_toBottomOf="@id/pb_app_usage"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintStart_toStartOf="@id/pb_app_usage"
+        app:layout_constraintTop_toTopOf="@id/pb_app_usage" />
+
+    <TextView
+        android:id="@+id/tv_appname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="2dp"
+        android:textAppearance="?textAppearanceLabelLarge"
+        android:textColor="?gray1"
+        app:layout_constraintStart_toEndOf="@id/iv_appicon"
+        app:layout_constraintTop_toTopOf="@id/iv_appicon" />
+
+    <TextView
+        android:id="@+id/tv_total_time_in_foreground"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="2시간 30분"
+        android:textAppearance="?textAppearanceBodySmall"
+        android:textColor="?white_text"
+        app:layout_constraintBottom_toBottomOf="@id/iv_appicon"
+        app:layout_constraintStart_toStartOf="@id/tv_appname" />
+
+    <TextView
+        android:id="@+id/tv_app_time_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="1시간 남음"
+        android:textAppearance="?textAppearanceTitleMedium"
+        android:textColor="?white_text"
+        app:layout_constraintBottom_toBottomOf="@id/pb_app_usage"
+        app:layout_constraintEnd_toEndOf="@id/pb_app_usage"
+        app:layout_constraintTop_toTopOf="@id/pb_app_usage" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

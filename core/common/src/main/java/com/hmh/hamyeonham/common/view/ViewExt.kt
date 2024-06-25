@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 inline fun View.setOnSingleClickListener(
     delay: Long = 500L,
-    crossinline block: (View) -> Unit
+    crossinline block: (View) -> Unit,
 ) {
     var previousClickedTime = 0L
     setOnClickListener { view ->
@@ -21,28 +21,30 @@ inline fun View.setOnSingleClickListener(
 
 class ItemDiffCallback<T : Any>(
     val onItemsTheSame: (T, T) -> Boolean,
-    val onContentsTheSame: (T, T) -> Boolean
+    val onContentsTheSame: (T, T) -> Boolean,
 ) : DiffUtil.ItemCallback<T>() {
     override fun areItemsTheSame(
-        oldItem: T, newItem: T
+        oldItem: T,
+        newItem: T,
     ): Boolean = onItemsTheSame(oldItem, newItem)
 
     override fun areContentsTheSame(
-        oldItem: T, newItem: T
+        oldItem: T,
+        newItem: T,
     ): Boolean = onContentsTheSame(oldItem, newItem)
 }
 
 class GridSpacingItemDecoration(
     private val spanCount: Int,
     private val spacing: Int,
-    private val includeEdge: Boolean
+    private val includeEdge: Boolean,
 ) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
         parent: RecyclerView,
-        state: RecyclerView.State
+        state: RecyclerView.State,
     ) {
         val position = parent.getChildAdapterPosition(view) // item position
         val column = position % spanCount // item column
@@ -64,6 +66,23 @@ class GridSpacingItemDecoration(
             if (position >= spanCount) {
                 outRect.top = spacing // item top
             }
+        }
+    }
+}
+
+class VerticalSpaceItemDecoration(private val verticalSpaceHeight: Int) :
+    RecyclerView.ItemDecoration() {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State,
+    ) {
+        val position = parent.getChildAdapterPosition(view)
+
+        // 첫 번째와 마지막 아이템을 제외한 경우에만 마진 적용
+        if (position != 0) {
+            outRect.top = verticalSpaceHeight
         }
     }
 }

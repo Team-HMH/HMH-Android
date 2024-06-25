@@ -2,6 +2,7 @@
 plugins {
     hmh("feature")
     hmh("compose")
+    hmh("test")
 }
 
 android {
@@ -13,5 +14,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.designsystem)
+
     implementation(libs.retrofit)
 }

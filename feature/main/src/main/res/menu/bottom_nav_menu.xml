@@ -1,14 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/challenge_dest"
-        android:icon="@drawable/ic_android_black_24dp"
+        android:icon="@drawable/ic_bottomnav_challenge_28"
         android:title="@string/challenge" />
     <item
         android:id="@+id/home_dest"
-        android:icon="@drawable/ic_android_black_24dp"
+        android:icon="@drawable/ic_bottomnav_home_28"
         android:title="@string/home" />
     <item
         android:id="@+id/my_page_dest"
-        android:icon="@drawable/ic_android_black_24dp"
+        android:icon="@drawable/ic_bottomnav_mypage_22"
         android:title="@string/my_page" />
 </menu>

@@ -1,0 +1,115 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Base.Theme.HMH" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:windowBackground">@color/blackground</item>
+
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/gray7</item>
+        <item name="colorPrimaryVariant">@color/gray8</item>
+        <item name="colorOnPrimary">@color/white_btn</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">@color/blackground</item>
+
+        <item name="colorSecondary">@color/gray3</item>
+        <item name="colorSecondaryVariant">@color/gray4</item>
+        <item name="colorOnSecondary">@color/white_text</item>
+
+        <!-- Customize your theme here. -->
+        <item name="colorOnBackground">@color/white_text</item>
+        <!-- Bottom nav bar active indicator color set -->
+        <item name="colorSecondaryContainer">@color/white_text</item>
+        <item name="colorOnSecondaryContainer">@color/gray2</item>
+        <!-- FAB shape custom -->
+        <item name="floatingActionButtonStyle">
+            @style/Widget.Material3.FloatingActionButton.Surface
+        </item>
+        <!-- Gray Scale Theme -->
+        <item name="colorOnSurface">@color/blue_purple_button</item>
+        <!-- Customize your theme here. -->
+        <item name="blackground">@color/blackground</item>
+        <item name="gray8">@color/gray8</item>
+        <item name="gray7">@color/gray7</item>
+        <item name="gray6">@color/gray6</item>
+        <item name="gray5">@color/gray5</item>
+        <item name="gray4">@color/gray4</item>
+        <item name="gray3">@color/gray3</item>
+        <item name="gray2">@color/gray2</item>
+        <item name="gray1">@color/gray1</item>
+        <item name="white_text">@color/white_text</item>
+
+        <!-- text color -->
+        <item name="android:textColor">@color/white_text</item>
+
+        <!-- button style -->
+        <item name="materialButtonStyle">@style/DefaultButtonStyle</item>
+
+        <!-- Blue Purple Colors -->
+        <item name="blue_purple_button">@color/blue_purple_button</item>
+        <item name="blue_purple_line">@color/blue_purple_line</item>
+        <item name="blue_purple_progress">@color/blue_purple_progress</item>
+        <item name="blue_purple_text">@color/blue_purple_text</item>
+
+        <!-- Blue Purple Opacities -->
+        <item name="blue_purple_opacity_70">@color/blue_purple_opacity_70</item>
+        <item name="blue_purple_opacity_22">@color/blue_purple_opacity_22</item>
+
+        <!-- Other Colors -->
+        <item name="white_btn">@color/white_btn</item>
+
+        <!-- Display -->
+        <item name="textAppearanceDisplayLarge">@style/TextAppearance.Hmh.DisplayLarge</item>
+        <item name="textAppearanceDisplayMedium">@style/TextAppearance.Hmh.DisplayMedium</item>
+        <item name="textAppearanceDisplaySmall">@style/TextAppearance.Hmh.DisplaySmall</item>
+        <!--Head line -->
+        <item name="textAppearanceHeadlineLarge">@style/TextAppearance.Hmh.HeadlineLarge</item>
+        <item name="textAppearanceHeadlineMedium">@style/TextAppearance.Hmh.HeadlineMedium</item>
+        <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Hmh.HeadlineSmall</item>
+        <!-- Title -->
+        <item name="textAppearanceTitleLarge">@style/TextAppearance.Hmh.TitleLarge</item>
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.Hmh.TitleMedium</item>
+        <!-- Body -->
+        <item name="textAppearanceBodyLarge">@style/TextAppearance.Hmh.BodyLarge</item>
+        <item name="textAppearanceBodyMedium">@style/TextAppearance.Hmh.BodyMedium</item>
+        <item name="textAppearanceBodySmall">@style/TextAppearance.Hmh.BodySmall</item>
+        <!-- Label -->
+        <item name="textAppearanceLabelLarge">@style/TextAppearance.Hmh.LabelLarge</item>
+        <item name="textAppearanceLabelMedium">@style/TextAppearance.Hmh.LabelMedium</item>
+    </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#17171B</item>
+        <item name="windowSplashScreenAnimatedIcon">@color/blackground</item>
+        <item name="postSplashScreenTheme">@style/Base.Theme.HMH</item>
+    </style>
+
+    <style name="DefaultButtonStyle" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/blue_purple_button</item>
+    </style>
+
+    <style name="Widget.Hmh.TotalProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="trackColor">?gray5</item>
+        <item name="indicatorColor">?white_btn</item>
+        <item name="trackThickness">6dp</item>
+        <item name="trackCornerRadius">2dp</item>
+        <item name="trackStopIndicatorSize">0dp</item>
+        <item name="indicatorTrackGapSize">0dp</item>
+    </style>
+
+    <style name="Widget.Hmh.OnBoardingProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="trackColor">?gray2</item>
+        <item name="indicatorColor">?blue_purple_progress</item>
+        <item name="trackThickness">4dp</item>
+        <item name="trackCornerRadius">6dp</item>
+        <item name="trackStopIndicatorSize">0dp</item>
+        <item name="indicatorTrackGapSize">0dp</item>
+
+    </style>
+
+    <style name="AppTheme.NumberPicker" parent="Base.Theme.HMH">
+        <item name="colorControlNormal">?gray6</item>
+        <item name="android:background">#00FFFFFF</item>
+        <item name="android:editTextColor">?white_text</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+</resources>

@@ -1,5 +1,11 @@
-# 하면함 Android
+<div align="center">
+  <p align="center">
+      <img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/68a431ad-013d-4712-b9d5-ca483211a8cd"/>
+  </p>
+  <br />
+</div>
 
+# 하면함 Android 
 ## 스마트폰 중독 탈출, 너도 하면함!
 <br/>
 <div align="center">
@@ -12,19 +18,19 @@
   <br />
 </div>
 
+![Alt](https://repobeats.axiom.co/api/embed/d2c401ae723c367a03ed9fb81ea6e6e7cfbee2ea.svg "Repobeats analytics image")
+
+
 <h2>Tech Stack</h2>
 
 - [Android App Architecture](https://developer.android.com/topic/architecture)
 - [Dagger-Hilt](https://developer.android.com/training/dependency-injection/hilt-android)
 - [Kotlin Coroutines](https://kotlinlang.org/docs/coroutines-overview.html), [Flow](https://kotlinlang.org/docs/flow.html)
-- [Jetpack Compose](https://developer.android.com/jetpack/compose)
 - [Material 3](https://m3.material.io/)
 - [Gradle Version Catalog](https://docs.gradle.org/current/userguide/platforms.html)
   and [Custom Convention Plugins](https://docs.gradle.org/current/samples/sample_convention_plugins.html)
 
 <h2>Activity Graph</h2>
-
-![Alt](https://repobeats.axiom.co/api/embed/d2c401ae723c367a03ed9fb81ea6e6e7cfbee2ea.svg "Repobeats analytics image")
 
 ## Contributors ✨
 
@@ -33,12 +39,12 @@
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
-<table>
+<table align="center">
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/KwakEuiJin"><img src="https://avatars.githubusercontent.com/u/93872496?v=4?s=100" width="100px;" alt="Kwak EuiJin"/><br/><sub><b>KwakEuiJin</b></sub></a><br /><a href="https://github.com/Team-HMH/HMH-Android/commits?author=KwakEuiJin" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kangyuri1114"><img src="https://avatars.githubusercontent.com/u/83583757?v=4?s=100" width="100px;" alt="Kang Yuri"/><br/><sub><b>KangYuri</b></sub></a><br /><a href="https://github.com/Team-HMH/HMH-Android/commits?author=kangyuri1114" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/memoryBangwool"><img src="https://avatars.githubusercontent.com/u/84266681?v=4?s=100" width="100px;" alt="Kyoung JiHyun"/><br /><sub><b>JiHyun Kyoung</b></sub></a><br/><a href="https://github.com/Team-HMH/HMH-Android/commits?author=memoryBangwool" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/KwakEuiJin"><img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/887eb00f-69de-4618-9a1c-07b2e1665da4" width="200px;" alt="Kwak EuiJin"/><br/><sub><b>KwakEuiJin</b></sub></a><br /><a href="https://github.com/Team-HMH/HMH-Android/commits?author=KwakEuiJin" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kangyuri1114"><img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/f1d5e563-74c8-4f16-a105-96a639a20f52" width="200px;" alt="Kang Yuri"/><br/><sub><b>KangYuri</b></sub></a><br /><a href="https://github.com/Team-HMH/HMH-Android/assets/84266681/eead72e1-a883-4ed0-a282-12deea8e3782" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jihyun0v0"><img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/3c1e14bd-be7e-435c-9af1-315a73aab13f" width="200px;" alt="Kyoung JiHyun"/><br /><sub><b>JiHyun Kyoung</b></sub></a><br/><a href="https://github.com/Team-HMH/HMH-Android/commits?author=jihyun0v0" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
@@ -55,47 +61,61 @@
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-## Folder Tree 📁
+# 시연영상
+## 온보딩 및 권한 추가
+https://github.com/Team-HMH/HMH-Android/assets/84266681/d5868d2f-9fc3-4bc8-b764-85877ee8c54f
 
-- 📁 app
-  - 📁 build
-  - 📄 build.gradle.kts
-  - 📄 google-services.json
-  - 📁 libs
-  - 📄 proguard-rules.pro
-  - 📁 src
-- 📁 build-logic
-  - 📁 convention
-  - 📁 gradle
-  - 📄 gradle.properties
-  - 📄 settings.gradle.kts
-- 📄 build.gradle.kts
-- 📁 buildSrc
-  - 📁 build
-  - 📄 build.gradle.kts
-  - 📄 gradle.properties
-  - 📄 settings.gradle.kts
-  - 📁 src
-- 📁 core
-  - 📁 common
-  - 📁 database
-- 📁 data
-  - 📁 usagestats
-- 📁 domain
-  - 📁 usagestats
-- 📁 feature
-  - 📁 login
-  - 📁 main
-  - 📁 onboarding
-  - 📁 statistics
-- 📁 gradle
-  - 📄 libs.versions.toml
-  - 📁 wrapper
-- 📄 gradle.properties
-- 📄 gradlew
-- 📄 gradlew.bat
-- 📄 local.properties
-- 📄 settings.gradle.kts 
+## 앱 잠금 화면 및 챌린지 실패
+https://github.com/Team-HMH/HMH-Android/assets/93872496/c5fb98b2-6627-42a3-8e3b-796156e3af35
+
+## 챌린지 실패 및 사용 연장
+https://github.com/Team-HMH/HMH-Android/assets/84266681/cacde6a4-b496-4214-a74d-189a02839cc6
+
+## 앱 추가 및 삭제
+https://github.com/Team-HMH/HMH-Android/assets/84266681/a5d16efd-a870-41ba-8896-af3445e474f3
+
+
+## Folder Tree 📁
+``` kotlin
+📁 app
+│   📁 build
+│   📁 libs
+│   📁 release
+│   📁 src
+📁 build-logic
+│   📁 convention
+│   📁 gradle
+📁 buildSrc
+│   📁 build
+│   📁 src
+📁 core
+│   📁 common
+│   📁 database
+│   📁 designsystem
+│   📁 network
+│   📁 ui
+│   📁 viewmodel
+📁 data
+│   📁 challenge
+│   📁 device
+│   📁 login
+│   📁 onboarding
+│   📁 usagestats
+│   📁 userinfo
+📁 domain
+│   📁 challenge
+│   📁 login
+│   📁 onboarding
+│   📁 usagestats
+│   📁 userinfo
+📁 feature
+│   📁 challenge
+│   📁 lock
+│   📁 login
+│   📁 main
+│   📁 mypage
+│   📁 onboarding
+```
 
 ## Progress Board 📋
 - [Team-HMH-Android](https://github.com/orgs/Team-HMH/projects/1)

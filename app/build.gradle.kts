@@ -57,16 +57,40 @@ android {
 dependencies {
 
     // Feature
-    implementation(projects.feature.statistics)
+    implementation(projects.feature.login)
+    implementation(projects.feature.onboarding)
+    implementation(projects.feature.main)
+    implementation(projects.feature.mypage)
+    implementation(projects.feature.challenge)
+    implementation(projects.feature.lock)
+    implementation(projects.feature.store)
 
     // Domain
     implementation(projects.domain.usagestats)
+    implementation(projects.domain.userinfo)
+    implementation(projects.domain.login)
+    implementation(projects.domain.challenge)
+    implementation(projects.domain.onboarding)
+    implementation(projects.domain.point)
+    implementation(projects.domain.lock)
 
     // Data
     implementation(projects.data.usagestats)
+    implementation(projects.data.userinfo)
+    implementation(projects.data.login)
+    implementation(projects.data.challenge)
+    implementation(projects.data.device)
+    implementation(projects.data.onboarding)
+    implementation(projects.data.point)
+    implementation(projects.data.lock)
 
     // Core
     implementation(projects.core.common)
+    implementation(projects.core.designsystem)
+    implementation(projects.core.database)
+    implementation(projects.core.domain)
+    implementation(projects.core.network)
+    implementation(projects.core.viewmodel.main)
 
     // Firebase
     implementation(platform(libs.firebase))
@@ -74,12 +98,11 @@ dependencies {
 
     // Splash
     implementation(libs.splash.screen)
-
-    // Features
-    implementation(projects.feature.login)
-    implementation(projects.feature.onboarding)
-    implementation(projects.feature.main)
+    implementation(libs.lottie)
 
     // kakao
     implementation(libs.kakao.login)
+
+    // Hilt Worker
+    implementation(libs.androidx.hilt.common)
 }

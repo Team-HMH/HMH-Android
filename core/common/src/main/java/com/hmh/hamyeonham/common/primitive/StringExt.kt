@@ -18,3 +18,12 @@ inline fun SpannableStringBuilder.textAppearance(
     @StyleRes style: Int,
     builderAction: SpannableStringBuilder.() -> Unit
 ) = inSpans(TextAppearanceSpan(context, style), builderAction = builderAction)
+
+fun String.extractDigits(): Int {
+    return try {
+        this.filter { it.isDigit() }.toIntOrNull() ?: 0
+    } catch (e: NumberFormatException) {
+        0
+    }
+}
+

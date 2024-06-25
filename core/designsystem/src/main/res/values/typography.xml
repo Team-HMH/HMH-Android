@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Display Large -->
+    <style name="TextAppearance.Hmh.DisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="android:textSize">31sp</item>
+        <!-- Line spacing auto is default -->
+    </style>
+
+    <!-- Display Medium -->
+    <style name="TextAppearance.Hmh.DisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
+        <item name="fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">23sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <!-- Display Small -->
+    <style name="TextAppearance.Hmh.DisplaySmall" parent="TextAppearance.Material3.DisplaySmall">
+        <item name="fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <!-- Headline Large -->
+    <style name="TextAppearance.Hmh.HeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
+        <item name="fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <!-- Headline Medium -->
+    <style name="TextAppearance.Hmh.HeadlineMedium" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <!-- Headline Small -->
+    <style name="TextAppearance.Hmh.HeadlineSmall" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+    </style>
+
+    <!-- Title Large -->
+    <style name="TextAppearance.Hmh.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <!-- Title Medium -->
+    <style name="TextAppearance.Hmh.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+    <!-- Title Medium -->
+    <style name="TextAppearance.Hmh.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
+        <item name="fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <!-- Body Large -->
+    <style name="TextAppearance.Hmh.BodyLarge" parent="TextAppearance.Material3.BodyLarge">
+        <item name="fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <!-- Body Medium -->
+    <style name="TextAppearance.Hmh.BodyMedium" parent="TextAppearance.Material3.BodyMedium">
+        <item name="fontFamily">@font/pretendard_regular</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <!-- Body Small -->
+    <style name="TextAppearance.Hmh.BodySmall" parent="TextAppearance.Material3.BodySmall">
+        <item name="fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+    </style>
+
+    <!-- Label Large -->
+    <style name="TextAppearance.Hmh.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
+        <item name="fontFamily">@font/pretendard_semibold</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+    </style>
+
+    <!-- Label Medium -->
+    <style name="TextAppearance.Hmh.LabelMedium" parent="TextAppearance.Material3.LabelMedium">
+        <item name="fontFamily">@font/pretendard_medium</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+    </style>
+</resources>

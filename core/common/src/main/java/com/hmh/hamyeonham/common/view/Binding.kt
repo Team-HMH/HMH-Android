@@ -12,14 +12,14 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 inline fun <T : ViewBinding> AppCompatActivity.viewBinding(
-    crossinline inflater: (LayoutInflater) -> T
+    crossinline inflater: (LayoutInflater) -> T,
 ) = lazy(LazyThreadSafetyMode.NONE) {
     inflater.invoke(layoutInflater)
 }
 
 class FragmentViewBindingDelegate<F : Fragment, T : ViewBinding>(
     val fragment: F,
-    val viewBindingFactory: (View) -> T
+    val viewBindingFactory: (View) -> T,
 ) : ReadOnlyProperty<F, T> {
     private var binding: T? = null
 
@@ -33,11 +33,11 @@ class FragmentViewBindingDelegate<F : Fragment, T : ViewBinding>(
                                 override fun onDestroy(owner: LifecycleOwner) {
                                     binding = null
                                 }
-                            }
+                            },
                         )
                     }
                 }
-            }
+            },
         )
     }
 
@@ -58,3 +58,8 @@ class FragmentViewBindingDelegate<F : Fragment, T : ViewBinding>(
 
 fun <T : ViewBinding> Fragment.viewBinding(viewBinder: (View) -> T) =
     FragmentViewBindingDelegate(this, viewBinder)
+
+fun Boolean.mapBooleanToVisibility(): Int = when (this) {
+    true -> View.VISIBLE
+    false -> View.INVISIBLE
+}

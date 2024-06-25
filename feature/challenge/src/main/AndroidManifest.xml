@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name="com.hmh.hamyeonham.challenge.newchallenge.NewChallengeActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.hmh.hamyeonham.challenge.point.PointActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.hmh.hamyeonham.challenge.appadd.AppAddActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysVisible" />
+    </application>
+
+</manifest>

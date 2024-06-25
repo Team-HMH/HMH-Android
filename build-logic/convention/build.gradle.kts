@@ -26,6 +26,10 @@ gradlePlugin {
             id = "com.hmh.hamyeonham.feature"
             implementationClass = "com.hmh.hamyeonham.plugin.AndroidFeaturePlugin"
         }
+        create("android-data") {
+            id = "com.hmh.hamyeonham.data"
+            implementationClass = "com.hmh.hamyeonham.plugin.AndroidDataPlugin"
+        }
         create("android-kotlin") {
             id = "com.hmh.hamyeonham.kotlin"
             implementationClass = "com.hmh.hamyeonham.plugin.AndroidKotlinPlugin"
