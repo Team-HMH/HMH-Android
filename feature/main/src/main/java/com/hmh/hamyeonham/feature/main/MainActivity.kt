@@ -8,7 +8,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.hmh.hamyeonham.challenge.worker.ChallengeDateSaveWorker
 import com.hmh.hamyeonham.common.activity.allPermissionIsGranted
 import com.hmh.hamyeonham.common.activity.isBatteryOptimizationEnabled
 import com.hmh.hamyeonham.common.activity.requestDisableBatteryOptimization
@@ -36,7 +35,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         initNavHostFragment()
         checkPowerManagerPermission()
-        scheduleDateSaveWorker()
         collectEffect()
     }
 
@@ -93,10 +91,6 @@ class MainActivity : AppCompatActivity() {
                 intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
             }
         }.showAllowingStateLoss(supportFragmentManager, "unlock_package")
-    }
-
-    private fun scheduleDateSaveWorker() {
-        ChallengeDateSaveWorker.scheduleChallengeDateSaveWorker(this)
     }
 
     private fun showChallengeFailedDialog() {
