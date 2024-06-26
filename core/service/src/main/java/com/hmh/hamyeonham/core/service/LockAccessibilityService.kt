@@ -2,12 +2,13 @@ package com.hmh.hamyeonham.core.service
 
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
-import android.util.Log
+import android.content.IntentFilter
 import android.view.accessibility.AccessibilityEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
+import com.hmh.hamyeonham.core.date.DateChangedReceiver
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.lock.GetIsUnLockUseCase
 import com.hmh.hamyeonham.usagestats.usecase.GetTotalUsageGoalUseCase
@@ -43,8 +44,18 @@ class LockAccessibilityService : AccessibilityService() {
     @Inject
     lateinit var getTotalUsageGoalUseCase: GetTotalUsageGoalUseCase
 
+    @Inject
+    lateinit var dateChangedReceiver: DateChangedReceiver
+
     private var checkUsageJob: Job? = null
     private var timerJob: Job? = null
+
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+
+        val filter = IntentFilter(Intent.ACTION_DATE_CHANGED)
+        registerReceiver(dateChangedReceiver, filter)
+    }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         ProcessLifecycleOwner.get().lifecycleScope.launch {
@@ -132,6 +143,7 @@ class LockAccessibilityService : AccessibilityService() {
         super.onDestroy()
         releaseCheckUsageJob()
         releaseTimerJob()
+        unregisterReceiver(dateChangedReceiver)
     }
 }
 

@@ -18,13 +18,11 @@ interface ChallengeDao {
     }
 
     // DailyChallenge 와 연관된 Usages 조회
-    @Transaction
     @Query("SELECT * FROM daily_challenges")
-    suspend fun getChallengeWithUsages(): List<ChallengeWithUsageEntity>
+    suspend fun getDailyChallenge(): List<DailyChallengeEntity>
 
-    @Transaction
     @Query("SELECT * FROM daily_challenges WHERE challengeDate = :date")
-    suspend fun getChallengeWithUsages(date: String): ChallengeWithUsageEntity?
+    suspend fun getDailyChallenge(date: String): DailyChallengeEntity?
 
     // 특정 DailyChallenge와 연관된 모든 데이터 삭제
     @Transaction

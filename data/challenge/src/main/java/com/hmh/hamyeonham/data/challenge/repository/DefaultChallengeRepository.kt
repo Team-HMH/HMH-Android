@@ -13,7 +13,6 @@ import com.hmh.hamyeonham.data.challenge.datasource.ChallengeLocalDatasource
 import com.hmh.hamyeonham.data.challenge.mapper.toAppsRequest
 import com.hmh.hamyeonham.data.challenge.mapper.toChallengeResult
 import com.hmh.hamyeonham.data.challenge.mapper.toChallengeStatus
-import com.hmh.hamyeonham.data.challenge.mapper.toChallengeWithUsage
 import com.hmh.hamyeonham.data.challenge.mapper.toChallengeWithUsageEntity
 import com.hmh.hamyeonham.data.challenge.mapper.toNewChallengeRequest
 import com.hmh.hamyeonham.data.challenge.mapper.toRequestChallengeWithUsage
@@ -43,7 +42,7 @@ class DefaultChallengeRepository @Inject constructor(
         return runCatching {
             val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
             challengeLocalDatasource.getChallengeWithUsage().map { entity ->
-                val challengeDate = entity.challenge.challengeDate
+                val challengeDate = entity.challengeDate
                 val appUsageList = getUsageStatsListUseCase(
                     startTime = startTime,
                     endTime = endTime,
@@ -64,13 +63,6 @@ class DefaultChallengeRepository @Inject constructor(
     override suspend fun deleteAllChallengeWithUsage(): Result<Unit> {
         return runCatching {
             challengeLocalDatasource.deleteAll()
-        }
-    }
-
-    override suspend fun getChallengeWithUsage(challengeDate: String): Result<ChallengeWithUsage> {
-        return runCatching {
-            challengeLocalDatasource.getChallengeWithUsage(challengeDate)
-                .toChallengeWithUsage(date = challengeDate)
         }
     }
 
