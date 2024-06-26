@@ -80,6 +80,9 @@ class ChallengeFragment : Fragment() {
     private fun collectMainStateAndProcess() {
         activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
             bindChallengeInfo(it)
+        }.launchIn(viewLifeCycleScope)
+
+        activityViewModel.usageStatusAndGoals.flowWithLifecycle(viewLifeCycle).onEach {
             updateUsageStatusAndGoals(it)
         }.launchIn(viewLifeCycleScope)
 
@@ -93,8 +96,8 @@ class ChallengeFragment : Fragment() {
         bindChallengeDate(it.todayIndexAsDate, it.startDate)
     }
 
-    private fun updateUsageStatusAndGoals(it: MainState) {
-        if (it.usageStatusAndGoals.isNotEmpty()) viewModel.updateUsageStatusAndGoals(
+    private fun updateUsageStatusAndGoals(usageStatusAndGoals: List<UsageStatusAndGoal>) {
+        if (usageStatusAndGoals.isNotEmpty()) viewModel.updateUsageStatusAndGoals(
             activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal()
         )
     }
@@ -218,7 +221,10 @@ class ChallengeFragment : Fragment() {
                 startDate.dayOfMonth
             )
             tvChallengeDay.text =
-                getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_day, todayIndexAsDate)
+                getString(
+                    com.hmh.hamyeonham.feature.challenge.R.string.challenge_day,
+                    todayIndexAsDate
+                )
         }
     }
 

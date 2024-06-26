@@ -42,6 +42,10 @@ class MainViewModel @Inject constructor(
     private val _mainState = MutableStateFlow(MainState())
     val mainState = _mainState.asStateFlow()
 
+    private val _usageStatusAndGoals = MutableStateFlow<List<UsageStatusAndGoal>>(emptyList())
+    val usageStatusAndGoals = _usageStatusAndGoals.asStateFlow()
+
+
     private var rawChallengeStatusList: List<ChallengeStatus.Status> = emptyList()
     private val _challengeStatusList = MutableStateFlow<List<ChallengeStatus.Status>>(emptyList())
     val challengeStatusList = _challengeStatusList.asStateFlow()
@@ -192,7 +196,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun getUsageStatusAndGoalsExceptTotal(): List<UsageStatusAndGoal> {
-        return mainState.value.usageStatusAndGoals.filter { it.packageName != UsageGoal.TOTAL }
+        return usageStatusAndGoals.value.filter { it.packageName != UsageGoal.TOTAL }
     }
 
     private fun setChallengeStatus(challengeStatus: ChallengeStatus) {
@@ -218,9 +222,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun setUsageStatsList(usageStatsList: List<UsageStatusAndGoal>) {
-        updateState {
-            copy(usageStatusAndGoals = usageStatsList)
-        }
+        _usageStatusAndGoals.value = usageStatsList
     }
 
     fun updateChallengeListWithToggleState(calendarToggleState: CalendarToggleState) {
