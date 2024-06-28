@@ -49,7 +49,7 @@ class DefaultChallengeRepository @Inject constructor(
                 )
                 ChallengeWithUsage(
                     challengeDate = challengeDate,
-                    apps = appUsageList.map {
+                    apps = appUsageList.filter { it.packageName != "total" }.map {
                         ChallengeWithUsage.Usage(
                             packageName = it.packageName,
                             usageTime = it.totalTimeInForeground

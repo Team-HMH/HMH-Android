@@ -3,13 +3,12 @@ package com.hmh.hamyeonham.core.worker
 import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
-import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.hmh.hamyeonham.challenge.model.ChallengeWithUsage
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
-import com.hmh.hamyeonham.common.time.getCurrentDateOfDefaultTimeZone
+import com.hmh.hamyeonham.common.time.getYesterdayDateNumeric
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -27,18 +26,13 @@ class ChallengeDateSaveWorker @AssistedInject constructor(
             val workRequest = OneTimeWorkRequestBuilder<ChallengeDateSaveWorker>().build()
 
             // WorkManager를 사용하여 작업 예약
-            WorkManager.getInstance(context).enqueueUniqueWork(
-                TAG,
-                ExistingWorkPolicy.REPLACE,
-                workRequest
-            )
+            WorkManager.getInstance(context).enqueue(workRequest)
         }
     }
 
     override suspend fun doWork(): Result {
-        val currentDate = getCurrentDateOfDefaultTimeZone()
         val challengeWithUsage = ChallengeWithUsage(
-            challengeDate = currentDate.toString(),
+            challengeDate = getYesterdayDateNumeric(),
             apps = emptyList(),
         )
         return runCatching {
