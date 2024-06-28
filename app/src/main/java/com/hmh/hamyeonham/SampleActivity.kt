@@ -29,9 +29,9 @@ class SampleActivity : AppCompatActivity() {
     private fun initLottieSplash() {
         binding.splashLottieAppLogo.playAnimation()
 
-        coroutineScope.launch{
+        coroutineScope.launch {
             delay(4000)
-            navigateToLogin ()
+            navigateToLogin()
         }
     }
 

@@ -120,13 +120,9 @@ class MainViewModel @Inject constructor(
 
     private fun uploadSavedChallenge() {
         viewModelScope.launch {
-            val challengeWithUsages =
-                challengeRepository.getChallengeWithUsage().getOrNull() ?: return@launch
+            val challengeWithUsages = challengeRepository.getChallengeWithUsage().getOrNull() ?: return@launch
             challengeRepository.uploadSavedChallenge(challengeWithUsages).onSuccess {
                 challengeRepository.deleteAllChallengeWithUsage()
-            }.onFailure {
-                sendEffect(MainEffect.NetworkError)
-                Log.e("uploadSavedChallenge error", it.toString())
             }
         }
     }
