@@ -3,6 +3,7 @@ package com.hmh.hamyeonham.core.service
 import android.accessibilityservice.AccessibilityService
 import android.content.Intent
 import android.content.IntentFilter
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -59,15 +60,11 @@ class LockAccessibilityService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent) {
         ProcessLifecycleOwner.get().lifecycleScope.launch {
-            val myEventType = event.eventType
-            val myPackageName = event.packageName?.toString() ?: return@launch
+            val eventType = event.eventType
+            val packageName = event.packageName?.toString() ?: return@launch
             if (getUsageIsLockUseCase()) return@launch
-            when (myEventType) {
-                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
-                    handleFocusedChangedEvent(myPackageName)
-                }
-
-                else -> Unit
+            if (eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+                handleFocusedChangedEvent(packageName)
             }
             this.cancel()
         }
@@ -76,10 +73,10 @@ class LockAccessibilityService : AccessibilityService() {
     private fun handleFocusedChangedEvent(packageName: String) {
         releaseCheckUsageJob()
         releaseTimerJob()
-        checkUsageJob = monitorAndLockIfExceedsUsageGoal(packageName)
+        checkUsageJob = monitorAndLockAppUsage(packageName)
     }
 
-    private fun monitorAndLockIfExceedsUsageGoal(packageName: String): Job {
+    private fun monitorAndLockAppUsage(packageName: String): Job {
         return ProcessLifecycleOwner.get().lifecycleScope.launch {
             val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
             val usageStats = getUsageStatFromPackageUseCase(
@@ -91,32 +88,52 @@ class LockAccessibilityService : AccessibilityService() {
                 startTime = startTime,
                 endTime = endTime,
             )
+            Log.d("Usage", "packageName: $packageName, usage: $usageStats")
             val usageGoals = getUsageGoalsUseCase().firstOrNull() ?: return@launch
-            val myGoal = usageGoals.find { it.packageName == packageName } ?: return@launch
-            val totalGoal = getTotalUsageGoalUseCase()
-            checkLockApp(usageStats, myGoal, packageName, totalUsageStats, totalGoal)
+            val totalUsageGoal = getTotalUsageGoalUseCase()
+            val usageGoal = usageGoals.find {
+                it.packageName == packageName
+            } ?: return@launch
+            checkLockApp(
+                usageStats = usageStats,
+                usageGoal = usageGoal,
+                packageName = packageName,
+                totalUsageStats = totalUsageStats,
+                totalUsageGoal = totalUsageGoal
+            )
         }
     }
 
     private fun checkLockApp(
         usageStats: Long,
-        myGoal: UsageGoal,
+        usageGoal: UsageGoal,
         packageName: String,
         totalUsageStats: Long,
         totalUsageGoal: UsageGoal
     ) {
-        if (usageStats > myGoal.goalTime || totalUsageStats > totalUsageGoal.goalTime) {
+        if (usageStats >= usageGoal.goalTime || totalUsageStats >= totalUsageGoal.goalTime) {
             moveToLock(packageName)
         } else {
             releaseTimerJob()
-            timerJob = ProcessLifecycleOwner.get().lifecycleScope.launch {
-                val appRemainingTime = myGoal.goalTime - usageStats
-                val totalRemainingTime = totalUsageGoal.goalTime - totalUsageStats
-                val remainingTime =
-                    if (appRemainingTime < totalRemainingTime) appRemainingTime else totalRemainingTime
-                delay(remainingTime)
-                moveToLock(packageName)
-            }
+            val appRemainingTime = usageGoal.goalTime - usageStats
+            val totalRemainingTime = totalUsageGoal.goalTime - totalUsageStats
+            startTimer(
+                appRemainingTime = appRemainingTime,
+                totalRemainingTime = totalRemainingTime,
+                packageName = packageName
+            )
+        }
+    }
+
+    private fun startTimer(
+        appRemainingTime: Long,
+        totalRemainingTime: Long,
+        packageName: String
+    ) {
+        val remainingTime = minOf(appRemainingTime, totalRemainingTime)
+        timerJob = ProcessLifecycleOwner.get().lifecycleScope.launch {
+            delay(remainingTime)
+            moveToLock(packageName)
         }
     }
 
