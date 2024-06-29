@@ -5,13 +5,16 @@ import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.AppInfo
 import com.hmh.hamyeonham.challenge.usecase.GetInstalledAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 sealed interface AppAddEffect {}
@@ -24,6 +27,12 @@ class AppAddViewModel @Inject constructor(
 ) : ViewModel() {
     private val _state = MutableStateFlow(AppAddState())
     val state = _state.asStateFlow()
+
+    private val _installedApps = MutableStateFlow<List<AppInfo>>(emptyList())
+    val installedApps = _installedApps.asStateFlow()
+
+    private val _isNextButtonActive = MutableStateFlow(false)
+    val isNextButtonActive = _isNextButtonActive.asStateFlow()
 
     private val _effect = MutableSharedFlow<AppAddEffect>(1)
     val effect = _effect.asSharedFlow()
@@ -38,18 +47,6 @@ class AppAddViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         getInstalledAppUseCase.clearCache()
-    }
-
-    private fun updateInstalledApps(installApps: List<AppInfo>) {
-        updateState {
-            copy(installedApps = installApps)
-        }
-    }
-
-    private fun updateState(transform: AppAddState.() -> AppAddState) {
-        val currentState = state.value
-        val newState = currentState.transform()
-        _state.value = newState
     }
 
     fun appCheckChanged(packageName: String, isCheck: Boolean) {
@@ -92,14 +89,13 @@ class AppAddViewModel @Inject constructor(
             getInstalledApps()
             return
         }
-        updateState {
-            copy(installedApps = state.value.installedApps.filter { it.appName.contains(query) })
-        }
+        val searchedApps = installedApps.value.filter { it.appName.contains(query) }
+        updateInstalledApps(searchedApps)
     }
 
     private fun getInstalledApps() {
         viewModelScope.launch {
-            val installApps = getInstalledAppUseCase()
+            val installApps = withContext(Dispatchers.IO) { getInstalledAppUseCase() }
             updateInstalledApps(installApps)
         }
     }
@@ -119,16 +115,26 @@ class AppAddViewModel @Inject constructor(
     }
 
     fun handleNextButtonStateWithGoalTime() {
-        val buttonState = !(state.value.goalTime == 0L)
-        updateState {
-            copy(isNextButtonActive = buttonState)
-        }
+        val buttonState = state.value.goalTime != 0L
+        updateNextButtonActive(buttonState)
     }
 
-    fun handleNextButtonStateWithAppSelection() {
-        val buttonState = !(state.value.selectedApps.isEmpty())
-        updateState {
-            copy(isNextButtonActive = buttonState)
-        }
+    private fun handleNextButtonStateWithAppSelection() {
+        val buttonState = state.value.selectedApps.isNotEmpty()
+        updateNextButtonActive(buttonState)
+    }
+
+    private fun updateInstalledApps(installApps: List<AppInfo>) {
+        _installedApps.update { installApps }
+    }
+
+    private fun updateState(transform: AppAddState.() -> AppAddState) {
+        val currentState = state.value
+        val newState = currentState.transform()
+        _state.value = newState
+    }
+
+    private fun updateNextButtonActive(buttonState: Boolean) {
+        _isNextButtonActive.update { buttonState }
     }
 }
