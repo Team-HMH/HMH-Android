@@ -1,16 +1,17 @@
 package com.hmh.hamyeonham.feature.onboarding.fragment
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
+import com.hmh.hamyeonham.common.fragment.viewLifeCycle
+import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.R
 import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingAppSelectionAdapter
@@ -19,6 +20,8 @@ import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingAppSelectionVie
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class OnBoardingAppAddSelectionFragment : Fragment() {
@@ -38,6 +41,7 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initViews()
         initSearchBar()
+        collectState()
     }
 
     private fun initViews() {
@@ -52,13 +56,14 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
             )
             layoutManager = LinearLayoutManager(requireContext())
         }
-        setViewPager()
     }
 
-    private fun setViewPager() {
-        val onboardingAppSelectionAdapter =
-            binding.rvAppSelection.adapter as? OnBoardingAppSelectionAdapter
-        onboardingAppSelectionAdapter?.submitList(viewModel.getInstalledApps())
+    private fun collectState() {
+        viewModel.installedApps.flowWithLifecycle(viewLifeCycle).onEach {
+            val onboardingAppSelectionAdapter =
+                binding.rvAppSelection.adapter as? OnBoardingAppSelectionAdapter
+            onboardingAppSelectionAdapter?.submitList(it)
+        }.launchIn(viewLifeCycleScope)
     }
 
     private fun onAppCheckboxClicked(packageName: String) {
@@ -70,25 +75,9 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
     }
 
     private fun initSearchBar() {
-        binding.etSearchbar.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                setRecyclerViewWithFilter(s.toString())
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-    }
-
-    private fun setRecyclerViewWithFilter(filter: String) {
-        val onboardingAppSelectionAdapter =
-            binding.rvAppSelection.adapter as? OnBoardingAppSelectionAdapter
-        val newAppList =
-            viewModel.getInstalledApps().filter {
-                (context?.getAppNameFromPackageName(it.packageName) ?: "").contains(filter)
-            }
-        onboardingAppSelectionAdapter?.submitList(newAppList)
+        binding.etSearchbar.doOnTextChanged { text, _, _, _ ->
+            viewModel.onQueryChanged(text.toString())
+        }
     }
 
     override fun onResume() {
