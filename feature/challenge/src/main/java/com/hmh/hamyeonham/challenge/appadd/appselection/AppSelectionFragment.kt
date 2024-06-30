@@ -17,6 +17,7 @@ import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.FrargmentAppSelectionBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -55,6 +56,8 @@ class AppSelectionFragment : Fragment() {
         viewModel.installedApps.flowWithLifecycle(viewLifeCycle).onEach { installedApps ->
             val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter
             appSelectionAdapter?.submitList(getInstalledAppList(requireContext()))
+            delay(300)
+            binding.rvAppSelection.scrollToPosition(0)
         }.launchIn(viewLifeCycleScope)
     }
 
