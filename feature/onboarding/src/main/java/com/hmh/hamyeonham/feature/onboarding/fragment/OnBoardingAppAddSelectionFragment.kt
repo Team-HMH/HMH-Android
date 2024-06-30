@@ -20,7 +20,6 @@ import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingAppSelectionVie
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -69,8 +68,8 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
         activityViewModel.onBoardingState
             .flowWithLifecycle(viewLifeCycle)
             .onEach {
-            activityViewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(it.appCodeList.isNotEmpty()))
-        }.launchIn(viewLifeCycleScope)
+                activityViewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(it.appCodeList.isNotEmpty()))
+            }.launchIn(viewLifeCycleScope)
     }
 
     private fun onAppCheckboxClicked(packageName: String) {
