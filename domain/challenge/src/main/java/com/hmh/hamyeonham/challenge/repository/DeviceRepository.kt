@@ -1,7 +1,10 @@
 package com.hmh.hamyeonham.challenge.repository
 
 import com.hmh.hamyeonham.challenge.model.AppInfo
+import kotlinx.coroutines.flow.StateFlow
 
 interface DeviceRepository {
-    suspend fun getInstalledApps(): List<AppInfo>
+    val installedApps: StateFlow<List<AppInfo>>
+    suspend fun fetchInstalledApps(): List<AppInfo>
+    suspend fun searchApp(query: String)
 }
