@@ -20,6 +20,7 @@ import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingAppSelectionVie
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -63,6 +64,12 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
             val onboardingAppSelectionAdapter =
                 binding.rvAppSelection.adapter as? OnBoardingAppSelectionAdapter
             onboardingAppSelectionAdapter?.submitList(it)
+        }.launchIn(viewLifeCycleScope)
+
+        activityViewModel.onBoardingState
+            .flowWithLifecycle(viewLifeCycle)
+            .onEach {
+            activityViewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(it.appCodeList.isNotEmpty()))
         }.launchIn(viewLifeCycleScope)
     }
 

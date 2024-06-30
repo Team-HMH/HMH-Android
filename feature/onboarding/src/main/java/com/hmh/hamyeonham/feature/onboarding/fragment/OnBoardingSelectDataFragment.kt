@@ -59,9 +59,7 @@ class OnBoardingSelectDataFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        activityViewModel.updateState {
-            copy(isNextButtonActive = selectedButtons.isNotEmpty())
-        }
+        activityViewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(selectedButtons.isNotEmpty()))
         activityViewModel.sendEvent(OnboardEvent.ChangeActivityButtonText(getString(R.string.all_next)))
         activityViewModel.sendEvent(OnboardEvent.VisibleProgressbar(true))
     }
@@ -125,9 +123,7 @@ class OnBoardingSelectDataFragment : Fragment() {
             selectedButtons.clear()
             if (selectedButton.isSelected) selectedButtons.add(selectedButton)
         }
-        activityViewModel.updateState {
-            copy(isNextButtonActive = selectedButtons.isNotEmpty())
-        }
+        activityViewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(selectedButtons.isNotEmpty()))
     }
 
     private fun updateUserResponse() {

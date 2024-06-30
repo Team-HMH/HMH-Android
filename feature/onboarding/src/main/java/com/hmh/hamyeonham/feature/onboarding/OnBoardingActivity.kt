@@ -15,6 +15,7 @@ import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentStateAdap
 import com.hmh.hamyeonham.feature.onboarding.databinding.ActivityOnBoardingBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEffect
+import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -43,9 +44,7 @@ class OnBoardingActivity : AppCompatActivity() {
 
     private fun updateAccessToken() {
         val accessToken = intent.getStringExtra(EXTRA_ACCESS_TOKEN)
-        viewModel.updateState {
-            copy(accessToken = accessToken.orEmpty())
-        }
+        viewModel.sendEvent(OnboardEvent.UpdateAccessToken(accessToken.orEmpty()))
     }
 
     private fun collectSignUpEffect() {
