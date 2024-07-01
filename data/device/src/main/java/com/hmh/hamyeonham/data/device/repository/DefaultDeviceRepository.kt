@@ -36,15 +36,16 @@ class DefaultDeviceRepository @Inject constructor(
                 addCategory(Intent.CATEGORY_LAUNCHER)
             }
             val resolveInfoList = context.packageManager.queryIntentActivities(intent, 0)
-            val installedAppInfoList = resolveInfoList
+            val usageGoals = goalsRepository.getUsageGoals().firstOrNull()
+            val goalPackages = usageGoals?.map { it.packageName }?.toSet() ?: emptySet()
+            resolveInfoList
+                .asSequence()
                 .map { it.toAppInfo() }
                 .filter { !context.isSystemPackage(it.packageName) }
                 .filter { it.packageName != context.packageName }
-                .distinct()
-            val usageGoals = goalsRepository.getUsageGoals().firstOrNull()
-            val goalPackages = usageGoals?.map { it.packageName }?.toSet() ?: emptySet()
-            installedAppInfoList
                 .filter { !goalPackages.contains(it.packageName) }
+                .distinct()
+                .toList()
                 .also { installedAppCache = it }
                 .also { _installedApps.value = it }
         }
