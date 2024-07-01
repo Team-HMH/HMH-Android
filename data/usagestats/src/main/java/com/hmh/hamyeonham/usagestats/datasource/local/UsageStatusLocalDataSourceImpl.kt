@@ -96,10 +96,6 @@ class UsageStatusLocalDataSourceImpl @Inject constructor(
                     }
                 }
             }
-
-            if (lastResumeTime != -1L) {
-                appUsageInfo.timeInForeground += endTime - lastResumeTime
-            }
         }
 
         return usageMap
