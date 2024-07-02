@@ -2,15 +2,22 @@ package com.hmh.hamyeonham.feature.onboarding
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
+import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.view.initAndStartProgressBarAnimation
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.core.service.lockAccessibilityServiceClassName
 import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentStateAdapter
 import com.hmh.hamyeonham.feature.onboarding.databinding.ActivityOnBoardingBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
@@ -49,15 +56,17 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun collectSignUpEffect() {
-        viewModel.onboardEffect.flowWithLifecycle(lifecycle).onEach {
-            when (it) {
-                is OnboardEffect.OnboardSuccess -> {
-                    moveToOnBoardingDoneSignUpActivity()
-                }
+        viewModel.onboardEffect
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                when (it) {
+                    is OnboardEffect.OnboardSuccess -> {
+                        moveToOnBoardingDoneSignUpActivity()
+                    }
 
-                is OnboardEffect.OnboardFail -> {}
-            }
-        }.launchIn(lifecycleScope)
+                    is OnboardEffect.OnboardFail -> {}
+                }
+            }.launchIn(lifecycleScope)
     }
 
     private fun initViews() {
@@ -95,10 +104,30 @@ class OnBoardingActivity : AppCompatActivity() {
         binding.vpOnboardingContainer.let { viewPager ->
             val currentItem = viewPager.currentItem
             val lastItem = pagerAdapter.itemCount - 1
+
             when {
                 currentItem < lastItem -> {
-                    viewPager.currentItem = currentItem + 1
-                    updateProgressBar(currentItem + 1, viewPager.adapter?.itemCount ?: 1)
+                    if (currentItem == 4) {
+                        viewModel.onBoardingState
+                            .flowWithLifecycle(lifecycle)
+                            .onEach {
+                                if (it.navigateToPermissionView) {
+                                    viewPager.currentItem = currentItem + 1
+                                    updateProgressBar(
+                                        currentItem + 1,
+                                        viewPager.adapter?.itemCount ?: 1,
+                                    )
+                                }
+                            }.launchIn(lifecycleScope)
+
+                        if(checkAccessibilityServiceEnabled()) {
+                            navigateToNextViewPager(viewPager, currentItem)
+                        } else {
+                            requestAccessibilitySettings()
+                        }
+                    } else {
+                        navigateToNextViewPager(viewPager, currentItem)
+                    }
                 }
 
                 currentItem == lastItem -> {
@@ -110,42 +139,85 @@ class OnBoardingActivity : AppCompatActivity() {
         }
     }
 
+    private fun navigateToNextViewPager(viewPager: ViewPager2, currentItem: Int) {
+        viewPager.currentItem = currentItem + 1
+        updateProgressBar(
+            currentItem + 1,
+            viewPager.adapter?.itemCount ?: 1,
+        )
+    }
+
+    private val accessibilitySettingsLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) {
+            if (checkAccessibilityServiceEnabled()) {
+                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_accessibility_settings))
+                navigateToNextOnboardingStep(binding.vpOnboardingContainer.adapter as OnBoardingFragmentStateAdapter)
+            }
+        }
+
+    private fun requestAccessibilitySettings() {
+        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+        accessibilitySettingsLauncher.launch(intent)
+    }
+
+    private fun checkAccessibilityServiceEnabled(): Boolean =
+        this.let {
+            val service =
+                it.packageName + "/" + lockAccessibilityServiceClassName
+            val enabledServicesSetting =
+                Settings.Secure.getString(
+                    it.contentResolver,
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+                )
+            enabledServicesSetting?.contains(service) == true
+        }
+
     private fun collectOnboardingState() {
-        viewModel.onBoardingState.flowWithLifecycle(lifecycle).onEach {
-            binding.btnOnboardingNext.isEnabled = it.isNextButtonActive
-        }.launchIn(lifecycleScope)
+        viewModel.onBoardingState
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                binding.btnOnboardingNext.isEnabled = it.isNextButtonActive
+            }.launchIn(lifecycleScope)
     }
 
     private fun changeOnBoardingButtonTextState() {
-        viewModel.onBoardingState.flowWithLifecycle(lifecycle).onEach {
-            binding.btnOnboardingNext.text = it.buttonText
-        }.launchIn(lifecycleScope)
+        viewModel.onBoardingState
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                binding.btnOnboardingNext.text = it.buttonText
+            }.launchIn(lifecycleScope)
     }
 
     private fun changeProgressbarVisibleState() {
-        viewModel.onBoardingState.flowWithLifecycle(lifecycle).onEach {
-            if (it.progressbarVisible) {
-                binding.pbOnboarding.visibility = View.VISIBLE
-            } else {
-                binding.pbOnboarding.visibility = View.GONE
-            }
-        }.launchIn(lifecycleScope)
+        viewModel.onBoardingState
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                if (it.progressbarVisible) {
+                    binding.pbOnboarding.visibility = View.VISIBLE
+                } else {
+                    binding.pbOnboarding.visibility = View.GONE
+                }
+            }.launchIn(lifecycleScope)
     }
 
     private fun setBackPressedCallback() {
-        onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                navigateToPreviousOnboardingStep()
+        onBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    navigateToPreviousOnboardingStep()
+                }
             }
-        }
     }
 
     private fun moveToOnBoardingDoneSignUpActivity() {
-        val intent = Intent(this, OnBoardingDoneSingUpActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        }
+        val intent =
+            Intent(this, OnBoardingDoneSingUpActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
         startActivity(intent)
         finish()
     }
@@ -160,7 +232,10 @@ class OnBoardingActivity : AppCompatActivity() {
         return pagerAdapter
     }
 
-    private fun updateProgressBar(currentItem: Int, totalItems: Int) {
+    private fun updateProgressBar(
+        currentItem: Int,
+        totalItems: Int,
+    ) {
         val progress = (currentItem + 1).toFloat() / totalItems.toFloat()
         val progressBarWidth = (progress * 100).toInt()
         binding.pbOnboarding.progress = progressBarWidth
