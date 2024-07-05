@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="1"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:lottie_autoPlay="true"
@@ -66,4 +67,35 @@
         android:textColor="?white_text"
         app:layout_constraintBottom_toBottomOf="@id/tv_total_usage"
         app:layout_constraintEnd_toEndOf="@id/pb_total_usage" />
+
+    <TextView
+        android:id="@+id/tv_require_permission"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?textAppearanceTitleSmall"
+        android:textColor="?gray2"
+        android:text="@string/require_permission_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/lav_blackhole" />
+
+    <TextView
+        android:id="@+id/btn_require_permission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+
+        android:layout_marginHorizontal="99dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/all_btn_able"
+        android:text="@string/require_permission"
+        android:gravity="center"
+        android:textAppearance="?textAppearanceTitleSmall"
+        android:textColor="?white_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_require_permission" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

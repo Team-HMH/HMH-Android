@@ -37,7 +37,7 @@ class SampleActivity : AppCompatActivity() {
     }
 
     private fun navigateToLogin() {
-        startActivity(Intent(this, OnBoardingActivity::class.java))
+        startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
 }

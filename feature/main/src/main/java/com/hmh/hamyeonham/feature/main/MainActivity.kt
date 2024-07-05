@@ -43,9 +43,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         checkUnlockedPackage()
-        if (!allPermissionIsGranted(lockAccessibilityServiceClassName)) {
-            Intent(this@MainActivity, PermissionActivity::class.java).let(::startActivity)
-        }
     }
 
     private fun collectEffect() {
