@@ -92,9 +92,18 @@ class OnBoardingActivity : AppCompatActivity() {
 
     private fun initViewPager() {
         val pagerAdapter = setOnboardingPageAdapter()
+
         binding.btnOnboardingNext.setOnClickListener {
             navigateToNextOnboardingStep(pagerAdapter)
         }
+
+        viewModel.onBoardingState
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                if (it.navigateToPermissionView && binding.vpOnboardingContainer.currentItem == 4) {
+                    navigateToNextViewPager(binding.vpOnboardingContainer, 4)
+                }
+            }.launchIn(lifecycleScope)
     }
 
     private fun navigateToPreviousOnboardingStep() {
@@ -118,19 +127,7 @@ class OnBoardingActivity : AppCompatActivity() {
             when {
                 currentItem < lastItem -> {
                     if (currentItem == 4) {
-                        viewModel.onBoardingState
-                            .flowWithLifecycle(lifecycle)
-                            .onEach {
-                                if (it.navigateToPermissionView) {
-                                    viewPager.currentItem = currentItem + 1
-                                    updateProgressBar(
-                                        currentItem + 1,
-                                        viewPager.adapter?.itemCount ?: 1,
-                                    )
-                                }
-                            }.launchIn(lifecycleScope)
-
-                        if(checkAccessibilityServiceEnabled()) {
+                        if (checkAccessibilityServiceEnabled()) {
                             navigateToNextViewPager(viewPager, currentItem)
                         } else {
                             requestAccessibilitySettings()
@@ -153,9 +150,10 @@ class OnBoardingActivity : AppCompatActivity() {
         viewPager.currentItem = currentItem + 1
         updateProgressBar(
             currentItem + 1,
-            viewPager.adapter?.itemCount ?: 1,
+            viewPager.adapter?.itemCount ?: 1
         )
     }
+
 
     private val accessibilitySettingsLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(
