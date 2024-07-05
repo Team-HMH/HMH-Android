@@ -100,8 +100,8 @@ class OnBoardingActivity : AppCompatActivity() {
         viewModel.onBoardingState
             .flowWithLifecycle(lifecycle)
             .onEach {
-                if (it.navigateToPermissionView && binding.vpOnboardingContainer.currentItem == 4) {
-                    navigateToNextViewPager(binding.vpOnboardingContainer, 4)
+                if (it.navigateToPermissionView && binding.vpOnboardingContainer.currentItem == 3) {
+                    navigateToNextViewPager(binding.vpOnboardingContainer, 3)
                 }
             }.launchIn(lifecycleScope)
     }
@@ -126,7 +126,7 @@ class OnBoardingActivity : AppCompatActivity() {
 
             when {
                 currentItem < lastItem -> {
-                    if (currentItem == 4) {
+                    if (currentItem == 3) {
                         if (checkAccessibilityServiceEnabled()) {
                             navigateToNextViewPager(viewPager, currentItem)
                         } else {

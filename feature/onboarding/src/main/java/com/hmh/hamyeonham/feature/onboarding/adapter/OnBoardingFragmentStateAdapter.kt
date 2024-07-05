@@ -15,12 +15,12 @@ enum class OnBoardingFragmentType {
     SELECT_DATA_TIME,
     SELECT_DATA_PROBLEM,
     SELECT_DATA_PERIOD,
-    SELECT_SCREEN_TIME_GOAL,
     SPECIFY_PERMISSION,
     REQUEST_PERMISSION,
     SELECT_APP,
     SELECT_APP_VIEW,
     SELECT_USE_TIME_GOAL,
+    SELECT_SCREEN_TIME_GOAL,
 }
 
 class OnBoardingFragmentStateAdapter(fragmentActivity: FragmentActivity) :

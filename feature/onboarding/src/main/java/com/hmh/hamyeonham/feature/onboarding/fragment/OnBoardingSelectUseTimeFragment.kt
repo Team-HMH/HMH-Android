@@ -56,7 +56,7 @@ class OnBoardingSelectUseTimeFragment : Fragment() {
 
         binding.npOnboardingUseTimeGoalHour.value = selectedHour
         binding.npOnboardingUseTimeGoalMinute.value = selectedMinute
-        activityViewModel.sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_done)))
+        activityViewModel.sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_next)))
         activityViewModel.sendEvent(OnboardEvent.visibleProgressbar(true))
     }
 }
