@@ -46,6 +46,16 @@ class OnBoardingActivity : AppCompatActivity() {
         changeOnBoardingButtonTextState()
         updateAccessToken()
         changeProgressbarVisibleState()
+        updateBackButtonVisibility()
+    }
+
+    private fun updateBackButtonVisibility() {
+        viewModel.onBoardingState
+            .flowWithLifecycle(lifecycle)
+            .onEach {
+                binding.ivOnboardingBack.visibility =
+                    if (it.isBackButtonActive) View.VISIBLE else View.GONE
+            }.launchIn(lifecycleScope)
     }
 
     private fun updateAccessToken() {
