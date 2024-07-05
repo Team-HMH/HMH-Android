@@ -35,6 +35,7 @@ class OnBoardingActivity : AppCompatActivity() {
     private val binding by viewBinding(ActivityOnBoardingBinding::inflate)
     private val viewModel by viewModels<OnBoardingViewModel>()
     private lateinit var onBackPressedCallback: OnBackPressedCallback
+    private var backButtonDelayTime: Long  = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -211,12 +212,18 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun setBackPressedCallback() {
-        onBackPressedCallback =
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    navigateToPreviousOnboardingStep()
+        onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - backButtonDelayTime >= 1000) {
+                    backButtonDelayTime = currentTime
+                    toast("‘뒤로’버튼을 한번 더 누르시면 종료됩니다.")
+                } else {
+                    finish()
                 }
             }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     private fun moveToOnBoardingDoneSignUpActivity() {
