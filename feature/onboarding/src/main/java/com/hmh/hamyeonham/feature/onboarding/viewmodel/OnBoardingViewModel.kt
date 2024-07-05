@@ -66,6 +66,10 @@ sealed interface OnboardEvent {
     data class NavigateToPermissionView(
         val navigateToPermissionView: Boolean,
     ) : OnboardEvent
+
+    data class UpdateBackButtonActive(
+        val isBackButtonActive: Boolean,
+    ) : OnboardEvent
 }
 
 sealed interface OnboardEffect {
@@ -83,6 +87,7 @@ data class OnBoardingState(
     val appGoalTimeMinute: Int = 0,
     val appGoalTimeHour: Int = 0,
     val isNextButtonActive: Boolean = false,
+    val isBackButtonActive: Boolean = true,
     val accessToken: String = "",
     val buttonText: String = "다음",
     val progressbarVisible: Boolean = true,
@@ -194,6 +199,12 @@ class OnBoardingViewModel
                 is OnboardEvent.NavigateToPermissionView -> {
                     updateState {
                         copy(navigateToPermissionView = event.navigateToPermissionView)
+                    }
+                }
+
+                is OnboardEvent.UpdateBackButtonActive -> {
+                    updateState {
+                        copy(isBackButtonActive = event.isBackButtonActive)
                     }
                 }
             }
