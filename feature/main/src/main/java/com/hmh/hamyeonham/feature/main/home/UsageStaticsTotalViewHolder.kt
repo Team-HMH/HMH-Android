@@ -97,7 +97,7 @@ enum class BlackHoleInfo(
     val lottieFile: Int,
     val description: Int,
 ) {
-    LEVEL_NONE(0, R.raw.lottie_blackhole0, R.string.blackhole_none),
+    LEVEL_NONE(999, R.raw.lottie_blackhole0, R.string.blackhole_none),
     LEVEL0(0, R.raw.lottie_blackhole0, R.string.blackhole0),
     LEVEL1(25, R.raw.lottie_blackhole1, R.string.blackhole1),
     LEVEL2(50, R.raw.lottie_blackhole2, R.string.blackhole2),
@@ -114,8 +114,12 @@ enum class BlackHoleInfo(
         val LEVELSIZE = 25
 
         fun createByPercentage(percentage: Int): BlackHoleInfo? =
-            entries.find {
-                (it.minPercentage <= percentage) && (percentage < (it.minPercentage + LEVELSIZE))
+            if (percentage >100) {
+                LEVEL_NONE
+            } else {
+                entries.find {
+                    (it.minPercentage <= percentage) && (percentage < (it.minPercentage + LEVELSIZE))
+                }
             }
     }
 }
