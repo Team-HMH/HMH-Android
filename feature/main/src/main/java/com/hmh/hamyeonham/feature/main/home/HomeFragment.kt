@@ -1,6 +1,5 @@
 package com.hmh.hamyeonham.feature.main.home
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +9,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
-import com.hmh.hamyeonham.common.activity.allPermissionIsGranted
 import com.hmh.hamyeonham.common.fragment.allPermissionIsGranted
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
-import com.hmh.hamyeonham.common.permission.PermissionActivity
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.service.lockAccessibilityServiceClassName
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
@@ -37,11 +34,12 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        return FragmentHomeBinding.inflate(inflater, container, false).root
-    }
+    ): View = FragmentHomeBinding.inflate(inflater, container, false).root
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         initStaticsRecyclerView()
         initUsageStatsList()
@@ -50,9 +48,9 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activityViewModel.reloadUsageStatsList()
-        if (!allPermissionIsGranted(lockAccessibilityServiceClassName)) {
-            activityViewModel.mainState.value.permissionGranted = false
-        }
+
+        activityViewModel.mainState.value.permissionGranted =
+            allPermissionIsGranted(lockAccessibilityServiceClassName)
     }
 
     private fun initStaticsRecyclerView() {
@@ -64,13 +62,19 @@ class HomeFragment : Fragment() {
 
     private fun initUsageStatsList() {
         val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
-        activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach { mainState ->
-            usageStaticsAdapter?.submitList(
-                mainState.usageStatusAndGoals.map {
-                    UsageStaticsModel(mainState.name, mainState.challengeSuccess, mainState.permissionGranted, it)
-                }
-            )
-        }.launchIn(viewLifeCycleScope)
+        activityViewModel.mainState
+            .flowWithLifecycle(viewLifeCycle)
+            .onEach { mainState ->
+                usageStaticsAdapter?.submitList(
+                    mainState.usageStatusAndGoals.map {
+                        UsageStaticsModel(
+                            mainState.name,
+                            mainState.challengeSuccess,
+                            mainState.permissionGranted,
+                            it,
+                        )
+                    },
+                )
+            }.launchIn(viewLifeCycleScope)
     }
-
 }
