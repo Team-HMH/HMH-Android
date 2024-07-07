@@ -3,7 +3,6 @@ package com.hmh.hamyeonham.feature.onboarding
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
@@ -19,6 +18,7 @@ import com.hmh.hamyeonham.common.view.initAndStartProgressBarAnimation
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.service.lockAccessibilityServiceClassName
 import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentStateAdapter
+import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentType
 import com.hmh.hamyeonham.feature.onboarding.databinding.ActivityOnBoardingBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEffect
@@ -35,7 +35,7 @@ class OnBoardingActivity : AppCompatActivity() {
     private val binding by viewBinding(ActivityOnBoardingBinding::inflate)
     private val viewModel by viewModels<OnBoardingViewModel>()
     private lateinit var onBackPressedCallback: OnBackPressedCallback
-    private var backButtonDelayTime: Long  = 0
+    private var backButtonDelayTime: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,7 +102,10 @@ class OnBoardingActivity : AppCompatActivity() {
             .flowWithLifecycle(lifecycle)
             .onEach {
                 if (it.navigateToPermissionView && binding.vpOnboardingContainer.currentItem == 3) {
-                    navigateToNextViewPager(binding.vpOnboardingContainer, 3)
+                    navigateToNextViewPager(
+                        binding.vpOnboardingContainer,
+                        OnBoardingFragmentType.SPECIFY_PERMISSION.position,
+                    )
                 }
             }.launchIn(lifecycleScope)
     }
@@ -127,7 +130,7 @@ class OnBoardingActivity : AppCompatActivity() {
 
             when {
                 currentItem < lastItem -> {
-                    if (currentItem == 3) {
+                    if (currentItem == OnBoardingFragmentType.SPECIFY_PERMISSION.position) {
                         if (checkAccessibilityServiceEnabled()) {
                             navigateToNextViewPager(viewPager, currentItem)
                         } else {
@@ -147,14 +150,16 @@ class OnBoardingActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToNextViewPager(viewPager: ViewPager2, currentItem: Int) {
+    private fun navigateToNextViewPager(
+        viewPager: ViewPager2,
+        currentItem: Int,
+    ) {
         viewPager.currentItem = currentItem + 1
         updateProgressBar(
             currentItem + 1,
-            viewPager.adapter?.itemCount ?: 1
+            viewPager.adapter?.itemCount ?: 1,
         )
     }
-
 
     private val accessibilitySettingsLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(
@@ -212,17 +217,18 @@ class OnBoardingActivity : AppCompatActivity() {
     }
 
     private fun setBackPressedCallback() {
-        onBackPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                val currentTime = System.currentTimeMillis()
-                if (currentTime - backButtonDelayTime >= 1000) {
-                    backButtonDelayTime = currentTime
-                    toast("‘뒤로’버튼을 한번 더 누르시면 종료됩니다.")
-                } else {
-                    finish()
+        onBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val currentTime = System.currentTimeMillis()
+                    if (currentTime - backButtonDelayTime >= 1000) {
+                        backButtonDelayTime = currentTime
+                        toast("‘뒤로’버튼을 한번 더 누르시면 종료됩니다.")
+                    } else {
+                        finish()
+                    }
                 }
             }
-        }
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
