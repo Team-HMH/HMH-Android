@@ -58,10 +58,3 @@ class OnBoardingFragmentStateAdapter(fragmentActivity: FragmentActivity) :
         }
     }
 }
-
-
-private fun Int.toOnBoardingFragmentType(): OnBoardingFragmentType {
-    return OnBoardingFragmentType.entries.getOrNull(this)
-        ?: OnBoardingFragmentType.SELECT_DATA_TIME
-}
-}
