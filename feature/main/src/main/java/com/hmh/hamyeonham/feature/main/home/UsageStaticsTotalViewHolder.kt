@@ -6,7 +6,7 @@ import android.view.View
 import androidx.core.content.ContextCompat.getString
 import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.common.context.getSecondStrColoredString
-import com.hmh.hamyeonham.common.permission.PermissionActivity
+import com.hmh.hamyeonham.common.permission.PermissionDescriptionActivity
 import com.hmh.hamyeonham.common.time.convertTimeToString
 import com.hmh.hamyeonham.common.view.initAndStartProgressBarAnimation
 import com.hmh.hamyeonham.feature.main.R
@@ -56,7 +56,7 @@ class UsageStaticsTotalViewHolder(
                 btnRequirePermission.visibility = View.VISIBLE
 
                 binding.btnRequirePermission.setOnClickListener {
-                    Intent(context, PermissionActivity::class.java).apply {
+                    Intent(context, PermissionDescriptionActivity::class.java).apply {
                         context.startActivity(this)
                     }
                 }
@@ -77,6 +77,7 @@ class UsageStaticsTotalViewHolder(
             } else {
                 // 권한 허용이 안 된 경우
                 BlackHoleInfo.LEVEL_NONE
+                // TODO : NONE -> 1일 때 text 리프레쉬 안 됨, 리사이클러뷰 화면 전체 리프레쉬 안 됨
             }
         setBlackHoleAnimation(blackHoleInfo)
         bindBlackHoleDiscription(blackHoleInfo)
