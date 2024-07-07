@@ -11,16 +11,21 @@ import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingSelectScreenTime
 import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingSelectUseTimeFragment
 import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingSpecifyPermissionFragment
 
-enum class OnBoardingFragmentType {
-    SELECT_DATA_TIME,
-    SELECT_DATA_PROBLEM,
-    SELECT_DATA_PERIOD,
-    SPECIFY_PERMISSION,
-    REQUEST_PERMISSION,
-    SELECT_APP,
-    SELECT_APP_VIEW,
-    SELECT_USE_TIME_GOAL,
-    SELECT_SCREEN_TIME_GOAL,
+enum class OnBoardingFragmentType(val position: Int) {
+    SELECT_DATA_TIME(0),
+    SELECT_DATA_PROBLEM(1),
+    SELECT_DATA_PERIOD(2),
+    SPECIFY_PERMISSION(3),
+    REQUEST_PERMISSION(4),
+    SELECT_APP(5),
+    SELECT_APP_VIEW(6),
+    SELECT_USE_TIME_GOAL(7),
+    SELECT_SCREEN_TIME_GOAL(8);
+
+    companion object {
+        private val map = entries.associateBy(OnBoardingFragmentType::position)
+        fun fromPosition(position: Int) = map[position]
+    }
 }
 
 class OnBoardingFragmentStateAdapter(fragmentActivity: FragmentActivity) :
@@ -30,17 +35,17 @@ class OnBoardingFragmentStateAdapter(fragmentActivity: FragmentActivity) :
     }
 
     override fun createFragment(position: Int): Fragment {
-        return when (val fragmentType = position.toOnBoardingFragmentType()) {
+        return when (val fragmentType = OnBoardingFragmentType.fromPosition(position)) {
             OnBoardingFragmentType.SELECT_DATA_TIME -> OnBoardingSelectDataFragment.newInstance(
-                fragmentType,
+                fragmentType
             )
 
             OnBoardingFragmentType.SELECT_DATA_PROBLEM -> OnBoardingSelectDataFragment.newInstance(
-                fragmentType,
+                fragmentType
             )
 
             OnBoardingFragmentType.SELECT_DATA_PERIOD -> OnBoardingSelectDataFragment.newInstance(
-                fragmentType,
+                fragmentType
             )
 
             OnBoardingFragmentType.SELECT_SCREEN_TIME_GOAL -> OnBoardingSelectScreenTimeFragment()
@@ -49,11 +54,14 @@ class OnBoardingFragmentStateAdapter(fragmentActivity: FragmentActivity) :
             OnBoardingFragmentType.SELECT_APP -> OnBoardingSelectAppFragment()
             OnBoardingFragmentType.SELECT_APP_VIEW -> OnBoardingAppAddSelectionFragment()
             OnBoardingFragmentType.SELECT_USE_TIME_GOAL -> OnBoardingSelectUseTimeFragment()
+            null -> throw IllegalArgumentException("Unknown fragment type for position $position")
         }
     }
+}
 
-    private fun Int.toOnBoardingFragmentType(): OnBoardingFragmentType {
-        return OnBoardingFragmentType.entries.getOrNull(this)
-            ?: OnBoardingFragmentType.SELECT_DATA_TIME
-    }
+
+private fun Int.toOnBoardingFragmentType(): OnBoardingFragmentType {
+    return OnBoardingFragmentType.entries.getOrNull(this)
+        ?: OnBoardingFragmentType.SELECT_DATA_TIME
+}
 }
