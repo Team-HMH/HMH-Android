@@ -46,7 +46,7 @@ class DefaultNavigationProvider @Inject constructor(
         return Intent(context, PointActivity::class.java)
     }
 
-    override fun toPermission(): Fragment {
-        return OnBoardingRequestPermissionFragment()
+    override fun toPermission(): Intent {
+        return Intent(context, OnBoardingRequestPermissionFragment::class.java)
     }
 }
