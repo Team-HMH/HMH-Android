@@ -28,16 +28,6 @@ class OnBoardingSpecifyPermissionFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val text = binding.tvOnboardingSpecifyPermissionList
-//        val spanText = SpannableStringBuilder(text.text)
-//        spanText.setSpan(
-//            TextAppearanceSpan(text.context, com.hmh.hamyeonham.core.designsystem.R.style.TextAppearance_Hmh_LabelLarge),
-//            0,
-//            39,
-//            SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE
-//        )
-//        text.text = spanText
-
         binding.tvPermissionLater.setOnClickListener {
             activityViewModel.updateState { copy(navigateToPermissionView = true) }
         }
