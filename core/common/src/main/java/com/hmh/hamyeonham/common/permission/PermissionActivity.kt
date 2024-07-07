@@ -11,12 +11,17 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.databinding.ActivityPermissionBinding
+import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.view.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PermissionActivity : AppCompatActivity() {
     private val binding by viewBinding(ActivityPermissionBinding::inflate)
+
+    @Inject
+    lateinit var navigationProvider: NavigationProvider
 
     private val accessibilitySettingsLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(
@@ -54,6 +59,7 @@ class PermissionActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (allPermissionIsGranted()) {
+            startActivity(navigationProvider.toMain())
             finish()
         }
         setPermissionToggleState()

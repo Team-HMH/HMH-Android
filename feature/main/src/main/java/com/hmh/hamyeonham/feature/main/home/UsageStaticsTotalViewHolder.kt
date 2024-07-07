@@ -77,7 +77,6 @@ class UsageStaticsTotalViewHolder(
             } else {
                 // 권한 허용이 안 된 경우
                 BlackHoleInfo.LEVEL_NONE
-                // TODO : NONE -> 1일 때 text 리프레쉬 안 됨, 리사이클러뷰 화면 전체 리프레쉬 안 됨
             }
         setBlackHoleAnimation(blackHoleInfo)
         bindBlackHoleDiscription(blackHoleInfo)
