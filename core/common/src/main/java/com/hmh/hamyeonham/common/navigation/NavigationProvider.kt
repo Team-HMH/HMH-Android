@@ -15,5 +15,5 @@ interface NavigationProvider {
     fun toLock(packageName: String): Intent
     fun toStore(): Intent
     fun toPoint(): Intent
-    fun toPermission(): Fragment
+    fun toPermission(): Intent
 }
