@@ -49,8 +49,11 @@ class HomeFragment : Fragment() {
         super.onResume()
         activityViewModel.reloadUsageStatsList()
 
-        activityViewModel.mainState.value.permissionGranted =
-            allPermissionIsGranted(lockAccessibilityServiceClassName)
+        activityViewModel.updateIsPermissionGranted(
+            allPermissionIsGranted(
+                lockAccessibilityServiceClassName,
+            ),
+        )
     }
 
     private fun initStaticsRecyclerView() {

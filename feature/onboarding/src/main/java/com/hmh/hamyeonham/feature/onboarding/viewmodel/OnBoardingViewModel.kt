@@ -110,6 +110,7 @@ class OnBoardingViewModel
         private val authRepository: AuthRepository,
         private val hmhNetworkPreference: HMHNetworkPreference,
     ) : ViewModel() {
+
         private val _onBoardingState = MutableStateFlow(OnBoardingState())
         val onBoardingState = _onBoardingState.asStateFlow()
 
