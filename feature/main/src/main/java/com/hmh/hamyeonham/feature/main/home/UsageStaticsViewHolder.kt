@@ -18,13 +18,12 @@ class UsageStaticsViewHolder(
     private val context: Context,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun onBind(
-        usageStatusAndGoal: UsageStatusAndGoal,
         usageStaticsModel: UsageStaticsModel,
     ) {
         if (usageStaticsModel.permissionGranted) {
-            bindAppInfo(usageStatusAndGoal)
-            bindUsageInfo(usageStatusAndGoal)
-            initAndStartProgressBarAnimation(binding.pbAppUsage, usageStatusAndGoal.usedPercentage)
+            bindAppInfo(usageStaticsModel.usageStatusAndGoal)
+            bindUsageInfo(usageStaticsModel.usageStatusAndGoal)
+            initAndStartProgressBarAnimation(binding.pbAppUsage, usageStaticsModel.usageStatusAndGoal.usedPercentage)
         } else {
             binding.root.visibility = View.GONE
         }
