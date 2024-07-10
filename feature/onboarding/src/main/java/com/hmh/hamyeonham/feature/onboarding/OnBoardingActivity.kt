@@ -3,12 +3,12 @@ package com.hmh.hamyeonham.feature.onboarding
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
@@ -37,6 +37,16 @@ class OnBoardingActivity : AppCompatActivity() {
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private var backButtonDelayTime: Long = 0
 
+    private val accessibilitySettingsLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) {
+            if (checkAccessibilityServiceEnabled()) {
+                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_accessibility_settings))
+                navigateToNextOnboardingStep(binding.vpOnboardingContainer.adapter as OnBoardingFragmentStateAdapter)
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -54,8 +64,8 @@ class OnBoardingActivity : AppCompatActivity() {
         viewModel.onBoardingState
             .flowWithLifecycle(lifecycle)
             .onEach {
-                binding.ivOnboardingBack.visibility =
-                    if (it.isBackButtonActive) View.VISIBLE else View.GONE
+                binding.ivOnboardingBack.isVisible =
+                    if (it.isBackButtonActive) true else false
             }.launchIn(lifecycleScope)
     }
 
@@ -101,7 +111,9 @@ class OnBoardingActivity : AppCompatActivity() {
         viewModel.onBoardingState
             .flowWithLifecycle(lifecycle)
             .onEach {
-                if (it.navigateToPermissionView && binding.vpOnboardingContainer.currentItem == 3) {
+                if (it.navigateToPermissionView &&
+                    binding.vpOnboardingContainer.currentItem == OnBoardingFragmentType.SPECIFY_PERMISSION.position
+                ) {
                     navigateToNextViewPager(
                         binding.vpOnboardingContainer,
                         OnBoardingFragmentType.SPECIFY_PERMISSION.position,
@@ -161,32 +173,20 @@ class OnBoardingActivity : AppCompatActivity() {
         )
     }
 
-    private val accessibilitySettingsLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-        ) {
-            if (checkAccessibilityServiceEnabled()) {
-                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_accessibility_settings))
-                navigateToNextOnboardingStep(binding.vpOnboardingContainer.adapter as OnBoardingFragmentStateAdapter)
-            }
-        }
-
     private fun requestAccessibilitySettings() {
         val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
         accessibilitySettingsLauncher.launch(intent)
     }
 
-    private fun checkAccessibilityServiceEnabled(): Boolean =
-        this.let {
-            val service =
-                it.packageName + "/" + lockAccessibilityServiceClassName
-            val enabledServicesSetting =
-                Settings.Secure.getString(
-                    it.contentResolver,
-                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
-                )
-            enabledServicesSetting?.contains(service) == true
-        }
+    private fun checkAccessibilityServiceEnabled(): Boolean {
+        val service = "$packageName/$lockAccessibilityServiceClassName"
+        val enabledServicesSetting =
+            Settings.Secure.getString(
+                contentResolver,
+                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+            )
+        return enabledServicesSetting?.contains(service) == true
+    }
 
     private fun collectOnboardingState() {
         viewModel.onBoardingState
@@ -208,11 +208,7 @@ class OnBoardingActivity : AppCompatActivity() {
         viewModel.onBoardingState
             .flowWithLifecycle(lifecycle)
             .onEach {
-                if (it.progressbarVisible) {
-                    binding.pbOnboarding.visibility = View.VISIBLE
-                } else {
-                    binding.pbOnboarding.visibility = View.GONE
-                }
+                binding.pbOnboarding.isVisible = it.progressbarVisible
             }.launchIn(lifecycleScope)
     }
 

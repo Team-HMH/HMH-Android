@@ -29,7 +29,7 @@ class OnBoardingSpecifyPermissionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.tvPermissionLater.setOnClickListener {
-            activityViewModel.updateState { copy(navigateToPermissionView = true) }
+            activityViewModel.sendEvent(OnboardEvent.NavigateToPermissionView(true))
         }
     }
 

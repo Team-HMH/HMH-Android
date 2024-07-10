@@ -54,7 +54,7 @@ class OnBoardingFragmentStateAdapter(fragmentActivity: FragmentActivity) :
             OnBoardingFragmentType.SELECT_APP -> OnBoardingSelectAppFragment()
             OnBoardingFragmentType.SELECT_APP_VIEW -> OnBoardingAppAddSelectionFragment()
             OnBoardingFragmentType.SELECT_USE_TIME_GOAL -> OnBoardingSelectUseTimeFragment()
-            null -> throw IllegalArgumentException("Unknown fragment type for position $position")
+            else -> OnBoardingSelectUseTimeFragment()
         }
     }
 }

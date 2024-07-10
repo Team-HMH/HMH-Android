@@ -2,8 +2,8 @@ package com.hmh.hamyeonham.feature.main.home
 
 import android.content.Context
 import android.content.Intent
-import android.view.View
 import androidx.core.content.ContextCompat.getString
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.common.context.getSecondStrColoredString
 import com.hmh.hamyeonham.common.permission.PermissionDescriptionActivity
@@ -48,12 +48,12 @@ class UsageStaticsTotalViewHolder(
             }
         } else {
             binding.run {
-                tvTotalTimeLeft.visibility = View.GONE
-                tvTotalGoal.visibility = View.GONE
-                tvTotalUsage.visibility = View.GONE
-                pbTotalUsage.visibility = View.GONE
-                tvRequirePermission.visibility = View.VISIBLE
-                btnRequirePermission.visibility = View.VISIBLE
+                tvTotalTimeLeft.isVisible = false
+                tvTotalGoal.isVisible = false
+                tvTotalUsage.isVisible = false
+                pbTotalUsage.isVisible = false
+                tvRequirePermission.isVisible = true
+                btnRequirePermission.isVisible = true
 
                 binding.btnRequirePermission.setOnClickListener {
                     Intent(context, PermissionDescriptionActivity::class.java).apply {
@@ -66,27 +66,30 @@ class UsageStaticsTotalViewHolder(
 
     private fun bindBlackHoleInfo(usageStaticsModel: UsageStaticsModel) {
         val blackHoleInfo =
-            if (usageStaticsModel.permissionGranted) {
-                if (usageStaticsModel.challengeSuccess) {
-                    BlackHoleInfo.createByPercentage(
-                        usageStaticsModel.usageStatusAndGoal.usedPercentage,
-                    ) ?: BlackHoleInfo.LEVEL0
-                } else {
+            when {
+                // 권한이 허용되어 있는 경우
+                (usageStaticsModel.permissionGranted && usageStaticsModel.challengeSuccess) -> {
+                    BlackHoleInfo.createByPercentage(usageStaticsModel.usageStatusAndGoal.usedPercentage)
+                        ?: BlackHoleInfo.LEVEL0
+                }
+                (usageStaticsModel.permissionGranted && !usageStaticsModel.challengeSuccess) -> {
                     BlackHoleInfo.LEVEL5
                 }
-            } else {
-                // 권한 허용이 안 된 경우
-                BlackHoleInfo.LEVEL_NONE
+                // 권한이 허용되지 않은 경우 default 값
+                else -> {
+                    BlackHoleInfo.LEVEL_NONE
+                }
             }
+
         setBlackHoleAnimation(blackHoleInfo)
-        bindBlackHoleDiscription(blackHoleInfo)
+        bindBlackHoleDescription(blackHoleInfo)
     }
 
     private fun setBlackHoleAnimation(blackHoleInfo: BlackHoleInfo) {
         binding.lavBlackhole.setAnimation(blackHoleInfo.lottieFile)
     }
 
-    private fun bindBlackHoleDiscription(blackHoleInfo: BlackHoleInfo) {
+    private fun bindBlackHoleDescription(blackHoleInfo: BlackHoleInfo) {
         binding.tvBlackholeDescription.text = getString(context, blackHoleInfo.description)
     }
 }
@@ -113,12 +116,6 @@ enum class BlackHoleInfo(
         val LEVELSIZE = 25
 
         fun createByPercentage(percentage: Int): BlackHoleInfo? =
-            if (percentage >100) {
-                LEVEL_NONE
-            } else {
-                entries.find {
-                    (it.minPercentage <= percentage) && (percentage < (it.minPercentage + LEVELSIZE))
-                }
-            }
+            entries.find { (it.minPercentage <= percentage) && (percentage < (it.minPercentage + LEVELSIZE)) }
     }
 }
