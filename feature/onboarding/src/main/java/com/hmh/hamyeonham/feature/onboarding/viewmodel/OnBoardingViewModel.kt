@@ -15,66 +15,24 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed interface OnboardEvent {
-    data class UpdateUsuallyUseTime(
-        val usuallyUseTime: String,
-    ) : OnboardEvent
-
-    data class UpdateProblems(
-        val problems: List<String>,
-    ) : OnboardEvent
-
-    data class UpdatePeriod(
-        val period: Int,
-    ) : OnboardEvent
-
-    data class UpdateScreenGoalTime(
-        val screeGoalTime: Int,
-    ) : OnboardEvent
-
-    data class AddApps(
-        val appCode: String,
-    ) : OnboardEvent
-
-    data class DeleteApp(
-        val appCode: String,
-    ) : OnboardEvent
-
-    data class UpdateAppGoalTimeMinute(
-        val goalTimeMinute: Int,
-    ) : OnboardEvent
-
-    data class UpdateAppGoalTimeHour(
-        val goalTimeHour: Int,
-    ) : OnboardEvent
-
-    data class UpdateNextButtonActive(
-        val isNextButtonActive: Boolean,
-    ) : OnboardEvent
-
-    data class UpdateAccessToken(
-        val accessToken: String,
-    ) : OnboardEvent
-
-    data class changeActivityButtonText(
-        val buttonText: String,
-    ) : OnboardEvent
-
-    data class visibleProgressbar(
-        val progressbarVisible: Boolean,
-    ) : OnboardEvent
-
-    data class NavigateToPermissionView(
-        val navigateToPermissionView: Boolean,
-    ) : OnboardEvent
-
-    data class UpdateBackButtonActive(
-        val isBackButtonActive: Boolean,
-    ) : OnboardEvent
+    data class UpdateUsuallyUseTime(val usuallyUseTime: String) : OnboardEvent
+    data class UpdateProblems(val problems: List<String>) : OnboardEvent
+    data class UpdatePeriod(val period: Int) : OnboardEvent
+    data class UpdateScreenGoalTime(val screeGoalTime: Int) : OnboardEvent
+    data class AddApps(val appCode: String) : OnboardEvent
+    data class DeleteApp(val appCode: String) : OnboardEvent
+    data class UpdateAppGoalTimeMinute(val goalTimeMinute: Int) : OnboardEvent
+    data class UpdateAppGoalTimeHour(val goalTimeHour: Int) : OnboardEvent
+    data class UpdateNextButtonActive(val isNextButtonActive: Boolean) : OnboardEvent
+    data class UpdateAccessToken(val accessToken: String) : OnboardEvent
+    data class ChangeActivityButtonText(val buttonText: String) : OnboardEvent
+    data class VisibleProgressbar(val progressbarVisible: Boolean) : OnboardEvent
+    data class NavigateToPermissionView(val navigateToPermissionView: Boolean, ) : OnboardEvent
+    data class UpdateBackButtonActive(val isBackButtonActive: Boolean, ) : OnboardEvent
 }
 
 sealed interface OnboardEffect {
     data object OnboardSuccess : OnboardEffect
-
     data object OnboardFail : OnboardEffect
 }
 
@@ -82,7 +40,7 @@ data class OnBoardingState(
     val usuallyUseTime: String = "",
     val problems: List<String> = emptyList(),
     val period: Int = -1,
-    val screenGoalTime: Int = DEFAULTSCREENTTIME,
+    val screenGoalTime: Int = DEFAULT_SCREEN_TIME,
     val appCodeList: List<String> = emptyList(),
     val appGoalTimeMinute: Int = 0,
     val appGoalTimeHour: Int = 0,
@@ -99,7 +57,7 @@ data class OnBoardingState(
         get() = ((appGoalTimeHour * 60) + appGoalTimeMinute).timeToMs()
 
     companion object {
-        val DEFAULTSCREENTTIME: Int = 1
+        const val DEFAULT_SCREEN_TIME: Int = 1
     }
 }
 
@@ -117,11 +75,11 @@ class OnBoardingViewModel
         private val _onboardEffect = MutableSharedFlow<OnboardEffect>()
         val onboardEffect = _onboardEffect.asSharedFlow()
 
-        fun updateState(transform: OnBoardingState.() -> OnBoardingState) {
-            val currentState = onBoardingState.value
-            val newState = currentState.transform()
-            _onBoardingState.value = newState
-        }
+    private fun updateState(transform: OnBoardingState.() -> OnBoardingState) {
+        val currentState = onBoardingState.value
+        val newState = currentState.transform()
+        _onBoardingState.value = newState
+    }
 
         fun sendEvent(event: OnboardEvent) {
             when (event) {
@@ -185,13 +143,13 @@ class OnBoardingViewModel
                     }
                 }
 
-                is OnboardEvent.changeActivityButtonText -> {
+                is OnboardEvent.ChangeActivityButtonText -> {
                     updateState {
                         copy(buttonText = event.buttonText)
                     }
                 }
 
-                is OnboardEvent.visibleProgressbar -> {
+                is OnboardEvent.VisibleProgressbar -> {
                     updateState {
                         copy(progressbarVisible = event.progressbarVisible)
                     }

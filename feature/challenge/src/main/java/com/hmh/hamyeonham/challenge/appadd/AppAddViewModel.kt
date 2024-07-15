@@ -3,7 +3,9 @@ package com.hmh.hamyeonham.challenge.appadd
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.AppInfo
-import com.hmh.hamyeonham.challenge.usecase.GetInstalledAppUseCase
+import com.hmh.hamyeonham.challenge.usecase.FetchInstalledAppUseCase
+import com.hmh.hamyeonham.challenge.usecase.ObserveInstalledAppUseCase
+import com.hmh.hamyeonham.challenge.usecase.SearchInstalledAppUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -11,6 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,10 +24,18 @@ sealed interface AppAddEffect {}
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class AppAddViewModel @Inject constructor(
-    private val getInstalledAppUseCase: GetInstalledAppUseCase
+    private val fetchInstalledAppUseCase: FetchInstalledAppUseCase,
+    private val searchInstalledAppUseCase: SearchInstalledAppUseCase,
+    private val observeInstalledAppUseCase: ObserveInstalledAppUseCase
 ) : ViewModel() {
     private val _state = MutableStateFlow(AppAddState())
     val state = _state.asStateFlow()
+
+    private val _installedApps = MutableStateFlow<List<AppInfo>>(emptyList())
+    val installedApps = _installedApps.asStateFlow()
+
+    private val _isNextButtonActive = MutableStateFlow(false)
+    val isNextButtonActive = _isNextButtonActive.asStateFlow()
 
     private val _effect = MutableSharedFlow<AppAddEffect>(1)
     val effect = _effect.asSharedFlow()
@@ -31,25 +43,11 @@ class AppAddViewModel @Inject constructor(
     private val _query = MutableStateFlow("")
 
     init {
-        getInstalledApps()
-        setupSearchDebounce()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        getInstalledAppUseCase.clearCache()
-    }
-
-    private fun updateInstalledApps(installApps: List<AppInfo>) {
-        updateState {
-            copy(installedApps = installApps)
+        viewModelScope.launch {
+            fetchInstalledAppUseCase()
+            collectInstalledApps()
+            setupSearchDebounce()
         }
-    }
-
-    private fun updateState(transform: AppAddState.() -> AppAddState) {
-        val currentState = state.value
-        val newState = currentState.transform()
-        _state.value = newState
     }
 
     fun appCheckChanged(packageName: String, isCheck: Boolean) {
@@ -79,29 +77,17 @@ class AppAddViewModel @Inject constructor(
     }
 
     private fun setupSearchDebounce() {
-        viewModelScope.launch {
-            _query.debounce(300)
-                .collect { query ->
-                    searchApp(query)
-                }
-        }
+        _query.debounce(300)
+            .onEach { query ->
+                searchInstalledAppUseCase(query)
+            }
+            .launchIn(viewModelScope)
     }
 
-    private fun searchApp(query: String) {
-        if (query.isEmpty()) {
-            getInstalledApps()
-            return
-        }
-        updateState {
-            copy(installedApps = state.value.installedApps.filter { it.appName.contains(query) })
-        }
-    }
-
-    private fun getInstalledApps() {
-        viewModelScope.launch {
-            val installApps = getInstalledAppUseCase()
-            updateInstalledApps(installApps)
-        }
+    private fun collectInstalledApps() {
+        observeInstalledAppUseCase().onEach {
+            _installedApps.value = it
+        }.launchIn(viewModelScope)
     }
 
     private fun checkApp(packageName: String) {
@@ -119,16 +105,22 @@ class AppAddViewModel @Inject constructor(
     }
 
     fun handleNextButtonStateWithGoalTime() {
-        val buttonState = !(state.value.goalTime == 0L)
-        updateState {
-            copy(isNextButtonActive = buttonState)
-        }
+        val buttonState = state.value.goalTime != 0L
+        updateNextButtonActive(buttonState)
     }
 
-    fun handleNextButtonStateWithAppSelection() {
-        val buttonState = !(state.value.selectedApps.isEmpty())
-        updateState {
-            copy(isNextButtonActive = buttonState)
-        }
+    private fun handleNextButtonStateWithAppSelection() {
+        val buttonState = state.value.selectedApps.isNotEmpty()
+        updateNextButtonActive(buttonState)
+    }
+
+    private fun updateState(transform: AppAddState.() -> AppAddState) {
+        val currentState = state.value
+        val newState = currentState.transform()
+        _state.value = newState
+    }
+
+    private fun updateNextButtonActive(buttonState: Boolean) {
+        _isNextButtonActive.value = buttonState
     }
 }

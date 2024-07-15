@@ -60,11 +60,9 @@ class OnBoardingRequestPermissionFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        activityViewModel.updateState {
-            copy(isNextButtonActive = allPermissionIsGranted())
-        }
-        activityViewModel.sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_next)))
-        activityViewModel.sendEvent(OnboardEvent.visibleProgressbar(true))
+        activityViewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(allPermissionIsGranted()))
+        activityViewModel.sendEvent(OnboardEvent.ChangeActivityButtonText(getString(R.string.all_next)))
+        activityViewModel.sendEvent(OnboardEvent.VisibleProgressbar(true))
         setPermissionToggleState()
     }
 
