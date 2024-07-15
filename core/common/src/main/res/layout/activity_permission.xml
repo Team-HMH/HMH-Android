@@ -30,72 +30,13 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_request_permission_title" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_accessibility_permission"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="10dp"
-        android:paddingVertical="19dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_onboarding_request_permission_description"
-        app:layout_constraintVertical_bias="0.5">
-
-        <TextView
-            android:id="@+id/tv_accessibility_permission_title"
-            style="?textAppearanceTitleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="21dp"
-            android:text="@string/onboarding_permission1_title"
-            android:textColor="?white_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_accessibility_permission_description"
-            style="@style/TextAppearance.Hmh.BodyMedium"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginStart="21dp"
-            android:layout_marginTop="1dp"
-            android:text="@string/onboarding_permission1_description"
-            android:textColor="?gray3"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_accessibility_permission_title" />
-
-        <com.google.android.material.materialswitch.MaterialSwitch
-            android:id="@+id/tg_accessibility_permission"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="28dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:thumbTint="@color/white_text"
-            app:trackTint="@drawable/toggle_selector"
-            app:trackDecorationTint="@drawable/toggle_selector" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <View
-        android:id="@+id/view_permission1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_centerInParent="true"
-        android:background="?gray7"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cl_accessibility_permission" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_usageinfo_permission"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:paddingVertical="19dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_permission1"
+        app:layout_constraintTop_toBottomOf="@+id/tv_onboarding_request_permission_description"
         app:layout_constraintVertical_bias="0.5">
 
         <TextView

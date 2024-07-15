@@ -50,9 +50,8 @@ class OnBoardingSelectScreenTimeFragment : Fragment() {
             val screenGoalTime = activityViewModel.onBoardingState.value.screenGoalTime
 
             binding.npOnboardingScreentimeGoal.value = screenGoalTime
-
             updateState { copy(isNextButtonActive = true) }
-            sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_next)))
+            sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_done)))
             sendEvent(OnboardEvent.visibleProgressbar(true))
         }
     }

@@ -1,6 +1,7 @@
 package com.hmh.hamyeonham.feature.main.home
 
 import android.content.Context
+import android.view.View
 import androidx.core.content.ContextCompat.getString
 import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.common.context.getAppIconFromPackageName
@@ -16,10 +17,16 @@ class UsageStaticsViewHolder(
     private val binding: ItemUsagestaticBinding,
     private val context: Context,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun onBind(usageStatusAndGoal: UsageStatusAndGoal) {
-        bindAppInfo(usageStatusAndGoal)
-        bindUsageInfo(usageStatusAndGoal)
-        initAndStartProgressBarAnimation(binding.pbAppUsage, usageStatusAndGoal.usedPercentage)
+    fun onBind(
+        usageStaticsModel: UsageStaticsModel,
+    ) {
+        if (usageStaticsModel.permissionGranted) {
+            bindAppInfo(usageStaticsModel.usageStatusAndGoal)
+            bindUsageInfo(usageStaticsModel.usageStatusAndGoal)
+            initAndStartProgressBarAnimation(binding.pbAppUsage, usageStaticsModel.usageStatusAndGoal.usedPercentage)
+        } else {
+            binding.root.visibility = View.GONE
+        }
     }
 
     private fun bindAppInfo(usageStatusAndGoal: UsageStatusAndGoal) {
@@ -38,11 +45,12 @@ class UsageStaticsViewHolder(
             pbAppUsage.progress = usageStatusAndGoal.usedPercentage
             tvTotalTimeInForeground.text =
                 convertTimeToString(usageStatusAndGoal.totalTimeInForegroundInMin)
-            tvAppTimeLeft.text = context.getSecondStrColoredString(
-                firstStr = convertTimeToString(usageStatusAndGoal.timeLeftInMin),
-                secondStr = getString(context, R.string.all_left),
-                color = com.hmh.hamyeonham.core.designsystem.R.color.gray1,
-            )
+            tvAppTimeLeft.text =
+                context.getSecondStrColoredString(
+                    firstStr = convertTimeToString(usageStatusAndGoal.timeLeftInMin),
+                    secondStr = getString(context, R.string.all_left),
+                    color = com.hmh.hamyeonham.core.designsystem.R.color.gray1,
+                )
         }
     }
 }
