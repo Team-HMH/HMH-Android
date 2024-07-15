@@ -2,6 +2,7 @@ package com.hmh.hamyeonham.core.worker
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker
+import androidx.work.BackoffPolicy
 import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -11,6 +12,7 @@ import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
 import com.hmh.hamyeonham.common.time.getYesterdayDateNumeric
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import java.util.concurrent.TimeUnit
 
 @HiltWorker
 class ChallengeDateSaveWorker @AssistedInject constructor(
@@ -23,9 +25,10 @@ class ChallengeDateSaveWorker @AssistedInject constructor(
         private const val TAG = "ChallengeDateSaveWorker"
         fun runAt(context: Context) {
             // 작업 요청 생성
-            val workRequest = OneTimeWorkRequestBuilder<ChallengeDateSaveWorker>().build()
+            val workRequest = OneTimeWorkRequestBuilder<ChallengeDateSaveWorker>()
+                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 10, TimeUnit.MINUTES)
+                .build()
 
-            // WorkManager를 사용하여 작업 예약
             WorkManager.getInstance(context).enqueue(workRequest)
         }
     }
