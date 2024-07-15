@@ -6,7 +6,6 @@ import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.hmh.hamyeonham.common.activity.checkAccessibilityServiceEnabled
 import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.databinding.ActivityPermissionDescriptionBinding
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
@@ -51,7 +50,11 @@ class PermissionDescriptionActivity : AppCompatActivity() {
     private fun checkAccessibilityAndNavigateToPermission() {
         if (checkAccessibilityServiceEnabled()) {
             toast(getString(R.string.success_accessibility_settings))
-            startActivity(navigationProvider.toPermission())
+            startActivity(
+                navigationProvider
+                    .toPermission()
+                    .setFlags (Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            )
             finish()
         }
     }
@@ -63,10 +66,11 @@ class PermissionDescriptionActivity : AppCompatActivity() {
 
     private fun checkAccessibilityServiceEnabled(): Boolean {
         val service = "$packageName/com.hmh.hamyeonham.core.service.LockAccessibilityService"
-        val enabledServicesSetting = Settings.Secure.getString(
-            contentResolver,
-            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
-        )
+        val enabledServicesSetting =
+            Settings.Secure.getString(
+                contentResolver,
+                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+            )
         return enabledServicesSetting?.contains(service) == true
     }
 }

@@ -8,6 +8,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
@@ -65,10 +66,10 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
             onboardingAppSelectionAdapter?.submitList(it)
         }.launchIn(viewLifeCycleScope)
 
-        activityViewModel.onBoardingState
-            .flowWithLifecycle(viewLifeCycle)
+        activityViewModel.isAppAddSelectionScreenButtonEnabled
+            .flowWithLifecycle(viewLifeCycle, Lifecycle.State.RESUMED)
             .onEach {
-                activityViewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(it.appCodeList.isNotEmpty()))
+                activityViewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(it))
             }.launchIn(viewLifeCycleScope)
     }
 

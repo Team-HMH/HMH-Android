@@ -9,8 +9,11 @@ import com.hmh.hamyeonham.login.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,8 +30,8 @@ sealed interface OnboardEvent {
     data class UpdateAccessToken(val accessToken: String) : OnboardEvent
     data class ChangeActivityButtonText(val buttonText: String) : OnboardEvent
     data class VisibleProgressbar(val progressbarVisible: Boolean) : OnboardEvent
-    data class NavigateToPermissionView(val navigateToPermissionView: Boolean, ) : OnboardEvent
-    data class UpdateBackButtonActive(val isBackButtonActive: Boolean, ) : OnboardEvent
+    data class NavigateToPermissionView(val navigateToPermissionView: Boolean) : OnboardEvent
+    data class UpdateBackButtonActive(val isBackButtonActive: Boolean) : OnboardEvent
 }
 
 sealed interface OnboardEffect {
@@ -62,18 +65,24 @@ data class OnBoardingState(
 }
 
 @HiltViewModel
-class OnBoardingViewModel
-    @Inject
-    constructor(
-        private val authRepository: AuthRepository,
-        private val hmhNetworkPreference: HMHNetworkPreference,
-    ) : ViewModel() {
+class OnBoardingViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val hmhNetworkPreference: HMHNetworkPreference,
+) : ViewModel() {
 
-        private val _onBoardingState = MutableStateFlow(OnBoardingState())
-        val onBoardingState = _onBoardingState.asStateFlow()
+    private val _onBoardingState = MutableStateFlow(OnBoardingState())
+    val onBoardingState = _onBoardingState.asStateFlow()
 
-        private val _onboardEffect = MutableSharedFlow<OnboardEffect>()
-        val onboardEffect = _onboardEffect.asSharedFlow()
+    private val _onboardEffect = MutableSharedFlow<OnboardEffect>()
+    val onboardEffect = _onboardEffect.asSharedFlow()
+
+    val isAppAddSelectionScreenButtonEnabled = onBoardingState.map {
+        onBoardingState -> onBoardingState.appCodeList.isNotEmpty()
+    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+    val isUseTimeScreenButtonEnabled = onBoardingState.map { onBoardingState ->
+        onBoardingState.appGoalTimeHour > 0 || onBoardingState.appGoalTimeMinute > 0
+    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     private fun updateState(transform: OnBoardingState.() -> OnBoardingState) {
         val currentState = onBoardingState.value
@@ -81,137 +90,137 @@ class OnBoardingViewModel
         _onBoardingState.value = newState
     }
 
-        fun sendEvent(event: OnboardEvent) {
-            when (event) {
-                is OnboardEvent.UpdateUsuallyUseTime -> {
-                    updateState {
-                        copy(usuallyUseTime = event.usuallyUseTime)
-                    }
+    fun sendEvent(event: OnboardEvent) {
+        when (event) {
+            is OnboardEvent.UpdateUsuallyUseTime -> {
+                updateState {
+                    copy(usuallyUseTime = event.usuallyUseTime)
                 }
+            }
 
-                is OnboardEvent.UpdateProblems -> {
-                    updateState {
-                        copy(problems = event.problems)
-                    }
+            is OnboardEvent.UpdateProblems -> {
+                updateState {
+                    copy(problems = event.problems)
                 }
+            }
 
-                is OnboardEvent.UpdatePeriod -> {
-                    updateState {
-                        copy(period = event.period)
-                    }
+            is OnboardEvent.UpdatePeriod -> {
+                updateState {
+                    copy(period = event.period)
                 }
+            }
 
-                is OnboardEvent.UpdateScreenGoalTime -> {
-                    updateState {
-                        copy(screenGoalTime = event.screeGoalTime)
-                    }
+            is OnboardEvent.UpdateScreenGoalTime -> {
+                updateState {
+                    copy(screenGoalTime = event.screeGoalTime)
                 }
+            }
 
-                is OnboardEvent.AddApps -> {
-                    updateState {
-                        copy(appCodeList = appCodeList + event.appCode)
-                    }
+            is OnboardEvent.AddApps -> {
+                updateState {
+                    copy(appCodeList = appCodeList + event.appCode)
                 }
+            }
 
-                is OnboardEvent.DeleteApp -> {
-                    updateState {
-                        copy(appCodeList = appCodeList - event.appCode)
-                    }
+            is OnboardEvent.DeleteApp -> {
+                updateState {
+                    copy(appCodeList = appCodeList - event.appCode)
                 }
+            }
 
-                is OnboardEvent.UpdateAppGoalTimeMinute -> {
-                    updateState {
-                        copy(appGoalTimeMinute = event.goalTimeMinute)
-                    }
+            is OnboardEvent.UpdateAppGoalTimeMinute -> {
+                updateState {
+                    copy(appGoalTimeMinute = event.goalTimeMinute)
                 }
+            }
 
-                is OnboardEvent.UpdateAppGoalTimeHour -> {
-                    updateState {
-                        copy(appGoalTimeHour = event.goalTimeHour)
-                    }
+            is OnboardEvent.UpdateAppGoalTimeHour -> {
+                updateState {
+                    copy(appGoalTimeHour = event.goalTimeHour)
                 }
+            }
 
-                is OnboardEvent.UpdateNextButtonActive -> {
-                    updateState {
-                        copy(isNextButtonActive = event.isNextButtonActive)
-                    }
+            is OnboardEvent.UpdateNextButtonActive -> {
+                updateState {
+                    copy(isNextButtonActive = event.isNextButtonActive)
                 }
+            }
 
-                is OnboardEvent.UpdateAccessToken -> {
-                    updateState {
-                        copy(accessToken = event.accessToken)
-                    }
+            is OnboardEvent.UpdateAccessToken -> {
+                updateState {
+                    copy(accessToken = event.accessToken)
                 }
+            }
 
-                is OnboardEvent.ChangeActivityButtonText -> {
-                    updateState {
-                        copy(buttonText = event.buttonText)
-                    }
+            is OnboardEvent.ChangeActivityButtonText -> {
+                updateState {
+                    copy(buttonText = event.buttonText)
                 }
+            }
 
-                is OnboardEvent.VisibleProgressbar -> {
-                    updateState {
-                        copy(progressbarVisible = event.progressbarVisible)
-                    }
+            is OnboardEvent.VisibleProgressbar -> {
+                updateState {
+                    copy(progressbarVisible = event.progressbarVisible)
                 }
+            }
 
-                is OnboardEvent.NavigateToPermissionView -> {
-                    updateState {
-                        copy(navigateToPermissionView = event.navigateToPermissionView)
-                    }
+            is OnboardEvent.NavigateToPermissionView -> {
+                updateState {
+                    copy(navigateToPermissionView = event.navigateToPermissionView)
                 }
+            }
 
-                is OnboardEvent.UpdateBackButtonActive -> {
-                    updateState {
-                        copy(isBackButtonActive = event.isBackButtonActive)
-                    }
+            is OnboardEvent.UpdateBackButtonActive -> {
+                updateState {
+                    copy(isBackButtonActive = event.isBackButtonActive)
                 }
             }
         }
-
-        fun signUp() {
-            viewModelScope.launch {
-                val state = onBoardingState.value
-                val token = state.accessToken
-                val request = getRequestDomain(state)
-                authRepository
-                    .signUp(token, request)
-                    .onSuccess { signUpUser ->
-                        signUpUser.let {
-                            hmhNetworkPreference.accessToken = it.accessToken
-                            hmhNetworkPreference.refreshToken = it.refreshToken
-                            hmhNetworkPreference.userId = it.userId
-                            hmhNetworkPreference.autoLoginConfigured = true
-                        }
-                        viewModelScope.launch {
-                            _onboardEffect.emit(OnboardEffect.OnboardSuccess)
-                        }
-                    }.onFailure {
-                        viewModelScope.launch {
-                            _onboardEffect.emit(OnboardEffect.OnboardFail)
-                        }
-                    }
-            }
-        }
-
-        private fun getRequestDomain(state: OnBoardingState) =
-            SignRequestDomain(
-                challenge =
-                    SignRequestDomain.Challenge(
-                        period = state.period,
-                        app =
-                            state.appCodeList.map { appCode ->
-                                SignRequestDomain.Challenge.App(
-                                    appCode = appCode,
-                                    goalTime = state.appGoalTime,
-                                )
-                            },
-                        goalTime = state.goalTime,
-                    ),
-                onboarding =
-                    SignRequestDomain.Onboarding(
-                        averageUseTime = state.usuallyUseTime,
-                        problem = state.problems,
-                    ),
-            )
     }
+
+    fun signUp() {
+        viewModelScope.launch {
+            val state = onBoardingState.value
+            val token = state.accessToken
+            val request = getRequestDomain(state)
+            authRepository
+                .signUp(token, request)
+                .onSuccess { signUpUser ->
+                    signUpUser.let {
+                        hmhNetworkPreference.accessToken = it.accessToken
+                        hmhNetworkPreference.refreshToken = it.refreshToken
+                        hmhNetworkPreference.userId = it.userId
+                        hmhNetworkPreference.autoLoginConfigured = true
+                    }
+                    viewModelScope.launch {
+                        _onboardEffect.emit(OnboardEffect.OnboardSuccess)
+                    }
+                }.onFailure {
+                    viewModelScope.launch {
+                        _onboardEffect.emit(OnboardEffect.OnboardFail)
+                    }
+                }
+        }
+    }
+
+    private fun getRequestDomain(state: OnBoardingState) =
+        SignRequestDomain(
+            challenge =
+            SignRequestDomain.Challenge(
+                period = state.period,
+                app =
+                state.appCodeList.map { appCode ->
+                    SignRequestDomain.Challenge.App(
+                        appCode = appCode,
+                        goalTime = state.appGoalTime,
+                    )
+                },
+                goalTime = state.goalTime,
+            ),
+            onboarding =
+            SignRequestDomain.Onboarding(
+                averageUseTime = state.usuallyUseTime,
+                problem = state.problems,
+            ),
+        )
+}
