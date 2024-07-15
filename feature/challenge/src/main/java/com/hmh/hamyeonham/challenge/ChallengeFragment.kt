@@ -151,7 +151,7 @@ class ChallengeFragment : Fragment() {
 
     private fun initPointButton() {
         val pointButtonImg =
-            if (activityViewModel.isPointLeftToCollect()) com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24 else com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
+            if (activityViewModel.isPointLeftToCollect) com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24 else com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
         binding.tvPointButton.setImageResource(pointButtonImg)
 
         binding.tvPointButton.setOnClickListener {
@@ -161,7 +161,7 @@ class ChallengeFragment : Fragment() {
 
     private fun initChallengeCreateButton() {
         binding.btnChallengeCreate.setOnClickListener {
-            if (activityViewModel.isPointLeftToCollect()) {
+            if (activityViewModel.isPointLeftToCollect) {
                 snackBarWithAction(
                     anchorView = binding.root,
                     message = getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_create),
@@ -251,7 +251,7 @@ class ChallengeFragment : Fragment() {
                 if (result.resultCode == Activity.RESULT_OK) {
                     val period = result.data?.getIntExtra(NewChallengeActivity.PERIOD, 0)
                     val goalTime = result.data?.getLongExtra(NewChallengeActivity.GOALTIME, 0)
-                    viewModel.generateNewChallenge(
+                    activityViewModel.generateNewChallenge(
                         NewChallenge(
                             period = period ?: 0,
                             goalTime = goalTime ?: 0
