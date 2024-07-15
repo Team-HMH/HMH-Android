@@ -91,6 +91,7 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.network)
     implementation(projects.core.viewmodel.main)
+    implementation(projects.core.service)
 
     // Firebase
     implementation(platform(libs.firebase))

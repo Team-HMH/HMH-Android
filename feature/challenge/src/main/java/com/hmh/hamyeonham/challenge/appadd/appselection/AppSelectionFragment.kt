@@ -1,20 +1,23 @@
 package com.hmh.hamyeonham.challenge.appadd.appselection
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmh.hamyeonham.challenge.appadd.AppAddViewModel
+import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.FrargmentAppSelectionBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -44,17 +47,17 @@ class AppSelectionFragment : Fragment() {
     }
 
     private fun initSearchBar() {
-        binding.etSearchbar.addTextChangedListener { text ->
+        binding.etSearchbar.doOnTextChanged { text, _, _, _ ->
             viewModel.onQueryChanged(text.toString())
         }
     }
 
     private fun collectState() {
-        viewModel.state.flowWithLifecycle(viewLifeCycle).onEach { state ->
+        viewModel.installedApps.flowWithLifecycle(viewLifeCycle).onEach { installedApps ->
             val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter
-            appSelectionAdapter?.submitList(
-                state.getInstalledAppList(requireContext())
-            )
+            appSelectionAdapter?.submitList(getInstalledAppList(requireContext()))
+            delay(300)
+            binding.rvAppSelection.scrollToPosition(0)
         }.launchIn(viewLifeCycleScope)
     }
 
@@ -64,5 +67,16 @@ class AppSelectionFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext())
             itemAnimator = null
         }
+    }
+
+    private fun getInstalledAppList(context: Context): List<AppSelectionModel> {
+        val installApps = viewModel.installedApps.value
+        val selectedApps = viewModel.state.value.selectedApps
+        return installApps.map {
+            if (it.packageName.contains(context.packageName)) {
+                return@map null
+            }
+            AppSelectionModel(it.packageName, selectedApps.contains(it.packageName))
+        }.sortedBy { context.getAppNameFromPackageName(it?.packageName ?: "") }.filterNotNull()
     }
 }

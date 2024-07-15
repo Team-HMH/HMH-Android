@@ -5,13 +5,13 @@ import com.hmh.hamyeonham.data.device.repository.DefaultDeviceRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.scopes.ViewModelScoped
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 interface DeviceBinder {
     @Binds
-    @Singleton
+    @ViewModelScoped
     fun bind(deviceRepository: DefaultDeviceRepository): DeviceRepository
 }
