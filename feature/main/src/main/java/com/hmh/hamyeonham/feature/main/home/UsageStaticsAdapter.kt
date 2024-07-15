@@ -12,6 +12,7 @@ import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 data class UsageStaticsModel(
     val userName: String,
     val challengeSuccess: Boolean,
+    val permissionGranted: Boolean,
     val usageStatusAndGoal: UsageStatusAndGoal,
 )
 
@@ -46,12 +47,12 @@ class UsageStaticsAdapter : ListAdapter<UsageStaticsModel, RecyclerView.ViewHold
         when (position) {
             0 -> {
                 val newHolder = holder as UsageStaticsTotalViewHolder
-                newHolder.onBind(currentList[position])
+                newHolder.onBind(currentList.getOrNull(position) ?: return)
             }
 
             else -> {
                 val newHolder = holder as UsageStaticsViewHolder
-                newHolder.onBind(currentList[position].usageStatusAndGoal)
+                newHolder.onBind(currentList.getOrNull(position) ?: return)
             }
         }
     }

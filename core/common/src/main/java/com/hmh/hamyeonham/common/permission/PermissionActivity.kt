@@ -9,23 +9,20 @@ import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.hmh.hamyeonham.common.activity.checkAccessibilityServiceEnabled
 import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.databinding.ActivityPermissionBinding
+import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.view.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PermissionActivity : AppCompatActivity() {
     private val binding by viewBinding(ActivityPermissionBinding::inflate)
 
-    private val accessibilitySettingsLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-        ) {
-            if (checkAccessibilityServiceEnabled()) {
-                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_accessibility_settings))
-            }
-        }
+    @Inject
+    lateinit var navigationProvider: NavigationProvider
 
     private val overlayPermissionLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(
@@ -54,6 +51,7 @@ class PermissionActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         if (allPermissionIsGranted()) {
+            startActivity(navigationProvider.toMain())
             finish()
         }
         setPermissionToggleState()
@@ -61,14 +59,6 @@ class PermissionActivity : AppCompatActivity() {
 
     private fun initViews() {
         binding.run {
-            clAccessibilityPermission.setOnClickListener {
-                if (checkAccessibilityServiceEnabled()) {
-                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_accessibility_settings))
-                    tgAccessibilityPermission.isChecked = true
-                } else {
-                    requestAccessibilitySettings()
-                }
-            }
             clUsageinfoPermission.setOnClickListener {
                 if (hasUsageStatsPermission()) {
                     toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_usage_stats_permission))
@@ -90,18 +80,11 @@ class PermissionActivity : AppCompatActivity() {
 
     private fun setPermissionToggleState() {
         binding.run {
-            tgAccessibilityPermission.isClickable = false
             tgUsageinfoPermission.isClickable = false
             tgDrawoverPermission.isClickable = false
-            tgAccessibilityPermission.isChecked = checkAccessibilityServiceEnabled()
             tgUsageinfoPermission.isChecked = hasUsageStatsPermission()
             tgDrawoverPermission.isChecked = hasOverlayPermission()
         }
-    }
-
-    private fun requestAccessibilitySettings() {
-        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-        accessibilitySettingsLauncher.launch(intent)
     }
 
     private fun requestOverlayPermission() {
