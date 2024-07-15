@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.fragment.app.Fragment
 import com.hmh.hamyeonham.challenge.point.PointActivity
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
+import com.hmh.hamyeonham.common.permission.PermissionActivity
 import com.hmh.hamyeonham.feature.lock.LockActivity
 import com.hmh.hamyeonham.feature.login.LoginActivity
 import com.hmh.hamyeonham.feature.main.MainActivity
@@ -46,7 +47,7 @@ class DefaultNavigationProvider @Inject constructor(
         return Intent(context, PointActivity::class.java)
     }
 
-    override fun toPermission(): Fragment {
-        return OnBoardingRequestPermissionFragment()
+    override fun toPermission(): Intent {
+        return Intent(context, PermissionActivity::class.java)
     }
 }

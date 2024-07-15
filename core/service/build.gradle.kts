@@ -14,6 +14,7 @@ dependencies {
 
     implementation(projects.domain.usagestats)
     implementation(projects.domain.lock)
+    implementation(projects.domain.challenge)
 
     implementation(libs.lifecycle.process)
     implementation(libs.androidx.hilt.common)

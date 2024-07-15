@@ -24,6 +24,11 @@ fun getNowTime(): Long {
 fun getNowDateNumeric(): String {
     return getNowTime().formatNumericDate()
 }
+// 어제 날짜를 숫자 형식으로 반환하는 함수
+// 예시 값: "2024-06-14"
+fun getYesterdayDateNumeric(): String {
+    return minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), 1).toString()
+}
 
 // 현재 시스템 시간을 Instant로 반환하는 함수
 // 예시 값: 2024-06-15T12:34:56.789Z

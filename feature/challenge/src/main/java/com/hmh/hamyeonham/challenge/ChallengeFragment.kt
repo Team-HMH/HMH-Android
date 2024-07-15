@@ -80,6 +80,9 @@ class ChallengeFragment : Fragment() {
     private fun collectMainStateAndProcess() {
         activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
             bindChallengeInfo(it)
+        }.launchIn(viewLifeCycleScope)
+
+        activityViewModel.usageStatusAndGoals.flowWithLifecycle(viewLifeCycle).onEach {
             updateUsageStatusAndGoals(it)
         }.launchIn(viewLifeCycleScope)
 
@@ -93,8 +96,8 @@ class ChallengeFragment : Fragment() {
         bindChallengeDate(it.todayIndexAsDate, it.startDate)
     }
 
-    private fun updateUsageStatusAndGoals(it: MainState) {
-        if (it.usageStatusAndGoals.isNotEmpty()) viewModel.updateUsageStatusAndGoals(
+    private fun updateUsageStatusAndGoals(usageStatusAndGoals: List<UsageStatusAndGoal>) {
+        if (usageStatusAndGoals.isNotEmpty()) viewModel.updateUsageStatusAndGoals(
             activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal()
         )
     }
@@ -148,7 +151,7 @@ class ChallengeFragment : Fragment() {
 
     private fun initPointButton() {
         val pointButtonImg =
-            if (activityViewModel.isPointLeftToCollect()) com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24 else com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
+            if (activityViewModel.isPointLeftToCollect) com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24 else com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
         binding.tvPointButton.setImageResource(pointButtonImg)
 
         binding.tvPointButton.setOnClickListener {
@@ -158,7 +161,7 @@ class ChallengeFragment : Fragment() {
 
     private fun initChallengeCreateButton() {
         binding.btnChallengeCreate.setOnClickListener {
-            if (activityViewModel.isPointLeftToCollect()) {
+            if (activityViewModel.isPointLeftToCollect) {
                 snackBarWithAction(
                     anchorView = binding.root,
                     message = getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_create),
@@ -218,7 +221,10 @@ class ChallengeFragment : Fragment() {
                 startDate.dayOfMonth
             )
             tvChallengeDay.text =
-                getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_day, todayIndexAsDate)
+                getString(
+                    com.hmh.hamyeonham.feature.challenge.R.string.challenge_day,
+                    todayIndexAsDate
+                )
         }
     }
 
@@ -245,7 +251,7 @@ class ChallengeFragment : Fragment() {
                 if (result.resultCode == Activity.RESULT_OK) {
                     val period = result.data?.getIntExtra(NewChallengeActivity.PERIOD, 0)
                     val goalTime = result.data?.getLongExtra(NewChallengeActivity.GOALTIME, 0)
-                    viewModel.generateNewChallenge(
+                    activityViewModel.generateNewChallenge(
                         NewChallenge(
                             period = period ?: 0,
                             goalTime = goalTime ?: 0
