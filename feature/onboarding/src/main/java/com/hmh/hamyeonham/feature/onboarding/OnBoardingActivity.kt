@@ -104,6 +104,7 @@ class OnBoardingActivity : AppCompatActivity() {
         val pagerAdapter = setOnboardingPageAdapter()
 
         binding.btnOnboardingNext.setOnClickListener {
+            viewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(false))
             navigateToNextOnboardingStep(pagerAdapter)
         }
 
