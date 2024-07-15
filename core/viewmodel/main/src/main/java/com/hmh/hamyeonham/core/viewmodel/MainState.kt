@@ -15,6 +15,7 @@ data class MainState(
     val name: String = "",
     val point: Int = 0,
     val challengeSuccess: Boolean = true,
+    var permissionGranted: Boolean = true,
 ) {
     val startDate: LocalDate = minusDaysFromDate(getCurrentDateOfDefaultTimeZone(), todayIndex)
     val isChallengeExist: Boolean = todayIndex != -1
