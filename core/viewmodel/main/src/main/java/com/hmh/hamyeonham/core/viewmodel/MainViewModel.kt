@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.ChallengeStatus
+import com.hmh.hamyeonham.challenge.model.NewChallenge
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
+import com.hmh.hamyeonham.challenge.usecase.NewChallengeUseCase
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
@@ -37,7 +39,8 @@ class MainViewModel @Inject constructor(
     private val getUsageStatsListUseCase: GetUsageStatsListUseCase,
     private val setIsUnLockUseCase: SetIsUnLockUseCase,
     private val updateIsUnLockUseCase: UpdateIsUnLockUseCase,
-) : ViewModel() {
+    private val newChallengeUseCase: NewChallengeUseCase,
+    ) : ViewModel() {
 
     private val _mainState = MutableStateFlow(MainState())
     val mainState = _mainState.asStateFlow()
@@ -49,6 +52,10 @@ class MainViewModel @Inject constructor(
     private var rawChallengeStatusList: List<ChallengeStatus.Status> = emptyList()
     private val _challengeStatusList = MutableStateFlow<List<ChallengeStatus.Status>>(emptyList())
     val challengeStatusList = _challengeStatusList.asStateFlow()
+
+    val isPointLeftToCollect get() =
+        challengeStatusList.value.contains(ChallengeStatus.Status.UNEARNED)
+
 
     private val _effect = MutableSharedFlow<MainEffect>()
     val effect = _effect.asSharedFlow()
@@ -101,8 +108,17 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun isPointLeftToCollect(): Boolean =
-        challengeStatusList.value.contains(ChallengeStatus.Status.UNEARNED)
+    fun getUsageStatusAndGoalsExceptTotal(): List<UsageStatusAndGoal> {
+        return usageStatusAndGoals.value.filter { it.packageName != UsageGoal.TOTAL }
+    }
+
+    fun generateNewChallenge(newChallenge: NewChallenge) {
+        viewModelScope.launch {
+            newChallengeUseCase(newChallenge).onSuccess {
+                getChallengeStatus()
+            }
+        }
+    }
 
     private fun updateState(transform: suspend MainState.() -> MainState) {
         viewModelScope.launch {
@@ -189,10 +205,6 @@ class MainViewModel @Inject constructor(
         updateState {
             copy(usageGoals = usageGoals)
         }
-    }
-
-    fun getUsageStatusAndGoalsExceptTotal(): List<UsageStatusAndGoal> {
-        return usageStatusAndGoals.value.filter { it.packageName != UsageGoal.TOTAL }
     }
 
     private fun setChallengeStatus(challengeStatus: ChallengeStatus) {

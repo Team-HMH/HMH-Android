@@ -3,10 +3,8 @@ package com.hmh.hamyeonham.challenge
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.Apps
-import com.hmh.hamyeonham.challenge.model.NewChallenge
 import com.hmh.hamyeonham.challenge.usecase.AddUsageGoalsUseCase
 import com.hmh.hamyeonham.challenge.usecase.DeleteUsageGoalUseCase
-import com.hmh.hamyeonham.challenge.usecase.NewChallengeUseCase
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.viewmodel.CalendarToggleState
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
@@ -48,7 +46,6 @@ enum class ModifierState {
 class ChallengeViewModel @Inject constructor(
     private val addUsageGoalsUseCase: AddUsageGoalsUseCase,
     private val deleteUsageGoalUseCase: DeleteUsageGoalUseCase,
-    private val newChallengeUseCase: NewChallengeUseCase,
     private val deletedAppUsageStoreUseCase: DeletedAppUsageStoreUseCase,
     private val checkAndDeleteDeletedAppUsageUseCase: CheckAndDeleteDeletedAppUsageUseCase
 ) : ViewModel() {
@@ -84,12 +81,6 @@ class ChallengeViewModel @Inject constructor(
                 usageStatusAndGoal.totalTimeInForeground,
                 usageStatusAndGoal.packageName
             )
-        }
-    }
-
-    fun generateNewChallenge(newChallenge: NewChallenge) {
-        viewModelScope.launch {
-            newChallengeUseCase(newChallenge)
         }
     }
 

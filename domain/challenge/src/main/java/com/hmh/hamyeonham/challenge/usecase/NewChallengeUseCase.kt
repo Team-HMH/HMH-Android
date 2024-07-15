@@ -7,7 +7,7 @@ import javax.inject.Inject
 class NewChallengeUseCase @Inject constructor(
     private val challengeRepository: ChallengeRepository
 ) {
-    suspend operator fun invoke(newChallenge: NewChallenge) {
-        challengeRepository.generateNewChallenge(newChallenge)
+    suspend operator fun invoke(newChallenge: NewChallenge): Result<Unit> {
+        return challengeRepository.generateNewChallenge(newChallenge)
     }
 }
