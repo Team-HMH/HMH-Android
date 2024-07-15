@@ -9,6 +9,7 @@
     <string name="all_left">남음</string>
     <string name="item_usagestatic_appicon_description">image of app icon</string>
     <string name="item_usagestatic_total_blackhole_description">image of black hole</string>
+    <string name="blackhole_none">반가워요.\n하면함을 시작해볼까요?</string>
     <string name="blackhole0">별조각을 잘 따라가고 있어요\n오늘도 화이팅!</string>
     <string name="blackhole1">별조각이 살짝 멀어졌어요\n조금 더 힘을 내요!</string>
     <string name="blackhole2">이런, 별조각이 희미해요\n방향을 잃지 않게 조심하세요</string>
@@ -27,5 +28,7 @@
     <string name="dialog_title_point_lack">포인트가 부족해요</string>
     <string name="dialog_description_point_lack">상점에서 포인트를 충전할 수 있어요</string>
     <string name="dialog_button_charge_point">포인트 구매하기</string>
+    <string name="require_permission">권한 허용하기</string>
+    <string name="require_permission_description">스크린타임 권한을 허용하면 여정이 시작돼요.</string>
 
 </resources>
