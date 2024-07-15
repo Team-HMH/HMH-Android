@@ -1,6 +1,5 @@
 package com.hmh.hamyeonham.feature.main
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +7,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.hmh.hamyeonham.challenge.worker.ChallengeDateSaveWorker
 import com.hmh.hamyeonham.common.activity.allPermissionIsGranted
 import com.hmh.hamyeonham.common.activity.isBatteryOptimizationEnabled
 import com.hmh.hamyeonham.common.activity.requestDisableBatteryOptimization
@@ -15,9 +15,7 @@ import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.OneButtonCommonDialog
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
-import com.hmh.hamyeonham.common.permission.PermissionActivity
 import com.hmh.hamyeonham.common.view.viewBinding
-import com.hmh.hamyeonham.core.service.lockAccessibilityServiceClassName
 import com.hmh.hamyeonham.core.viewmodel.MainEffect
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.ActivityMainBinding
@@ -41,9 +39,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         checkUnlockedPackage()
-        if (!allPermissionIsGranted(lockAccessibilityServiceClassName)) {
-            Intent(this@MainActivity, PermissionActivity::class.java).let(::startActivity)
-        }
     }
 
     private fun collectEffect() {
