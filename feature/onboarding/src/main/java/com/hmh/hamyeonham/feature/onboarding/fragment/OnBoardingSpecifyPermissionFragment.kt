@@ -35,7 +35,7 @@ class OnBoardingSpecifyPermissionFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        activityViewModel.sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_request_permission)))
+        activityViewModel.sendEvent(OnboardEvent.ChangeActivityButtonText(getString(R.string.all_request_permission)))
         activityViewModel.sendEvent(OnboardEvent.UpdateBackButtonActive(false))
     }
 }

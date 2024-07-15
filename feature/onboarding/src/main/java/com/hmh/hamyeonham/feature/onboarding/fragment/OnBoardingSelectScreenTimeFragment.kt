@@ -51,8 +51,8 @@ class OnBoardingSelectScreenTimeFragment : Fragment() {
 
             binding.npOnboardingScreentimeGoal.value = screenGoalTime
             sendEvent(OnboardEvent.UpdateNextButtonActive(true))
-            sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_done)))
-            sendEvent(OnboardEvent.visibleProgressbar(true))
+            sendEvent(OnboardEvent.ChangeActivityButtonText(getString(R.string.all_done)))
+            sendEvent(OnboardEvent.VisibleProgressbar(true))
         }
     }
 

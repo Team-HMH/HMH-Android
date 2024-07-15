@@ -65,27 +65,18 @@ class HomeFragment : Fragment() {
 
     private fun initUsageStatsList() {
         val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
-        activityViewModel.mainState
-            .flowWithLifecycle(viewLifeCycle)
-            .onEach { mainState ->
-                usageStaticsAdapter?.submitList(
-                    mainState.usageStatusAndGoals.map {
-                        UsageStaticsModel(
-                            mainState.name,
-                            mainState.challengeSuccess,
-                            mainState.permissionGranted,
-                            it,
-                        )
-                    },
-                )
-            }.launchIn(viewLifeCycleScope)
         activityViewModel.usageStatusAndGoals
             .flowWithLifecycle(viewLifeCycle)
             .onEach { usageStatusGoals ->
                 val mainState = activityViewModel.mainState.value
                 usageStaticsAdapter?.submitList(
                     usageStatusGoals.map {
-                        UsageStaticsModel(it.packageName, mainState.challengeSuccess, it)
+                        UsageStaticsModel(
+                            userName = mainState.name,
+                            challengeSuccess = mainState.challengeSuccess,
+                            permissionGranted = mainState.permissionGranted,
+                            usageStatusAndGoal = it
+                        )
                     }
                 )
             }.launchIn(viewLifeCycleScope)
