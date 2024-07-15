@@ -23,6 +23,7 @@ class OnBoardingSelectAppFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activityViewModel.sendEvent(OnboardEvent.ChangeActivityButtonText(getString(R.string.all_select_app)))
+        activityViewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(true))
         activityViewModel.sendEvent(OnboardEvent.VisibleProgressbar(true))
     }
 }
