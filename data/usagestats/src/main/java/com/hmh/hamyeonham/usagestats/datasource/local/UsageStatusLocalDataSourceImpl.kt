@@ -89,10 +89,8 @@ class UsageStatusLocalDataSourceImpl @Inject constructor(
                     }
 
                     UsageEvents.Event.ACTIVITY_PAUSED, UsageEvents.Event.ACTIVITY_STOPPED -> {
-                        if (lastResumeTime != -1L) {
-                            appUsageInfo.timeInForeground += event.timeStamp - lastResumeTime
-                            lastResumeTime = -1L
-                        }
+                        appUsageInfo.timeInForeground += event.timeStamp - lastResumeTime
+                        lastResumeTime = event.timeStamp
                     }
                 }
             }

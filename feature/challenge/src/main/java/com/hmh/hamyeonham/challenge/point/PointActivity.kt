@@ -20,13 +20,29 @@ class PointActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        initViews()
         collectPointInfo()
         collectUserPoint()
-        backToMain()
     }
 
-    private fun backToMain() {
+    private fun initViews() {
+        initAdapter()
+        initCloseClickListener()
+    }
+
+    private fun initAdapter() {
+        val adapter = PointAdapter(
+            onButtonClick = { challengeDate ->
+                viewModel.earnChallengePoint(challengeDate)
+            },
+        )
+        binding.rvPoint.run {
+            this.adapter = adapter
+            layoutManager = LinearLayoutManager(context)
+        }
+    }
+
+    private fun initCloseClickListener() {
         binding.ivBack.setOnClickListener {
             finish()
         }
@@ -35,23 +51,14 @@ class PointActivity : AppCompatActivity() {
     private fun collectPointInfo() {
         viewModel.pointInfoList.flowWithLifecycle(lifecycle)
             .onEach { pointInfoList ->
-                val adapter = PointAdapter(
-                    onButtonClick = { challengeDate ->
-                        viewModel.earnChallengePoint(challengeDate)
-                    },
-                )
-                binding.rvPoint.adapter = adapter
-                adapter.submitList(pointInfoList)
-                binding.rvPoint.layoutManager = LinearLayoutManager(this)
-            }
-            .launchIn(lifecycleScope)
+                (binding.rvPoint.adapter as? PointAdapter)?.submitList(pointInfoList)
+            }.launchIn(lifecycleScope)
     }
 
     private fun collectUserPoint() {
         viewModel.currentPointState.flowWithLifecycle(lifecycle)
             .onEach {
                 binding.tvPointTotal.text = it.toString()
-            }
-            .launchIn(lifecycleScope)
+            }.launchIn(lifecycleScope)
     }
 }
