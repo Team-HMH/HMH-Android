@@ -144,29 +144,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_drawover_permission" />
 
-
-    <TextView
-        android:id="@+id/tv_api_description_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="21dp"
-        android:text="@string/api_description_title"
-        android:textAppearance="@style/TextAppearance.Hmh.LabelLarge"
-        android:textColor="?gray4"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_onboarding_permission3" />
-
-    <TextView
-        android:id="@+id/tv_api_description_contents"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="21dp"
-        android:layout_marginTop="7dp"
-        android:text="@string/api_description_contents"
-        android:textAppearance="@style/TextAppearance.Hmh.LabelMedium"
-        android:textColor="?gray4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_api_description_title" />
 </androidx.constraintlayout.widget.ConstraintLayout>

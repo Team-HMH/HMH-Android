@@ -84,6 +84,8 @@ class OnBoardingViewModel @Inject constructor(
         onBoardingState.appGoalTimeHour > 0 || onBoardingState.appGoalTimeMinute > 0
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
+    val isAccessibilityServicePermissionScreenButtonEnabled = MutableStateFlow(true)
+
     private fun updateState(transform: OnBoardingState.() -> OnBoardingState) {
         val currentState = onBoardingState.value
         val newState = currentState.transform()
