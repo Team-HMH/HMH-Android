@@ -65,8 +65,7 @@ class OnBoardingActivity : AppCompatActivity() {
         viewModel.onBoardingState
             .flowWithLifecycle(lifecycle)
             .onEach {
-                binding.ivOnboardingBack.isVisible =
-                    if (it.isBackButtonActive) true else false
+                binding.ivOnboardingBack.isVisible = it.isBackButtonActive
             }.launchIn(lifecycleScope)
     }
 
