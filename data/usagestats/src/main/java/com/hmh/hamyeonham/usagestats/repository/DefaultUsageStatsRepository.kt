@@ -74,4 +74,8 @@ class DefaultUsageStatsRepository @Inject constructor(
         val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
         return getUsageTimeForPackage(startTime, endTime, packageName)
     }
+
+    override fun getForegroundAppPackageName(): String? {
+        return usageStatusLocalDataSource.getForegroundAppPackageName()
+    }
 }

@@ -229,12 +229,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun updateIsPermissionGranted(isPermissionGranted: Boolean) {
-        updateState {
-            copy(permissionGranted = isPermissionGranted)
-        }
-    }
-
     private fun setUsageStatsList(usageStatsList: List<UsageStatusAndGoal>) {
         _usageStatusAndGoals.value = usageStatsList
     }
