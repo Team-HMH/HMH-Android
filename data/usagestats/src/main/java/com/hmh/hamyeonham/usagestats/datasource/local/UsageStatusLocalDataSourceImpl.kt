@@ -25,6 +25,25 @@ class UsageStatusLocalDataSourceImpl @Inject constructor(
         }
     }
 
+    override fun getForegroundAppPackageName(): String? {
+        val endTime = System.currentTimeMillis()
+        val startTime = endTime - 10000
+        val usageEvents = usageStatsManager?.queryEvents(startTime, endTime)
+        var lastEvent: UsageEvents.Event? = null
+
+        usageEvents?.let {
+            while (it.hasNextEvent()) {
+                val event = UsageEvents.Event()
+                it.getNextEvent(event)
+                if (event.eventType == UsageEvents.Event.ACTIVITY_RESUMED) {
+                    lastEvent = event
+                }
+            }
+        }
+
+        return lastEvent?.packageName
+    }
+
     private fun getUsageStatistics(startTime: Long, endTime: Long): List<AppUsageInfo> {
         if (usageStatsManager == null) {
             return emptyList()

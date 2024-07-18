@@ -9,7 +9,6 @@ import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.hmh.hamyeonham.common.activity.checkAccessibilityServiceEnabled
 import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.databinding.ActivityPermissionBinding
 import com.hmh.hamyeonham.common.navigation.NavigationProvider

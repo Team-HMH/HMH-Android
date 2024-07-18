@@ -9,11 +9,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
-import com.hmh.hamyeonham.common.fragment.allPermissionIsGranted
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
-import com.hmh.hamyeonham.core.service.lockAccessibilityServiceClassName
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,12 +46,6 @@ class HomeFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activityViewModel.reloadUsageStatsList()
-
-        activityViewModel.updateIsPermissionGranted(
-            allPermissionIsGranted(
-                lockAccessibilityServiceClassName,
-            ),
-        )
     }
 
     private fun initStaticsRecyclerView() {
@@ -74,7 +66,7 @@ class HomeFragment : Fragment() {
                         UsageStaticsModel(
                             userName = mainState.name,
                             challengeSuccess = mainState.challengeSuccess,
-                            permissionGranted = mainState.permissionGranted,
+                            permissionGranted = true,
                             usageStatusAndGoal = it
                         )
                     }

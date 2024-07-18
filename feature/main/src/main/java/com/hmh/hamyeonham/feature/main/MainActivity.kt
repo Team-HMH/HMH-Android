@@ -7,13 +7,19 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.hmh.hamyeonham.common.activity.isBatteryOptimizationEnabled
-import com.hmh.hamyeonham.common.activity.requestDisableBatteryOptimization
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
+import com.hmh.hamyeonham.common.context.hasNotificationPermission
 import com.hmh.hamyeonham.common.dialog.OneButtonCommonDialog
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
+import com.hmh.hamyeonham.common.permission.Permission
+import com.hmh.hamyeonham.common.permission.PermissionRequestListener
+import com.hmh.hamyeonham.common.permission.allPermissionIsGranted
+import com.hmh.hamyeonham.common.permission.isBatteryOptimizationEnabled
+import com.hmh.hamyeonham.common.permission.requestDisableBatteryOptimization
+import com.hmh.hamyeonham.common.permission.requestNotificationPermission
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.core.service.LockForegroundService
 import com.hmh.hamyeonham.core.viewmodel.MainEffect
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.ActivityMainBinding
@@ -30,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initNavHostFragment()
-        checkPowerManagerPermission()
+        checkPermission()
         collectEffect()
     }
 
@@ -51,12 +57,6 @@ class MainActivity : AppCompatActivity() {
                 is MainEffect.NetworkError -> showErrorDialog()
             }
         }.launchIn(lifecycleScope)
-    }
-
-    private fun checkPowerManagerPermission() {
-        if (isBatteryOptimizationEnabled()) {
-            requestDisableBatteryOptimization()
-        }
     }
 
     private fun initNavHostFragment() {
@@ -122,5 +122,19 @@ class MainActivity : AppCompatActivity() {
                 dismiss()
             }
         }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
+    }
+
+    private fun checkPermission() {
+        if (allPermissionIsGranted()) {
+            // TODO Permission 화면 보내기
+        }
+
+        checkPowerManagerPermission()
+    }
+
+    private fun checkPowerManagerPermission() {
+        if (isBatteryOptimizationEnabled()) {
+            requestDisableBatteryOptimization()
+        }
     }
 }
