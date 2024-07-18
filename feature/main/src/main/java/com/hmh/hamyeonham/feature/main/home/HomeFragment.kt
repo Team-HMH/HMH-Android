@@ -60,6 +60,7 @@ class HomeFragment : Fragment() {
         binding.rvStatics.run {
             adapter = UsageStaticsAdapter()
             layoutManager = LinearLayoutManager(requireContext())
+            itemAnimator = null
         }
     }
 
