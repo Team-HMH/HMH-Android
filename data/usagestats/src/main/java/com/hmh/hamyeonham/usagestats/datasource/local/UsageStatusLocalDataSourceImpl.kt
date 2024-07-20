@@ -2,6 +2,7 @@ package com.hmh.hamyeonham.usagestats.datasource.local
 
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
+import android.os.Build
 import com.hmh.hamyeonham.usagestats.model.UsageStatsModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -81,21 +82,28 @@ class UsageStatusLocalDataSourceImpl @Inject constructor(
         sameEvents.forEach { (packageName, events) ->
             val appUsageInfo = usageMap.getOrPut(packageName) { AppUsageInfo(packageName) }
             var lastResumeTime = -1L
+            var lastEventType = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                UsageEvents.Event.ACTIVITY_PAUSED
+            } else {
+                UsageEvents.Event.MOVE_TO_BACKGROUND
+            }
 
             events.forEach { event ->
                 when (event.eventType) {
                     UsageEvents.Event.ACTIVITY_RESUMED -> {
                         lastResumeTime = event.timeStamp
+                        lastEventType = event.eventType
                     }
 
                     UsageEvents.Event.ACTIVITY_PAUSED, UsageEvents.Event.ACTIVITY_STOPPED -> {
                         appUsageInfo.timeInForeground += event.timeStamp - lastResumeTime
                         lastResumeTime = event.timeStamp
+                        lastEventType = event.eventType
                     }
                 }
             }
 
-            if (lastResumeTime != -1L) {
+            if (lastEventType == UsageEvents.Event.ACTIVITY_RESUMED) {
                 appUsageInfo.timeInForeground += endTime - lastResumeTime
             }
         }
