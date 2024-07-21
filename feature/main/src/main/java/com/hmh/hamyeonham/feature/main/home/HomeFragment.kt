@@ -66,7 +66,6 @@ class HomeFragment : Fragment() {
                         UsageStaticsModel(
                             userName = mainState.name,
                             challengeSuccess = mainState.challengeSuccess,
-                            permissionGranted = true,
                             usageStatusAndGoal = it
                         )
                     }

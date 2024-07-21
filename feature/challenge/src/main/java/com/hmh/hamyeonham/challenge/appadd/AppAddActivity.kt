@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
@@ -28,6 +29,7 @@ class AppAddActivity : AppCompatActivity() {
         setContentView(binding.root)
         initViews()
         collectState()
+        collectEffect()
     }
 
     private fun initViews() {
@@ -46,6 +48,25 @@ class AppAddActivity : AppCompatActivity() {
             .onEach { binding.btAppSelection.isEnabled = it }
             .launchIn(lifecycleScope)
     }
+
+
+    private fun collectEffect() {
+        viewModel.effect.flowWithLifecycle(lifecycle).onEach {
+            when (it) {
+                is AppAddEffect.ShowLoading -> {
+                    binding.pbLoading.isVisible = true
+                }
+
+                is AppAddEffect.HideLoading -> {
+                    binding.pbLoading.isVisible = false
+                }
+
+                is AppAddEffect.NONE -> {
+                }
+            }
+        }.launchIn(lifecycleScope)
+    }
+
 
     private fun handleNextClicked() {
         binding.vpAppAdd.run {

@@ -8,29 +8,28 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
-import com.hmh.hamyeonham.common.context.hasNotificationPermission
 import com.hmh.hamyeonham.common.dialog.OneButtonCommonDialog
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
-import com.hmh.hamyeonham.common.permission.Permission
-import com.hmh.hamyeonham.common.permission.PermissionRequestListener
 import com.hmh.hamyeonham.common.permission.allPermissionIsGranted
 import com.hmh.hamyeonham.common.permission.isBatteryOptimizationEnabled
 import com.hmh.hamyeonham.common.permission.requestDisableBatteryOptimization
-import com.hmh.hamyeonham.common.permission.requestNotificationPermission
 import com.hmh.hamyeonham.common.view.viewBinding
-import com.hmh.hamyeonham.core.service.LockForegroundService
 import com.hmh.hamyeonham.core.viewmodel.MainEffect
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val binding by viewBinding(ActivityMainBinding::inflate)
     private val viewModel by viewModels<MainViewModel>()
+
+    @Inject
+    lateinit var navigationProvider: NavigationProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,8 +124,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkPermission() {
-        if (allPermissionIsGranted()) {
-            // TODO Permission 화면 보내기
+        if (!allPermissionIsGranted()) {
+            startActivity(navigationProvider.toPermission())
         }
 
         checkPowerManagerPermission()

@@ -9,6 +9,7 @@ import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.hmh.hamyeonham.common.context.hasNotificationPermission
 import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.databinding.ActivityPermissionBinding
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
@@ -41,6 +42,13 @@ class PermissionActivity : AppCompatActivity() {
             }
         }
 
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (hasNotificationPermission()) {
+                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_notification_permission))
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -60,7 +68,7 @@ class PermissionActivity : AppCompatActivity() {
         binding.run {
             clUsageinfoPermission.setOnClickListener {
                 if (hasUsageStatsPermission()) {
-                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_usage_stats_permission))
+                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_permission_granted))
                     tgUsageinfoPermission.isChecked = true
                 } else {
                     requestUsageAccessPermission()
@@ -68,10 +76,17 @@ class PermissionActivity : AppCompatActivity() {
             }
             clDrawoverPermission.setOnClickListener {
                 if (hasOverlayPermission()) {
-                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_overlay_permission))
+                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_permission_granted))
                     tgDrawoverPermission.isChecked = true
                 } else {
                     requestOverlayPermission()
+                }
+            }
+            clNotificationPermission.setOnClickListener {
+                if (hasNotificationPermission()) {
+                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_permission_granted))
+                } else {
+                    requestNotificationPermission(requestNotificationPermissionLauncher)
                 }
             }
         }
@@ -81,8 +96,10 @@ class PermissionActivity : AppCompatActivity() {
         binding.run {
             tgUsageinfoPermission.isClickable = false
             tgDrawoverPermission.isClickable = false
+            tgNotificationPermission.isClickable = false
             tgUsageinfoPermission.isChecked = hasUsageStatsPermission()
             tgDrawoverPermission.isChecked = hasOverlayPermission()
+            tgNotificationPermission.isChecked = hasNotificationPermission()
         }
     }
 
@@ -106,15 +123,6 @@ class PermissionActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkAccessibilityServiceEnabled(): Boolean {
-        val service = "$packageName/com.hmh.hamyeonham.core.service.LockAccessibilityService"
-        val enabledServicesSetting = Settings.Secure.getString(
-            contentResolver,
-            Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
-        )
-        return enabledServicesSetting?.contains(service) == true
-    }
-
     private fun hasUsageStatsPermission(): Boolean {
         val usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as? UsageStatsManager
         val time = System.currentTimeMillis()
@@ -129,9 +137,5 @@ class PermissionActivity : AppCompatActivity() {
 
     private fun hasOverlayPermission(): Boolean {
         return Settings.canDrawOverlays(this)
-    }
-
-    private fun allPermissionIsGranted(): Boolean {
-        return checkAccessibilityServiceEnabled() && hasUsageStatsPermission() && hasOverlayPermission()
     }
 }
