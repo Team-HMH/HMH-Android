@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
+import com.hmh.hamyeonham.common.context.hasNotificationPermission
 import com.hmh.hamyeonham.common.dialog.OneButtonCommonDialog
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
@@ -15,6 +16,7 @@ import com.hmh.hamyeonham.common.permission.allPermissionIsGranted
 import com.hmh.hamyeonham.common.permission.isBatteryOptimizationEnabled
 import com.hmh.hamyeonham.common.permission.requestDisableBatteryOptimization
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.core.service.LockForegroundService
 import com.hmh.hamyeonham.core.viewmodel.MainEffect
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.ActivityMainBinding
@@ -35,12 +37,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initNavHostFragment()
-        checkPermission()
         collectEffect()
     }
 
     override fun onResume() {
         super.onResume()
+        checkPermission()
+        startLockService()
         checkUnlockedPackage()
     }
 
@@ -83,6 +86,12 @@ class MainActivity : AppCompatActivity() {
                 intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
             }
         }.showAllowingStateLoss(supportFragmentManager, "unlock_package")
+    }
+
+    private fun startLockService() {
+        if (hasNotificationPermission()) {
+            LockForegroundService.startService(this)
+        }
     }
 
     private fun showChallengeFailedDialog() {

@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import com.hmh.hamyeonham.common.context.hasNotificationPermission
 import com.hmh.hamyeonham.common.context.toast
 
+
 fun AppCompatActivity.requestAccessibilitySettings() {
     val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
     startActivity(intent)
@@ -140,8 +141,10 @@ private fun AppCompatActivity.showPermissionDeniedDialog() {
         .setTitle("알림 권한 필요")
         .setMessage("이 앱은 정상적으로 작동하기 위해 알림 권한이 필요합니다. 설정에서 권한을 허용해 주세요.")
         .setPositiveButton("설정 열기") { _, _ ->
-            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                data = Uri.fromParts("package", packageName, null)
+            val intent = Intent().apply {
+                action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
             startActivity(intent)
         }
