@@ -32,4 +32,5 @@ interface UsageStatsRepository {
     ): List<UsageStatus>
 
     suspend fun getUsageStatForPackageOfToday(packageName: String): Long
+    fun getForegroundAppPackageName(): String?
 }

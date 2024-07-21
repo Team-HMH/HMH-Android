@@ -9,22 +9,19 @@ import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingSelectAppFragmen
 import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingSelectDataFragment
 import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingSelectScreenTimeFragment
 import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingSelectUseTimeFragment
-import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingSpecifyPermissionFragment
 
-enum class OnBoardingFragmentType(val position: Int) {
-    SELECT_DATA_TIME(0),
-    SELECT_DATA_PROBLEM(1),
-    SELECT_DATA_PERIOD(2),
-    SPECIFY_PERMISSION(3),
-    REQUEST_PERMISSION(4),
-    SELECT_APP(5),
-    SELECT_APP_VIEW(6),
-    SELECT_USE_TIME_GOAL(7),
-    SELECT_SCREEN_TIME_GOAL(8);
+enum class OnBoardingFragmentType {
+    SELECT_DATA_TIME,
+    SELECT_DATA_PROBLEM,
+    SELECT_DATA_PERIOD,
+    REQUEST_PERMISSION,
+    SELECT_APP,
+    SELECT_APP_VIEW,
+    SELECT_USE_TIME_GOAL,
+    SELECT_SCREEN_TIME_GOAL;
 
     companion object {
-        private val map = entries.associateBy(OnBoardingFragmentType::position)
-        fun fromPosition(position: Int) = map[position]
+        fun fromPosition(position: Int): OnBoardingFragmentType = entries.getOrNull(position) ?: SELECT_DATA_TIME
     }
 }
 
@@ -36,9 +33,7 @@ class OnBoardingFragmentStateAdapter(fragmentActivity: FragmentActivity) :
 
     override fun createFragment(position: Int): Fragment {
         return when (val fragmentType = OnBoardingFragmentType.fromPosition(position)) {
-            OnBoardingFragmentType.SELECT_DATA_TIME -> OnBoardingSelectDataFragment.newInstance(
-                fragmentType
-            )
+            OnBoardingFragmentType.SELECT_DATA_TIME -> OnBoardingSelectDataFragment.newInstance(fragmentType)
 
             OnBoardingFragmentType.SELECT_DATA_PROBLEM -> OnBoardingSelectDataFragment.newInstance(
                 fragmentType
@@ -50,7 +45,6 @@ class OnBoardingFragmentStateAdapter(fragmentActivity: FragmentActivity) :
 
             OnBoardingFragmentType.SELECT_SCREEN_TIME_GOAL -> OnBoardingSelectScreenTimeFragment()
             OnBoardingFragmentType.REQUEST_PERMISSION -> OnBoardingRequestPermissionFragment()
-            OnBoardingFragmentType.SPECIFY_PERMISSION -> OnBoardingSpecifyPermissionFragment()
             OnBoardingFragmentType.SELECT_APP -> OnBoardingSelectAppFragment()
             OnBoardingFragmentType.SELECT_APP_VIEW -> OnBoardingAppAddSelectionFragment()
             OnBoardingFragmentType.SELECT_USE_TIME_GOAL -> OnBoardingSelectUseTimeFragment()

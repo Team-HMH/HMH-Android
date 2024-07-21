@@ -2,10 +2,7 @@ package com.hmh.hamyeonham.feature.onboarding
 
 import android.content.Intent
 import android.os.Bundle
-import android.provider.Settings
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -16,9 +13,7 @@ import androidx.viewpager2.widget.ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
 import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.view.initAndStartProgressBarAnimation
 import com.hmh.hamyeonham.common.view.viewBinding
-import com.hmh.hamyeonham.core.service.lockAccessibilityServiceClassName
 import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentStateAdapter
-import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentType
 import com.hmh.hamyeonham.feature.onboarding.databinding.ActivityOnBoardingBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEffect
@@ -37,16 +32,6 @@ class OnBoardingActivity : AppCompatActivity() {
     private val viewModel by viewModels<OnBoardingViewModel>()
     private lateinit var onBackPressedCallback: OnBackPressedCallback
     private var backButtonDelayTime: Long = 0
-
-    private val accessibilitySettingsLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-        ) {
-            if (checkAccessibilityServiceEnabled()) {
-                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_accessibility_settings))
-                navigateToNextOnboardingStep(binding.vpOnboardingContainer.adapter as OnBoardingFragmentStateAdapter)
-            }
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,19 +91,6 @@ class OnBoardingActivity : AppCompatActivity() {
             viewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(false))
             navigateToNextOnboardingStep(pagerAdapter)
         }
-
-        viewModel.onBoardingState
-            .flowWithLifecycle(lifecycle)
-            .onEach {
-                if (it.navigateToPermissionView &&
-                    binding.vpOnboardingContainer.currentItem == OnBoardingFragmentType.SPECIFY_PERMISSION.position
-                ) {
-                    navigateToNextViewPager(
-                        binding.vpOnboardingContainer,
-                        OnBoardingFragmentType.SPECIFY_PERMISSION.position,
-                    )
-                }
-            }.launchIn(lifecycleScope)
     }
 
     private fun navigateToPreviousOnboardingStep() {
@@ -141,15 +113,7 @@ class OnBoardingActivity : AppCompatActivity() {
 
             when {
                 currentItem < lastItem -> {
-                    if (currentItem == OnBoardingFragmentType.SPECIFY_PERMISSION.position) {
-                        if (checkAccessibilityServiceEnabled()) {
-                            navigateToNextViewPager(viewPager, currentItem)
-                        } else {
-                            requestAccessibilitySettings()
-                        }
-                    } else {
-                        navigateToNextViewPager(viewPager, currentItem)
-                    }
+                    navigateToNextViewPager(viewPager, currentItem)
                 }
 
                 currentItem == lastItem -> {
@@ -170,21 +134,6 @@ class OnBoardingActivity : AppCompatActivity() {
             currentItem + 1,
             viewPager.adapter?.itemCount ?: 1,
         )
-    }
-
-    private fun requestAccessibilitySettings() {
-        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-        accessibilitySettingsLauncher.launch(intent)
-    }
-
-    private fun checkAccessibilityServiceEnabled(): Boolean {
-        val service = "$packageName/$lockAccessibilityServiceClassName"
-        val enabledServicesSetting =
-            Settings.Secure.getString(
-                contentResolver,
-                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
-            )
-        return enabledServicesSetting?.contains(service) == true
     }
 
     private fun collectOnboardingState() {

@@ -17,6 +17,7 @@ dependencies {
     implementation(projects.domain.challenge)
 
     implementation(libs.lifecycle.process)
+    implementation(libs.lifecycle.service)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.work.runtime.ktx)
 }
