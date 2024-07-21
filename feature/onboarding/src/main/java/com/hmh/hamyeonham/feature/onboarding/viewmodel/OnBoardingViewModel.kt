@@ -30,7 +30,6 @@ sealed interface OnboardEvent {
     data class UpdateAccessToken(val accessToken: String) : OnboardEvent
     data class ChangeActivityButtonText(val buttonText: String) : OnboardEvent
     data class VisibleProgressbar(val progressbarVisible: Boolean) : OnboardEvent
-    data class NavigateToPermissionView(val navigateToPermissionView: Boolean) : OnboardEvent
     data class UpdateBackButtonActive(val isBackButtonActive: Boolean) : OnboardEvent
 }
 
@@ -52,7 +51,6 @@ data class OnBoardingState(
     val accessToken: String = "",
     val buttonText: String = "다음",
     val progressbarVisible: Boolean = true,
-    var navigateToPermissionView: Boolean = false,
 ) {
     val goalTime: Long
         get() = (screenGoalTime * 60).timeToMs()
@@ -83,8 +81,6 @@ class OnBoardingViewModel @Inject constructor(
     val isUseTimeScreenButtonEnabled = onBoardingState.map { onBoardingState ->
         onBoardingState.appGoalTimeHour > 0 || onBoardingState.appGoalTimeMinute > 0
     }.stateIn(viewModelScope, SharingStarted.Lazily, false)
-
-    val isAccessibilityServicePermissionScreenButtonEnabled = MutableStateFlow(true)
 
     private fun updateState(transform: OnBoardingState.() -> OnBoardingState) {
         val currentState = onBoardingState.value
@@ -163,12 +159,6 @@ class OnBoardingViewModel @Inject constructor(
             is OnboardEvent.VisibleProgressbar -> {
                 updateState {
                     copy(progressbarVisible = event.progressbarVisible)
-                }
-            }
-
-            is OnboardEvent.NavigateToPermissionView -> {
-                updateState {
-                    copy(navigateToPermissionView = event.navigateToPermissionView)
                 }
             }
 
