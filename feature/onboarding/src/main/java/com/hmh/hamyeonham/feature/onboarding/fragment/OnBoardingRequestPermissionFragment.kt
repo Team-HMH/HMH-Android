@@ -14,6 +14,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.hmh.hamyeonham.common.fragment.toast
+import com.hmh.hamyeonham.common.permission.hasNotificationPermission
+import com.hmh.hamyeonham.common.permission.requestNotificationPermission
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.R
 import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingRequestPermissionBinding
@@ -44,6 +46,13 @@ class OnBoardingRequestPermissionFragment : Fragment() {
             }
         }
 
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (hasNotificationPermission()) {
+                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_notification_permission))
+            }
+        }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -70,7 +79,7 @@ class OnBoardingRequestPermissionFragment : Fragment() {
         binding.run {
             clOnboardingUsageinfoPermission.setOnClickListener {
                 if (hasUsageStatsPermission()) {
-                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_usage_stats_permission))
+                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_permission_granted))
                     tgOnboardingUsageinfoPermission.isChecked = true
                 } else {
                     requestUsageAccessPermission()
@@ -78,10 +87,18 @@ class OnBoardingRequestPermissionFragment : Fragment() {
             }
             clOnboardingDrawoverPermission.setOnClickListener {
                 if (hasOverlayPermission()) {
-                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_overlay_permission))
+                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_permission_granted))
                     tgOnboardingDrawoverPermission.isChecked = true
                 } else {
                     requestOverlayPermission()
+                }
+            }
+
+            clNotificationPermission.setOnClickListener {
+                if (hasNotificationPermission()) {
+                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_permission_granted))
+                } else {
+                    requestNotificationPermission(requestNotificationPermissionLauncher)
                 }
             }
         }
@@ -91,8 +108,10 @@ class OnBoardingRequestPermissionFragment : Fragment() {
         binding.run {
             tgOnboardingUsageinfoPermission.isClickable = false
             tgOnboardingDrawoverPermission.isClickable = false
+            tgNotificationPermission.isClickable = false
             tgOnboardingUsageinfoPermission.isChecked = hasUsageStatsPermission()
             tgOnboardingDrawoverPermission.isChecked = hasOverlayPermission()
+            tgNotificationPermission.isChecked = hasNotificationPermission()
         }
     }
 
@@ -131,7 +150,9 @@ class OnBoardingRequestPermissionFragment : Fragment() {
         } ?: false
     }
 
-    private fun hasOverlayPermission(): Boolean = context?.let { Settings.canDrawOverlays(it) } ?: false
+    private fun hasOverlayPermission(): Boolean =
+        context?.let { Settings.canDrawOverlays(it) } ?: false
 
-    private fun allPermissionIsGranted(): Boolean = hasUsageStatsPermission() && hasOverlayPermission()
+    private fun allPermissionIsGranted(): Boolean =
+        hasUsageStatsPermission() && hasOverlayPermission() && hasNotificationPermission()
 }

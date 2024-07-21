@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,6 +18,7 @@ import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.R
 import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingAppSelectionAdapter
 import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingAppAddSelectionBinding
+import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingAppSelectionEffect
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingAppSelectionViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
@@ -43,6 +45,7 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
         initViews()
         initSearchBar()
         collectState()
+        collectEffect()
     }
 
     private fun initViews() {
@@ -71,6 +74,21 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
             .onEach {
                 activityViewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(it))
             }.launchIn(viewLifeCycleScope)
+    }
+
+    private fun collectEffect() {
+        viewModel.effect.flowWithLifecycle(viewLifeCycle).onEach {
+            when (it) {
+                is OnBoardingAppSelectionEffect.ShowLoading -> {
+                    binding.pbLoading.isVisible = true
+                }
+                is OnBoardingAppSelectionEffect.HideLoading -> {
+                    binding.pbLoading.isVisible = false
+                }
+                is OnBoardingAppSelectionEffect.NONE -> {
+                }
+            }
+        }.launchIn(viewLifeCycleScope)
     }
 
     private fun onAppCheckboxClicked(packageName: String) {

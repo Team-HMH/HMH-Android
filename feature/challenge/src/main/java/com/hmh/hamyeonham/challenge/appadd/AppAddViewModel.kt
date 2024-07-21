@@ -18,7 +18,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-sealed interface AppAddEffect {}
+sealed interface AppAddEffect {
+    data object ShowLoading : AppAddEffect
+    data object HideLoading : AppAddEffect
+    data object NONE : AppAddEffect
+}
 
 
 @OptIn(FlowPreview::class)
@@ -44,7 +48,11 @@ class AppAddViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            sendEffect(AppAddEffect.ShowLoading)
             fetchInstalledAppUseCase()
+            sendEffect(AppAddEffect.HideLoading)
+        }
+        viewModelScope.launch {
             collectInstalledApps()
             setupSearchDebounce()
         }
@@ -74,6 +82,13 @@ class AppAddViewModel @Inject constructor(
 
     fun onQueryChanged(newQuery: String) {
         _query.value = newQuery
+    }
+
+    private fun sendEffect(effect: AppAddEffect) {
+        viewModelScope.launch {
+            _effect.emit(effect)
+            _effect.emit(AppAddEffect.NONE)
+        }
     }
 
     private fun setupSearchDebounce() {

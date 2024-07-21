@@ -1,5 +1,6 @@
 package com.hmh.hamyeonham.common.context
 
+import android.Manifest
 import android.app.Dialog
 import android.content.Context
 import android.content.pm.ApplicationInfo
@@ -14,7 +15,6 @@ import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -135,4 +135,16 @@ fun Context.isSystemPackage(packageName: String): Boolean {
         Log.e("isSystemPackage", e.toString())
     }
     return false
+}
+
+fun Context.hasNotificationPermission(): Boolean {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+    } else {
+        // Android 13 이하 버전에서는 이 권한이 필요하지 않음
+        true
+    }
 }
