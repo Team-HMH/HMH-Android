@@ -1,7 +1,6 @@
 package com.hmh.hamyeonham.feature.main.home
 
 import android.content.Context
-import android.view.View
 import androidx.core.content.ContextCompat.getString
 import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.common.context.getAppIconFromPackageName
@@ -20,13 +19,12 @@ class UsageStaticsViewHolder(
     fun onBind(
         usageStaticsModel: UsageStaticsModel,
     ) {
-        if (usageStaticsModel.permissionGranted) {
-            bindAppInfo(usageStaticsModel.usageStatusAndGoal)
-            bindUsageInfo(usageStaticsModel.usageStatusAndGoal)
-            initAndStartProgressBarAnimation(binding.pbAppUsage, usageStaticsModel.usageStatusAndGoal.usedPercentage)
-        } else {
-            binding.root.visibility = View.GONE
-        }
+        bindAppInfo(usageStaticsModel.usageStatusAndGoal)
+        bindUsageInfo(usageStaticsModel.usageStatusAndGoal)
+        initAndStartProgressBarAnimation(
+            binding.pbAppUsage,
+            usageStaticsModel.usageStatusAndGoal.usedPercentage
+        )
     }
 
     private fun bindAppInfo(usageStatusAndGoal: UsageStatusAndGoal) {

@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="21dp"
-            android:text="@string/onboarding_permission2_title"
+            android:text="@string/onboarding_permission_usage_title"
             android:textColor="?white_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -57,7 +57,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="21dp"
             android:layout_marginTop="1dp"
-            android:text="@string/onboarding_permission2_description"
+            android:text="@string/onboarding_permission_usage_description"
             android:textColor="?gray3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_usageinfo_permission_title" />
@@ -71,8 +71,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:thumbTint="@color/white_text"
-            app:trackTint="@drawable/toggle_selector"
-            app:trackDecorationTint="@drawable/toggle_selector" />
+            app:trackDecorationTint="@drawable/toggle_selector"
+            app:trackTint="@drawable/toggle_selector" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -102,7 +102,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="21dp"
-            android:text="@string/onboarding_permission3_title"
+            android:text="@string/onboarding_permission_draw_over_title"
             android:textColor="?white_text"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -115,7 +115,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="21dp"
             android:layout_marginTop="1dp"
-            android:text="@string/onboarding_permission3_description"
+            android:text="@string/onboarding_permission_draw_over_description"
             android:textColor="?gray3"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_drawover_permission_title" />
@@ -129,8 +129,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:thumbTint="@color/white_text"
-            app:trackTint="@drawable/toggle_selector"
-            app:trackDecorationTint="@drawable/toggle_selector" />
+            app:trackDecorationTint="@drawable/toggle_selector"
+            app:trackTint="@drawable/toggle_selector" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -143,5 +143,63 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_drawover_permission" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_notification_permission"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingVertical="19dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_onboarding_permission3"
+        app:layout_constraintVertical_bias="0.5">
+
+        <TextView
+            android:id="@+id/tv_notification_permission_title"
+            style="?textAppearanceTitleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="21dp"
+            android:text="@string/onboarding_permission_notification_title"
+            android:textColor="?white_text"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_notification_permission_description"
+            style="@style/TextAppearance.Hmh.BodyMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="21dp"
+            android:layout_marginTop="1dp"
+            android:text="@string/onboarding_permission_notification_description"
+            android:textColor="?gray3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_notification_permission_title" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/tg_notification_permission"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginEnd="28dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:thumbTint="@color/white_text"
+            app:trackDecorationTint="@drawable/toggle_selector"
+            app:trackTint="@drawable/toggle_selector" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view_onboarding_permission4"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_centerInParent="true"
+        android:background="?gray7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_notification_permission" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

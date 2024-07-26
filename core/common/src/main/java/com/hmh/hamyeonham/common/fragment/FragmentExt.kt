@@ -1,10 +1,5 @@
 package com.hmh.hamyeonham.common.fragment
 
-import android.app.usage.UsageStatsManager
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.provider.Settings
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.ColorRes
@@ -27,7 +22,12 @@ fun Fragment.snackBar(anchorView: View, message: () -> String) {
     Snackbar.make(anchorView, message(), Snackbar.LENGTH_SHORT).show()
 }
 
-fun Fragment.snackBarWithAction(anchorView: View, message: String, actionMessage:String, action: View.OnClickListener) {
+fun Fragment.snackBarWithAction(
+    anchorView: View,
+    message: String,
+    actionMessage: String,
+    action: View.OnClickListener
+) {
     Snackbar.make(anchorView, message, Snackbar.LENGTH_SHORT)
         .setAction(actionMessage, action)
         .show()
@@ -46,68 +46,4 @@ val Fragment.viewLifeCycle
 val Fragment.viewLifeCycleScope
     get() = viewLifecycleOwner.lifecycleScope
 
-fun Fragment.requestAccessibilitySettings() {
-    val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-    startActivity(intent)
-}
 
-fun Fragment.requestOverlayPermission() {
-    val packageUri = Uri.parse("package:${requireContext().packageName}")
-    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, packageUri)
-    startActivity(intent)
-}
-
-fun Fragment.requestUsageAccessPermission() {
-    try {
-        val packageUri = Uri.parse("package:${requireContext().packageName}")
-        val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS, packageUri)
-        startActivity(intent)
-    } catch (e: Exception) {
-        startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-    }
-}
-
-fun Fragment.checkAccessibilityServiceEnabled(classCanonicalName: String): Boolean {
-    val service = "${requireContext().packageName}/${classCanonicalName}"
-    val enabledServicesSetting = Settings.Secure.getString(
-        requireContext().contentResolver,
-        Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
-    )
-    return enabledServicesSetting?.contains(service) == true
-}
-
-fun Fragment.hasUsageStatsPermission(): Boolean {
-    val usageStatsManager =
-        requireContext().getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-    val time = System.currentTimeMillis()
-    val stats = usageStatsManager.queryUsageStats(
-        UsageStatsManager.INTERVAL_DAILY,
-        time - 1000 * 60,
-        time,
-    )
-    return stats != null && stats.isNotEmpty()
-}
-
-fun Fragment.hasOverlayPermission(): Boolean {
-    return Settings.canDrawOverlays(requireContext())
-}
-
-fun Fragment.checkAllPermissionIsGranted(classCanonicalName: String) {
-    when {
-        !checkAccessibilityServiceEnabled(classCanonicalName) -> {
-            requestAccessibilitySettings()
-        }
-
-        !hasUsageStatsPermission() -> {
-            requestUsageAccessPermission()
-        }
-
-        !hasOverlayPermission() -> {
-            requestOverlayPermission()
-        }
-    }
-}
-
-fun Fragment.allPermissionIsGranted(classCanonicalName: String): Boolean {
-    return this.checkAccessibilityServiceEnabled(classCanonicalName) && hasUsageStatsPermission() && hasOverlayPermission()
-}
