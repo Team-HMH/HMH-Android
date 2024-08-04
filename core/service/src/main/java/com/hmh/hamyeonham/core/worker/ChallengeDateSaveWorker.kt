@@ -7,7 +7,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.hmh.hamyeonham.challenge.model.ChallengeWithUsage
+import com.hmh.hamyeonham.challenge.model.ChallengeWithUsageInput
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
 import com.hmh.hamyeonham.common.time.getYesterdayDateNumeric
 import dagger.assisted.Assisted
@@ -34,12 +34,12 @@ class ChallengeDateSaveWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
-        val challengeWithUsage = ChallengeWithUsage(
+        val challengeWithUsageInput = ChallengeWithUsageInput(
             challengeDate = getYesterdayDateNumeric(),
             apps = emptyList(),
         )
         return runCatching {
-            challengeRepository.insertChallengeWithUsage(challengeWithUsage)
+            challengeRepository.insertChallengeWithUsage(challengeWithUsageInput)
         }.fold(
             onSuccess = {
                 Result.success()

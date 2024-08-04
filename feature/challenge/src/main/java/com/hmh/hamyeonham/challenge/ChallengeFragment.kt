@@ -22,7 +22,6 @@ import com.hmh.hamyeonham.challenge.appadd.AppAddActivity
 import com.hmh.hamyeonham.challenge.calendar.ChallengeCalendarAdapter
 import com.hmh.hamyeonham.challenge.goals.ChallengeUsageGoalsAdapter
 import com.hmh.hamyeonham.challenge.model.Apps
-import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.challenge.model.NewChallenge
 import com.hmh.hamyeonham.challenge.newchallenge.NewChallengeActivity
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
@@ -208,9 +207,9 @@ class ChallengeFragment : Fragment() {
         challengeGoalsAdapter?.submitList(challengeUsageGoalList)
     }
 
-    private fun bindChallengeCalendar(challengeStatusList: List<ChallengeStatus.Status>) {
+    private fun bindChallengeCalendar(challengeList: List<ChallengeStatus>) {
         val challengeAdapter = binding.rvChallengeCalendar.adapter as? ChallengeCalendarAdapter
-        challengeAdapter?.updateList(challengeStatusList)
+        challengeAdapter?.updateList(challengeList)
     }
 
     private fun bindChallengeDate(todayIndexAsDate: Int, startDate: LocalDate) {

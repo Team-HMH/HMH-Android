@@ -3,11 +3,12 @@ package com.hmh.hamyeonham.core.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hmh.hamyeonham.challenge.model.ChallengeStatus
+import com.hmh.hamyeonham.challenge.model.Challenge
 import com.hmh.hamyeonham.challenge.model.NewChallenge
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
 import com.hmh.hamyeonham.challenge.usecase.NewChallengeUseCase
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
+import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.domain.point.repository.PointRepository
@@ -40,7 +41,7 @@ class MainViewModel @Inject constructor(
     private val setIsUnLockUseCase: SetIsUnLockUseCase,
     private val updateIsUnLockUseCase: UpdateIsUnLockUseCase,
     private val newChallengeUseCase: NewChallengeUseCase,
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val _mainState = MutableStateFlow(MainState())
     val mainState = _mainState.asStateFlow()
@@ -49,12 +50,13 @@ class MainViewModel @Inject constructor(
     val usageStatusAndGoals = _usageStatusAndGoals.asStateFlow()
 
 
-    private var rawChallengeStatusList: List<ChallengeStatus.Status> = emptyList()
-    private val _challengeStatusList = MutableStateFlow<List<ChallengeStatus.Status>>(emptyList())
-    val challengeStatusList = _challengeStatusList.asStateFlow()
+    private var rawChallengeList: List<ChallengeStatus> = emptyList()
+    private val _challengeList = MutableStateFlow<List<ChallengeStatus>>(emptyList())
+    val challengeStatusList = _challengeList.asStateFlow()
 
-    val isPointLeftToCollect get() =
-        challengeStatusList.value.contains(ChallengeStatus.Status.UNEARNED)
+    val isPointLeftToCollect
+        get() =
+            challengeStatusList.value.contains(ChallengeStatus.UNEARNED)
 
 
     private val _effect = MutableSharedFlow<MainEffect>()
@@ -136,7 +138,8 @@ class MainViewModel @Inject constructor(
 
     private fun uploadSavedChallenge() {
         viewModelScope.launch {
-            val challengeWithUsages = challengeRepository.getChallengeWithUsage().getOrNull() ?: return@launch
+            val challengeWithUsages =
+                challengeRepository.getChallengeWithUsage().getOrNull() ?: return@launch
             challengeRepository.uploadSavedChallenge(challengeWithUsages).onSuccess {
                 challengeRepository.deleteAllChallengeWithUsage()
             }
@@ -144,10 +147,7 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun updateGoals() {
-        usageGoalsRepository.updateUsageGoal().onFailure {
-            sendEffect(MainEffect.NetworkError)
-            Log.e("updateUsageGoal error", it.toString())
-        }
+        usageGoalsRepository.updateUsageGoal()
     }
 
     private suspend fun getChallengeStatus() {
@@ -207,17 +207,17 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun setChallengeStatus(challengeStatus: ChallengeStatus) {
+    private fun setChallengeStatus(challenge: Challenge) {
         updateState {
             copy(
-                appGoals = challengeStatus.appGoals,
-                totalGoalTimeInHour = challengeStatus.goalTimeInHours,
-                period = challengeStatus.period,
-                todayIndex = challengeStatus.todayIndex,
+                appGoals = challenge.appGoals,
+                totalGoalTimeInHour = challenge.goalTimeInHours,
+                period = challenge.period,
+                todayIndex = challenge.todayIndex,
             )
         }
-        rawChallengeStatusList = challengeStatus.challengeStatusList
-        _challengeStatusList.value = challengeStatus.challengeStatusList
+        rawChallengeList = challenge.challengeList
+        _challengeList.value = challenge.challengeList
     }
 
     private fun updateUserInfo(userInfo: UserInfo) {
@@ -235,9 +235,9 @@ class MainViewModel @Inject constructor(
 
     fun updateChallengeListWithToggleState(calendarToggleState: CalendarToggleState) {
         val challengeStatusList = challengeStatusList.value
-        _challengeStatusList.value = when (calendarToggleState) {
+        _challengeList.value = when (calendarToggleState) {
             CalendarToggleState.EXPANDED -> {
-                rawChallengeStatusList
+                rawChallengeList
             }
 
             CalendarToggleState.COLLAPSED -> {

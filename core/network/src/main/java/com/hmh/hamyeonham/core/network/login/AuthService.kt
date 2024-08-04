@@ -27,7 +27,7 @@ interface AuthService {
         @Header("Authorization") accessToken: String,
     ): BaseResponse<Unit>
 
-    @POST("api/v1/user/signup")
+    @POST("api/v2/user/signup")
     suspend fun signUp(
         @Header("Authorization") accessToken: String,
         @Header("OS") OS: String,

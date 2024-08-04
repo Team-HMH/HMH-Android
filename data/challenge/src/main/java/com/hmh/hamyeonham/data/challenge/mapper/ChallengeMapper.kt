@@ -1,19 +1,17 @@
 package com.hmh.hamyeonham.data.challenge.mapper
 
-import com.hmh.hamyeonham.challenge.model.ChallengeStatus
-import com.hmh.hamyeonham.challenge.model.ChallengeWithUsage
+import com.hmh.hamyeonham.challenge.model.Challenge
+import com.hmh.hamyeonham.challenge.model.ChallengeWithUsageInput
 import com.hmh.hamyeonham.core.database.model.ChallengeWithUsageEntity
 import com.hmh.hamyeonham.core.database.model.DailyChallengeEntity
 import com.hmh.hamyeonham.core.database.model.UsageEntity
 import com.hmh.hamyeonham.core.network.challenge.model.ChallengeResponse
-import com.hmh.hamyeonham.core.network.usagegoal.model.ChallengeWithUsageRequest
-import com.hmh.hamyeonham.core.network.usagegoal.model.UsageGoalResponse
-import com.hmh.hamyeonham.usagestats.model.UsageStatus
+import com.hmh.hamyeonham.core.network.challenge.model.ChallengeWithUsageRequest
 
-internal fun ChallengeResponse.toChallengeStatus(): ChallengeStatus {
-    return ChallengeStatus(
+internal fun ChallengeResponse.toChallengeStatus(): Challenge {
+    return Challenge(
         apps.map {
-            ChallengeStatus.AppGoal(it.appCode, it.goalTime)
+            Challenge.AppGoal(it.appCode, it.goalTime)
         },
         statuses.toStatusList(todayIndex),
         goalTime,
@@ -22,29 +20,14 @@ internal fun ChallengeResponse.toChallengeStatus(): ChallengeStatus {
     )
 }
 
-internal fun UsageGoalResponse.toChallengeResult(): Boolean {
-    return when (status) {
-        ChallengeStatus.Status.FAILURE.value -> false
-        //FAIL일 경우
-        else -> true
-    }
-}
-
-internal fun ChallengeWithUsageEntity?.toChallengeWithUsage(date: String): ChallengeWithUsage {
-    return ChallengeWithUsage(
-        challengeDate = date,
-        apps = this?.apps?.map { it.toUsage() } ?: emptyList()
-    )
-}
-
-internal fun ChallengeWithUsage.toChallengeWithUsageEntity(): ChallengeWithUsageEntity {
+internal fun ChallengeWithUsageInput.toChallengeWithUsageEntity(): ChallengeWithUsageEntity {
     return ChallengeWithUsageEntity(
         challenge = DailyChallengeEntity(challengeDate = challengeDate),
         apps = apps.map { UsageEntity(it.packageName, it.usageTime, challengeDate) }
     )
 }
 
-internal fun List<ChallengeWithUsage>.toRequestChallengeWithUsage(): ChallengeWithUsageRequest {
+internal fun List<ChallengeWithUsageInput>.toRequestChallengeWithUsage(): ChallengeWithUsageRequest {
     return ChallengeWithUsageRequest(
         finishedDailyChallenges = map {
             ChallengeWithUsageRequest.DailyChallenges(
@@ -60,13 +43,9 @@ internal fun List<ChallengeWithUsage>.toRequestChallengeWithUsage(): ChallengeWi
     )
 }
 
-internal fun UsageEntity.toUsage(): ChallengeWithUsage.Usage {
-    return ChallengeWithUsage.Usage(
+internal fun UsageEntity.toUsage(): ChallengeWithUsageInput.Usage {
+    return ChallengeWithUsageInput.Usage(
         packageName = packageName,
         usageTime = usageTime
     )
-}
-
-internal fun UsageStatus.toUsage(): ChallengeWithUsage.Usage {
-    return ChallengeWithUsage.Usage(packageName, totalTimeInForeground)
 }

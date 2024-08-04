@@ -1,8 +1,10 @@
 package com.hmh.hamyeonham.challenge.model
 
-data class ChallengeStatus(
+import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
+
+data class Challenge(
     val appGoals: List<AppGoal> = emptyList(),
-    val challengeStatusList: List<Status> = emptyList(),
+    val challengeList: List<ChallengeStatus> = emptyList(),
     val goalTime: Long = 0,
     val period: Int = 0,
     val todayIndex: Int = 0,
@@ -14,12 +16,4 @@ data class ChallengeStatus(
 
     val goalTimeInHours: Int
         get() = (goalTime / 1000 / 60 / 60).toInt()
-
-    enum class Status(val value: String) {
-        NONE("NONE"),
-        UNEARNED("UNEARNED"),
-        EARNED("EARNED"),
-        FAILURE("FAILURE"),
-        TODAY("TODAY")
-    }
 }
