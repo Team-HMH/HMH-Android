@@ -12,12 +12,14 @@ import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 data class UsageStaticsModel(
     val userName: String,
     val challengeSuccess: Boolean,
-    val usageStatusAndGoal: UsageStatusAndGoal,
+    val usageAppStatusAndGoal: UsageStatusAndGoal.App,
+    val totalGoalTime: Long,
+    val totalTimeInForeground: Long,
 )
 
 class UsageStaticsAdapter : ListAdapter<UsageStaticsModel, RecyclerView.ViewHolder>(
     ItemDiffCallback<UsageStaticsModel>(
-        onItemsTheSame = { old, new -> old.usageStatusAndGoal == new.usageStatusAndGoal },
+        onItemsTheSame = { old, new -> old.usageAppStatusAndGoal == new.usageAppStatusAndGoal },
         onContentsTheSame = { old, new -> old == new },
     ),
 ) {

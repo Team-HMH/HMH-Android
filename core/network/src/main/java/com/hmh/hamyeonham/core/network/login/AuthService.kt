@@ -31,6 +31,7 @@ interface AuthService {
     suspend fun signUp(
         @Header("Authorization") accessToken: String,
         @Header("OS") OS: String,
+        @Header("Time-Zone") timeZone: String,
         @Body request: SignUpRequest,
     ): BaseResponse<SignUpResponse>
 }

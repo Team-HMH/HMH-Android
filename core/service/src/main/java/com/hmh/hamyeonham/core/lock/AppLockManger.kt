@@ -58,13 +58,12 @@ class AppLockManger @Inject constructor(
             )
             Log.d("Usage", "packageName: $packageName, usage: $usageStats")
             val usageGoals = getUsageGoalsUseCase().firstOrNull() ?: return@launch
+            val currentAppGoal =
+                usageGoals.appGoals.find { it.packageName == packageName } ?: return@launch
             val totalUsageGoal = getTotalUsageGoalUseCase()
-            val usageGoal = usageGoals.find {
-                it.packageName == packageName
-            } ?: return@launch
             checkLockApp(
                 usageStats = usageStats,
-                usageGoal = usageGoal,
+                currentAppGoal = currentAppGoal,
                 packageName = packageName,
                 totalUsageStats = totalUsageStats,
                 totalUsageGoal = totalUsageGoal
@@ -74,17 +73,17 @@ class AppLockManger @Inject constructor(
 
     private suspend fun checkLockApp(
         usageStats: Long,
-        usageGoal: UsageGoal,
+        currentAppGoal: UsageGoal.App,
         packageName: String,
         totalUsageStats: Long,
         totalUsageGoal: UsageGoal
     ) {
-        if (usageStats >= usageGoal.goalTime || totalUsageStats >= totalUsageGoal.goalTime) {
+        if (usageStats >= currentAppGoal.goalTime || totalUsageStats >= totalUsageGoal.totalGoalTime) {
             moveToLock(packageName)
         } else {
             releaseTimerJob()
-            val appRemainingTime = usageGoal.goalTime - usageStats
-            val totalRemainingTime = totalUsageGoal.goalTime - totalUsageStats
+            val appRemainingTime = currentAppGoal.goalTime - usageStats
+            val totalRemainingTime = totalUsageGoal.totalGoalTime - totalUsageStats
             startTimer(
                 appRemainingTime = appRemainingTime,
                 totalRemainingTime = totalRemainingTime,

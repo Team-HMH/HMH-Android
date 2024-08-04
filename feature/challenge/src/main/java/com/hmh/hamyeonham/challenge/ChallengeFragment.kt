@@ -36,6 +36,7 @@ import com.hmh.hamyeonham.common.view.dp
 import com.hmh.hamyeonham.common.view.mapBooleanToVisibility
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.designsystem.R
+import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
 import com.hmh.hamyeonham.core.viewmodel.CalendarToggleState
 import com.hmh.hamyeonham.core.viewmodel.MainState
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
@@ -95,10 +96,8 @@ class ChallengeFragment : Fragment() {
         bindChallengeDate(it.todayIndexAsDate, it.startDate)
     }
 
-    private fun updateUsageStatusAndGoals(usageStatusAndGoals: List<UsageStatusAndGoal>) {
-        if (usageStatusAndGoals.isNotEmpty()) viewModel.updateUsageStatusAndGoals(
-            activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal()
-        )
+    private fun updateUsageStatusAndGoals(usageStatusAndGoals: UsageStatusAndGoal) {
+        viewModel.updateUsageStatusAndGoals(usageStatusAndGoals)
     }
 
     private fun collectChallengeStateAndProcess() {
@@ -320,7 +319,7 @@ class ChallengeFragment : Fragment() {
         }
     }
 
-    private fun RecyclerView.setDeleteAppDialog(it: UsageStatusAndGoal) {
+    private fun RecyclerView.setDeleteAppDialog(it: UsageStatusAndGoal.App) {
         val clickedAppNameToDialog = context.getAppNameFromPackageName(it.packageName)
         TwoButtonCommonDialog.newInstance(
             title = getString(R.string.delete_app_dialog_title, clickedAppNameToDialog),
