@@ -19,7 +19,7 @@ class GetUsageStatsListUseCase @Inject constructor(
     suspend operator fun invoke(
         startTime: Long,
         endTime: Long,
-    ): List<UsageStatusAndGoal> {
+    ): UsageStatusAndGoal {
         usageGoalsRepository.getUsageGoals().first().let { usageGoal ->
             val selectedPackages = getSelectedPackageList(usageGoal)
             val usageForSelectedApps = getUsageStatsAndGoalsForSelectedPackages(
@@ -41,9 +41,7 @@ class GetUsageStatsListUseCase @Inject constructor(
                 },
             )
 
-            return usageStatusAndGoal.apply {
-                apps.sortedByDescending { it.usedPercentage }
-            }
+            return usageStatusAndGoal
         }
     }
 

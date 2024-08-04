@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.core.content.ContextCompat.getString
 import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.common.context.getSecondStrColoredString
-import com.hmh.hamyeonham.common.time.convertTimeToString
+import com.hmh.hamyeonham.common.time.convertMillisecondToString
 import com.hmh.hamyeonham.common.view.initAndStartProgressBarAnimation
 import com.hmh.hamyeonham.feature.main.R
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticTotalBinding
@@ -18,29 +18,32 @@ class UsageStaticsTotalViewHolder(
         bindBlackHoleInfo(usageStaticsModel)
         initAndStartProgressBarAnimation(
             binding.pbTotalUsage,
-            usageStaticsModel.usageStatusAndGoal.usedPercentage,
+            usageStaticsModel.usageAppStatusAndGoal.usedPercentage,
         )
     }
 
     private fun bindUsageStaticsInfo(usageStaticsModel: UsageStaticsModel) {
         binding.run {
+            val totalTimeLeft =
+                usageStaticsModel.totalGoalTime - usageStaticsModel.totalTimeInForeground
+
             tvTotalTimeLeft.text =
                 context.getSecondStrColoredString(
-                    firstStr = convertTimeToString(usageStaticsModel.usageStatusAndGoal.timeLeftInMin),
+                    firstStr = convertMillisecondToString(totalTimeLeft),
                     secondStr = getString(context, R.string.all_left),
                     color = com.hmh.hamyeonham.core.designsystem.R.color.gray1,
                 )
             tvTotalGoal.text =
                 context.getString(
                     R.string.total_goal_time,
-                    convertTimeToString(usageStaticsModel.usageStatusAndGoal.goalTimeInMin),
+                    convertMillisecondToString(usageStaticsModel.totalGoalTime),
                 )
             tvTotalUsage.text =
                 context.getString(
                     R.string.total_used,
-                    convertTimeToString(usageStaticsModel.usageStatusAndGoal.totalTimeInForegroundInMin),
+                    convertMillisecondToString(usageStaticsModel.totalTimeInForeground),
                 )
-            pbTotalUsage.progress = usageStaticsModel.usageStatusAndGoal.usedPercentage
+            pbTotalUsage.progress = usageStaticsModel.usageAppStatusAndGoal.usedPercentage
         }
 
     }
@@ -50,7 +53,7 @@ class UsageStaticsTotalViewHolder(
             when {
                 // 권한이 허용되어 있는 경우
                 usageStaticsModel.challengeSuccess -> {
-                    BlackHoleInfo.createByPercentage(usageStaticsModel.usageStatusAndGoal.usedPercentage)
+                    BlackHoleInfo.createByPercentage(usageStaticsModel.usageAppStatusAndGoal.usedPercentage)
                         ?: BlackHoleInfo.LEVEL0
                 }
                 // 권한이 허용되지 않은 경우 default 값

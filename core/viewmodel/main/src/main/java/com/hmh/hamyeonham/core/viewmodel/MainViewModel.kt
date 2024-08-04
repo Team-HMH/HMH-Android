@@ -46,7 +46,7 @@ class MainViewModel @Inject constructor(
     private val _mainState = MutableStateFlow(MainState())
     val mainState = _mainState.asStateFlow()
 
-    private val _usageStatusAndGoals = MutableStateFlow<List<UsageStatusAndGoal>>(emptyList())
+    private val _usageStatusAndGoals = MutableStateFlow(UsageStatusAndGoal())
     val usageStatusAndGoals = _usageStatusAndGoals.asStateFlow()
 
 
@@ -72,7 +72,6 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             updateGoals()
             getChallengeStatus()
-            getChallengeSuccess()
             getUserInfo()
             getUsageGoalAndStatList()
         }
@@ -110,10 +109,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getUsageStatusAndGoalsExceptTotal(): List<UsageStatusAndGoal> {
-        return usageStatusAndGoals.value.filter { it.packageName != UsageGoal.TOTAL }
-    }
-
     fun generateNewChallenge(newChallenge: NewChallenge) {
         viewModelScope.launch {
             newChallengeUseCase(newChallenge).onSuccess {
@@ -147,7 +142,9 @@ class MainViewModel @Inject constructor(
     }
 
     private suspend fun updateGoals() {
-        usageGoalsRepository.updateUsageGoal()
+        usageGoalsRepository.updateUsageGoal().onSuccess {
+            updateState { copy(challengeSuccess = it) }
+        }
     }
 
     private suspend fun getChallengeStatus() {
@@ -168,14 +165,6 @@ class MainViewModel @Inject constructor(
                 }
                 Log.e("challenge status error", it.toString())
             }
-    }
-
-    private suspend fun getChallengeSuccess() {
-        challengeRepository.getTodayResult().onSuccess {
-            updateState { copy(challengeSuccess = it) }
-        }.onFailure {
-            Log.e("getTodayResult error", it.toString())
-        }
     }
 
     private fun getUsageGoalAndStatList() {
@@ -201,7 +190,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun setUsageGaols(usageGoals: List<UsageGoal>) {
+    private fun setUsageGaols(usageGoals: UsageGoal) {
         updateState {
             copy(usageGoals = usageGoals)
         }
@@ -229,7 +218,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun setUsageStatsList(usageStatsList: List<UsageStatusAndGoal>) {
+    private fun setUsageStatsList(usageStatsList: UsageStatusAndGoal) {
         _usageStatusAndGoals.value = usageStatsList
     }
 

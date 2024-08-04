@@ -19,15 +19,15 @@ class UsageStaticsViewHolder(
     fun onBind(
         usageStaticsModel: UsageStaticsModel,
     ) {
-        bindAppInfo(usageStaticsModel.usageStatusAndGoal)
-        bindUsageInfo(usageStaticsModel.usageStatusAndGoal)
+        bindAppInfo(usageStaticsModel.usageAppStatusAndGoal)
+        bindUsageInfo(usageStaticsModel.usageAppStatusAndGoal)
         initAndStartProgressBarAnimation(
             binding.pbAppUsage,
-            usageStaticsModel.usageStatusAndGoal.usedPercentage
+            usageStaticsModel.usageAppStatusAndGoal.usedPercentage
         )
     }
 
-    private fun bindAppInfo(usageStatusAndGoal: UsageStatusAndGoal) {
+    private fun bindAppInfo(usageStatusAndGoal: UsageStatusAndGoal.App) {
         binding.run {
             tvAppname.text = context.getAppNameFromPackageName(usageStatusAndGoal.packageName)
             ivAppicon.setImageDrawable(
@@ -38,14 +38,13 @@ class UsageStaticsViewHolder(
         }
     }
 
-    private fun bindUsageInfo(usageStatusAndGoal: UsageStatusAndGoal) {
+    private fun bindUsageInfo(usageStatusAndGoal: UsageStatusAndGoal.App) {
         binding.run {
             pbAppUsage.progress = usageStatusAndGoal.usedPercentage
-            tvTotalTimeInForeground.text =
-                convertTimeToString(usageStatusAndGoal.totalTimeInForegroundInMin)
+            tvGoalTime.text = convertTimeToString(usageStatusAndGoal.goalTimeInMinute)
             tvAppTimeLeft.text =
                 context.getSecondStrColoredString(
-                    firstStr = convertTimeToString(usageStatusAndGoal.timeLeftInMin),
+                    firstStr = convertTimeToString(usageStatusAndGoal.timeLeftInMinute),
                     secondStr = getString(context, R.string.all_left),
                     color = com.hmh.hamyeonham.core.designsystem.R.color.gray1,
                 )

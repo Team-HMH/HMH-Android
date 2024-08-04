@@ -14,6 +14,7 @@ import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.FragmentHomeBinding
+import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -40,7 +41,7 @@ class HomeFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initStaticsRecyclerView()
-        initUsageStatsList()
+        collectState()
     }
 
     override fun onResume() {
@@ -56,21 +57,29 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initUsageStatsList() {
-        val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
+    private fun collectState() {
         activityViewModel.usageStatusAndGoals
             .flowWithLifecycle(viewLifeCycle)
             .onEach { usageStatusGoals ->
-                val mainState = activityViewModel.mainState.value
-                usageStaticsAdapter?.submitList(
-                    usageStatusGoals.map {
-                        UsageStaticsModel(
-                            userName = mainState.name,
-                            challengeSuccess = mainState.challengeSuccess,
-                            usageStatusAndGoal = it
-                        )
-                    }
-                )
+                updateUsageStatusAndGoal(usageStatusGoals)
             }.launchIn(viewLifeCycleScope)
+    }
+
+    private fun updateUsageStatusAndGoal(
+        usageStatusGoals: UsageStatusAndGoal
+    ) {
+        val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
+        val mainState = activityViewModel.mainState.value
+        usageStaticsAdapter?.submitList(
+            usageStatusGoals.apps.map {
+                UsageStaticsModel(
+                    userName = mainState.name,
+                    challengeSuccess = mainState.challengeSuccess,
+                    usageAppStatusAndGoal = it,
+                    totalGoalTime = usageStatusGoals.totalGoalTime,
+                    totalTimeInForeground = usageStatusGoals.totalTimeInForeground
+                )
+            }
+        )
     }
 }

@@ -57,7 +57,7 @@ object NetModule {
     @Singleton
     @Provides
     @Auth
-    fun provideAuthInterceptor(interceptor: HeaderInterceptor): Interceptor = interceptor
+    fun provideHeaderInterceptor(interceptor: HeaderInterceptor): Interceptor = interceptor
 
     @Singleton
     @Provides

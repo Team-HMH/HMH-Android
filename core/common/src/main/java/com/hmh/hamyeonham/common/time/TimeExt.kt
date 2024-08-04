@@ -128,6 +128,11 @@ fun convertTimeToString(minute: Long): String {
     }.trim()
 }
 
+fun convertMillisecondToString(millisecond: Long): String {
+    val minute = millisecond.msToMin()
+    return convertTimeToString(minute)
+}
+
 // 분을 밀리초로 변환하는 함수
 // 예시 값: 300000L (입력: 5)
 fun Int.timeToMs(): Long {

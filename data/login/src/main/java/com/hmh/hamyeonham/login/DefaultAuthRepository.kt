@@ -8,6 +8,7 @@ import com.hmh.hamyeonham.login.model.Login
 import com.hmh.hamyeonham.login.model.SignRequestDomain
 import com.hmh.hamyeonham.login.model.SignUpUser
 import com.hmh.hamyeonham.login.repository.AuthRepository
+import kotlinx.datetime.TimeZone
 import javax.inject.Inject
 
 class DefaultAuthRepository @Inject constructor(
@@ -23,6 +24,7 @@ class DefaultAuthRepository @Inject constructor(
             authService.signUp(
                 bearerToken,
                 "Android",
+                timeZone = TimeZone.currentSystemDefault().id,
                 signUpRequest.toSignUpRequest(),
             ).data.toSignUpUser()
         }

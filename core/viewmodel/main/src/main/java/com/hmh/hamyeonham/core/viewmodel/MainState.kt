@@ -11,7 +11,7 @@ data class MainState(
     val totalGoalTimeInHour: Int = 0,
     val period: Int = 0,
     val todayIndex: Int = 0,
-    val usageGoals: List<UsageGoal> = emptyList(),
+    val usageGoals: UsageGoal = UsageGoal(),
     val name: String = "",
     val point: Int = 0,
     val challengeSuccess: Boolean = true,
