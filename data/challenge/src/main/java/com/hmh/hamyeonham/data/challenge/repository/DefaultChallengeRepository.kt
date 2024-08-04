@@ -1,8 +1,8 @@
 package com.hmh.hamyeonham.data.challenge.repository
 
 import com.hmh.hamyeonham.challenge.model.Apps
-import com.hmh.hamyeonham.challenge.model.ChallengeStatus
-import com.hmh.hamyeonham.challenge.model.ChallengeWithUsage
+import com.hmh.hamyeonham.challenge.model.Challenge
+import com.hmh.hamyeonham.challenge.model.ChallengeWithUsageInput
 import com.hmh.hamyeonham.challenge.model.NewChallenge
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
@@ -11,7 +11,6 @@ import com.hmh.hamyeonham.core.network.challenge.ChallengeService
 import com.hmh.hamyeonham.core.network.usagegoal.DailyChallengeService
 import com.hmh.hamyeonham.data.challenge.datasource.ChallengeLocalDatasource
 import com.hmh.hamyeonham.data.challenge.mapper.toAppsRequest
-import com.hmh.hamyeonham.data.challenge.mapper.toChallengeResult
 import com.hmh.hamyeonham.data.challenge.mapper.toChallengeStatus
 import com.hmh.hamyeonham.data.challenge.mapper.toChallengeWithUsageEntity
 import com.hmh.hamyeonham.data.challenge.mapper.toNewChallengeRequest
@@ -26,19 +25,15 @@ class DefaultChallengeRepository @Inject constructor(
     private val challengeLocalDatasource: ChallengeLocalDatasource,
 ) : ChallengeRepository {
 
-    override suspend fun getChallengeData(): Result<ChallengeStatus> {
+    override suspend fun getChallengeData(): Result<Challenge> {
         return runCatching { challengeService.getChallengeData().data.toChallengeStatus() }
-    }
-
-    override suspend fun getTodayResult(): Result<Boolean> {
-        return runCatching { dailyChallengeService.getUsageGoal().data.toChallengeResult() }
     }
 
     override suspend fun updateDailyChallengeFailed(): Result<Unit> {
         return runCatching { dailyChallengeService.updateDailyChallengeFailed().data }
     }
 
-    override suspend fun getChallengeWithUsage(): Result<List<ChallengeWithUsage>> {
+    override suspend fun getChallengeWithUsage(): Result<List<ChallengeWithUsageInput>> {
         return runCatching {
             val (startTime, endTime) = getCurrentDayStartEndEpochMillis()
             challengeLocalDatasource.getChallengeWithUsage().map { entity ->
@@ -47,10 +42,10 @@ class DefaultChallengeRepository @Inject constructor(
                     startTime = startTime,
                     endTime = endTime,
                 )
-                ChallengeWithUsage(
+                ChallengeWithUsageInput(
                     challengeDate = challengeDate,
                     apps = appUsageList.filter { it.packageName != "total" }.map {
-                        ChallengeWithUsage.Usage(
+                        ChallengeWithUsageInput.Usage(
                             packageName = it.packageName,
                             usageTime = it.totalTimeInForeground
                         )
@@ -66,9 +61,9 @@ class DefaultChallengeRepository @Inject constructor(
         }
     }
 
-    override suspend fun insertChallengeWithUsage(challengeWithUsage: ChallengeWithUsage): Result<Unit> {
+    override suspend fun insertChallengeWithUsage(challengeWithUsageInput: ChallengeWithUsageInput): Result<Unit> {
         return runCatching {
-            challengeLocalDatasource.insertChallengeWithUsage(challengeWithUsage.toChallengeWithUsageEntity())
+            challengeLocalDatasource.insertChallengeWithUsage(challengeWithUsageInput.toChallengeWithUsageEntity())
         }
 
     }
@@ -79,9 +74,9 @@ class DefaultChallengeRepository @Inject constructor(
         }
     }
 
-    override suspend fun uploadSavedChallenge(challengeWithUsages: List<ChallengeWithUsage>): Result<Unit> {
+    override suspend fun uploadSavedChallenge(challengeWithUsageInputs: List<ChallengeWithUsageInput>): Result<Unit> {
         return runCatching {
-            dailyChallengeService.postChallengeWithUsage(challengeWithUsages.toRequestChallengeWithUsage())
+            dailyChallengeService.postChallengeWithUsage(challengeWithUsageInputs.toRequestChallengeWithUsage())
         }
     }
 
