@@ -10,10 +10,10 @@ import retrofit2.http.HTTP
 import retrofit2.http.POST
 
 interface ChallengeService {
-    @GET("api/v1/challenge")
+    @GET("api/v2/challenge")
     suspend fun getChallengeData(): BaseResponse<ChallengeResponse>
 
-    @POST("api/v1/challenge")
+    @POST("api/v2/challenge")
     suspend fun postNewChallenge(@Body request: NewChallengeRequest): BaseResponse<Unit>
 
     @POST("api/v1/challenge/app")
