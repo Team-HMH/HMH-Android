@@ -10,6 +10,10 @@ fun initAndStartProgressBarAnimation(pb: ProgressBar, progressTo: Int) {
     initAndStartAnimation(pb, "progress", 0, progressTo, AccelerateInterpolator())
 }
 
+fun initAndStartProgressBarAnimation(pb: ProgressBar, progressFrom: Int, progressTo: Int) {
+    initAndStartAnimation(pb, "progress", progressFrom, progressTo, AccelerateInterpolator())
+}
+
 inline fun <reified T : BaseInterpolator> initAndStartAnimation(
     view: View,
     propertyName: String,
