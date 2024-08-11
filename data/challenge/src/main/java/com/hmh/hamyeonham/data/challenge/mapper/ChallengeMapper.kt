@@ -2,8 +2,6 @@ package com.hmh.hamyeonham.data.challenge.mapper
 
 import com.hmh.hamyeonham.challenge.model.Challenge
 import com.hmh.hamyeonham.challenge.model.ChallengeWithUsageInput
-import com.hmh.hamyeonham.core.database.model.ChallengeWithUsageEntity
-import com.hmh.hamyeonham.core.database.model.DailyChallengeEntity
 import com.hmh.hamyeonham.core.database.model.UsageEntity
 import com.hmh.hamyeonham.core.network.challenge.model.ChallengeResponse
 import com.hmh.hamyeonham.core.network.challenge.model.ChallengeWithUsageRequest
@@ -20,18 +18,11 @@ internal fun ChallengeResponse.toChallengeStatus(): Challenge {
     )
 }
 
-internal fun ChallengeWithUsageInput.toChallengeWithUsageEntity(): ChallengeWithUsageEntity {
-    return ChallengeWithUsageEntity(
-        challenge = DailyChallengeEntity(challengeDate = challengeDate),
-        apps = apps.map { UsageEntity(it.packageName, it.usageTime, challengeDate) }
-    )
-}
-
 internal fun List<ChallengeWithUsageInput>.toRequestChallengeWithUsage(): ChallengeWithUsageRequest {
     return ChallengeWithUsageRequest(
         finishedDailyChallenges = map {
             ChallengeWithUsageRequest.DailyChallenges(
-                challengeDate = it.challengeDate,
+                challengePeriodIndex = it.challengePeriodIndex,
                 apps = it.apps.map { app ->
                     ChallengeWithUsageRequest.DailyChallenges.AppUsage(
                         appCode = app.packageName,

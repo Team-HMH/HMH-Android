@@ -8,6 +8,7 @@ import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
@@ -96,6 +97,15 @@ fun getCurrentDayStartEndEpochMillis(): Pair<Long, Long> {
     return Pair(startOfDayTime, endOfDayTime)
 }
 
+fun getDayStartEndEpochMillis(date: LocalDate): Pair<Long, Long> {
+    val startOfDayTime = date.toStartOfDayTime().toEpochMilliseconds(defaultTimeZone)
+    val endOfDayTime = date.plus(1, DateTimeUnit.DAY).toStartOfDayTime().toEpochMilliseconds(defaultTimeZone)
+    if (startOfDayTime > endOfDayTime) {
+        throw IllegalArgumentException("startOfDay is greater than endOfDay")
+    }
+    return Pair(startOfDayTime, endOfDayTime)
+}
+
 // 주어진 날짜의 시작 시간과 종료 시간을 Epoch 밀리초로 반환하는 함수
 // 예시 값: Pair(1737072000000L, 1737077696789L) (입력: 2024-06-15)
 fun getTargetDayStartEndEpochMillis(targetDate: LocalDate): Pair<Long, Long> {
@@ -106,6 +116,7 @@ fun getTargetDayStartEndEpochMillis(targetDate: LocalDate): Pair<Long, Long> {
 
 // 현재 날짜를 yyyy-MM-dd 형식으로 반환하는 함수
 // 예시 값: 2024-06-15
+val currentDate get() = getCurrentDateOfDefaultTimeZone()
 fun getCurrentDateOfDefaultTimeZone(): LocalDate {
     return Clock.System.now().toLocalDateTime(defaultTimeZone).date
 }
