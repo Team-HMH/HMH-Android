@@ -10,8 +10,8 @@ data class ChallengeWithUsageRequest(
 ) {
     @Serializable
     data class DailyChallenges(
-        @SerialName("challengeDate")
-        val challengeDate: String,
+        @SerialName("challengePeriodIndex")
+        val challengePeriodIndex: Int,
         @SerialName("apps")
         val apps: List<AppUsage>
     ) {

@@ -1,5 +1,6 @@
 package com.hmh.hamyeonham.core.network.usagegoal
 
+import com.hmh.hamyeonham.core.network.challenge.model.ChallengeFinishResponse
 import com.hmh.hamyeonham.core.network.challenge.model.ChallengeWithUsageRequest
 import com.hmh.hamyeonham.core.network.model.BaseResponse
 import com.hmh.hamyeonham.core.network.usagegoal.model.UsageGoalResponse
@@ -16,6 +17,6 @@ interface DailyChallengeService {
     suspend fun updateDailyChallengeFailed(): BaseResponse<Unit>
 
     @POST("api/v2/challenge/daily/finish")
-    suspend fun postChallengeWithUsage(@Body request: ChallengeWithUsageRequest): BaseResponse<Unit>
+    suspend fun postChallengeWithUsage(@Body request: ChallengeWithUsageRequest): BaseResponse<ChallengeFinishResponse>
 
 }

@@ -63,8 +63,6 @@ class MainViewModel @Inject constructor(
     val effect = _effect.asSharedFlow()
 
     init {
-        uploadSavedChallenge()
-
         viewModelScope.launch {
             updateIsUnLockUseCase()
         }
@@ -131,20 +129,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun uploadSavedChallenge() {
-        viewModelScope.launch {
-            val challengeWithUsages =
-                challengeRepository.getChallengeWithUsage().getOrNull() ?: return@launch
-            challengeRepository.uploadSavedChallenge(challengeWithUsages).onSuccess {
-                challengeRepository.deleteAllChallengeWithUsage()
-            }
-        }
-    }
-
     private suspend fun updateGoals() {
-        usageGoalsRepository.updateUsageGoal().onSuccess {
-            updateState { copy(challengeSuccess = it) }
-        }
+        usageGoalsRepository.updateUsageGoal()
+            .onSuccess {
+                updateState { copy(challengeSuccess = it) }
+            }
     }
 
     private suspend fun getChallengeStatus() {
@@ -153,17 +142,10 @@ class MainViewModel @Inject constructor(
                 setChallengeStatus(it)
             }.onFailure {
                 if (it is HttpException) {
-                    when (it.code()) {
-                        LACK_POINT_ERROR_CODE -> {
-                            sendEffect(MainEffect.LackOfPoint)
-                        }
-
-                        else -> sendEffect(MainEffect.NetworkError)
-                    }
+                    sendEffect(MainEffect.NetworkError)
                 } else {
                     sendEffect(MainEffect.NetworkError)
                 }
-                Log.e("challenge status error", it.toString())
             }
     }
 
