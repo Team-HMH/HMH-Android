@@ -9,9 +9,11 @@ sealed class HomeItem {
         val totalGoalTime: Long,
         val totalTimeInForeground: Long,
         val usageAppStatusAndGoal: UsageStatusAndGoal.App,
+        val previousUsedPercentage: Int = 0
     ) : HomeItem()
 
     data class UsageStaticsModel(
         val usageAppStatusAndGoal: UsageStatusAndGoal.App,
+        val previousUsedPercentage: Int = 0
     ) : HomeItem()
 }

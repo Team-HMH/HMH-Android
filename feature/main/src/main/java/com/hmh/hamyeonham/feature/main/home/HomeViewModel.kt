@@ -1,16 +1,20 @@
 package com.hmh.hamyeonham.feature.main.home
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.hmh.hamyeonham.core.viewmodel.HomeItem
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 data class HomeState(
     val userName: String = "",
     val challengeSuccess: Boolean = true,
-    val usageStatusAndGoals: List<UsageStatusAndGoal> = emptyList(),
+    val usageStatusAndGoals: UsageStatusAndGoal = UsageStatusAndGoal(),
     val previousUsedPercentages: Map<String, Int> = emptyMap()
 )
 
@@ -18,13 +22,34 @@ data class HomeState(
 class HomeViewModel @Inject constructor(
 ) : ViewModel() {
 
-    private val _homeState = MutableStateFlow(HomeState())
-    val homeState = _homeState.asStateFlow()
+    private val homeState = MutableStateFlow(HomeState())
+
+    val homeItems = homeState.map { homeState ->
+        listOf(
+            HomeItem.TotalModel(
+                userName = homeState.userName,
+                challengeSuccess = homeState.challengeSuccess,
+                totalGoalTime = homeState.usageStatusAndGoals.totalGoalTime,
+                totalTimeInForeground = homeState.usageStatusAndGoals.totalTimeInForeground,
+                usageAppStatusAndGoal = homeState.usageStatusAndGoals.apps.firstOrNull()
+                    ?: UsageStatusAndGoal.App(),
+                previousUsedPercentage = 0
+            )
+        ) + homeState.usageStatusAndGoals.apps.map { apps ->
+            HomeItem.UsageStaticsModel(
+                usageAppStatusAndGoal = apps,
+                previousUsedPercentage = homeState.previousUsedPercentages.getOrDefault(
+                    apps.packageName,
+                    0
+                )
+            )
+        }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     fun updateHomeState(
         newUserName: String,
         newChallengeSuccess: Boolean,
-        newUsageStatusAndGoal: List<UsageStatusAndGoal>
+        newUsageStatusAndGoal: UsageStatusAndGoal
     ) {
         updateUserName(newUserName)
         updateChallengeSuccess(newChallengeSuccess)
@@ -39,9 +64,9 @@ class HomeViewModel @Inject constructor(
         updateHomeState { copy(challengeSuccess = newChallengeSuccess) }
     }
 
-    private fun updateUsageStatusAndGoal(newUsageStatusAndGoal: List<UsageStatusAndGoal>) {
+    private fun updateUsageStatusAndGoal(newUsageStatusAndGoal: UsageStatusAndGoal) {
         val newPreviousUsedPercentage =
-            homeState.value.usageStatusAndGoals.associate { it.packageName to it.usedPercentage }
+            homeState.value.usageStatusAndGoals.apps.associate { it.packageName to it.usedPercentage }
         updatePreviousUsedPercentage(newPreviousUsedPercentage)
         updateHomeState { copy(usageStatusAndGoals = newUsageStatusAndGoal) }
     }
@@ -54,7 +79,7 @@ class HomeViewModel @Inject constructor(
         val currentState = homeState.value
         val newState = currentState.transform()
 
-        _homeState.value = newState
+        homeState.value = newState
     }
 
 }

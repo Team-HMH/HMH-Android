@@ -19,7 +19,7 @@ class UsageStaticsTotalViewHolder(
         bindBlackHoleInfo(totalModel)
         initAndStartProgressBarAnimation(
             binding.pbTotalUsage,
-            previousProgress,
+            totalModel.previousUsedPercentage,
             totalModel.usageAppStatusAndGoal.usedPercentage,
         )
     }

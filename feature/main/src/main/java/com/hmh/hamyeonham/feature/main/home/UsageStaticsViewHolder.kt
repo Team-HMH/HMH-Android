@@ -17,16 +17,13 @@ class UsageStaticsViewHolder(
     private val binding: ItemUsagestaticBinding,
     private val context: Context,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun onBind(
-        usageStaticsModel: HomeItem.UsageStaticsModel,
-    ) {
-        val previousProgress = usageStaticsModel.previousUsedPercentage
-        bindAppInfo(usageStaticsModel.usageStatusAndGoal)
-        bindUsageInfo(usageStaticsModel.usageStatusAndGoal)
+    fun onBind(usageStaticsModel: HomeItem.UsageStaticsModel) {
+        bindAppInfo(usageStaticsModel.usageAppStatusAndGoal)
+        bindUsageInfo(usageStaticsModel.usageAppStatusAndGoal)
         initAndStartProgressBarAnimation(
             binding.pbAppUsage,
-            previousProgress,
-            usageStaticsModel.usageStatusAndGoal.usedPercentage,
+            usageStaticsModel.previousUsedPercentage,
+            usageStaticsModel.usageAppStatusAndGoal.usedPercentage,
         )
     }
 

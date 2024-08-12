@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
@@ -23,7 +24,7 @@ import kotlinx.coroutines.flow.onEach
 class HomeFragment : Fragment() {
     private val binding by viewBinding(FragmentHomeBinding::bind)
     private val activityViewModel by activityViewModels<MainViewModel>()
-    private val viewModel by activityViewModels<HomeViewModel>()
+    private val viewModel by viewModels<HomeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +43,6 @@ class HomeFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initStaticsRecyclerView()
-        initUsageStatsList()
         collectState()
         collectMainState()
     }
@@ -74,7 +74,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun collectState() {
-        activityViewModel.homeItems
+        viewModel.homeItems
             .flowWithLifecycle(viewLifeCycle)
             .onEach { homeItems ->
                 updateUsageStatusAndGoal(homeItems)
