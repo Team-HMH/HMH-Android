@@ -6,7 +6,7 @@ import com.hmh.hamyeonham.common.qualifier.Log
 import com.hmh.hamyeonham.common.qualifier.Secured
 import com.hmh.hamyeonham.common.qualifier.Unsecured
 import com.hmh.hamyeonham.core.network.auth.authenticator.HMHAuthenticator
-import com.hmh.hamyeonham.core.network.auth.interceptor.AuthInterceptor
+import com.hmh.hamyeonham.core.network.auth.interceptor.HeaderInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Binds
 import dagger.Module
@@ -57,7 +57,7 @@ object NetModule {
     @Singleton
     @Provides
     @Auth
-    fun provideAuthInterceptor(interceptor: AuthInterceptor): Interceptor = interceptor
+    fun provideHeaderInterceptor(interceptor: HeaderInterceptor): Interceptor = interceptor
 
     @Singleton
     @Provides

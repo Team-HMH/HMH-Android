@@ -12,6 +12,7 @@ import com.google.android.material.transition.MaterialFadeThrough
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.core.viewmodel.HomeItem
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +41,7 @@ class HomeFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initStaticsRecyclerView()
-        initUsageStatsList()
+        collectState()
     }
 
     override fun onResume() {
@@ -56,21 +57,16 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initUsageStatsList() {
-        val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
-        activityViewModel.usageStatusAndGoals
+    private fun collectState() {
+        activityViewModel.homeItems
             .flowWithLifecycle(viewLifeCycle)
-            .onEach { usageStatusGoals ->
-                val mainState = activityViewModel.mainState.value
-                usageStaticsAdapter?.submitList(
-                    usageStatusGoals.map {
-                        UsageStaticsModel(
-                            userName = mainState.name,
-                            challengeSuccess = mainState.challengeSuccess,
-                            usageStatusAndGoal = it
-                        )
-                    }
-                )
+            .onEach { homeItems ->
+                updateUsageStatusAndGoal(homeItems)
             }.launchIn(viewLifeCycleScope)
+    }
+
+    private fun updateUsageStatusAndGoal(homeItems: List<HomeItem>) {
+        val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
+        usageStaticsAdapter?.submitList(homeItems)
     }
 }

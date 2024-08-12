@@ -20,22 +20,23 @@ data class ChallengeState(
     val calendarToggleState: CalendarToggleState = CalendarToggleState.COLLAPSED,
     val usageGoals: List<UsageGoal> = emptyList(),
     val modifierState: ModifierState = ModifierState.DONE,
-    val usageStatusAndGoals: List<UsageStatusAndGoal> = emptyList(),
+    val usageStatusAndGoals: UsageStatusAndGoal = UsageStatusAndGoal(),
 ) {
-    val usageGoalsAndModifiers = usageStatusAndGoals.map {
-        ChallengeUsageGoal(it, modifierState)
-    }
+    val usageGoalsAndModifiers: List<ChallengeUsageGoal>
+        get() = usageStatusAndGoals.apps.map {
+            ChallengeUsageGoal(it, modifierState)
+        } + ChallengeUsageGoal(UsageStatusAndGoal.App(), modifierState)
 }
 
 data class ChallengeUsageGoal(
-    val usageStatusAndGoal: UsageStatusAndGoal = UsageStatusAndGoal(),
+    val usageStatusAndGoal: UsageStatusAndGoal.App = UsageStatusAndGoal.App(),
     val modifierState: ModifierState = ModifierState.EDIT,
 ) {
     companion object {
         const val MAX_DELETABLE = 5
     }
 
-    val isDeletable: Boolean = usageStatusAndGoal.totalTimeInForegroundInMin < MAX_DELETABLE
+    val isDeletable: Boolean = usageStatusAndGoal.usageTime < MAX_DELETABLE
 }
 
 enum class ModifierState {
@@ -53,7 +54,7 @@ class ChallengeViewModel @Inject constructor(
     private val _challengeState = MutableStateFlow(ChallengeState())
     val challengeState = _challengeState.asStateFlow()
 
-    fun updateUsageStatusAndGoals(newUsageStatusAndGoals: List<UsageStatusAndGoal>) {
+    fun updateUsageStatusAndGoals(newUsageStatusAndGoals: UsageStatusAndGoal) {
         updateChallengeState { copy(usageStatusAndGoals = newUsageStatusAndGoals) }
     }
 
@@ -74,11 +75,11 @@ class ChallengeViewModel @Inject constructor(
         }
     }
 
-    fun deleteApp(usageStatusAndGoal: UsageStatusAndGoal) {
+    fun deleteApp(usageStatusAndGoal: UsageStatusAndGoal.App) {
         viewModelScope.launch {
             deleteUsageGoalUseCase(usageStatusAndGoal.packageName)
             deletedAppUsageStoreUseCase(
-                usageStatusAndGoal.totalTimeInForeground,
+                usageStatusAndGoal.usageTime,
                 usageStatusAndGoal.packageName
             )
         }

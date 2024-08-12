@@ -18,7 +18,7 @@ interface PointService {
         @Body request: EarnPointRequest,
     ): BaseResponse<EarnPointResponse>
 
-    @GET("/api/v1/point/use")
+    @GET("/api/v2/point/use")
     suspend fun getUsablePoint(): UsablePointResponse
 
     @PATCH("/api/v1/point/use")

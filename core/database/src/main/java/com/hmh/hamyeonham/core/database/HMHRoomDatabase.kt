@@ -12,7 +12,7 @@ import com.hmh.hamyeonham.core.database.model.DeletedGoalWithUsageEntity
 import com.hmh.hamyeonham.core.database.model.DeletedUsageEntity
 import com.hmh.hamyeonham.core.database.model.LockWithDateEntity
 import com.hmh.hamyeonham.core.database.model.UsageEntity
-import com.hmh.hamyeonham.core.database.model.UsageGoalsEntity
+import com.hmh.hamyeonham.core.database.model.UsageGoalEntity
 import com.hmh.hamyeonham.core.database.model.UsageTotalGoalEntity
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [
-        UsageGoalsEntity::class,
+        UsageGoalEntity::class,
         UsageTotalGoalEntity::class,
         UsageEntity::class,
         DailyChallengeEntity::class,

@@ -22,7 +22,6 @@ import com.hmh.hamyeonham.challenge.appadd.AppAddActivity
 import com.hmh.hamyeonham.challenge.calendar.ChallengeCalendarAdapter
 import com.hmh.hamyeonham.challenge.goals.ChallengeUsageGoalsAdapter
 import com.hmh.hamyeonham.challenge.model.Apps
-import com.hmh.hamyeonham.challenge.model.ChallengeStatus
 import com.hmh.hamyeonham.challenge.model.NewChallenge
 import com.hmh.hamyeonham.challenge.newchallenge.NewChallengeActivity
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
@@ -37,6 +36,7 @@ import com.hmh.hamyeonham.common.view.dp
 import com.hmh.hamyeonham.common.view.mapBooleanToVisibility
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.designsystem.R
+import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
 import com.hmh.hamyeonham.core.viewmodel.CalendarToggleState
 import com.hmh.hamyeonham.core.viewmodel.MainState
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
@@ -56,9 +56,19 @@ class ChallengeFragment : Fragment() {
     private lateinit var appSelectionResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var newChallengeResultLauncher: ActivityResultLauncher<Intent>
 
-
     @Inject
     lateinit var navigationProvider: NavigationProvider
+
+    private val pointResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val point = result.data?.getIntExtra("point", 0)
+            if (point != null && point != 0) {
+                activityViewModel.updatePoint(point)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -96,10 +106,8 @@ class ChallengeFragment : Fragment() {
         bindChallengeDate(it.todayIndexAsDate, it.startDate)
     }
 
-    private fun updateUsageStatusAndGoals(usageStatusAndGoals: List<UsageStatusAndGoal>) {
-        if (usageStatusAndGoals.isNotEmpty()) viewModel.updateUsageStatusAndGoals(
-            activityViewModel.getUsageStatusAndGoalsExceptTotal() + UsageStatusAndGoal()
-        )
+    private fun updateUsageStatusAndGoals(usageStatusAndGoals: UsageStatusAndGoal) {
+        viewModel.updateUsageStatusAndGoals(usageStatusAndGoals)
     }
 
     private fun collectChallengeStateAndProcess() {
@@ -180,7 +188,7 @@ class ChallengeFragment : Fragment() {
 
     private fun navigateToPointView() {
         val intent = navigationProvider.toPoint()
-        startActivity(intent)
+        pointResultLauncher.launch(intent)
     }
 
     private fun initViews() {
@@ -208,9 +216,9 @@ class ChallengeFragment : Fragment() {
         challengeGoalsAdapter?.submitList(challengeUsageGoalList)
     }
 
-    private fun bindChallengeCalendar(challengeStatusList: List<ChallengeStatus.Status>) {
+    private fun bindChallengeCalendar(challengeList: List<ChallengeStatus>) {
         val challengeAdapter = binding.rvChallengeCalendar.adapter as? ChallengeCalendarAdapter
-        challengeAdapter?.updateList(challengeStatusList)
+        challengeAdapter?.updateList(challengeList)
     }
 
     private fun bindChallengeDate(todayIndexAsDate: Int, startDate: LocalDate) {
@@ -321,7 +329,7 @@ class ChallengeFragment : Fragment() {
         }
     }
 
-    private fun RecyclerView.setDeleteAppDialog(it: UsageStatusAndGoal) {
+    private fun RecyclerView.setDeleteAppDialog(it: UsageStatusAndGoal.App) {
         val clickedAppNameToDialog = context.getAppNameFromPackageName(it.packageName)
         TwoButtonCommonDialog.newInstance(
             title = getString(R.string.delete_app_dialog_title, clickedAppNameToDialog),
