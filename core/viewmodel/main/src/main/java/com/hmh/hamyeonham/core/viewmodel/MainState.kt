@@ -13,7 +13,6 @@ data class MainState(
     val todayIndex: Int = 0,
     val usageGoals: UsageGoal = UsageGoal(),
     val name: String = "",
-    val point: Int = 0,
     val challengeSuccess: Boolean = true,
     var permissionGranted: Boolean = true,
 ) {

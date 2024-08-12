@@ -56,9 +56,19 @@ class ChallengeFragment : Fragment() {
     private lateinit var appSelectionResultLauncher: ActivityResultLauncher<Intent>
     private lateinit var newChallengeResultLauncher: ActivityResultLauncher<Intent>
 
-
     @Inject
     lateinit var navigationProvider: NavigationProvider
+
+    private val pointResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val point = result.data?.getIntExtra("point", 0)
+            if (point != null && point != 0) {
+                activityViewModel.updatePoint(point)
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -178,7 +188,7 @@ class ChallengeFragment : Fragment() {
 
     private fun navigateToPointView() {
         val intent = navigationProvider.toPoint()
-        startActivity(intent)
+        pointResultLauncher.launch(intent)
     }
 
     private fun initViews() {

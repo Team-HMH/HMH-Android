@@ -70,6 +70,9 @@ class MainViewModel @Inject constructor(
     private val _challengeList = MutableStateFlow<List<ChallengeStatus>>(emptyList())
     val challengeStatusList = _challengeList.asStateFlow()
 
+    private val _userPoint = MutableStateFlow(0)
+    val userPoint = _userPoint.asStateFlow()
+
     val isPointLeftToCollect
         get() =
             challengeStatusList.value.contains(ChallengeStatus.UNEARNED)
@@ -100,6 +103,7 @@ class MainViewModel @Inject constructor(
     fun updateDailyChallengeFailed() {
         viewModelScope.launch {
             pointRepository.usePoint().onSuccess {
+                _userPoint.value = it.userPoint
                 setIsUnLockUseCase(true).onSuccess {
                     getChallengeStatus()
                     sendEffect(MainEffect.SuccessUsePoint)
@@ -129,6 +133,23 @@ class MainViewModel @Inject constructor(
                 getChallengeStatus()
             }
         }
+    }
+
+    fun updateChallengeListWithToggleState(calendarToggleState: CalendarToggleState) {
+        val challengeStatusList = challengeStatusList.value
+        _challengeList.value = when (calendarToggleState) {
+            CalendarToggleState.EXPANDED -> {
+                rawChallengeList
+            }
+
+            CalendarToggleState.COLLAPSED -> {
+                challengeStatusList.take(7)
+            }
+        }
+    }
+
+    fun updatePoint(point: Int) {
+        _userPoint.value = point
     }
 
     private fun updateState(transform: suspend MainState.() -> MainState) {
@@ -209,28 +230,13 @@ class MainViewModel @Inject constructor(
 
     private fun updateUserInfo(userInfo: UserInfo) {
         updateState {
-            copy(
-                name = userInfo.name,
-                point = userInfo.point,
-            )
+            copy(name = userInfo.name)
         }
+        _userPoint.value = userInfo.point
     }
 
     private fun setUsageStatsList(usageStatsList: UsageStatusAndGoal) {
         _usageStatusAndGoals.value = usageStatsList
-    }
-
-    fun updateChallengeListWithToggleState(calendarToggleState: CalendarToggleState) {
-        val challengeStatusList = challengeStatusList.value
-        _challengeList.value = when (calendarToggleState) {
-            CalendarToggleState.EXPANDED -> {
-                rawChallengeList
-            }
-
-            CalendarToggleState.COLLAPSED -> {
-                challengeStatusList.take(7)
-            }
-        }
     }
 
     companion object {
