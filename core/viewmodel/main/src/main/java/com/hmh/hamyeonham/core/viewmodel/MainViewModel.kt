@@ -21,8 +21,11 @@ import com.hmh.hamyeonham.userinfo.repository.UserInfoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -49,6 +52,19 @@ class MainViewModel @Inject constructor(
     private val _usageStatusAndGoals = MutableStateFlow(UsageStatusAndGoal())
     val usageStatusAndGoals = _usageStatusAndGoals.asStateFlow()
 
+    val homeItems = usageStatusAndGoals.map {
+        listOf(
+            HomeItem.TotalModel(
+                userName = mainState.value.name,
+                challengeSuccess = mainState.value.challengeSuccess,
+                totalGoalTime = it.totalGoalTime,
+                totalTimeInForeground = it.totalTimeInForeground,
+                usageAppStatusAndGoal = it.apps.firstOrNull() ?: UsageStatusAndGoal.App()
+            )
+        ) + it.apps.map { apps ->
+            HomeItem.UsageStaticsModel(apps)
+        }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
     private var rawChallengeList: List<ChallengeStatus> = emptyList()
     private val _challengeList = MutableStateFlow<List<ChallengeStatus>>(emptyList())

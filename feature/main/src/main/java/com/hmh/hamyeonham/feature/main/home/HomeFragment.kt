@@ -12,9 +12,9 @@ import com.google.android.material.transition.MaterialFadeThrough
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.core.viewmodel.HomeItem
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.FragmentHomeBinding
-import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -58,28 +58,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun collectState() {
-        activityViewModel.usageStatusAndGoals
+        activityViewModel.homeItems
             .flowWithLifecycle(viewLifeCycle)
-            .onEach { usageStatusGoals ->
-                updateUsageStatusAndGoal(usageStatusGoals)
+            .onEach { homeItems ->
+                updateUsageStatusAndGoal(homeItems)
             }.launchIn(viewLifeCycleScope)
     }
 
-    private fun updateUsageStatusAndGoal(
-        usageStatusGoals: UsageStatusAndGoal
-    ) {
+    private fun updateUsageStatusAndGoal(homeItems: List<HomeItem>) {
         val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
-        val mainState = activityViewModel.mainState.value
-        usageStaticsAdapter?.submitList(
-            usageStatusGoals.apps.map {
-                UsageStaticsModel(
-                    userName = mainState.name,
-                    challengeSuccess = mainState.challengeSuccess,
-                    usageAppStatusAndGoal = it,
-                    totalGoalTime = usageStatusGoals.totalGoalTime,
-                    totalTimeInForeground = usageStatusGoals.totalTimeInForeground
-                )
-            }
-        )
+        usageStaticsAdapter?.submitList(homeItems)
     }
 }

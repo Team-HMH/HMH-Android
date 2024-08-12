@@ -8,6 +8,7 @@ import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.context.getSecondStrColoredString
 import com.hmh.hamyeonham.common.time.convertTimeToString
 import com.hmh.hamyeonham.common.view.initAndStartProgressBarAnimation
+import com.hmh.hamyeonham.core.viewmodel.HomeItem
 import com.hmh.hamyeonham.feature.main.R
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticBinding
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
@@ -17,7 +18,7 @@ class UsageStaticsViewHolder(
     private val context: Context,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun onBind(
-        usageStaticsModel: UsageStaticsModel,
+        usageStaticsModel: HomeItem.UsageStaticsModel,
     ) {
         bindAppInfo(usageStaticsModel.usageAppStatusAndGoal)
         bindUsageInfo(usageStaticsModel.usageAppStatusAndGoal)

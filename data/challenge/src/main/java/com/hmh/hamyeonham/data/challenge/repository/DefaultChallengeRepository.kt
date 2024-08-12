@@ -34,7 +34,7 @@ class DefaultChallengeRepository @Inject constructor(
             val challenge = challengeService.getChallengeData().data.toChallengeStatus()
 
             val challengeWithIndex = challenge.challengeList.mapIndexedNotNull { index, challengeStatus ->
-                if (challengeStatus != ChallengeStatus.NONE || challenge.todayIndex == index) {
+                if (challengeStatus != ChallengeStatus.NONE || challenge.todayIndex <= index) {
                     null
                 } else {
                     val dateIndexDifference = index - challenge.todayIndex
