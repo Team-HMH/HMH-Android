@@ -14,7 +14,7 @@ class UsageStaticsTotalViewHolder(
     private val context: Context,
 ) : RecyclerView.ViewHolder(binding.root) {
     fun onBind(usageStaticsModel: UsageStaticsModel) {
-        val previousProgress = binding.pbTotalUsage.progress
+        val previousProgress = usageStaticsModel.previousUsedPercentage
         bindUsageStaticsInfo(usageStaticsModel)
         bindBlackHoleInfo(usageStaticsModel)
         initAndStartProgressBarAnimation(

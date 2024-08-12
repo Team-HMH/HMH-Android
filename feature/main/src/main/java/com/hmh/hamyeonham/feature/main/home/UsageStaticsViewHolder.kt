@@ -19,7 +19,7 @@ class UsageStaticsViewHolder(
     fun onBind(
         usageStaticsModel: UsageStaticsModel,
     ) {
-        val previousProgress = binding.pbAppUsage.progress
+        val previousProgress = usageStaticsModel.previousUsedPercentage
         bindAppInfo(usageStaticsModel.usageStatusAndGoal)
         bindUsageInfo(usageStaticsModel.usageStatusAndGoal)
         initAndStartProgressBarAnimation(
