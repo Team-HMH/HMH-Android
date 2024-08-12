@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.onEach
 class HomeFragment : Fragment() {
     private val binding by viewBinding(FragmentHomeBinding::bind)
     private val activityViewModel by activityViewModels<MainViewModel>()
+    private val viewModel by activityViewModels<HomeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +41,7 @@ class HomeFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initStaticsRecyclerView()
+        collectMainState()
         initUsageStatsList()
     }
 
@@ -56,18 +58,32 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initUsageStatsList() {
-        val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
+    private fun collectMainState() {
         activityViewModel.usageStatusAndGoals
             .flowWithLifecycle(viewLifeCycle)
             .onEach { usageStatusGoals ->
                 val mainState = activityViewModel.mainState.value
+                viewModel.updateHomeState(
+                    newUserName = mainState.name,
+                    newChallengeSuccess = mainState.challengeSuccess,
+                    newUsageStatusAndGoal = usageStatusGoals
+                )
+            }.launchIn(viewLifeCycleScope)
+    }
+
+    private fun initUsageStatsList() {
+        val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
+        viewModel.homeState
+            .flowWithLifecycle(viewLifeCycle)
+            .onEach { homeState ->
                 usageStaticsAdapter?.submitList(
-                    usageStatusGoals.map {
+                    homeState.usageStatusAndGoals.map {
                         UsageStaticsModel(
-                            userName = mainState.name,
-                            challengeSuccess = mainState.challengeSuccess,
-                            usageStatusAndGoal = it
+                            userName = homeState.userName,
+                            challengeSuccess = homeState.challengeSuccess,
+                            usageStatusAndGoal = it,
+                            previousUsedPercentage = homeState.previousUsedPercentages.get(it.packageName)
+                                ?: 0
                         )
                     }
                 )
