@@ -13,6 +13,7 @@ data class UsageStaticsModel(
     val userName: String,
     val challengeSuccess: Boolean,
     val usageStatusAndGoal: UsageStatusAndGoal,
+    val previousUsedPercentage: Int = 0
 )
 
 class UsageStaticsAdapter : ListAdapter<UsageStaticsModel, RecyclerView.ViewHolder>(
