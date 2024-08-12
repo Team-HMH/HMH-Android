@@ -12,6 +12,7 @@ import com.google.android.material.transition.MaterialFadeThrough
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.core.viewmodel.HomeItem
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,8 +42,9 @@ class HomeFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initStaticsRecyclerView()
-        collectMainState()
         initUsageStatsList()
+        collectState()
+        collectMainState()
     }
 
     override fun onResume() {
@@ -71,22 +73,16 @@ class HomeFragment : Fragment() {
             }.launchIn(viewLifeCycleScope)
     }
 
-    private fun initUsageStatsList() {
-        val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
-        viewModel.homeState
+    private fun collectState() {
+        activityViewModel.homeItems
             .flowWithLifecycle(viewLifeCycle)
-            .onEach { homeState ->
-                usageStaticsAdapter?.submitList(
-                    homeState.usageStatusAndGoals.map {
-                        UsageStaticsModel(
-                            userName = homeState.userName,
-                            challengeSuccess = homeState.challengeSuccess,
-                            usageStatusAndGoal = it,
-                            previousUsedPercentage = homeState.previousUsedPercentages.get(it.packageName)
-                                ?: 0
-                        )
-                    }
-                )
+            .onEach { homeItems ->
+                updateUsageStatusAndGoal(homeItems)
             }.launchIn(viewLifeCycleScope)
+    }
+
+    private fun updateUsageStatusAndGoal(homeItems: List<HomeItem>) {
+        val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
+        usageStaticsAdapter?.submitList(homeItems)
     }
 }

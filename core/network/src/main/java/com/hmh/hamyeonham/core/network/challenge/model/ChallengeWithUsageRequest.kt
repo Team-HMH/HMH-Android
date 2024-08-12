@@ -1,4 +1,4 @@
-package com.hmh.hamyeonham.core.network.usagegoal.model
+package com.hmh.hamyeonham.core.network.challenge.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -10,8 +10,8 @@ data class ChallengeWithUsageRequest(
 ) {
     @Serializable
     data class DailyChallenges(
-        @SerialName("challengeDate")
-        val challengeDate: String,
+        @SerialName("challengePeriodIndex")
+        val challengePeriodIndex: Int,
         @SerialName("apps")
         val apps: List<AppUsage>
     ) {

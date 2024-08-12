@@ -15,10 +15,6 @@ class GetTotalUsageStatsUseCase @Inject constructor(
     private val deleteGoalRepository: DeleteGoalRepository
 ) {
 
-    companion object {
-        private const val TOTAL = "total"
-    }
-
     suspend operator fun invoke(
         startTime: Long,
         endTime: Long,
@@ -33,7 +29,7 @@ class GetTotalUsageStatsUseCase @Inject constructor(
         }
     }
 
-    suspend fun calculateTotalUsage(usageStats: List<UsageStatus>): Long {
+    private suspend fun calculateTotalUsage(usageStats: List<UsageStatus>): Long {
         return usageStats.sumUsageStats() + deleteGoalRepository.getDeletedUsageOfToday()
     }
 
@@ -45,7 +41,7 @@ class GetTotalUsageStatsUseCase @Inject constructor(
         return usageStatsRepository.getUsageStatForPackages(startTime, endTime, packageNames)
     }
 
-    private fun getPackageNamesFromUsageGoals(usageGoals: List<UsageGoal>): List<String> {
-        return usageGoals.filter { it.packageName != TOTAL }.map { it.packageName }
+    private fun getPackageNamesFromUsageGoals(usageGoals: UsageGoal): List<String> {
+        return usageGoals.appGoals.map { it.packageName }
     }
 }

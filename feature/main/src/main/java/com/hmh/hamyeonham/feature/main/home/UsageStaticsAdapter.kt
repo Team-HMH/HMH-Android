@@ -5,20 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.common.view.ItemDiffCallback
+import com.hmh.hamyeonham.core.viewmodel.HomeItem
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticBinding
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticTotalBinding
-import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 
-data class UsageStaticsModel(
-    val userName: String,
-    val challengeSuccess: Boolean,
-    val usageStatusAndGoal: UsageStatusAndGoal,
-    val previousUsedPercentage: Int = 0
-)
-
-class UsageStaticsAdapter : ListAdapter<UsageStaticsModel, RecyclerView.ViewHolder>(
-    ItemDiffCallback<UsageStaticsModel>(
-        onItemsTheSame = { old, new -> old.usageStatusAndGoal == new.usageStatusAndGoal },
+class UsageStaticsAdapter : ListAdapter<HomeItem, RecyclerView.ViewHolder>(
+    ItemDiffCallback<HomeItem>(
+        onItemsTheSame = { old, new -> old.hashCode() == new.hashCode() },
         onContentsTheSame = { old, new -> old == new },
     ),
 ) {
@@ -27,8 +20,8 @@ class UsageStaticsAdapter : ListAdapter<UsageStaticsModel, RecyclerView.ViewHold
         viewType: Int,
     ): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return when (viewType) {
-            TOTAL_ITEM_TYPE -> {
+        return when (HomeItemViewType.fromOrdinal(viewType)) {
+            HomeItemViewType.TOTAL_ITEM_TYPE -> {
                 val binding = ItemUsagestaticTotalBinding.inflate(inflater, parent, false)
                 UsageStaticsTotalViewHolder(binding, parent.context)
             }
@@ -44,25 +37,38 @@ class UsageStaticsAdapter : ListAdapter<UsageStaticsModel, RecyclerView.ViewHold
         holder: RecyclerView.ViewHolder,
         position: Int,
     ) {
-        when (position) {
-            0 -> {
-                val newHolder = holder as UsageStaticsTotalViewHolder
-                newHolder.onBind(currentList.getOrNull(position) ?: return)
+        when (holder) {
+            is UsageStaticsTotalViewHolder -> {
+                val item = currentList.getOrNull(position) as? HomeItem.TotalModel ?: return
+                holder.onBind(item)
             }
 
-            else -> {
-                val newHolder = holder as UsageStaticsViewHolder
-                newHolder.onBind(currentList.getOrNull(position) ?: return)
+           is UsageStaticsViewHolder -> {
+                val item = currentList.getOrNull(position) as? HomeItem.UsageStaticsModel ?: return
+               holder.onBind(item)
             }
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 0) TOTAL_ITEM_TYPE else APP_ITEM_TYPE
+        val currentItem = getItem(position)
+        val itemType = when (currentItem) {
+            is HomeItem.TotalModel -> HomeItemViewType.TOTAL_ITEM_TYPE
+            is HomeItem.UsageStaticsModel -> HomeItemViewType.APP_ITEM_TYPE
+        }
+        return HomeItemViewType.getOrdinal(itemType)
     }
 
-    companion object {
-        const val TOTAL_ITEM_TYPE = 0
-        const val APP_ITEM_TYPE = 1
+    enum class HomeItemViewType {
+        TOTAL_ITEM_TYPE,
+        APP_ITEM_TYPE,
+        ;
+
+        companion object {
+            fun fromOrdinal(ordinal: Int) =
+                entries.firstOrNull { it.ordinal == ordinal } ?: APP_ITEM_TYPE
+
+            fun getOrdinal(viewType: HomeItemViewType) = viewType.ordinal
+        }
     }
 }

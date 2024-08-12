@@ -59,6 +59,7 @@ class PointActivity : AppCompatActivity() {
         viewModel.currentPointState.flowWithLifecycle(lifecycle)
             .onEach {
                 binding.tvPointTotal.text = it.toString()
+                setResult(RESULT_OK, intent.putExtra("point", it))
             }.launchIn(lifecycleScope)
     }
 }

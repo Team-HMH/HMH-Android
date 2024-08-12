@@ -1,11 +1,12 @@
 package com.hmh.hamyeonham.core.network.auth.interceptor
 
 import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
-import javax.inject.Inject
+import kotlinx.datetime.TimeZone
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
 
-class AuthInterceptor @Inject constructor(
+class HeaderInterceptor @Inject constructor(
     private val dataStore: HMHNetworkPreference
 ) : Interceptor {
     private val encodedToken: String
@@ -19,6 +20,7 @@ class AuthInterceptor @Inject constructor(
         val headerRequest = originalRequest.newBuilder()
             .addHeader("Authorization", encodedToken)
             .addHeader("OS", "Android")
+            .addHeader("Time-Zone", TimeZone.currentSystemDefault().id)
             .build()
         return chain.proceed(headerRequest)
     }
