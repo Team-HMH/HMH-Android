@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.common.context.getSecondStrColoredString
 import com.hmh.hamyeonham.common.time.convertMillisecondToString
 import com.hmh.hamyeonham.common.view.initAndStartProgressBarAnimation
+import com.hmh.hamyeonham.core.viewmodel.HomeItem
 import com.hmh.hamyeonham.feature.main.R
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticTotalBinding
 
@@ -13,19 +14,19 @@ class UsageStaticsTotalViewHolder(
     private val binding: ItemUsagestaticTotalBinding,
     private val context: Context,
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun onBind(usageStaticsModel: UsageStaticsModel) {
-        bindUsageStaticsInfo(usageStaticsModel)
-        bindBlackHoleInfo(usageStaticsModel)
+    fun onBind(totalModel: HomeItem.TotalModel) {
+        bindUsageStaticsInfo(totalModel)
+        bindBlackHoleInfo(totalModel)
         initAndStartProgressBarAnimation(
             binding.pbTotalUsage,
-            usageStaticsModel.usageAppStatusAndGoal.usedPercentage,
+            totalModel.usageAppStatusAndGoal.usedPercentage,
         )
     }
 
-    private fun bindUsageStaticsInfo(usageStaticsModel: UsageStaticsModel) {
+    private fun bindUsageStaticsInfo(totalModel: HomeItem.TotalModel) {
         binding.run {
             val totalTimeLeft =
-                usageStaticsModel.totalGoalTime - usageStaticsModel.totalTimeInForeground
+                totalModel.totalGoalTime - totalModel.totalTimeInForeground
 
             tvTotalTimeLeft.text =
                 context.getSecondStrColoredString(
@@ -36,24 +37,24 @@ class UsageStaticsTotalViewHolder(
             tvTotalGoal.text =
                 context.getString(
                     R.string.total_goal_time,
-                    convertMillisecondToString(usageStaticsModel.totalGoalTime),
+                    convertMillisecondToString(totalModel.totalGoalTime),
                 )
             tvTotalUsage.text =
                 context.getString(
                     R.string.total_used,
-                    convertMillisecondToString(usageStaticsModel.totalTimeInForeground),
+                    convertMillisecondToString(totalModel.totalTimeInForeground),
                 )
-            pbTotalUsage.progress = usageStaticsModel.usageAppStatusAndGoal.usedPercentage
+            pbTotalUsage.progress = totalModel.usageAppStatusAndGoal.usedPercentage
         }
 
     }
 
-    private fun bindBlackHoleInfo(usageStaticsModel: UsageStaticsModel) {
+    private fun bindBlackHoleInfo(totalModel: HomeItem.TotalModel) {
         val blackHoleInfo =
             when {
                 // 권한이 허용되어 있는 경우
-                usageStaticsModel.challengeSuccess -> {
-                    BlackHoleInfo.createByPercentage(usageStaticsModel.usageAppStatusAndGoal.usedPercentage)
+                totalModel.challengeSuccess -> {
+                    BlackHoleInfo.createByPercentage(totalModel.usageAppStatusAndGoal.usedPercentage)
                         ?: BlackHoleInfo.LEVEL0
                 }
                 // 권한이 허용되지 않은 경우 default 값
