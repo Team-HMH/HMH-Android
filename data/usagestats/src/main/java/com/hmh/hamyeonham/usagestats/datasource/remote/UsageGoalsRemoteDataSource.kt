@@ -9,7 +9,7 @@ class UsageGoalsRemoteDataSource @Inject constructor(
     private val dailyChallengeService: DailyChallengeService,
 ) {
 
-    suspend fun getUsageGoals(): Result<List<UsageGoal>> {
+    suspend fun getUsageGoals(): Result<UsageGoal> {
         return runCatching { dailyChallengeService.getUsageGoal().data.toUsageGoalList() }
     }
 }

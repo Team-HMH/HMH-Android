@@ -37,13 +37,15 @@ class DefaultDeviceRepository @Inject constructor(
             }
             val resolveInfoList = context.packageManager.queryIntentActivities(intent, 0)
             val usageGoals = goalsRepository.getUsageGoals().firstOrNull()
-            val goalPackages = usageGoals?.map { it.packageName }?.toSet() ?: emptySet()
+            val goalPackages = usageGoals?.appGoals?.map { it.packageName }?.toSet() ?: emptySet()
             resolveInfoList
                 .asSequence()
                 .map { it.toAppInfo() }
-                .filter { !context.isSystemPackage(it.packageName) }
-                .filter { it.packageName != context.packageName }
-                .filter { !goalPackages.contains(it.packageName) }
+                .filter {
+                    !context.isSystemPackage(it.packageName) &&
+                            it.packageName != context.packageName &&
+                            !goalPackages.contains(it.packageName)
+                }
                 .distinct()
                 .toList()
                 .also { installedAppCache = it }

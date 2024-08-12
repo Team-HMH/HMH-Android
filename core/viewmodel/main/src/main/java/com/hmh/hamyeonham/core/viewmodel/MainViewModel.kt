@@ -3,11 +3,12 @@ package com.hmh.hamyeonham.core.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hmh.hamyeonham.challenge.model.ChallengeStatus
+import com.hmh.hamyeonham.challenge.model.Challenge
 import com.hmh.hamyeonham.challenge.model.NewChallenge
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
 import com.hmh.hamyeonham.challenge.usecase.NewChallengeUseCase
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
+import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.domain.point.repository.PointRepository
@@ -20,8 +21,11 @@ import com.hmh.hamyeonham.userinfo.repository.UserInfoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -40,29 +44,44 @@ class MainViewModel @Inject constructor(
     private val setIsUnLockUseCase: SetIsUnLockUseCase,
     private val updateIsUnLockUseCase: UpdateIsUnLockUseCase,
     private val newChallengeUseCase: NewChallengeUseCase,
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val _mainState = MutableStateFlow(MainState())
     val mainState = _mainState.asStateFlow()
 
-    private val _usageStatusAndGoals = MutableStateFlow<List<UsageStatusAndGoal>>(emptyList())
+    private val _usageStatusAndGoals = MutableStateFlow(UsageStatusAndGoal())
     val usageStatusAndGoals = _usageStatusAndGoals.asStateFlow()
 
+    val homeItems = usageStatusAndGoals.map {
+        listOf(
+            HomeItem.TotalModel(
+                userName = mainState.value.name,
+                challengeSuccess = mainState.value.challengeSuccess,
+                totalGoalTime = it.totalGoalTime,
+                totalTimeInForeground = it.totalTimeInForeground,
+                usageAppStatusAndGoal = it.apps.firstOrNull() ?: UsageStatusAndGoal.App()
+            )
+        ) + it.apps.map { apps ->
+            HomeItem.UsageStaticsModel(apps)
+        }
+    }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-    private var rawChallengeStatusList: List<ChallengeStatus.Status> = emptyList()
-    private val _challengeStatusList = MutableStateFlow<List<ChallengeStatus.Status>>(emptyList())
-    val challengeStatusList = _challengeStatusList.asStateFlow()
+    private var rawChallengeList: List<ChallengeStatus> = emptyList()
+    private val _challengeList = MutableStateFlow<List<ChallengeStatus>>(emptyList())
+    val challengeStatusList = _challengeList.asStateFlow()
 
-    val isPointLeftToCollect get() =
-        challengeStatusList.value.contains(ChallengeStatus.Status.UNEARNED)
+    private val _userPoint = MutableStateFlow(0)
+    val userPoint = _userPoint.asStateFlow()
+
+    val isPointLeftToCollect
+        get() =
+            challengeStatusList.value.contains(ChallengeStatus.UNEARNED)
 
 
     private val _effect = MutableSharedFlow<MainEffect>()
     val effect = _effect.asSharedFlow()
 
     init {
-        uploadSavedChallenge()
-
         viewModelScope.launch {
             updateIsUnLockUseCase()
         }
@@ -70,7 +89,6 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             updateGoals()
             getChallengeStatus()
-            getChallengeSuccess()
             getUserInfo()
             getUsageGoalAndStatList()
         }
@@ -85,6 +103,7 @@ class MainViewModel @Inject constructor(
     fun updateDailyChallengeFailed() {
         viewModelScope.launch {
             pointRepository.usePoint().onSuccess {
+                _userPoint.value = it.userPoint
                 setIsUnLockUseCase(true).onSuccess {
                     getChallengeStatus()
                     sendEffect(MainEffect.SuccessUsePoint)
@@ -108,16 +127,29 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getUsageStatusAndGoalsExceptTotal(): List<UsageStatusAndGoal> {
-        return usageStatusAndGoals.value.filter { it.packageName != UsageGoal.TOTAL }
-    }
-
     fun generateNewChallenge(newChallenge: NewChallenge) {
         viewModelScope.launch {
             newChallengeUseCase(newChallenge).onSuccess {
                 getChallengeStatus()
             }
         }
+    }
+
+    fun updateChallengeListWithToggleState(calendarToggleState: CalendarToggleState) {
+        val challengeStatusList = challengeStatusList.value
+        _challengeList.value = when (calendarToggleState) {
+            CalendarToggleState.EXPANDED -> {
+                rawChallengeList
+            }
+
+            CalendarToggleState.COLLAPSED -> {
+                challengeStatusList.take(7)
+            }
+        }
+    }
+
+    fun updatePoint(point: Int) {
+        _userPoint.value = point
     }
 
     private fun updateState(transform: suspend MainState.() -> MainState) {
@@ -134,20 +166,11 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun uploadSavedChallenge() {
-        viewModelScope.launch {
-            val challengeWithUsages = challengeRepository.getChallengeWithUsage().getOrNull() ?: return@launch
-            challengeRepository.uploadSavedChallenge(challengeWithUsages).onSuccess {
-                challengeRepository.deleteAllChallengeWithUsage()
-            }
-        }
-    }
-
     private suspend fun updateGoals() {
-        usageGoalsRepository.updateUsageGoal().onFailure {
-            sendEffect(MainEffect.NetworkError)
-            Log.e("updateUsageGoal error", it.toString())
-        }
+        usageGoalsRepository.updateUsageGoal()
+            .onSuccess {
+                updateState { copy(challengeSuccess = it) }
+            }
     }
 
     private suspend fun getChallengeStatus() {
@@ -156,26 +179,11 @@ class MainViewModel @Inject constructor(
                 setChallengeStatus(it)
             }.onFailure {
                 if (it is HttpException) {
-                    when (it.code()) {
-                        LACK_POINT_ERROR_CODE -> {
-                            sendEffect(MainEffect.LackOfPoint)
-                        }
-
-                        else -> sendEffect(MainEffect.NetworkError)
-                    }
+                    sendEffect(MainEffect.NetworkError)
                 } else {
                     sendEffect(MainEffect.NetworkError)
                 }
-                Log.e("challenge status error", it.toString())
             }
-    }
-
-    private suspend fun getChallengeSuccess() {
-        challengeRepository.getTodayResult().onSuccess {
-            updateState { copy(challengeSuccess = it) }
-        }.onFailure {
-            Log.e("getTodayResult error", it.toString())
-        }
     }
 
     private fun getUsageGoalAndStatList() {
@@ -201,49 +209,34 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun setUsageGaols(usageGoals: List<UsageGoal>) {
+    private fun setUsageGaols(usageGoals: UsageGoal) {
         updateState {
             copy(usageGoals = usageGoals)
         }
     }
 
-    private fun setChallengeStatus(challengeStatus: ChallengeStatus) {
+    private fun setChallengeStatus(challenge: Challenge) {
         updateState {
             copy(
-                appGoals = challengeStatus.appGoals,
-                totalGoalTimeInHour = challengeStatus.goalTimeInHours,
-                period = challengeStatus.period,
-                todayIndex = challengeStatus.todayIndex,
+                appGoals = challenge.appGoals,
+                totalGoalTimeInHour = challenge.goalTimeInHours,
+                period = challenge.period,
+                todayIndex = challenge.todayIndex,
             )
         }
-        rawChallengeStatusList = challengeStatus.challengeStatusList
-        _challengeStatusList.value = challengeStatus.challengeStatusList
+        rawChallengeList = challenge.challengeList
+        _challengeList.value = challenge.challengeList
     }
 
     private fun updateUserInfo(userInfo: UserInfo) {
         updateState {
-            copy(
-                name = userInfo.name,
-                point = userInfo.point,
-            )
+            copy(name = userInfo.name)
         }
+        _userPoint.value = userInfo.point
     }
 
-    private fun setUsageStatsList(usageStatsList: List<UsageStatusAndGoal>) {
+    private fun setUsageStatsList(usageStatsList: UsageStatusAndGoal) {
         _usageStatusAndGoals.value = usageStatsList
-    }
-
-    fun updateChallengeListWithToggleState(calendarToggleState: CalendarToggleState) {
-        val challengeStatusList = challengeStatusList.value
-        _challengeStatusList.value = when (calendarToggleState) {
-            CalendarToggleState.EXPANDED -> {
-                rawChallengeStatusList
-            }
-
-            CalendarToggleState.COLLAPSED -> {
-                challengeStatusList.take(7)
-            }
-        }
     }
 
     companion object {

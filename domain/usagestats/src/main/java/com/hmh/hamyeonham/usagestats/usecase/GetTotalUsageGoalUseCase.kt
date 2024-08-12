@@ -9,6 +9,6 @@ class GetTotalUsageGoalUseCase @Inject constructor(
     private val usageGoalsRepository: UsageGoalsRepository,
 ) {
     suspend operator fun invoke(): UsageGoal {
-        return usageGoalsRepository.getUsageGoals().first().get(0)
+        return usageGoalsRepository.getUsageGoals().first()
     }
 }
