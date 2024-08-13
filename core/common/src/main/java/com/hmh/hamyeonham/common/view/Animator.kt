@@ -6,18 +6,23 @@ import android.view.animation.AccelerateInterpolator
 import android.view.animation.BaseInterpolator
 import android.widget.ProgressBar
 
-fun initAndStartProgressBarAnimation(pb: ProgressBar, progressTo: Int) {
-    initAndStartAnimation(pb, "progress", 0, progressTo, AccelerateInterpolator())
+fun ProgressBar.setProgressWithAnimation(progressTo: Int) {
+    progress = progressTo
+    initAndStartAnimation(
+        view = this,
+        this.progress,
+        progressTo,
+        AccelerateInterpolator()
+    )
 }
 
 inline fun <reified T : BaseInterpolator> initAndStartAnimation(
     view: View,
-    propertyName: String,
     from: Int,
     to: Int,
     newInterpolator: T,
 ) {
-    ObjectAnimator.ofInt(view, propertyName, from, to).apply {
+    ObjectAnimator.ofInt(view, view::class.simpleName.toString(), from, to).apply {
         interpolator = newInterpolator
     }.start()
 }
