@@ -17,7 +17,7 @@ class UsageStaticsTotalViewHolder(
     fun onBind(totalModel: HomeItem.TotalModel) {
         bindUsageStaticsInfo(totalModel)
         bindBlackHoleInfo(totalModel)
-        binding.pbTotalUsage.setProgressWithAnimation(totalModel.usageAppStatusAndGoal.usedPercentage)
+        binding.pbTotalUsage.setProgressWithAnimation(totalModel.totalPercentage)
     }
 
     private fun bindUsageStaticsInfo(totalModel: HomeItem.TotalModel) {
@@ -41,7 +41,7 @@ class UsageStaticsTotalViewHolder(
                     R.string.total_used,
                     convertMillisecondToString(totalModel.totalTimeInForeground),
                 )
-            pbTotalUsage.progress = totalModel.usageAppStatusAndGoal.usedPercentage
+            pbTotalUsage.progress = totalModel.totalPercentage
         }
 
     }
@@ -51,7 +51,7 @@ class UsageStaticsTotalViewHolder(
             when {
                 // 권한이 허용되어 있는 경우
                 totalModel.challengeSuccess -> {
-                    BlackHoleInfo.createByPercentage(totalModel.usageAppStatusAndGoal.usedPercentage)
+                    BlackHoleInfo.createByPercentage(totalModel.totalPercentage)
                         ?: BlackHoleInfo.LEVEL0
                 }
                 // 권한이 허용되지 않은 경우 default 값
