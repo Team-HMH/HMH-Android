@@ -8,8 +8,13 @@ sealed class HomeItem {
         val challengeSuccess: Boolean,
         val totalGoalTime: Long,
         val totalTimeInForeground: Long,
-        val usageAppStatusAndGoal: UsageStatusAndGoal.App,
-    ) : HomeItem()
+    ) : HomeItem() {
+        val totalPercentage = if (totalGoalTime == 0L || totalTimeInForeground > totalGoalTime) {
+            100
+        } else {
+            ((totalTimeInForeground * 100 / totalGoalTime).toInt())
+        }
+    }
 
     data class UsageStaticsModel(
         val usageAppStatusAndGoal: UsageStatusAndGoal.App,

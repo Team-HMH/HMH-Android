@@ -59,7 +59,6 @@ class MainViewModel @Inject constructor(
                 challengeSuccess = mainState.value.challengeSuccess,
                 totalGoalTime = it.totalGoalTime,
                 totalTimeInForeground = it.totalTimeInForeground,
-                usageAppStatusAndGoal = it.apps.firstOrNull() ?: UsageStatusAndGoal.App()
             )
         ) + it.apps.map { apps ->
             HomeItem.UsageStaticsModel(apps)
