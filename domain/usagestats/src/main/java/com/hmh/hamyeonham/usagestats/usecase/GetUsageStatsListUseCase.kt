@@ -38,7 +38,7 @@ class GetUsageStatsListUseCase @Inject constructor(
                         usageTime = usageForSelectedApps.find { usageStatus -> usageStatus.packageName == it.packageName }?.totalTimeInForeground ?: 0,
                         goalTime = it.goalTime,
                     )
-                },
+                }.sortedByDescending { it.usageTime },
             )
 
             return usageStatusAndGoal
