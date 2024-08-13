@@ -7,7 +7,7 @@ import com.hmh.hamyeonham.common.context.getAppIconFromPackageName
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.context.getSecondStrColoredString
 import com.hmh.hamyeonham.common.time.convertTimeToString
-import com.hmh.hamyeonham.common.view.initAndStartProgressBarAnimation
+import com.hmh.hamyeonham.common.view.setProgressWithAnimation
 import com.hmh.hamyeonham.core.viewmodel.HomeItem
 import com.hmh.hamyeonham.feature.main.R
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticBinding
@@ -22,10 +22,7 @@ class UsageStaticsViewHolder(
     ) {
         bindAppInfo(usageStaticsModel.usageAppStatusAndGoal)
         bindUsageInfo(usageStaticsModel.usageAppStatusAndGoal)
-        initAndStartProgressBarAnimation(
-            binding.pbAppUsage,
-            usageStaticsModel.usageAppStatusAndGoal.usedPercentage
-        )
+        binding.pbAppUsage.setProgressWithAnimation(usageStaticsModel.usageAppStatusAndGoal.usedPercentage)
     }
 
     private fun bindAppInfo(usageStatusAndGoal: UsageStatusAndGoal.App) {

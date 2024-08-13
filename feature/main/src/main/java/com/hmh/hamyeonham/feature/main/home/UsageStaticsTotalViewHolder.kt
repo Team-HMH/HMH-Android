@@ -5,7 +5,7 @@ import androidx.core.content.ContextCompat.getString
 import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.common.context.getSecondStrColoredString
 import com.hmh.hamyeonham.common.time.convertMillisecondToString
-import com.hmh.hamyeonham.common.view.initAndStartProgressBarAnimation
+import com.hmh.hamyeonham.common.view.setProgressWithAnimation
 import com.hmh.hamyeonham.core.viewmodel.HomeItem
 import com.hmh.hamyeonham.feature.main.R
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticTotalBinding
@@ -17,10 +17,7 @@ class UsageStaticsTotalViewHolder(
     fun onBind(totalModel: HomeItem.TotalModel) {
         bindUsageStaticsInfo(totalModel)
         bindBlackHoleInfo(totalModel)
-        initAndStartProgressBarAnimation(
-            binding.pbTotalUsage,
-            totalModel.usageAppStatusAndGoal.usedPercentage,
-        )
+        binding.pbTotalUsage.setProgressWithAnimation(totalModel.usageAppStatusAndGoal.usedPercentage)
     }
 
     private fun bindUsageStaticsInfo(totalModel: HomeItem.TotalModel) {
