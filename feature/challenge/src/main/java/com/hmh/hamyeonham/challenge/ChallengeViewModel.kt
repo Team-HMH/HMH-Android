@@ -33,10 +33,10 @@ data class ChallengeUsageGoal(
     val modifierState: ModifierState = ModifierState.EDIT,
 ) {
     companion object {
-        const val MAX_DELETABLE = 5
+        const val MAX_DELETABLE = 300000
     }
 
-    val isDeletable: Boolean = usageStatusAndGoal.usageTime < MAX_DELETABLE
+    val isDeletable: Boolean = usageStatusAndGoal.usageTime <= MAX_DELETABLE
 }
 
 enum class ModifierState {
