@@ -1,7 +1,7 @@
 package com.hmh.hamyeonham.challenge.model
 
-data class ChallengeWithUsage(
-    val challengeDate: String,
+data class ChallengeWithUsageInput(
+    val challengePeriodIndex: Int,
     val apps: List<Usage>
 ) {
     data class Usage(

@@ -16,48 +16,39 @@ class GetUsageStatsListUseCase @Inject constructor(
     private val deleteGoalRepository: DeleteGoalRepository
 ) {
 
-    companion object {
-        private const val TOTAL = "total"
-    }
-
     suspend operator fun invoke(
         startTime: Long,
         endTime: Long,
-    ): List<UsageStatusAndGoal> {
-        usageGoalsRepository.getUsageGoals().first().let { usageGoals ->
-            val selectedPackages = getSelectedPackageList(usageGoals)
+    ): UsageStatusAndGoal {
+        usageGoalsRepository.getUsageGoals().first().let { usageGoal ->
+            val selectedPackages = getSelectedPackageList(usageGoal)
             val usageForSelectedApps = getUsageStatsAndGoalsForSelectedPackages(
                 startTime,
                 endTime,
                 selectedPackages,
             )
-            val usageStatusAndGoalsForSelectedApps = usageForSelectedApps.map {
-                UsageStatusAndGoal(
-                    it.packageName,
-                    it.totalTimeInForeground,
-                    getUsageGoalForPackage(usageGoals, it.packageName),
-                )
-            }
             val totalUsage = usageForSelectedApps.sumUsageStats() + deleteGoalRepository.getDeletedUsageOfToday()
-            val totalUsageStatusAndGoal = UsageStatusAndGoal(
-                TOTAL,
-                totalUsage,
-                getUsageGoalForPackage(usageGoals, TOTAL),
+
+            val usageStatusAndGoal = UsageStatusAndGoal(
+                totalTimeInForeground = totalUsage,
+                totalGoalTime = usageGoal.totalGoalTime,
+                apps = usageGoal.appGoals.map {
+                    UsageStatusAndGoal.App(
+                        packageName = it.packageName,
+                        usageTime = usageForSelectedApps.find { usageStatus -> usageStatus.packageName == it.packageName }?.totalTimeInForeground ?: 0,
+                        goalTime = it.goalTime,
+                    )
+                }.sortedByDescending { it.usageTime },
             )
-            return listOf(totalUsageStatusAndGoal) + usageStatusAndGoalsForSelectedApps.sortedByDescending { it.usedPercentage }
+
+            return usageStatusAndGoal
         }
     }
 
     private fun getUsageGoalForPackage(
-        usageGoalsForSelectedPackages: List<UsageGoal>,
-        packageName: String,
+        usageGoalsForSelectedPackages: UsageGoal,
     ): Long {
-        usageGoalsForSelectedPackages.forEach {
-            if (it.packageName == packageName) {
-                return it.goalTime
-            }
-        }
-        return 0
+        return usageGoalsForSelectedPackages.totalGoalTime
     }
 
     private suspend fun getUsageStatsAndGoalsForSelectedPackages(
@@ -68,7 +59,6 @@ class GetUsageStatsListUseCase @Inject constructor(
         return usageStatsRepository.getUsageStatForPackages(startTime, endTime, selectedPackages)
     }
 
-    private fun getSelectedPackageList(usageGoalList: List<UsageGoal>): List<String> =
-        usageGoalList.filter { it.packageName != TOTAL }
-            .map { it.packageName }.distinct()
+    private fun getSelectedPackageList(usageGoalList: UsageGoal): List<String> =
+        usageGoalList.appGoals.map { it.packageName }.distinct()
 }

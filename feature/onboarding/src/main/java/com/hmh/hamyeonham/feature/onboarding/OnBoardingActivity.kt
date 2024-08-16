@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
 import com.hmh.hamyeonham.common.context.toast
-import com.hmh.hamyeonham.common.view.initAndStartProgressBarAnimation
+import com.hmh.hamyeonham.common.view.setProgressWithAnimation
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentStateAdapter
 import com.hmh.hamyeonham.feature.onboarding.databinding.ActivityOnBoardingBinding
@@ -203,8 +203,7 @@ class OnBoardingActivity : AppCompatActivity() {
     ) {
         val progress = (currentItem + 1).toFloat() / totalItems.toFloat()
         val progressBarWidth = (progress * 100).toInt()
-        binding.pbOnboarding.progress = progressBarWidth
-        initAndStartProgressBarAnimation(binding.pbOnboarding, progressBarWidth)
+        binding.pbOnboarding.setProgressWithAnimation(progressBarWidth)
     }
 
     override fun onDestroy() {

@@ -111,15 +111,12 @@ class MyPageFragment : Fragment() {
 
     private fun collectMainState() {
         activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
-            bindMyPageWithUserInfo(it.name, it.point)
+            binding.tvUserName.text = it.name
         }.launchIn(viewLifeCycleScope)
-    }
 
-    private fun bindMyPageWithUserInfo(name: String, point: Int) {
-        binding.run {
-            tvUserName.text = name
-            tvPoint.text = getString(R.string.mypage_point, point)
-        }
+        activityViewModel.userPoint.flowWithLifecycle(viewLifeCycle).onEach {
+            binding.tvPoint.text = getString(R.string.mypage_point, it)
+        }.launchIn(viewLifeCycleScope)
     }
 
     private fun initPrivacyButton() {

@@ -9,12 +9,12 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface LockService {
-    @GET("/api/v1/user/daily/lock")
+    @GET("/api/v2/user/daily/lock")
     suspend fun getIsLockedWithDate(
         @Query("lockCheckDate") date: String
     ): BaseResponse<LockCheckWithDate>
 
-    @POST("/api/v1/user/daily/lock")
+    @POST("/api/v2/user/daily/lock")
     suspend fun postLockWithDate(
         @Body body: RequestLockDate
     ): BaseResponse<Unit>

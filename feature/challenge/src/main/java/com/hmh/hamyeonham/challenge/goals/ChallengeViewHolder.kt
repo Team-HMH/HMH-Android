@@ -50,9 +50,9 @@ sealed class ChallengeViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder
             tvAppName.text = appName
             tvAppNameDelete.text = appName
             tvAppUsageGoal.text =
-                convertTimeToString(item.usageStatusAndGoal.goalTimeInMin)
+                convertTimeToString(item.usageStatusAndGoal.goalTimeInMinute)
             tvAppUsageGoalDelete.text =
-                convertTimeToString(item.usageStatusAndGoal.goalTimeInMin)
+                convertTimeToString(item.usageStatusAndGoal.goalTimeInMinute)
         }
 
         private fun ItemUsageGoalBinding.setVisibility(modifierState: ModifierState) {

@@ -12,9 +12,11 @@ class AddUsageGoalsUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(apps: Apps) {
         challengeRepository.postApps(apps).onSuccess {
-            usageGoalsRepository.addUsageGoalList(apps.apps.map {
-                UsageGoal(it.appCode, it.goalTime)
-            })
+            usageGoalsRepository.addUsageGoalList(
+                apps.apps.map {
+                    UsageGoal.App(it.appCode, it.goalTime)
+                }
+            )
         }
     }
 }
