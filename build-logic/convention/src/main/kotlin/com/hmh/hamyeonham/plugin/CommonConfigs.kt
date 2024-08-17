@@ -9,9 +9,10 @@ import org.gradle.kotlin.dsl.getByType
 import java.util.Properties
 
 internal fun Project.configureAndroidCommonPlugin() {
-    val properties = Properties().apply {
-        load(rootProject.file("local.properties").inputStream())
-    }
+    val properties =
+        Properties().apply {
+            load(rootProject.file("local.properties").inputStream())
+        }
 
     apply<AndroidKotlinPlugin>()
     apply<KotlinSerializationPlugin>()
@@ -25,6 +26,9 @@ internal fun Project.configureAndroidCommonPlugin() {
             val kakaoApiKey = properties["kakaoApiKey"] as? String ?: ""
             manifestPlaceholders["kakaoApiKey"] = properties["kakaoApiKey"] as String
             buildConfigField("String", "KAKAO_API_KEY", "\"${kakaoApiKey}\"")
+
+            val amplitudeApiKey = properties["amplitudeApiKey"] as? String ?: ""
+            buildConfigField("String", "AMPLITUDE_API_KEY", "\"${amplitudeApiKey}\"")
         }
         buildTypes {
             getByName("debug") {
