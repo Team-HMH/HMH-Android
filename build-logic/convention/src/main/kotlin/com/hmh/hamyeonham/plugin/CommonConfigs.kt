@@ -52,5 +52,6 @@ internal fun Project.configureAndroidCommonPlugin() {
         "implementation"(libs.findLibrary("material").get())
         "implementation"(libs.findLibrary("fragment.ktx").get())
         "implementation"(libs.findLibrary("timber").get())
+        "implementation"(libs.findLibrary("amplitude").get())
     }
 }

@@ -110,7 +110,4 @@ dependencies {
 
     // Hilt Worker
     implementation(libs.androidx.hilt.common)
-
-    // amplitude
-    implementation(libs.amplitude)
 }
