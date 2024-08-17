@@ -83,6 +83,7 @@ javax-inject = "1"
 androidx-hilt = "1.2.0"
 work-runtime-ktx = "2.9.0"
 timber = "5.0.1"
+amplitude = "2.+"
 
 
 [libraries]
@@ -211,6 +212,9 @@ zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", ve
 androidx-hilt-common = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidx-hilt" }
 androidx-hilt-compiler = {module ="androidx.hilt:hilt-compiler", version.ref = "androidx-hilt" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-runtime-ktx" }
+
+#amplitude
+amplitude = { module = "com.amplitude:android-sdk", version.ref = "amplitude" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
