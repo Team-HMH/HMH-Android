@@ -6,13 +6,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.ActivityNewChallengeBinding
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.json.JSONObject
 
 class NewChallengeActivity : AppCompatActivity() {
-
     private val binding by viewBinding(ActivityNewChallengeBinding::inflate)
     private val viewModel by viewModels<NewChallengeViewModel>()
 
@@ -41,23 +42,29 @@ class NewChallengeActivity : AppCompatActivity() {
     private fun handleNextClicked() {
         binding.vpNewChallenge.run {
             when (currentItem) {
-                FRAGMENT.PERIODSELECTION.position -> currentItem = FRAGMENT.TIMESELECTION.position
+                FRAGMENT.PERIODSELECTION.position -> {
+                    currentItem = FRAGMENT.TIMESELECTION.position
+                    val properties = JSONObject().put("period", viewModel.state.value.goalDate)
+                    AmplitudeUtils.trackEventWithProperties("view_challenge_time", properties)
+                }
                 FRAGMENT.TIMESELECTION.position -> finishWithResults()
             }
         }
     }
 
     private fun collectNewChallengeState() {
-        viewModel.state.flowWithLifecycle(lifecycle)
+        viewModel.state
+            .flowWithLifecycle(lifecycle)
             .onEach { binding.btNewChallenge.isEnabled = it.isNextButtonActive }
             .launchIn(lifecycleScope)
     }
 
     private fun finishWithResults() {
-        val intent = Intent().apply {
-            putExtra(PERIOD, viewModel.state.value.goalDate)
-            putExtra(GOALTIME, viewModel.state.value.goalTime)
-        }
+        val intent =
+            Intent().apply {
+                putExtra(PERIOD, viewModel.state.value.goalDate)
+                putExtra(GOALTIME, viewModel.state.value.goalTime)
+            }
         setResult(RESULT_OK, intent)
         finish()
     }
