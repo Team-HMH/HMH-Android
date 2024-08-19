@@ -33,11 +33,13 @@ class OnBoardingSelectDataFragment : Fragment() {
 
     companion object {
         private const val ARG_FRAGMENT_TYPE = "ARG_FRAGMENT_TYPE"
+
         fun newInstance(fragmentType: OnBoardingFragmentType): OnBoardingSelectDataFragment {
             val onBoardingFragment = OnBoardingSelectDataFragment()
-            val args = Bundle().apply {
-                putString(ARG_FRAGMENT_TYPE, fragmentType.name)
-            }
+            val args =
+                Bundle().apply {
+                    putString(ARG_FRAGMENT_TYPE, fragmentType.name)
+                }
             onBoardingFragment.arguments = args
             return onBoardingFragment
         }
@@ -47,11 +49,12 @@ class OnBoardingSelectDataFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        return FragmentOnBoardingSelectDataBinding.inflate(inflater, container, false).root
-    }
+    ): View = FragmentOnBoardingSelectDataBinding.inflate(inflater, container, false).root
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
         initFragmentType()
@@ -66,28 +69,31 @@ class OnBoardingSelectDataFragment : Fragment() {
 
     private fun initViews() {
         initQuestionButton()
-        viewModel.onBoardingSelectDataState.onEach {
-            binding.apply {
-                val onBoardingQuestion = it.onBoardingQuestion
-                tvOnboardingSelectDataQuestion.text = onBoardingQuestion.title
-                tvOnboardingSelectDataDescription.text = onBoardingQuestion.description
-                btnOnboardingSelectData1.text = onBoardingQuestion.options.getOrNull(0).orEmpty()
-                btnOnboardingSelectData2.text = onBoardingQuestion.options.getOrNull(1).orEmpty()
-                btnOnboardingSelectData3.text = onBoardingQuestion.options.getOrNull(2).orEmpty()
-                btnOnboardingSelectData4.text = onBoardingQuestion.options.getOrNull(3).orEmpty()
-            }
-        }.launchIn(lifecycleScope)
+        viewModel.onBoardingSelectDataState
+            .onEach {
+                binding.apply {
+                    val onBoardingQuestion = it.onBoardingQuestion
+                    tvOnboardingSelectDataQuestion.text = onBoardingQuestion.title
+                    tvOnboardingSelectDataDescription.text = onBoardingQuestion.description
+                    btnOnboardingSelectData1.text = onBoardingQuestion.options.getOrNull(0).orEmpty()
+                    btnOnboardingSelectData2.text = onBoardingQuestion.options.getOrNull(1).orEmpty()
+                    btnOnboardingSelectData3.text = onBoardingQuestion.options.getOrNull(2).orEmpty()
+                    btnOnboardingSelectData4.text = onBoardingQuestion.options.getOrNull(3).orEmpty()
+                }
+            }.launchIn(lifecycleScope)
     }
 
     private fun initQuestionButton() {
-        val onboardingFragmentButtonList = listOf(
-            binding.btnOnboardingSelectData1,
-            binding.btnOnboardingSelectData2,
-            binding.btnOnboardingSelectData3,
-            binding.btnOnboardingSelectData4,
-        )
+        val onboardingFragmentButtonList =
+            listOf(
+                binding.btnOnboardingSelectData1,
+                binding.btnOnboardingSelectData2,
+                binding.btnOnboardingSelectData3,
+                binding.btnOnboardingSelectData4,
+            )
 
-        onboardingFragmentButtonList.forEachIndexed { _, button ->
+        onboardingFragmentButtonList.forEachIndexed { index, button ->
+            button.tag = index + 1
             button.setOnClickListener {
                 toggleButtonSelection(button)
             }
@@ -128,15 +134,25 @@ class OnBoardingSelectDataFragment : Fragment() {
 
     private fun updateUserResponse() {
         val selectedQuestion = selectedButtons.map { it.text.toString() }
+        val buttonIndices =
+            selectedButtons.map { button ->
+                button.tag as? Int ?: -1
+            }
+
         val firstSelected = selectedQuestion.firstOrNull()
+        val buttonIndex = buttonIndices.firstOrNull() ?: -1
 
         when (fragmentType) {
             OnBoardingFragmentType.SELECT_DATA_TIME -> {
-                activityViewModel.sendEvent(OnboardEvent.UpdateUsuallyUseTime(firstSelected.orEmpty()))
+                activityViewModel.sendEvent(
+                    OnboardEvent.UpdateUsuallyUseTime(firstSelected.orEmpty(), buttonIndex),
+                )
             }
 
             OnBoardingFragmentType.SELECT_DATA_PROBLEM -> {
-                activityViewModel.sendEvent(OnboardEvent.UpdateProblems(selectedQuestion))
+                activityViewModel.sendEvent(
+                    OnboardEvent.UpdateProblems(selectedQuestion, buttonIndices),
+                )
             }
 
             OnBoardingFragmentType.SELECT_DATA_PERIOD -> {
@@ -151,11 +167,10 @@ class OnBoardingSelectDataFragment : Fragment() {
         }
     }
 
-    private fun String.toOnboardingFragmentType(): OnBoardingFragmentType {
-        return try {
+    private fun String.toOnboardingFragmentType(): OnBoardingFragmentType =
+        try {
             OnBoardingFragmentType.valueOf(this)
         } catch (e: Exception) {
             OnBoardingFragmentType.SELECT_DATA_TIME
         }
-    }
 }
