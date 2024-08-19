@@ -77,7 +77,7 @@ class ChallengeViewModel
                 runCatching {
                     addUsageGoalsUseCase(apps)
                 }.onSuccess {
-                    AmplitudeUtils.trackEventWithProperties("click_add_complete")
+                    AmplitudeUtils.trackEventWithProperties("complete_add_new")
                 }
                 checkAndDeleteDeletedAppUsageUseCase(apps.apps.map { it.appCode })
             }
