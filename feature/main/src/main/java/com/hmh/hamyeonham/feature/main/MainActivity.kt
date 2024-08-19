@@ -7,6 +7,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.context.hasNotificationPermission
 import com.hmh.hamyeonham.common.dialog.OneButtonCommonDialog
@@ -48,17 +49,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun collectEffect() {
-        viewModel.effect.flowWithLifecycle(lifecycle).onEach { effect ->
-            when (effect) {
-                is MainEffect.SuccessUsePoint -> {
-                    intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
-                    showChallengeFailedDialog()
-                }
+        viewModel.effect
+            .flowWithLifecycle(lifecycle)
+            .onEach { effect ->
+                when (effect) {
+                    is MainEffect.SuccessUsePoint -> {
+                        intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
+                        showChallengeFailedDialog()
+                    }
 
-                is MainEffect.LackOfPoint -> showPointLackDialog()
-                is MainEffect.NetworkError -> showErrorDialog()
-            }
-        }.launchIn(lifecycleScope)
+                    is MainEffect.LackOfPoint -> showPointLackDialog()
+                    is MainEffect.NetworkError -> showErrorDialog()
+                }
+            }.launchIn(lifecycleScope)
     }
 
     private fun initNavHostFragment() {
@@ -70,22 +73,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkUnlockedPackage() {
         val packageName = intent.getStringExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME) ?: return
-        TwoButtonCommonDialog.newInstance(
-            title = getString(
-                R.string.dialog_title_unlock_package,
-                getAppNameFromPackageName(packageName)
-            ),
-            description = getString(R.string.dialog_description_unlock_package),
-            confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
-            dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
-        ).apply {
-            setConfirmButtonClickListener {
-                viewModel.updateDailyChallengeFailed()
-            }
-            setDismissButtonClickListener {
-                intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
-            }
-        }.showAllowingStateLoss(supportFragmentManager, "unlock_package")
+        TwoButtonCommonDialog
+            .newInstance(
+                title =
+                    getString(
+                        R.string.dialog_title_unlock_package,
+                        getAppNameFromPackageName(packageName),
+                    ),
+                description = getString(R.string.dialog_description_unlock_package),
+                confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
+                dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
+            ).apply {
+                setConfirmButtonClickListener {
+                    viewModel.updateDailyChallengeFailed()
+                }
+                setDismissButtonClickListener {
+                    intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
+                }
+            }.showAllowingStateLoss(supportFragmentManager, "unlock_package")
     }
 
     private fun startLockService() {
@@ -95,41 +100,45 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showChallengeFailedDialog() {
-        OneButtonCommonDialog.newInstance(
-            title = getString(R.string.dialog_title_challenge_failed),
-            description = getString(R.string.dialog_description_challenge_failed),
-            iconRes = R.drawable.ic_challenge_failed,
-            confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
-        ).apply {
-            setConfirmButtonClickListener {
-                dismiss()
-            }
-        }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
+        OneButtonCommonDialog
+            .newInstance(
+                title = getString(R.string.dialog_title_challenge_failed),
+                description = getString(R.string.dialog_description_challenge_failed),
+                iconRes = R.drawable.ic_challenge_failed,
+                confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_done),
+            ).apply {
+                setConfirmButtonClickListener {
+                    AmplitudeUtils.trackEventWithProperties("click_unlock_complete_button")
+                    dismiss()
+                }
+            }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
     }
 
     private fun showPointLackDialog() {
-        OneButtonCommonDialog.newInstance(
-            title = getString(R.string.dialog_title_point_lack),
-            description = getString(R.string.dialog_description_point_lack),
-            iconRes = R.drawable.ic_point_lack,
-            confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.no),
-        ).apply {
-            setConfirmButtonClickListener {
-                dismiss()
-            }
-        }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
+        OneButtonCommonDialog
+            .newInstance(
+                title = getString(R.string.dialog_title_point_lack),
+                description = getString(R.string.dialog_description_point_lack),
+                iconRes = R.drawable.ic_point_lack,
+                confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.no),
+            ).apply {
+                setConfirmButtonClickListener {
+                    dismiss()
+                }
+            }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
     }
 
     private fun showErrorDialog() {
-        OneButtonCommonDialog.newInstance(
-            title = getString(com.hmh.hamyeonham.core.designsystem.R.string.dialog_title_network_error),
-            description = getString(com.hmh.hamyeonham.core.designsystem.R.string.dialog_description_network_error),
-            confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
-        ).apply {
-            setConfirmButtonClickListener {
-                dismiss()
-            }
-        }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
+        OneButtonCommonDialog
+            .newInstance(
+                title = getString(com.hmh.hamyeonham.core.designsystem.R.string.dialog_title_network_error),
+                description = getString(com.hmh.hamyeonham.core.designsystem.R.string.dialog_description_network_error),
+                confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
+            ).apply {
+                setConfirmButtonClickListener {
+                    dismiss()
+                }
+            }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
     }
 
     private fun checkPermission() {
