@@ -10,6 +10,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.view.setProgressWithAnimation
 import com.hmh.hamyeonham.common.view.viewBinding
@@ -88,6 +89,7 @@ class OnBoardingActivity : AppCompatActivity() {
         val pagerAdapter = setOnboardingPageAdapter()
 
         binding.btnOnboardingNext.setOnClickListener {
+            AmplitudeUtils.trackEventWithProperties("click_onboarding_next")
             viewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(false))
             navigateToNextOnboardingStep(pagerAdapter)
         }
