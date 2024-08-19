@@ -24,6 +24,7 @@ import com.hmh.hamyeonham.challenge.goals.ChallengeUsageGoalsAdapter
 import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.model.NewChallenge
 import com.hmh.hamyeonham.challenge.newchallenge.NewChallengeActivity
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.fragment.snackBarWithAction
@@ -59,26 +60,28 @@ class ChallengeFragment : Fragment() {
     @Inject
     lateinit var navigationProvider: NavigationProvider
 
-    private val pointResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result: ActivityResult ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val point = result.data?.getIntExtra("point", 0)
-            if (point != null && point != 0) {
-                activityViewModel.updatePoint(point)
+    private val pointResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult(),
+        ) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val point = result.data?.getIntExtra("point", 0)
+                if (point != null && point != 0) {
+                    activityViewModel.updatePoint(point)
+                }
             }
         }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        return FragmentChallengeBinding.inflate(inflater, container, false).root
-    }
+    ): View = FragmentChallengeBinding.inflate(inflater, container, false).root
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         initAppSelectionResultLauncher()
         initNewChallengeResultLauncher()
@@ -88,17 +91,23 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun collectMainStateAndProcess() {
-        activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
-            bindChallengeInfo(it)
-        }.launchIn(viewLifeCycleScope)
+        activityViewModel.mainState
+            .flowWithLifecycle(viewLifeCycle)
+            .onEach {
+                bindChallengeInfo(it)
+            }.launchIn(viewLifeCycleScope)
 
-        activityViewModel.usageStatusAndGoals.flowWithLifecycle(viewLifeCycle).onEach {
-            updateUsageStatusAndGoals(it)
-        }.launchIn(viewLifeCycleScope)
+        activityViewModel.usageStatusAndGoals
+            .flowWithLifecycle(viewLifeCycle)
+            .onEach {
+                updateUsageStatusAndGoals(it)
+            }.launchIn(viewLifeCycleScope)
 
-        activityViewModel.challengeStatusList.flowWithLifecycle(viewLifeCycle).onEach {
-            bindChallengeCalendar(it)
-        }.launchIn(viewLifeCycleScope)
+        activityViewModel.challengeStatusList
+            .flowWithLifecycle(viewLifeCycle)
+            .onEach {
+                bindChallengeCalendar(it)
+            }.launchIn(viewLifeCycleScope)
     }
 
     private fun bindChallengeInfo(it: MainState) {
@@ -111,11 +120,13 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun collectChallengeStateAndProcess() {
-        viewModel.challengeState.flowWithLifecycle(viewLifeCycle).onEach {
-            handleModifierButtonState(it.modifierState)
-            handleCalendarToggleState(it.calendarToggleState)
-            bindUsageGoals(it.usageGoalsAndModifiers)
-        }.launchIn(viewLifeCycleScope)
+        viewModel.challengeState
+            .flowWithLifecycle(viewLifeCycle)
+            .onEach {
+                handleModifierButtonState(it.modifierState)
+                handleCalendarToggleState(it.calendarToggleState)
+                bindUsageGoals(it.usageGoalsAndModifiers)
+            }.launchIn(viewLifeCycleScope)
     }
 
     private fun handleModifierButtonState(it: ModifierState) {
@@ -129,17 +140,19 @@ class ChallengeFragment : Fragment() {
     private fun getTextAndColorsOfModifierState(modifierState: ModifierState) =
         when (modifierState) {
             ModifierState.EDIT -> {
-                getString(R.string.all_done) to ContextCompat.getColor(
-                    requireContext(),
-                    R.color.white_text,
-                )
+                getString(R.string.all_done) to
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white_text,
+                    )
             }
 
             ModifierState.DONE -> {
-                getString(R.string.all_edit) to ContextCompat.getColor(
-                    requireContext(),
-                    R.color.blue_purple_text,
-                )
+                getString(R.string.all_edit) to
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.blue_purple_text,
+                    )
             }
         }
 
@@ -169,13 +182,15 @@ class ChallengeFragment : Fragment() {
 
     private fun initChallengeCreateButton() {
         binding.btnChallengeCreate.setOnClickListener {
+            AmplitudeUtils.trackEventWithProperties("click_newchallenge_button")
             if (activityViewModel.isPointLeftToCollect) {
                 snackBarWithAction(
                     anchorView = binding.root,
                     message = getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_create),
-                    actionMessage = getString(
-                        com.hmh.hamyeonham.feature.challenge.R.string.all_move
-                    )
+                    actionMessage =
+                        getString(
+                            com.hmh.hamyeonham.feature.challenge.R.string.all_move,
+                        ),
                 ) {
                     navigateToPointView()
                 }
@@ -221,17 +236,21 @@ class ChallengeFragment : Fragment() {
         challengeAdapter?.updateList(challengeList)
     }
 
-    private fun bindChallengeDate(todayIndexAsDate: Int, startDate: LocalDate) {
+    private fun bindChallengeDate(
+        todayIndexAsDate: Int,
+        startDate: LocalDate,
+    ) {
         binding.run {
-            tvChallengeStartDate.text = getString(
-                com.hmh.hamyeonham.feature.challenge.R.string.challenge_start_date,
-                startDate.monthNumber,
-                startDate.dayOfMonth
-            )
+            tvChallengeStartDate.text =
+                getString(
+                    com.hmh.hamyeonham.feature.challenge.R.string.challenge_start_date,
+                    startDate.monthNumber,
+                    startDate.dayOfMonth,
+                )
             tvChallengeDay.text =
                 getString(
                     com.hmh.hamyeonham.feature.challenge.R.string.challenge_day,
-                    todayIndexAsDate
+                    todayIndexAsDate,
                 )
         }
     }
@@ -262,8 +281,8 @@ class ChallengeFragment : Fragment() {
                     activityViewModel.generateNewChallenge(
                         NewChallenge(
                             period = period ?: 0,
-                            goalTime = goalTime ?: 0
-                        )
+                            goalTime = goalTime ?: 0,
+                        ),
                     )
                 }
             }
@@ -308,22 +327,26 @@ class ChallengeFragment : Fragment() {
 
     private fun initChallengeGoalsRecyclerView() {
         binding.rvAppUsageGoals.run {
-            adapter = ChallengeUsageGoalsAdapter(
-                onAppListAddClicked = {
-                    val intent = Intent(requireContext(), AppAddActivity::class.java)
-                    appSelectionResultLauncher.launch(intent)
-                },
-                onAppItemClicked = { challengeGoal ->
-                    when (viewModel.challengeState.value.modifierState) {
-                        ModifierState.EDIT -> {
-                            if (challengeGoal.isDeletable) setDeleteAppDialog(challengeGoal.usageStatusAndGoal)
-                            else toast(getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_delete))
-                        }
+            adapter =
+                ChallengeUsageGoalsAdapter(
+                    onAppListAddClicked = {
+                        val intent = Intent(requireContext(), AppAddActivity::class.java)
+                        appSelectionResultLauncher.launch(intent)
+                    },
+                    onAppItemClicked = { challengeGoal ->
+                        when (viewModel.challengeState.value.modifierState) {
+                            ModifierState.EDIT -> {
+                                if (challengeGoal.isDeletable) {
+                                    setDeleteAppDialog(challengeGoal.usageStatusAndGoal)
+                                } else {
+                                    toast(getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_delete))
+                                }
+                            }
 
-                        else -> Unit
-                    }
-                },
-            )
+                            else -> Unit
+                        }
+                    },
+                )
             layoutManager = LinearLayoutManager(requireContext())
             addItemDecoration(VerticalSpaceItemDecoration(9.dp))
         }
@@ -331,16 +354,17 @@ class ChallengeFragment : Fragment() {
 
     private fun RecyclerView.setDeleteAppDialog(it: UsageStatusAndGoal.App) {
         val clickedAppNameToDialog = context.getAppNameFromPackageName(it.packageName)
-        TwoButtonCommonDialog.newInstance(
-            title = getString(R.string.delete_app_dialog_title, clickedAppNameToDialog),
-            description = getString(R.string.delete_app_dialog_description),
-            confirmButtonText = getString(R.string.all_okay),
-            dismissButtonText = getString(R.string.all_cancel),
-        ).apply {
-            setConfirmButtonClickListener {
-                viewModel.deleteApp(it)
-            }
-            setDismissButtonClickListener {}
-        }.showAllowingStateLoss(childFragmentManager)
+        TwoButtonCommonDialog
+            .newInstance(
+                title = getString(R.string.delete_app_dialog_title, clickedAppNameToDialog),
+                description = getString(R.string.delete_app_dialog_description),
+                confirmButtonText = getString(R.string.all_okay),
+                dismissButtonText = getString(R.string.all_cancel),
+            ).apply {
+                setConfirmButtonClickListener {
+                    viewModel.deleteApp(it)
+                }
+                setDismissButtonClickListener {}
+            }.showAllowingStateLoss(childFragmentManager)
     }
 }
