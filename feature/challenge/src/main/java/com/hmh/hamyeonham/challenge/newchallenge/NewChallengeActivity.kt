@@ -34,7 +34,13 @@ class NewChallengeActivity : AppCompatActivity() {
             vpNewChallenge.adapter = NewChallengeViewPagerAdapter(this@NewChallengeActivity)
             vpNewChallenge.isUserInputEnabled = false
 
-            btNewChallenge.setOnClickListener { handleNextClicked() }
+            btNewChallenge.setOnClickListener {
+                handleNextClicked()
+                if (vpNewChallenge.adapter?.itemCount == FRAGMENT.PERIODSELECTION.position) {
+                    val properties = JSONObject().put("period", viewModel.state.value.goalDate)
+                    AmplitudeUtils.trackEventWithProperties("view_newchallenge_totaltime", properties)
+                }
+            }
             ivBack.setOnClickListener { finish() }
         }
     }
@@ -42,11 +48,7 @@ class NewChallengeActivity : AppCompatActivity() {
     private fun handleNextClicked() {
         binding.vpNewChallenge.run {
             when (currentItem) {
-                FRAGMENT.PERIODSELECTION.position -> {
-                    currentItem = FRAGMENT.TIMESELECTION.position
-                    val properties = JSONObject().put("period", viewModel.state.value.goalDate)
-                    AmplitudeUtils.trackEventWithProperties("view_challenge_time", properties)
-                }
+                FRAGMENT.PERIODSELECTION.position -> currentItem = FRAGMENT.TIMESELECTION.position
                 FRAGMENT.TIMESELECTION.position -> finishWithResults()
             }
         }
