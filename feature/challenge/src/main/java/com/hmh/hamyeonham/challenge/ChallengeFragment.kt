@@ -330,6 +330,7 @@ class ChallengeFragment : Fragment() {
             adapter =
                 ChallengeUsageGoalsAdapter(
                     onAppListAddClicked = {
+                        AmplitudeUtils.trackEventWithProperties("click_add_button")
                         val intent = Intent(requireContext(), AppAddActivity::class.java)
                         appSelectionResultLauncher.launch(intent)
                     },
