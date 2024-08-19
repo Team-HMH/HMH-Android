@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.fragment.toast
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
@@ -25,6 +26,7 @@ import com.hmh.hamyeonham.mypage.viewmodel.UserEffect
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.json.JSONObject
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -40,9 +42,7 @@ class MyPageFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        return FragmentMyPageBinding.inflate(inflater, container, false).root
-    }
+    ): View = FragmentMyPageBinding.inflate(inflater, container, false).root
 
     override fun onViewCreated(
         view: View,
@@ -59,6 +59,8 @@ class MyPageFragment : Fragment() {
 
     private fun initStoreButton() {
         binding.vStore.setOnClickListener {
+            val property = JSONObject().put("view_type", "mypage")
+            AmplitudeUtils.trackEventWithProperties("view_shop", property)
             val intent = navigationProvider.toStore()
             startActivity(intent)
         }
@@ -66,40 +68,44 @@ class MyPageFragment : Fragment() {
 
     private fun initViews() {
         binding.tvLogout.setOnClickListener {
-            TwoButtonCommonDialog.newInstance(
-                title = getString(R.string.logout_description),
-                confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
-                dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
-            ).apply {
-                setConfirmButtonClickListener {
-                    viewModel.handleLogout()
-                }
-            }.showAllowingStateLoss(childFragmentManager)
+            TwoButtonCommonDialog
+                .newInstance(
+                    title = getString(R.string.logout_description),
+                    confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
+                    dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
+                ).apply {
+                    setConfirmButtonClickListener {
+                        viewModel.handleLogout()
+                    }
+                }.showAllowingStateLoss(childFragmentManager)
         }
 
         binding.tvWithdrawal.setOnClickListener {
-            TwoButtonCommonDialog.newInstance(
-                title = getString(R.string.withdrawal_title),
-                description = getString(R.string.withdrawal_description),
-                confirmButtonText = getString(R.string.mypage_withdrawal),
-                dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
-            ).apply {
-                setConfirmButtonClickListener {
-                    viewModel.handleWithdrawal()
-                }
-            }.showAllowingStateLoss(childFragmentManager)
+            TwoButtonCommonDialog
+                .newInstance(
+                    title = getString(R.string.withdrawal_title),
+                    description = getString(R.string.withdrawal_description),
+                    confirmButtonText = getString(R.string.mypage_withdrawal),
+                    dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
+                ).apply {
+                    setConfirmButtonClickListener {
+                        viewModel.handleWithdrawal()
+                    }
+                }.showAllowingStateLoss(childFragmentManager)
         }
     }
 
     private fun collectEffect() {
-        viewModel.userEffect.flowWithLifecycle(lifecycle).onEach { state ->
-            when (state) {
-                is UserEffect.WithdrawalSuccess -> moveToLoginActivity()
-                is UserEffect.WithdrawalFail -> toast(getString(R.string.withdrawal_fail))
-                is UserEffect.LogoutSuccess -> moveToLoginActivity()
-                is UserEffect.LogoutFail -> toast(getString(R.string.logout_fail))
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
+        viewModel.userEffect
+            .flowWithLifecycle(lifecycle)
+            .onEach { state ->
+                when (state) {
+                    is UserEffect.WithdrawalSuccess -> moveToLoginActivity()
+                    is UserEffect.WithdrawalFail -> toast(getString(R.string.withdrawal_fail))
+                    is UserEffect.LogoutSuccess -> moveToLoginActivity()
+                    is UserEffect.LogoutFail -> toast(getString(R.string.logout_fail))
+                }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun moveToLoginActivity() {
@@ -110,13 +116,17 @@ class MyPageFragment : Fragment() {
     }
 
     private fun collectMainState() {
-        activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
-            binding.tvUserName.text = it.name
-        }.launchIn(viewLifeCycleScope)
+        activityViewModel.mainState
+            .flowWithLifecycle(viewLifeCycle)
+            .onEach {
+                binding.tvUserName.text = it.name
+            }.launchIn(viewLifeCycleScope)
 
-        activityViewModel.userPoint.flowWithLifecycle(viewLifeCycle).onEach {
-            binding.tvPoint.text = getString(R.string.mypage_point, it)
-        }.launchIn(viewLifeCycleScope)
+        activityViewModel.userPoint
+            .flowWithLifecycle(viewLifeCycle)
+            .onEach {
+                binding.tvPoint.text = getString(R.string.mypage_point, it)
+            }.launchIn(viewLifeCycleScope)
     }
 
     private fun initPrivacyButton() {
