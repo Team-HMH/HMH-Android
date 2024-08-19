@@ -160,6 +160,7 @@ class ChallengeFragment : Fragment() {
         binding.tvModifierButton.setOnClickListener {
             when (viewModel.challengeState.value.modifierState) {
                 ModifierState.DONE -> {
+                    AmplitudeUtils.trackEventWithProperties("click_edit_button")
                     viewModel.updateModifierState(ModifierState.EDIT)
                 }
 
