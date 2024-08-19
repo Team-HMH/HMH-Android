@@ -38,7 +38,7 @@ fun LockScreen(
     onClickClose: () -> Unit = {},
     onClickUnLock: () -> Unit = {},
 ) {
-    AmplitudeUtils.trackEventWithProperties("view_unlock_button")
+    AmplitudeUtils.trackEventWithProperties("view_unlock_popup")
     Box(
         modifier =
             Modifier
