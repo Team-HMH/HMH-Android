@@ -85,7 +85,11 @@ class ChallengeViewModel
 
         fun deleteApp(usageStatusAndGoal: UsageStatusAndGoal.App) {
             viewModelScope.launch {
-                deleteUsageGoalUseCase(usageStatusAndGoal.packageName)
+                runCatching {
+                    deleteUsageGoalUseCase(usageStatusAndGoal.packageName)
+                }.onSuccess {
+                    AmplitudeUtils.trackEventWithProperties("click_delete_complete")
+                }
                 deletedAppUsageStoreUseCase(
                     usageStatusAndGoal.usageTime,
                     usageStatusAndGoal.packageName,
