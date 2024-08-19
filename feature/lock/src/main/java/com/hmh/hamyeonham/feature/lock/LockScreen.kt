@@ -21,6 +21,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.feature.lock.ui.theme.Blackground
 import com.hmh.hamyeonham.feature.lock.ui.theme.BluePurpleButton
@@ -37,19 +38,22 @@ fun LockScreen(
     onClickClose: () -> Unit = {},
     onClickUnLock: () -> Unit = {},
 ) {
+    AmplitudeUtils.trackEventWithProperties("view_unlock_button")
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Blackground),
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(Blackground),
     ) {
         val context = LocalContext.current
         val appName = context.getAppNameFromPackageName(packageName)
 
         Column(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .fillMaxWidth()
-                .padding(top = 132.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .padding(top = 132.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             AsyncImage(
@@ -71,9 +75,10 @@ fun LockScreen(
         }
 
         Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -92,15 +97,21 @@ fun LockScreen(
             ) {
                 Text(
                     text = stringResource(R.string.close),
-                    modifier = Modifier
-                        .padding(horizontal = 70.dp, vertical = 10.dp),
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 70.dp, vertical = 10.dp),
                     style = HmhTypography.titleMedium,
                     color = WhiteBtn,
                 )
             }
             Text(
-                modifier = Modifier.clickable(onClick = onClickUnLock)
-                    .padding(top = 22.dp, bottom = 58.dp),
+                modifier =
+                    Modifier
+                        .clickable(onClick = {
+                            onClickUnLock()
+                            AmplitudeUtils.trackEventWithProperties("click_unlock_button")
+                        })
+                        .padding(top = 22.dp, bottom = 58.dp),
                 text = stringResource(R.string.do_unlock),
                 style = HmhTypography.titleSmall,
                 color = Gray1,
