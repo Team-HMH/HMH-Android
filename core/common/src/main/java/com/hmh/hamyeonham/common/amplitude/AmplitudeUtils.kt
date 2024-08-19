@@ -4,7 +4,7 @@ import com.amplitude.api.Amplitude
 import org.json.JSONObject
 
 object AmplitudeUtils {
-    private val amplitude = Amplitude.getInstance()
+    private val amplitude by lazy { Amplitude.getInstance() }
 
     fun trackEventWithProperties(
         eventName: String,
