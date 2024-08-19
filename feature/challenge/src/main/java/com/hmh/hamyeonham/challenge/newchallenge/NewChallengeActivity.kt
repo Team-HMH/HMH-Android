@@ -38,7 +38,7 @@ class NewChallengeActivity : AppCompatActivity() {
                 handleNextClicked()
                 if (vpNewChallenge.adapter?.itemCount == FRAGMENT.PERIODSELECTION.position) {
                     val properties = JSONObject().put("period", viewModel.state.value.goalDate)
-                    AmplitudeUtils.trackEventWithProperties("view_newchallenge_totaltime", properties)
+                    AmplitudeUtils.trackEventWithProperties("click_newchallenge_totaltime", properties)
                 }
             }
             ivBack.setOnClickListener { finish() }
