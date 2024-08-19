@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.usecase.AddUsageGoalsUseCase
 import com.hmh.hamyeonham.challenge.usecase.DeleteUsageGoalUseCase
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.viewmodel.CalendarToggleState
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
@@ -23,9 +24,10 @@ data class ChallengeState(
     val usageStatusAndGoals: UsageStatusAndGoal = UsageStatusAndGoal(),
 ) {
     val usageGoalsAndModifiers: List<ChallengeUsageGoal>
-        get() = usageStatusAndGoals.apps.map {
-            ChallengeUsageGoal(it, modifierState)
-        } + ChallengeUsageGoal(UsageStatusAndGoal.App(), modifierState)
+        get() =
+            usageStatusAndGoals.apps.map {
+                ChallengeUsageGoal(it, modifierState)
+            } + ChallengeUsageGoal(UsageStatusAndGoal.App(), modifierState)
 }
 
 data class ChallengeUsageGoal(
@@ -40,61 +42,66 @@ data class ChallengeUsageGoal(
 }
 
 enum class ModifierState {
-    EDIT, DONE,
+    EDIT,
+    DONE,
 }
 
 @HiltViewModel
-class ChallengeViewModel @Inject constructor(
-    private val addUsageGoalsUseCase: AddUsageGoalsUseCase,
-    private val deleteUsageGoalUseCase: DeleteUsageGoalUseCase,
-    private val deletedAppUsageStoreUseCase: DeletedAppUsageStoreUseCase,
-    private val checkAndDeleteDeletedAppUsageUseCase: CheckAndDeleteDeletedAppUsageUseCase
-) : ViewModel() {
+class ChallengeViewModel
+    @Inject
+    constructor(
+        private val addUsageGoalsUseCase: AddUsageGoalsUseCase,
+        private val deleteUsageGoalUseCase: DeleteUsageGoalUseCase,
+        private val deletedAppUsageStoreUseCase: DeletedAppUsageStoreUseCase,
+        private val checkAndDeleteDeletedAppUsageUseCase: CheckAndDeleteDeletedAppUsageUseCase,
+    ) : ViewModel() {
+        private val _challengeState = MutableStateFlow(ChallengeState())
+        val challengeState = _challengeState.asStateFlow()
 
-    private val _challengeState = MutableStateFlow(ChallengeState())
-    val challengeState = _challengeState.asStateFlow()
-
-    fun updateUsageStatusAndGoals(newUsageStatusAndGoals: UsageStatusAndGoal) {
-        updateChallengeState { copy(usageStatusAndGoals = newUsageStatusAndGoals) }
-    }
-
-    fun updateModifierState(newModifierState: ModifierState) {
-        updateChallengeState { copy(modifierState = newModifierState) }
-    }
-
-    private fun updateChallengeState(transform: ChallengeState.() -> ChallengeState) {
-        val currentState = challengeState.value
-        val newState = currentState.transform()
-        _challengeState.value = newState
-    }
-
-    fun addApp(apps: Apps) {
-        viewModelScope.launch {
-            addUsageGoalsUseCase(apps)
-            checkAndDeleteDeletedAppUsageUseCase(apps.apps.map { it.appCode })
+        fun updateUsageStatusAndGoals(newUsageStatusAndGoals: UsageStatusAndGoal) {
+            updateChallengeState { copy(usageStatusAndGoals = newUsageStatusAndGoals) }
         }
-    }
 
-    fun deleteApp(usageStatusAndGoal: UsageStatusAndGoal.App) {
-        viewModelScope.launch {
-            deleteUsageGoalUseCase(usageStatusAndGoal.packageName)
-            deletedAppUsageStoreUseCase(
-                usageStatusAndGoal.usageTime,
-                usageStatusAndGoal.packageName
-            )
+        fun updateModifierState(newModifierState: ModifierState) {
+            updateChallengeState { copy(modifierState = newModifierState) }
         }
-    }
 
-    fun toggleCalendarState() {
-        when (challengeState.value.calendarToggleState) {
-            CalendarToggleState.COLLAPSED -> {
-                updateChallengeState { copy(calendarToggleState = CalendarToggleState.EXPANDED) }
-            }
+        private fun updateChallengeState(transform: ChallengeState.() -> ChallengeState) {
+            val currentState = challengeState.value
+            val newState = currentState.transform()
+            _challengeState.value = newState
+        }
 
-            CalendarToggleState.EXPANDED -> {
-                updateChallengeState { copy(calendarToggleState = CalendarToggleState.COLLAPSED) }
+        fun addApp(apps: Apps) {
+            viewModelScope.launch {
+                runCatching {
+                    addUsageGoalsUseCase(apps)
+                }.onSuccess {
+                    AmplitudeUtils.trackEventWithProperties("click_add_complete")
+                }
+                checkAndDeleteDeletedAppUsageUseCase(apps.apps.map { it.appCode })
             }
         }
-    }
 
-}
+        fun deleteApp(usageStatusAndGoal: UsageStatusAndGoal.App) {
+            viewModelScope.launch {
+                deleteUsageGoalUseCase(usageStatusAndGoal.packageName)
+                deletedAppUsageStoreUseCase(
+                    usageStatusAndGoal.usageTime,
+                    usageStatusAndGoal.packageName,
+                )
+            }
+        }
+
+        fun toggleCalendarState() {
+            when (challengeState.value.calendarToggleState) {
+                CalendarToggleState.COLLAPSED -> {
+                    updateChallengeState { copy(calendarToggleState = CalendarToggleState.EXPANDED) }
+                }
+
+                CalendarToggleState.EXPANDED -> {
+                    updateChallengeState { copy(calendarToggleState = CalendarToggleState.COLLAPSED) }
+                }
+            }
+        }
+    }
