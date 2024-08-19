@@ -21,10 +21,12 @@ import javax.inject.Inject
 sealed interface OnboardEvent {
     data class UpdateUsuallyUseTime(
         val usuallyUseTime: String,
+        val buttonIndex: Int,
     ) : OnboardEvent
 
     data class UpdateProblems(
         val problems: List<String>,
+        val buttonIndices: List<Int>,
     ) : OnboardEvent
 
     data class UpdatePeriod(
@@ -80,7 +82,9 @@ sealed interface OnboardEffect {
 
 data class OnBoardingState(
     val usuallyUseTime: String = "",
+    val usuallyUseTimeButtonIndex: Int = -1,
     val problems: List<String> = emptyList(),
+    val problemsButtonIndex: List<Int> = emptyList(),
     val period: Int = -1,
     val screenGoalTime: Int = DEFAULT_SCREEN_TIME,
     val appCodeList: List<String> = emptyList(),
@@ -137,13 +141,13 @@ class OnBoardingViewModel
             when (event) {
                 is OnboardEvent.UpdateUsuallyUseTime -> {
                     updateState {
-                        copy(usuallyUseTime = event.usuallyUseTime)
+                        copy(usuallyUseTime = event.usuallyUseTime, usuallyUseTimeButtonIndex = event.buttonIndex)
                     }
                 }
 
                 is OnboardEvent.UpdateProblems -> {
                     updateState {
-                        copy(problems = event.problems)
+                        copy(problems = event.problems, problemsButtonIndex = event.buttonIndices)
                     }
                 }
 

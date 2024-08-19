@@ -121,6 +121,14 @@ class OnBoardingActivity : AppCompatActivity() {
                         OnBoardingFragmentType.SELECT_SCREEN_TIME_GOAL -> {
                             AmplitudeUtils.trackEventWithProperties("click_challenge_totaltime")
                         }
+                        OnBoardingFragmentType.SELECT_DATA_TIME -> {
+                            val property = JSONObject().put("answer_value", viewModel.onBoardingState.value.usuallyUseTimeButtonIndex) // Int
+                            AmplitudeUtils.trackEventWithProperties("click_survey1_answer", property)
+                        }
+                        OnBoardingFragmentType.SELECT_DATA_PROBLEM -> {
+                            val property = JSONObject().put("answer_value", viewModel.onBoardingState.value.problemsButtonIndex) // List
+                            AmplitudeUtils.trackEventWithProperties("click_survey2_answer", property)
+                        }
                         OnBoardingFragmentType.SELECT_DATA_PERIOD -> {
                             val property = JSONObject().put("period", viewModel.onBoardingState.value.period)
                             AmplitudeUtils.trackEventWithProperties("click_challenge_period_answer", property)
