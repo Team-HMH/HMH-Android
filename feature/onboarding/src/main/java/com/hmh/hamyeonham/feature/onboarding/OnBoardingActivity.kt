@@ -15,6 +15,7 @@ import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.view.setProgressWithAnimation
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentStateAdapter
+import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentType
 import com.hmh.hamyeonham.feature.onboarding.databinding.ActivityOnBoardingBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEffect
@@ -22,6 +23,7 @@ import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.json.JSONObject
 
 @AndroidEntryPoint
 class OnBoardingActivity : AppCompatActivity() {
@@ -115,6 +117,16 @@ class OnBoardingActivity : AppCompatActivity() {
 
             when {
                 currentItem < lastItem -> {
+                    when (OnBoardingFragmentType.entries[currentItem]) {
+                        OnBoardingFragmentType.SELECT_SCREEN_TIME_GOAL -> {
+                            AmplitudeUtils.trackEventWithProperties("click_challenge_totaltime")
+                        }
+                        OnBoardingFragmentType.SELECT_DATA_PERIOD -> {
+                            val property = JSONObject().put("period", viewModel.onBoardingState.value.period)
+                            AmplitudeUtils.trackEventWithProperties("click_challenge_period_answer", property)
+                        }
+                        else -> Unit
+                    }
                     navigateToNextViewPager(viewPager, currentItem)
                 }
 
