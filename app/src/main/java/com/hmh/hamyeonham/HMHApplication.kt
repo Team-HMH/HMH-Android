@@ -36,11 +36,17 @@ class HMHApplication :
     override fun onCreate() {
         super.onCreate()
 
+        setAmplitude()
+
+        KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY)
+        notificationManager.setupNotificationChannel()
+    }
+
+    private fun setAmplitude() {
         Amplitude
             .getInstance()
             .initialize(this, BuildConfig.AMPLITUDE_API_KEY)
             .enableForegroundTracking(this)
-        KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY)
-        notificationManager.setupNotificationChannel()
+            .enableLogging(true)
     }
 }
