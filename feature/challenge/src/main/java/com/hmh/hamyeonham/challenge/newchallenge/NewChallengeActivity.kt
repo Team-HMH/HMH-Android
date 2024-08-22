@@ -6,7 +6,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.hmh.hamyeonham.common.dialog.OneButtonCommonDialog
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.feature.challenge.R
 import com.hmh.hamyeonham.feature.challenge.databinding.ActivityNewChallengeBinding
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -42,7 +44,7 @@ class NewChallengeActivity : AppCompatActivity() {
         binding.vpNewChallenge.run {
             when (currentItem) {
                 FRAGMENT.PERIODSELECTION.position -> currentItem = FRAGMENT.TIMESELECTION.position
-                FRAGMENT.TIMESELECTION.position -> finishWithResults()
+                FRAGMENT.TIMESELECTION.position -> showChallengeCreatedDialog()
             }
         }
     }
@@ -51,6 +53,20 @@ class NewChallengeActivity : AppCompatActivity() {
         viewModel.state.flowWithLifecycle(lifecycle)
             .onEach { binding.btNewChallenge.isEnabled = it.isNextButtonActive }
             .launchIn(lifecycleScope)
+    }
+
+    private fun showChallengeCreatedDialog() {
+        OneButtonCommonDialog.newInstance(
+            title = getString(R.string.dialog_title_challengecreated),
+            description = getString(R.string.dialog_description_challengecreated),
+            iconRes = R.drawable.ic_challengecreated_120,
+            confirmButtonText = getString(R.string.dialog_button_challengecreated),
+            setBlueButton = true
+        ).apply {
+            setConfirmButtonClickListener {
+                finishWithResults()
+            }
+        }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
     }
 
     private fun finishWithResults() {
