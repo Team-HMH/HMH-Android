@@ -10,6 +10,7 @@ import androidx.annotation.DrawableRes
 import androidx.core.view.isGone
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import com.hmh.hamyeonham.common.R
 import com.hmh.hamyeonham.common.context.dialogWidthPercent
 import com.hmh.hamyeonham.common.databinding.DialogCommonOneButtonBinding
 import com.hmh.hamyeonham.common.view.setOnSingleClickListener
@@ -52,6 +53,7 @@ class OneButtonCommonDialog : DialogFragment() {
         val description = arguments?.getString(DESCRIPTION)
         val iconRes = arguments?.getInt(ICON_RES)
         val confirmButtonText = arguments?.getString(CONFIRM_BUTTON_TEXT, "")
+        val setBlueButton = arguments?.getBoolean(BLUE_BUTTON, false)?:false
 
         with(binding) {
             tvDialogTitle.text = title
@@ -60,6 +62,8 @@ class OneButtonCommonDialog : DialogFragment() {
                 ivDialogIcon.isGone = true
             }
             tvConfirmButton.text = confirmButtonText
+            if(setBlueButton)
+                tvConfirmButton.setBackgroundResource(R.drawable.shape_blue_purple_button_radius6)
         }
     }
 
@@ -82,6 +86,7 @@ class OneButtonCommonDialog : DialogFragment() {
         const val DESCRIPTION = "description"
         const val ICON_RES = "iconRes"
         const val CONFIRM_BUTTON_TEXT = "confirmButtonText"
+        const val BLUE_BUTTON = "blueButton"
 
 
         fun newInstance(
@@ -89,6 +94,7 @@ class OneButtonCommonDialog : DialogFragment() {
             description: String? = null,
             @DrawableRes iconRes: Int? = null,
             confirmButtonText: String,
+            setBlueButton: Boolean = false
         ): OneButtonCommonDialog {
             return OneButtonCommonDialog().apply {
                 arguments = Bundle().apply {
@@ -96,6 +102,7 @@ class OneButtonCommonDialog : DialogFragment() {
                     putString(DESCRIPTION, description)
                     iconRes?.let { putInt(ICON_RES, it) }
                     putString(CONFIRM_BUTTON_TEXT, confirmButtonText)
+                    putBoolean(BLUE_BUTTON, setBlueButton)
                 }
             }
         }
