@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
+import androidx.core.view.isGone
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.hmh.hamyeonham.common.context.dialogWidthPercent
@@ -53,12 +55,16 @@ class TwoButtonCommonDialog : DialogFragment() {
     private fun initViews() {
         val title = arguments?.getString(TITLE, "")
         val description = arguments?.getString(DESCRIPTION)
+        val iconRes = arguments?.getInt(OneButtonCommonDialog.ICON_RES)
         val confirmButtonText = arguments?.getString(CONFIRM_BUTTON_TEXT, "")
         val dismissButtonText = arguments?.getString(DISMISS_BUTTON_TEXT, "")
 
         with(binding) {
             tvDialogTitle.text = title
             tvDialogDescription.text = description
+            iconRes?.let { ivDialogIcon.setImageResource(it) } ?: run {
+                ivDialogIcon.isGone = true
+            }
             tvConfirmButton.text = confirmButtonText
             tvDismissButton.text = dismissButtonText
         }
@@ -92,6 +98,7 @@ class TwoButtonCommonDialog : DialogFragment() {
         fun newInstance(
             title: String,
             description: String? = null,
+            @DrawableRes iconRes: Int? = null,
             confirmButtonText: String,
             dismissButtonText: String
         ): TwoButtonCommonDialog {
@@ -100,6 +107,7 @@ class TwoButtonCommonDialog : DialogFragment() {
                     putString(TITLE, title)
                     putString(DESCRIPTION, description)
                     putString(CONFIRM_BUTTON_TEXT, confirmButtonText)
+                    iconRes?.let { putInt(OneButtonCommonDialog.ICON_RES, it) }
                     putString(DISMISS_BUTTON_TEXT, dismissButtonText)
                 }
             }
