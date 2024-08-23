@@ -53,7 +53,7 @@ class OneButtonCommonDialog : DialogFragment() {
         val description = arguments?.getString(DESCRIPTION)
         val iconRes = arguments?.getInt(ICON_RES)
         val confirmButtonText = arguments?.getString(CONFIRM_BUTTON_TEXT, "")
-        val setBlueButton = arguments?.getBoolean(BLUE_BUTTON, false)?:false
+        val setBlueButton = arguments?.getBoolean(BLUE_BUTTON, false) ?: false
 
         with(binding) {
             tvDialogTitle.text = title
@@ -62,7 +62,7 @@ class OneButtonCommonDialog : DialogFragment() {
                 ivDialogIcon.isGone = true
             }
             tvConfirmButton.text = confirmButtonText
-            if(setBlueButton)
+            if (setBlueButton)
                 tvConfirmButton.setBackgroundResource(R.drawable.shape_blue_purple_button_radius6)
         }
     }
