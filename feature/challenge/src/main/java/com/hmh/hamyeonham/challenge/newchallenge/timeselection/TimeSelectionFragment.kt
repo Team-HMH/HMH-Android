@@ -27,12 +27,11 @@ class TimeSelectionFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = FragmentTimeSelectionBinding.inflate(inflater, container, false).root
+    ): View {
+        return FragmentTimeSelectionBinding.inflate(inflater, container, false).root
+    }
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?,
-    ) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setNumberPicker()
     }

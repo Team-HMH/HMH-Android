@@ -51,10 +51,7 @@ class OnBoardingSelectDataFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View = FragmentOnBoardingSelectDataBinding.inflate(inflater, container, false).root
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?,
-    ) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
         initFragmentType()
@@ -69,28 +66,26 @@ class OnBoardingSelectDataFragment : Fragment() {
 
     private fun initViews() {
         initQuestionButton()
-        viewModel.onBoardingSelectDataState
-            .onEach {
-                binding.apply {
-                    val onBoardingQuestion = it.onBoardingQuestion
-                    tvOnboardingSelectDataQuestion.text = onBoardingQuestion.title
-                    tvOnboardingSelectDataDescription.text = onBoardingQuestion.description
-                    btnOnboardingSelectData1.text = onBoardingQuestion.options.getOrNull(0).orEmpty()
-                    btnOnboardingSelectData2.text = onBoardingQuestion.options.getOrNull(1).orEmpty()
-                    btnOnboardingSelectData3.text = onBoardingQuestion.options.getOrNull(2).orEmpty()
-                    btnOnboardingSelectData4.text = onBoardingQuestion.options.getOrNull(3).orEmpty()
-                }
-            }.launchIn(lifecycleScope)
+        viewModel.onBoardingSelectDataState.onEach {
+            binding.apply {
+                val onBoardingQuestion = it.onBoardingQuestion
+                tvOnboardingSelectDataQuestion.text = onBoardingQuestion.title
+                tvOnboardingSelectDataDescription.text = onBoardingQuestion.description
+                btnOnboardingSelectData1.text = onBoardingQuestion.options.getOrNull(0).orEmpty()
+                btnOnboardingSelectData2.text = onBoardingQuestion.options.getOrNull(1).orEmpty()
+                btnOnboardingSelectData3.text = onBoardingQuestion.options.getOrNull(2).orEmpty()
+                btnOnboardingSelectData4.text = onBoardingQuestion.options.getOrNull(3).orEmpty()
+            }
+        }.launchIn(lifecycleScope)
     }
 
     private fun initQuestionButton() {
-        val onboardingFragmentButtonList =
-            listOf(
-                binding.btnOnboardingSelectData1,
-                binding.btnOnboardingSelectData2,
-                binding.btnOnboardingSelectData3,
-                binding.btnOnboardingSelectData4,
-            )
+        val onboardingFragmentButtonList = listOf(
+            binding.btnOnboardingSelectData1,
+            binding.btnOnboardingSelectData2,
+            binding.btnOnboardingSelectData3,
+            binding.btnOnboardingSelectData4,
+        )
 
         onboardingFragmentButtonList.forEachIndexed { index, button ->
             button.tag = index + 1

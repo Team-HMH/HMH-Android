@@ -14,9 +14,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Inject
 
 @HiltAndroidApp
-class HMHApplication :
-    Application(),
-    Configuration.Provider {
+class HMHApplication : Application(), Configuration.Provider {
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface HiltWorkerFactoryEntryPoint {
@@ -26,12 +24,10 @@ class HMHApplication :
     @Inject
     lateinit var notificationManager: AppNotificationManager
 
-    override val workManagerConfiguration: Configuration =
-        Configuration
-            .Builder()
-            .setWorkerFactory(
-                EntryPoints.get(this, HiltWorkerFactoryEntryPoint::class.java).workerFactory(),
-            ).build()
+    override val workManagerConfiguration: Configuration = Configuration.Builder()
+        .setWorkerFactory(
+            EntryPoints.get(this, HiltWorkerFactoryEntryPoint::class.java).workerFactory(),
+        ).build()
 
     override fun onCreate() {
         super.onCreate()

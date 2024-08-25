@@ -9,10 +9,9 @@ plugins {
     alias(libs.plugins.crashlytics)
 }
 
-val properties =
-    Properties().apply {
-        load(rootProject.file("local.properties").inputStream())
-    }
+val properties = Properties().apply {
+    load(rootProject.file("local.properties").inputStream())
+}
 
 android {
     namespace = "com.hmh.hamyeonham"
@@ -20,9 +19,7 @@ android {
     defaultConfig {
         applicationId = "com.hmh.hamyeonham"
         versionCode =
-            libs.versions.versionCode
-                .get()
-                .toInt()
+            libs.versions.versionCode.get().toInt()
         versionName = libs.versions.appVersion.get()
     }
 

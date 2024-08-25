@@ -40,26 +40,26 @@ fun LockScreen(
 ) {
     AmplitudeUtils.trackEventWithProperties("view_unlock_popup")
     Box(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .background(Blackground),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Blackground),
     ) {
         val context = LocalContext.current
         val appName = context.getAppNameFromPackageName(packageName)
 
         Column(
-            modifier =
-                Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxWidth()
-                    .padding(top = 132.dp),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .fillMaxWidth()
+                .padding(top = 132.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             AsyncImage(
                 model = R.drawable.lock_on,
                 contentDescription = "LockScreen Icon",
-                modifier = Modifier.padding(bottom = 48.dp).size(120.dp),
+                modifier = Modifier
+                    .padding(bottom = 48.dp)
+                    .size(120.dp),
             )
             Text(
                 text = stringResource(R.string.target_usage_time_end),
@@ -75,17 +75,18 @@ fun LockScreen(
         }
 
         Column(
-            modifier =
-                Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth(),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 stringResource(R.string.remind_alarm_permission),
                 style = TextStyle(textAlign = TextAlign.Center).merge(HmhTypography.bodySmall),
                 color = Gray3,
-                modifier = Modifier.padding(vertical = 21.dp).align(Alignment.CenterHorizontally),
+                modifier = Modifier
+                    .padding(vertical = 21.dp)
+                    .align(Alignment.CenterHorizontally),
             )
             Button(
                 colors = ButtonDefaults.buttonColors(containerColor = BluePurpleButton),
@@ -97,21 +98,19 @@ fun LockScreen(
             ) {
                 Text(
                     text = stringResource(R.string.close),
-                    modifier =
-                        Modifier
-                            .padding(horizontal = 70.dp, vertical = 10.dp),
+                    modifier = Modifier
+                        .padding(horizontal = 70.dp, vertical = 10.dp),
                     style = HmhTypography.titleMedium,
                     color = WhiteBtn,
                 )
             }
             Text(
-                modifier =
-                    Modifier
-                        .clickable(onClick = {
-                            onClickUnLock()
-                            AmplitudeUtils.trackEventWithProperties("click_unlock_button")
-                        })
-                        .padding(top = 22.dp, bottom = 58.dp),
+                modifier = Modifier
+                    .clickable(onClick = {
+                        onClickUnLock()
+                        AmplitudeUtils.trackEventWithProperties("click_unlock_button")
+                    })
+                    .padding(top = 22.dp, bottom = 58.dp),
                 text = stringResource(R.string.do_unlock),
                 style = HmhTypography.titleSmall,
                 color = Gray1,
