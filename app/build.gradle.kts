@@ -18,8 +18,7 @@ android {
 
     defaultConfig {
         applicationId = "com.hmh.hamyeonham"
-        versionCode =
-            libs.versions.versionCode.get().toInt()
+        versionCode = libs.versions.versionCode.get().toInt()
         versionName = libs.versions.appVersion.get()
     }
 
