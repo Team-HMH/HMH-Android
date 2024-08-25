@@ -37,12 +37,11 @@ class PointActivity : AppCompatActivity() {
     }
 
     private fun initAdapter() {
-        val adapter =
-            PointAdapter(
-                onButtonClick = { challengeDate ->
-                    viewModel.earnChallengePoint(challengeDate)
-                },
-            )
+        val adapter = PointAdapter(
+            onButtonClick = { challengeDate ->
+                viewModel.earnChallengePoint(challengeDate)
+            },
+        )
         binding.rvPoint.run {
             this.adapter = adapter
             layoutManager = LinearLayoutManager(context)
@@ -56,19 +55,15 @@ class PointActivity : AppCompatActivity() {
     }
 
     private fun collectPointInfo() {
-        viewModel.pointInfoList
-            .flowWithLifecycle(lifecycle)
-            .onEach { pointInfoList ->
-                (binding.rvPoint.adapter as? PointAdapter)?.submitList(pointInfoList)
-            }.launchIn(lifecycleScope)
+        viewModel.pointInfoList.flowWithLifecycle(lifecycle).onEach { pointInfoList ->
+            (binding.rvPoint.adapter as? PointAdapter)?.submitList(pointInfoList)
+        }.launchIn(lifecycleScope)
     }
 
     private fun collectUserPoint() {
-        viewModel.currentPointState
-            .flowWithLifecycle(lifecycle)
-            .onEach {
-                binding.tvPointTotal.text = it.toString()
-                setResult(RESULT_OK, intent.putExtra("point", it))
-            }.launchIn(lifecycleScope)
+        viewModel.currentPointState.flowWithLifecycle(lifecycle).onEach {
+            binding.tvPointTotal.text = it.toString()
+            setResult(RESULT_OK, intent.putExtra("point", it))
+        }.launchIn(lifecycleScope)
     }
 }

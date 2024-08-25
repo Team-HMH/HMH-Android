@@ -38,7 +38,10 @@ class NewChallengeActivity : AppCompatActivity() {
                 handleNextClicked()
                 if (vpNewChallenge.adapter?.itemCount == FRAGMENT.PERIODSELECTION.position) {
                     val properties = JSONObject().put("period", viewModel.state.value.goalDate)
-                    AmplitudeUtils.trackEventWithProperties("click_newchallenge_totaltime", properties)
+                    AmplitudeUtils.trackEventWithProperties(
+                        "click_newchallenge_totaltime",
+                        properties
+                    )
                 }
             }
             ivBack.setOnClickListener { finish() }
@@ -55,18 +58,16 @@ class NewChallengeActivity : AppCompatActivity() {
     }
 
     private fun collectNewChallengeState() {
-        viewModel.state
-            .flowWithLifecycle(lifecycle)
-            .onEach { binding.btNewChallenge.isEnabled = it.isNextButtonActive }
-            .launchIn(lifecycleScope)
+        viewModel.state.flowWithLifecycle(lifecycle).onEach {
+            binding.btNewChallenge.isEnabled = it.isNextButtonActive
+        }.launchIn(lifecycleScope)
     }
 
     private fun finishWithResults() {
-        val intent =
-            Intent().apply {
-                putExtra(PERIOD, viewModel.state.value.goalDate)
-                putExtra(GOALTIME, viewModel.state.value.goalTime)
-            }
+        val intent = Intent().apply {
+            putExtra(PERIOD, viewModel.state.value.goalDate)
+            putExtra(GOALTIME, viewModel.state.value.goalTime)
+        }
         setResult(RESULT_OK, intent)
         finish()
     }

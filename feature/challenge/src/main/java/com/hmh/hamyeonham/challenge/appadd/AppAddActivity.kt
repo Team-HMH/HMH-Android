@@ -48,29 +48,26 @@ class AppAddActivity : AppCompatActivity() {
     }
 
     private fun collectState() {
-        viewModel.isNextButtonActive
-            .flowWithLifecycle(lifecycle)
-            .onEach { binding.btAppSelection.isEnabled = it }
-            .launchIn(lifecycleScope)
+        viewModel.isNextButtonActive.flowWithLifecycle(lifecycle).onEach {
+            binding.btAppSelection.isEnabled = it
+        }.launchIn(lifecycleScope)
     }
 
     private fun collectEffect() {
-        viewModel.effect
-            .flowWithLifecycle(lifecycle)
-            .onEach {
-                when (it) {
-                    is AppAddEffect.ShowLoading -> {
-                        binding.pbLoading.isVisible = true
-                    }
-
-                    is AppAddEffect.HideLoading -> {
-                        binding.pbLoading.isVisible = false
-                    }
-
-                    is AppAddEffect.NONE -> {
-                    }
+        viewModel.effect.flowWithLifecycle(lifecycle).onEach {
+            when (it) {
+                is AppAddEffect.ShowLoading -> {
+                    binding.pbLoading.isVisible = true
                 }
-            }.launchIn(lifecycleScope)
+
+                is AppAddEffect.HideLoading -> {
+                    binding.pbLoading.isVisible = false
+                }
+
+                is AppAddEffect.NONE -> {
+                }
+            }
+        }.launchIn(lifecycleScope)
     }
 
     private fun handleNextClicked() {
@@ -83,15 +80,10 @@ class AppAddActivity : AppCompatActivity() {
     }
 
     private fun finishWithResults() {
-        val intent =
-            Intent().apply {
-                putExtra(
-                    SELECTED_APPS,
-                    viewModel.state.value.selectedApps
-                        .toTypedArray(),
-                )
-                putExtra(GOAL_TIME, viewModel.state.value.goalTime)
-            }
+        val intent = Intent().apply {
+            putExtra(SELECTED_APPS, viewModel.state.value.selectedApps.toTypedArray())
+            putExtra(GOAL_TIME, viewModel.state.value.goalTime)
+        }
         setResult(RESULT_OK, intent)
         finish()
     }

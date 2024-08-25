@@ -24,9 +24,7 @@ sealed interface LoginEffect {
 
     data object LoginFail : LoginEffect
 
-    data class RequireSignUp(
-        val token: String,
-    ) : LoginEffect
+    data class RequireSignUp(val token: String) : LoginEffect
 }
 
 data class LoginState(
@@ -34,73 +32,36 @@ data class LoginState(
 )
 
 @HiltViewModel
-class LoginViewModel
-    @Inject
-    constructor(
-        private val authRepository: AuthRepository,
-        private val hmhNetworkPreference: HMHNetworkPreference,
-        private val databaseManager: DatabaseManager,
-    ) : ViewModel() {
-        private val _kakaoLoginEvent = MutableSharedFlow<LoginEffect>()
-        val kakaoLoginEvent = _kakaoLoginEvent.asSharedFlow()
+class LoginViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val hmhNetworkPreference: HMHNetworkPreference,
+    private val databaseManager: DatabaseManager,
+) : ViewModel() {
+    private val _kakaoLoginEvent = MutableSharedFlow<LoginEffect>()
+    val kakaoLoginEvent = _kakaoLoginEvent.asSharedFlow()
 
-        private val _loginState = MutableStateFlow(LoginState())
-        val loginState = _loginState.asStateFlow()
+    private val _loginState = MutableStateFlow(LoginState())
+    val loginState = _loginState.asStateFlow()
 
-        init {
-            updateLoginState()
-        }
+    init {
+        updateLoginState()
+    }
 
-        private fun updateLoginState() {
-            val currentState = loginState.value
-            _loginState.value =
-                currentState.copy(
-                    autoLogin = hmhNetworkPreference.autoLoginConfigured,
-                )
-        }
+    private fun updateLoginState() {
+        val currentState = loginState.value
+        _loginState.value = currentState.copy(
+            autoLogin = hmhNetworkPreference.autoLoginConfigured,
+        )
+    }
 
-        fun loginWithKakaoApp(context: Context) {
-            if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
-                UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
-                    if (error != null) {
-                        if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                            return@loginWithKakaoTalk
-                        }
-                        loginWithKakaoAccount(context)
-                    } else if (token != null) {
-                        viewModelScope.launch {
-                            authRepository
-                                .login(token.accessToken)
-                                .onSuccess {
-                                    hmhNetworkPreference.run {
-                                        accessToken = it.accessToken
-                                        refreshToken = it.refreshToken
-                                        userId = it.userId
-                                        autoLoginConfigured = true
-                                    }
-                                    _kakaoLoginEvent.emit(LoginEffect.LoginSuccess)
-                                    AmplitudeUtils.trackEventWithProperties("click_onboarding_kakao")
-                                }.onFailure {
-                                    if (it is HttpException && it.code() == 403) {
-                                        hmhNetworkPreference.clear()
-                                        databaseManager.deleteAll()
-                                        _kakaoLoginEvent.emit(LoginEffect.RequireSignUp(token.accessToken))
-                                    } else {
-                                        _kakaoLoginEvent.emit(LoginEffect.LoginFail)
-                                    }
-                                }
-                        }
-                    }
-                }
-            } else {
-                loginWithKakaoAccount(context)
-            }
-        }
-
-        private fun loginWithKakaoAccount(context: Context) {
-            UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
+    fun loginWithKakaoApp(context: Context) {
+        if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
+            UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
                 if (error != null) {
-                    // 닉네임 정보 얻기 실패 시
+                    if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                        return@loginWithKakaoTalk
+                    }
+                    loginWithKakaoAccount(context)
                 } else if (token != null) {
                     viewModelScope.launch {
                         authRepository
@@ -126,5 +87,39 @@ class LoginViewModel
                     }
                 }
             }
+        } else {
+            loginWithKakaoAccount(context)
         }
     }
+
+    private fun loginWithKakaoAccount(context: Context) {
+        UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
+            if (error != null) {
+                // 닉네임 정보 얻기 실패 시
+            } else if (token != null) {
+                viewModelScope.launch {
+                    authRepository
+                        .login(token.accessToken)
+                        .onSuccess {
+                            hmhNetworkPreference.run {
+                                accessToken = it.accessToken
+                                refreshToken = it.refreshToken
+                                userId = it.userId
+                                autoLoginConfigured = true
+                            }
+                            _kakaoLoginEvent.emit(LoginEffect.LoginSuccess)
+                            AmplitudeUtils.trackEventWithProperties("click_onboarding_kakao")
+                        }.onFailure {
+                            if (it is HttpException && it.code() == 403) {
+                                hmhNetworkPreference.clear()
+                                databaseManager.deleteAll()
+                                _kakaoLoginEvent.emit(LoginEffect.RequireSignUp(token.accessToken))
+                            } else {
+                                _kakaoLoginEvent.emit(LoginEffect.LoginFail)
+                            }
+                        }
+                }
+            }
+        }
+    }
+}

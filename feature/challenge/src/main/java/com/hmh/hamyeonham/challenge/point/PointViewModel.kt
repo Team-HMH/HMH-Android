@@ -13,37 +13,35 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
-class PointViewModel
-    @Inject
-    constructor(
-        private val pointRepository: PointRepository,
-    ) : ViewModel() {
-        private val _currentUserPoint = MutableStateFlow(0)
-        val currentPointState = _currentUserPoint.asStateFlow()
+class PointViewModel @Inject constructor(
+    private val pointRepository: PointRepository,
+) : ViewModel() {
+    private val _currentUserPoint = MutableStateFlow(0)
+    val currentPointState = _currentUserPoint.asStateFlow()
 
-        private val _pointInfoList = MutableStateFlow(emptyList<PointInfo.ChallengePointStatus>())
-        val pointInfoList = _pointInfoList.asStateFlow()
+    private val _pointInfoList = MutableStateFlow(emptyList<PointInfo.ChallengePointStatus>())
+    val pointInfoList = _pointInfoList.asStateFlow()
 
-        init {
-            getPointInfoList()
-        }
+    init {
+        getPointInfoList()
+    }
 
-        fun earnChallengePoint(challengeDate: String) {
-            viewModelScope.launch {
-                pointRepository.earnPoint(challengeDate).onSuccess {
-                    val properties = JSONObject().put("get_point_date", challengeDate)
-                    AmplitudeUtils.trackEventWithProperties("click_getpoint_button", properties)
-                    getPointInfoList()
-                }
-            }
-        }
-
-        private fun getPointInfoList() {
-            viewModelScope.launch {
-                pointRepository.getPointInfoList().onSuccess {
-                    _pointInfoList.value = it.challengePointStatuses
-                    _currentUserPoint.value = it.currentUserPoint
-                }
+    fun earnChallengePoint(challengeDate: String) {
+        viewModelScope.launch {
+            pointRepository.earnPoint(challengeDate).onSuccess {
+                val properties = JSONObject().put("get_point_date", challengeDate)
+                AmplitudeUtils.trackEventWithProperties("click_getpoint_button", properties)
+                getPointInfoList()
             }
         }
     }
+
+    private fun getPointInfoList() {
+        viewModelScope.launch {
+            pointRepository.getPointInfoList().onSuccess {
+                _pointInfoList.value = it.challengePointStatuses
+                _currentUserPoint.value = it.currentUserPoint
+            }
+        }
+    }
+}
