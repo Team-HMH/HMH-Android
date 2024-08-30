@@ -2,6 +2,7 @@ package com.hmh.hamyeonham.feature.onboarding.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.time.timeToMs
 import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
 import com.hmh.hamyeonham.login.model.SignRequestDomain
@@ -18,8 +19,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed interface OnboardEvent {
-    data class UpdateUsuallyUseTime(val usuallyUseTime: String) : OnboardEvent
-    data class UpdateProblems(val problems: List<String>) : OnboardEvent
+    data class UpdateUsuallyUseTime(val usuallyUseTime: String, val buttonIndex: Int) : OnboardEvent
+
+    data class UpdateProblems(
+        val problems: List<String>,
+        val buttonIndices: List<Int>
+    ) : OnboardEvent
+
     data class UpdatePeriod(val period: Int) : OnboardEvent
     data class UpdateScreenGoalTime(val screeGoalTime: Int) : OnboardEvent
     data class AddApps(val appCode: String) : OnboardEvent
@@ -35,12 +41,15 @@ sealed interface OnboardEvent {
 
 sealed interface OnboardEffect {
     data object OnboardSuccess : OnboardEffect
+
     data object OnboardFail : OnboardEffect
 }
 
 data class OnBoardingState(
     val usuallyUseTime: String = "",
+    val usuallyUseTimeButtonIndex: Int = -1,
     val problems: List<String> = emptyList(),
+    val problemsButtonIndex: List<Int> = emptyList(),
     val period: Int = -1,
     val screenGoalTime: Int = DEFAULT_SCREEN_TIME,
     val appCodeList: List<String> = emptyList(),
@@ -63,24 +72,29 @@ data class OnBoardingState(
 }
 
 @HiltViewModel
-class OnBoardingViewModel @Inject constructor(
+class OnBoardingViewModel
+@Inject
+constructor(
     private val authRepository: AuthRepository,
     private val hmhNetworkPreference: HMHNetworkPreference,
 ) : ViewModel() {
-
     private val _onBoardingState = MutableStateFlow(OnBoardingState())
     val onBoardingState = _onBoardingState.asStateFlow()
 
     private val _onboardEffect = MutableSharedFlow<OnboardEffect>()
     val onboardEffect = _onboardEffect.asSharedFlow()
 
-    val isAppAddSelectionScreenButtonEnabled = onBoardingState.map {
-        onBoardingState -> onBoardingState.appCodeList.isNotEmpty()
-    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
+    val isAppAddSelectionScreenButtonEnabled =
+        onBoardingState
+            .map { onBoardingState ->
+                onBoardingState.appCodeList.isNotEmpty()
+            }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
-    val isUseTimeScreenButtonEnabled = onBoardingState.map { onBoardingState ->
-        onBoardingState.appGoalTimeHour > 0 || onBoardingState.appGoalTimeMinute > 0
-    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
+    val isUseTimeScreenButtonEnabled =
+        onBoardingState
+            .map { onBoardingState ->
+                onBoardingState.appGoalTimeHour > 0 || onBoardingState.appGoalTimeMinute > 0
+            }.stateIn(viewModelScope, SharingStarted.Lazily, false)
 
     private fun updateState(transform: OnBoardingState.() -> OnBoardingState) {
         val currentState = onBoardingState.value
@@ -92,13 +106,16 @@ class OnBoardingViewModel @Inject constructor(
         when (event) {
             is OnboardEvent.UpdateUsuallyUseTime -> {
                 updateState {
-                    copy(usuallyUseTime = event.usuallyUseTime)
+                    copy(
+                        usuallyUseTime = event.usuallyUseTime,
+                        usuallyUseTimeButtonIndex = event.buttonIndex
+                    )
                 }
             }
 
             is OnboardEvent.UpdateProblems -> {
                 updateState {
-                    copy(problems = event.problems)
+                    copy(problems = event.problems, problemsButtonIndex = event.buttonIndices)
                 }
             }
 
@@ -186,6 +203,7 @@ class OnBoardingViewModel @Inject constructor(
                     }
                     viewModelScope.launch {
                         _onboardEffect.emit(OnboardEffect.OnboardSuccess)
+                        AmplitudeUtils.trackEventWithProperties("complete_onboarding_finish")
                     }
                 }.onFailure {
                     viewModelScope.launch {

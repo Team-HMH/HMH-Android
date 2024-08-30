@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.feature.onboarding.R
 import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingSelectAppBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
@@ -22,6 +23,7 @@ class OnBoardingSelectAppFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        AmplitudeUtils.trackEventWithProperties("view_challenge_app_time")
         activityViewModel.sendEvent(OnboardEvent.ChangeActivityButtonText(getString(R.string.all_select_app)))
         activityViewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(true))
         activityViewModel.sendEvent(OnboardEvent.VisibleProgressbar(true))

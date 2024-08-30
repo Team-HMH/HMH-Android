@@ -6,13 +6,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.ActivityNewChallengeBinding
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.json.JSONObject
 
 class NewChallengeActivity : AppCompatActivity() {
-
     private val binding by viewBinding(ActivityNewChallengeBinding::inflate)
     private val viewModel by viewModels<NewChallengeViewModel>()
 
@@ -33,7 +34,16 @@ class NewChallengeActivity : AppCompatActivity() {
             vpNewChallenge.adapter = NewChallengeViewPagerAdapter(this@NewChallengeActivity)
             vpNewChallenge.isUserInputEnabled = false
 
-            btNewChallenge.setOnClickListener { handleNextClicked() }
+            btNewChallenge.setOnClickListener {
+                handleNextClicked()
+                if (vpNewChallenge.adapter?.itemCount == FRAGMENT.PERIODSELECTION.position) {
+                    val properties = JSONObject().put("period", viewModel.state.value.goalDate)
+                    AmplitudeUtils.trackEventWithProperties(
+                        "click_newchallenge_totaltime",
+                        properties
+                    )
+                }
+            }
             ivBack.setOnClickListener { finish() }
         }
     }
@@ -48,9 +58,9 @@ class NewChallengeActivity : AppCompatActivity() {
     }
 
     private fun collectNewChallengeState() {
-        viewModel.state.flowWithLifecycle(lifecycle)
-            .onEach { binding.btNewChallenge.isEnabled = it.isNextButtonActive }
-            .launchIn(lifecycleScope)
+        viewModel.state.flowWithLifecycle(lifecycle).onEach {
+            binding.btNewChallenge.isEnabled = it.isNextButtonActive
+        }.launchIn(lifecycleScope)
     }
 
     private fun finishWithResults() {
