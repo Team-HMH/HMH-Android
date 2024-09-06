@@ -23,7 +23,7 @@ class UsageStaticsTotalViewHolder(
     private fun bindUsageStaticsInfo(totalModel: HomeItem.TotalModel) {
         binding.run {
             val totalTimeLeft =
-                totalModel.totalGoalTime - totalModel.totalTimeInForeground
+                if (totalModel.totalGoalTime > totalModel.totalTimeInForeground) totalModel.totalGoalTime - totalModel.totalTimeInForeground else 0
 
             tvTotalTimeLeft.text =
                 context.getSecondStrColoredString(
