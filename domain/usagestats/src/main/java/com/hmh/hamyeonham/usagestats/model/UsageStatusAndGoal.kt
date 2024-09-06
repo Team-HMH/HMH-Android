@@ -12,7 +12,7 @@ data class UsageStatusAndGoal(
         val usageTime: Long = 0,
         val goalTime: Long = 0,
     ) {
-        val timeLeftInMinute = msToMinute(goalTime - usageTime)
+        val timeLeftInMinute = msToMinute(if(goalTime > usageTime) goalTime - usageTime else 0)
         val goalTimeInMinute = msToMinute(goalTime)
 
         private fun msToMinute(time: Long): Long {
