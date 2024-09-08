@@ -111,14 +111,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showPointLackDialog() {
-        OneButtonCommonDialog.newInstance(
+        TwoButtonCommonDialog.newInstance(
             title = getString(R.string.dialog_title_point_lack),
             description = getString(R.string.dialog_description_point_lack),
             iconRes = R.drawable.ic_point_lack,
-            confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.no),
+            confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
+            dismissButtonText = getString(R.string.dialog_button_charge_point)
         ).apply {
             setConfirmButtonClickListener {
                 dismiss()
+            }
+            setDismissButtonClickListener {
+                val intent = navigationProvider.toStore()
+                startActivity(intent)
             }
         }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
     }
@@ -139,7 +144,6 @@ class MainActivity : AppCompatActivity() {
         if (!allPermissionIsGranted()) {
             startActivity(navigationProvider.toPermission())
         }
-
         checkPowerManagerPermission()
     }
 
