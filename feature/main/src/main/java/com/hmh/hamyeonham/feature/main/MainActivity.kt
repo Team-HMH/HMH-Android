@@ -7,6 +7,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.context.hasNotificationPermission
 import com.hmh.hamyeonham.common.dialog.OneButtonCommonDialog
@@ -71,9 +72,10 @@ class MainActivity : AppCompatActivity() {
     private fun checkUnlockedPackage() {
         val packageName = intent.getStringExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME) ?: return
         TwoButtonCommonDialog.newInstance(
-            title = getString(
+            title =
+            getString(
                 R.string.dialog_title_unlock_package,
-                getAppNameFromPackageName(packageName)
+                getAppNameFromPackageName(packageName),
             ),
             description = getString(R.string.dialog_description_unlock_package),
             confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
@@ -99,9 +101,10 @@ class MainActivity : AppCompatActivity() {
             title = getString(R.string.dialog_title_challenge_failed),
             description = getString(R.string.dialog_description_challenge_failed),
             iconRes = R.drawable.ic_challenge_failed,
-            confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
+            confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_done),
         ).apply {
             setConfirmButtonClickListener {
+                AmplitudeUtils.trackEventWithProperties("click_unlock_complete_button")
                 dismiss()
             }
         }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
