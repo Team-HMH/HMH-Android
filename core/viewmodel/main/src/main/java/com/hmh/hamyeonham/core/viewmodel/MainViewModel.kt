@@ -93,6 +93,12 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun reloadChallengeStatus() {
+        viewModelScope.launch {
+            getChallengeStatus()
+        }
+    }
+
     fun reloadUsageStatsList() {
         viewModelScope.launch {
             getTodayTimeAndSetUsageStatsList()
