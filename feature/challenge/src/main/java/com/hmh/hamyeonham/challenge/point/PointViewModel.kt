@@ -2,19 +2,20 @@ package com.hmh.hamyeonham.challenge.point
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.domain.point.model.PointInfo
 import com.hmh.hamyeonham.domain.point.repository.PointRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import javax.inject.Inject
 
-
 @HiltViewModel
-class PointViewModel @Inject constructor(private val pointRepository: PointRepository) :
-    ViewModel() {
-
+class PointViewModel @Inject constructor(
+    private val pointRepository: PointRepository,
+) : ViewModel() {
     private val _currentUserPoint = MutableStateFlow(0)
     val currentPointState = _currentUserPoint.asStateFlow()
 
@@ -28,6 +29,8 @@ class PointViewModel @Inject constructor(private val pointRepository: PointRepos
     fun earnChallengePoint(challengeDate: String) {
         viewModelScope.launch {
             pointRepository.earnPoint(challengeDate).onSuccess {
+                val properties = JSONObject().put("get_point_date", challengeDate)
+                AmplitudeUtils.trackEventWithProperties("click_getpoint_button", properties)
                 getPointInfoList()
             }
         }
@@ -42,4 +45,3 @@ class PointViewModel @Inject constructor(private val pointRepository: PointRepos
         }
     }
 }
-

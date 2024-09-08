@@ -10,10 +10,12 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.view.setProgressWithAnimation
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentStateAdapter
+import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentType
 import com.hmh.hamyeonham.feature.onboarding.databinding.ActivityOnBoardingBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEffect
@@ -21,6 +23,7 @@ import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.json.JSONObject
 
 @AndroidEntryPoint
 class OnBoardingActivity : AppCompatActivity() {
@@ -88,6 +91,7 @@ class OnBoardingActivity : AppCompatActivity() {
         val pagerAdapter = setOnboardingPageAdapter()
 
         binding.btnOnboardingNext.setOnClickListener {
+            AmplitudeUtils.trackEventWithProperties("click_onboarding_next")
             viewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(false))
             navigateToNextOnboardingStep(pagerAdapter)
         }
@@ -113,6 +117,24 @@ class OnBoardingActivity : AppCompatActivity() {
 
             when {
                 currentItem < lastItem -> {
+                    when (OnBoardingFragmentType.entries[currentItem]) {
+                        OnBoardingFragmentType.SELECT_SCREEN_TIME_GOAL -> {
+                            AmplitudeUtils.trackEventWithProperties("click_challenge_totaltime")
+                        }
+                        OnBoardingFragmentType.SELECT_DATA_TIME -> {
+                            val property = JSONObject().put("answer_value", viewModel.onBoardingState.value.usuallyUseTimeButtonIndex) // Int
+                            AmplitudeUtils.trackEventWithProperties("click_survey1_answer", property)
+                        }
+                        OnBoardingFragmentType.SELECT_DATA_PROBLEM -> {
+                            val property = JSONObject().put("answer_value", viewModel.onBoardingState.value.problemsButtonIndex) // List
+                            AmplitudeUtils.trackEventWithProperties("click_survey2_answer", property)
+                        }
+                        OnBoardingFragmentType.SELECT_DATA_PERIOD -> {
+                            val property = JSONObject().put("period", viewModel.onBoardingState.value.period)
+                            AmplitudeUtils.trackEventWithProperties("click_challenge_period_answer", property)
+                        }
+                        else -> Unit
+                    }
                     navigateToNextViewPager(viewPager, currentItem)
                 }
 

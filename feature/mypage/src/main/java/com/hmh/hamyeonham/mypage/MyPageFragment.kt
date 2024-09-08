@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.fragment.toast
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
@@ -25,6 +26,7 @@ import com.hmh.hamyeonham.mypage.viewmodel.UserEffect
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.json.JSONObject
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -59,6 +61,8 @@ class MyPageFragment : Fragment() {
 
     private fun initStoreButton() {
         binding.vStore.setOnClickListener {
+            val property = JSONObject().put("view_type", "mypage")
+            AmplitudeUtils.trackEventWithProperties("view_shop", property)
             val intent = navigationProvider.toStore()
             startActivity(intent)
         }
