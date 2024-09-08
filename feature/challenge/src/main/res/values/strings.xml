@@ -37,4 +37,8 @@
     <string name="new_challenge_screentime_goal_description">목표 사용 시간은 최대 6시간까지 설정할 수 있어요</string>
     <string name="tv_calendar_toggle_collapse">접기 "\u25B2"</string>
     <string name="tv_calendar_toggle_expand">펼치기 "\u25BC"</string>
+
+    <string name="dialog_title_challengecreated">새로운 챌린지 생성 완료!</string>
+    <string name="dialog_description_challengecreated">별조각을 모아\n블랙홀 탈출에 성공하세요</string>
+    <string name="dialog_button_challengecreated"> 새 챌린지 출발!</string>
 </resources>
