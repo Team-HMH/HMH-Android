@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
+import androidx.core.view.isGone
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.hmh.hamyeonham.common.context.dialogWidthPercent
@@ -53,12 +55,21 @@ class TwoButtonCommonDialog : DialogFragment() {
     private fun initViews() {
         val title = arguments?.getString(TITLE, "")
         val description = arguments?.getString(DESCRIPTION)
+        val iconRes = arguments?.getInt(OneButtonCommonDialog.ICON_RES, 0)
         val confirmButtonText = arguments?.getString(CONFIRM_BUTTON_TEXT, "")
         val dismissButtonText = arguments?.getString(DISMISS_BUTTON_TEXT, "")
+        val hideIcon = arguments?.getBoolean(HIDE_ICON) ?: false
 
         with(binding) {
             tvDialogTitle.text = title
             tvDialogDescription.text = description
+            if (hideIcon)
+                ivDialogIcon.isGone = true
+            else {
+                iconRes?.let {
+                    ivDialogIcon.setImageResource(it)
+                } ?: run { ivDialogIcon.isGone = true }
+            }
             tvConfirmButton.text = confirmButtonText
             tvDismissButton.text = dismissButtonText
         }
@@ -87,11 +98,14 @@ class TwoButtonCommonDialog : DialogFragment() {
         const val DESCRIPTION = "description"
         const val CONFIRM_BUTTON_TEXT = "confirmButtonText"
         const val DISMISS_BUTTON_TEXT = "dismissButtonText"
+        const val ICON_RES = "iconRes"
+        const val HIDE_ICON = "hideIcon"
 
 
         fun newInstance(
             title: String,
             description: String? = null,
+            @DrawableRes iconRes: Int? = null,
             confirmButtonText: String,
             dismissButtonText: String
         ): TwoButtonCommonDialog {
@@ -100,6 +114,7 @@ class TwoButtonCommonDialog : DialogFragment() {
                     putString(TITLE, title)
                     putString(DESCRIPTION, description)
                     putString(CONFIRM_BUTTON_TEXT, confirmButtonText)
+                    iconRes?.let { putInt(ICON_RES, it) } ?: run { putBoolean(HIDE_ICON, true) }
                     putString(DISMISS_BUTTON_TEXT, dismissButtonText)
                 }
             }
