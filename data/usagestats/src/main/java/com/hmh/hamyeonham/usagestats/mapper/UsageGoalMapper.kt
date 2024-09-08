@@ -4,15 +4,6 @@ import com.hmh.hamyeonham.core.database.model.UsageGoalEntity
 import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.network.challenge.model.ChallengeResponse
-import com.hmh.hamyeonham.core.network.usagegoal.model.UsageGoalResponse
-
-internal fun UsageGoalResponse.toUsageGoalList(): UsageGoal {
-    return UsageGoal(
-        status = ChallengeStatus.fromString(status.orEmpty()),
-        totalGoalTime = goalTime ?: 0,
-        appGoals = apps?.map { it.toApp() } ?: emptyList()
-    )
-}
 
 internal fun ChallengeResponse.toUsageGoalList(): UsageGoal {
     val status =
@@ -23,9 +14,6 @@ internal fun ChallengeResponse.toUsageGoalList(): UsageGoal {
         appGoals = apps.map { it.toApp() }
     )
 }
-
-internal fun UsageGoalResponse.AppGoal.toApp() = UsageGoal.App(appCode.orEmpty(), goalTime ?: 0)
-
 
 internal fun ChallengeResponse.AppGoal.toApp() = UsageGoal.App(appCode, goalTime)
 
