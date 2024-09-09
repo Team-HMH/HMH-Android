@@ -148,7 +148,10 @@ class MainViewModel @Inject constructor(
             }
 
             CalendarToggleState.COLLAPSED -> {
-                challengeStatusList.take(7)
+                if(challengeStatusList.size == 14)
+                    challengeStatusList.take(14)
+                else
+                    challengeStatusList.take(7)
             }
         }
     }
