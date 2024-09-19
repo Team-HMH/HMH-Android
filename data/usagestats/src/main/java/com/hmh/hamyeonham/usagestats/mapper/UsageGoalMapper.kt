@@ -3,17 +3,19 @@ package com.hmh.hamyeonham.usagestats.mapper
 import com.hmh.hamyeonham.core.database.model.UsageGoalEntity
 import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
-import com.hmh.hamyeonham.core.network.usagegoal.model.UsageGoalResponse
+import com.hmh.hamyeonham.core.network.challenge.model.ChallengeResponse
 
-internal fun UsageGoalResponse.toUsageGoalList(): UsageGoal {
+internal fun ChallengeResponse.toUsageGoalList(): UsageGoal {
+    val status =
+        if (todayIndex > -1) ChallengeStatus.fromString(statuses[todayIndex]) else ChallengeStatus.NONE
     return UsageGoal(
-        status = ChallengeStatus.fromString(status.orEmpty()),
-        totalGoalTime = goalTime ?: 0,
-        appGoals = apps?.map { it.toApp() } ?: emptyList()
+        status = status,
+        totalGoalTime = goalTime,
+        appGoals = apps.map { it.toApp() }
     )
 }
 
-internal fun UsageGoalResponse.AppGoal.toApp() = UsageGoal.App(appCode.orEmpty(), goalTime ?: 0)
+internal fun ChallengeResponse.AppGoal.toApp() = UsageGoal.App(appCode, goalTime)
 
 internal fun UsageGoalEntity.toUsageAppGoal() = UsageGoal.App(packageName, goalTime)
 

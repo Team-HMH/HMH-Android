@@ -68,6 +68,7 @@ class ChallengeFragment : Fragment() {
             if (point != null && point != 0) {
                 activityViewModel.updatePoint(point)
             }
+            activityViewModel.reloadChallengeStatus()
         }
     }
 
@@ -102,6 +103,9 @@ class ChallengeFragment : Fragment() {
 
         activityViewModel.challengeStatusList.flowWithLifecycle(viewLifeCycle).onEach {
             bindChallengeCalendar(it)
+            val pointButtonImg =
+                if (activityViewModel.isPointLeftToCollect) com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24 else com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
+            binding.tvPointButton.setImageResource(pointButtonImg)
         }.launchIn(viewLifeCycleScope)
     }
 
