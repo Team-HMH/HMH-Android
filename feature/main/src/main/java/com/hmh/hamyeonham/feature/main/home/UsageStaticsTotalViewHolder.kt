@@ -49,14 +49,14 @@ class UsageStaticsTotalViewHolder(
     private fun bindBlackHoleInfo(totalModel: HomeItem.TotalModel) {
         val blackHoleInfo =
             when {
-                // 권한이 허용되어 있는 경우
+                // 챌린지 성공한 경우
                 totalModel.challengeSuccess -> {
                     BlackHoleInfo.createByPercentage(totalModel.totalPercentage)
                         ?: BlackHoleInfo.LEVEL0
                 }
-                // 권한이 허용되지 않은 경우 default 값
+                // 챌린지 실패한 경우
                 else -> {
-                    BlackHoleInfo.LEVEL_NONE
+                    BlackHoleInfo.LEVEL5
                 }
             }
 
@@ -78,7 +78,6 @@ enum class BlackHoleInfo(
     val lottieFile: Int,
     val description: Int,
 ) {
-    LEVEL_NONE(999, R.raw.lottie_blackhole0, R.string.blackhole_none),
     LEVEL0(0, R.raw.lottie_blackhole0, R.string.blackhole0),
     LEVEL1(25, R.raw.lottie_blackhole1, R.string.blackhole1),
     LEVEL2(50, R.raw.lottie_blackhole2, R.string.blackhole2),

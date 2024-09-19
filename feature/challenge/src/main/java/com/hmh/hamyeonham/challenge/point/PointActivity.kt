@@ -7,6 +7,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
+import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.ActivityPointBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +30,7 @@ class PointActivity : AppCompatActivity() {
         initViews()
         collectPointInfo()
         collectUserPoint()
+        collectPointSuccessState()
     }
 
     private fun initViews() {
@@ -64,6 +66,14 @@ class PointActivity : AppCompatActivity() {
         viewModel.currentPointState.flowWithLifecycle(lifecycle).onEach {
             binding.tvPointTotal.text = it.toString()
             setResult(RESULT_OK, intent.putExtra("point", it))
+        }.launchIn(lifecycleScope)
+    }
+
+    private fun collectPointSuccessState() {
+        viewModel.getPointSuccess.flowWithLifecycle(lifecycle).onEach {
+            if(it) {
+                toast("포인트를 획득했어요!")
+            }
         }.launchIn(lifecycleScope)
     }
 }

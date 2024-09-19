@@ -22,6 +22,10 @@ class PointViewModel @Inject constructor(
     private val _pointInfoList = MutableStateFlow(emptyList<PointInfo.ChallengePointStatus>())
     val pointInfoList = _pointInfoList.asStateFlow()
 
+    private val _getPointSuccess = MutableStateFlow(false)
+    val getPointSuccess = _getPointSuccess.asStateFlow()
+
+
     init {
         getPointInfoList()
     }
@@ -32,6 +36,7 @@ class PointViewModel @Inject constructor(
                 val properties = JSONObject().put("get_point_date", challengeDate)
                 AmplitudeUtils.trackEventWithProperties("click_getpoint_button", properties)
                 getPointInfoList()
+                _getPointSuccess.value = true
             }
         }
     }
