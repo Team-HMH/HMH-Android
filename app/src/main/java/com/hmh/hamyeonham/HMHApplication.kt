@@ -5,6 +5,7 @@ import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.amplitude.api.Amplitude
 import com.hmh.hamyeonham.core.notification.AppNotificationManager
+import com.hmh.hamyeonham.hus.usagestats.HMHUsageStatsManager
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.EntryPoint
 import dagger.hilt.EntryPoints
@@ -35,6 +36,7 @@ class HMHApplication : Application(), Configuration.Provider {
         setAmplitude()
 
         KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY)
+        HMHUsageStatsManager.init(this)
         notificationManager.setupNotificationChannel()
     }
 

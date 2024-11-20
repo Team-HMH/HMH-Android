@@ -2,19 +2,17 @@ package com.hmh.hamyeonham.usagestats.repository
 
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
 import com.hmh.hamyeonham.common.time.getTargetDayStartEndEpochMillis
-import com.hmh.hamyeonham.usagestats.datasource.local.UsageStatusLocalDataSource
+import com.hmh.hamyeonham.hus.usagestats.HMHUsageStatsManager
 import com.hmh.hamyeonham.usagestats.model.UsageStatus
 import kotlinx.datetime.toLocalDate
 import javax.inject.Inject
 
-class DefaultUsageStatsRepository @Inject constructor(
-    private val usageStatusLocalDataSource: UsageStatusLocalDataSource,
-) : UsageStatsRepository {
+class DefaultUsageStatsRepository @Inject constructor() : UsageStatsRepository {
     override suspend fun getUsageStats(targetDate: String): List<UsageStatus> {
         val (startTime, endTime) = getTargetDayStartEndEpochMillis(targetDate.toLocalDate())
-        val usageStatsList = usageStatusLocalDataSource.getUsageStats(startTime, endTime)
+        val usageStatsList = HMHUsageStatsManager.getUsageStats(startTime, endTime)
         return usageStatsList.map { usageStatModel ->
-            UsageStatus(usageStatModel.packageName, usageStatModel.totalTimeInForeground)
+            UsageStatus(usageStatModel.packageName, usageStatModel.timeInForeground)
         }
     }
 
@@ -22,9 +20,9 @@ class DefaultUsageStatsRepository @Inject constructor(
         startTime: Long,
         endTime: Long,
     ): List<UsageStatus> {
-        val usageStatsList = usageStatusLocalDataSource.getUsageStats(startTime, endTime)
+        val usageStatsList = HMHUsageStatsManager.getUsageStats(startTime, endTime)
         return usageStatsList.map { usageStatModel ->
-            UsageStatus(usageStatModel.packageName, usageStatModel.totalTimeInForeground)
+            UsageStatus(usageStatModel.packageName, usageStatModel.timeInForeground)
         }
     }
 
@@ -76,6 +74,6 @@ class DefaultUsageStatsRepository @Inject constructor(
     }
 
     override fun getForegroundAppPackageName(): String? {
-        return usageStatusLocalDataSource.getForegroundAppPackageName()
+        return HMHUsageStatsManager.getForegroundAppPackageName()
     }
 }
