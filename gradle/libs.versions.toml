@@ -84,6 +84,7 @@ androidx-hilt = "1.2.0"
 work-runtime-ktx = "2.9.0"
 timber = "5.0.1"
 amplitude = "2.+"
+hus = "0.0.5"
 
 
 [libraries]
@@ -215,6 +216,9 @@ androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx"
 
 #amplitude
 amplitude = { module = "com.amplitude:android-sdk", version.ref = "amplitude" }
+
+#HMH-UsageStats
+hmh-hus = { group = "xyz.hmh-api", name = "hmh-hus", version.ref = "hus" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

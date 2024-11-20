@@ -5,8 +5,6 @@ import android.content.Context
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.datasource.local.DeletedAppUsageLocalDataSource
 import com.hmh.hamyeonham.usagestats.datasource.local.DeletedAppUsageLocalDataSourceImpl
-import com.hmh.hamyeonham.usagestats.datasource.local.UsageStatusLocalDataSource
-import com.hmh.hamyeonham.usagestats.datasource.local.UsageStatusLocalDataSourceImpl
 import com.hmh.hamyeonham.usagestats.repository.DefaultDeleteGoalRepository
 import com.hmh.hamyeonham.usagestats.repository.DefaultUsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.repository.DefaultUsageStatsRepository
@@ -33,9 +31,6 @@ object UsageStatsModule {
     @Module
     @InstallIn(SingletonComponent::class)
     interface Binder {
-        @Binds
-        @Singleton
-        fun provideUsageStatusDataSource(usageStatsDataSource: UsageStatusLocalDataSourceImpl): UsageStatusLocalDataSource
 
         @Binds
         @Singleton
