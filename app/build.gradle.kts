@@ -106,4 +106,7 @@ dependencies {
 
     // Hilt Worker
     implementation(libs.androidx.hilt.common)
+
+    // HMH - Usage Stats
+    implementation(libs.hmh.hus)
 }
