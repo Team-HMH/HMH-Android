@@ -2,22 +2,22 @@
 compileSdk = "34"
 minSdk = "28"
 targetSdk = "34"
-appVersion = "1.0.1"
-versionCode = "1000100"
+appVersion = "1.0.2"
+versionCode = "1000200"
 
 # kotlin
 kotlin = "1.9.24"
 kotlinx-serialization-json = "1.6.3"
 kotlinx-serialization-converter = "1.0.0"
 kotlinx-coroutines = "1.8.1"
-kotlinx-datetime = "0.5.0"
+kotlinx-datetime = "0.6.1"
 ksp = "1.9.24-1.0.20"
 
 # android
 corektx = "1.13.1"
 appcompat = "1.7.0"
 activity = "1.9.0"
-lifecycle = "2.8.1"
+lifecycle = "2.8.4"
 navigation = "2.7.7"
 startup = "1.1.1"
 security = "1.1.0-alpha06"
@@ -83,6 +83,7 @@ javax-inject = "1"
 androidx-hilt = "1.2.0"
 work-runtime-ktx = "2.9.0"
 timber = "5.0.1"
+amplitude = "2.+"
 
 
 [libraries]
@@ -211,6 +212,9 @@ zxing-android-embedded = { module = "com.journeyapps:zxing-android-embedded", ve
 androidx-hilt-common = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidx-hilt" }
 androidx-hilt-compiler = {module ="androidx.hilt:hilt-compiler", version.ref = "androidx-hilt" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-runtime-ktx" }
+
+#amplitude
+amplitude = { module = "com.amplitude:android-sdk", version.ref = "amplitude" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

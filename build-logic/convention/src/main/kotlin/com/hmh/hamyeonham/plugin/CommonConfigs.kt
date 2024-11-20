@@ -25,6 +25,9 @@ internal fun Project.configureAndroidCommonPlugin() {
             val kakaoApiKey = properties["kakaoApiKey"] as? String ?: ""
             manifestPlaceholders["kakaoApiKey"] = properties["kakaoApiKey"] as String
             buildConfigField("String", "KAKAO_API_KEY", "\"${kakaoApiKey}\"")
+
+            val amplitudeApiKey = properties["amplitudeApiKey"] as? String ?: ""
+            buildConfigField("String", "AMPLITUDE_API_KEY", "\"${amplitudeApiKey}\"")
         }
         buildTypes {
             getByName("debug") {
@@ -48,5 +51,6 @@ internal fun Project.configureAndroidCommonPlugin() {
         "implementation"(libs.findLibrary("material").get())
         "implementation"(libs.findLibrary("fragment.ktx").get())
         "implementation"(libs.findLibrary("timber").get())
+        "implementation"(libs.findLibrary("amplitude").get())
     }
 }

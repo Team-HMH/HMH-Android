@@ -21,6 +21,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.feature.lock.ui.theme.Blackground
 import com.hmh.hamyeonham.feature.lock.ui.theme.BluePurpleButton
@@ -37,6 +38,7 @@ fun LockScreen(
     onClickClose: () -> Unit = {},
     onClickUnLock: () -> Unit = {},
 ) {
+    AmplitudeUtils.trackEventWithProperties("view_unlock_popup")
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -55,7 +57,9 @@ fun LockScreen(
             AsyncImage(
                 model = R.drawable.lock_on,
                 contentDescription = "LockScreen Icon",
-                modifier = Modifier.padding(bottom = 48.dp).size(120.dp),
+                modifier = Modifier
+                    .padding(bottom = 48.dp)
+                    .size(120.dp),
             )
             Text(
                 text = stringResource(R.string.target_usage_time_end),
@@ -80,7 +84,9 @@ fun LockScreen(
                 stringResource(R.string.remind_alarm_permission),
                 style = TextStyle(textAlign = TextAlign.Center).merge(HmhTypography.bodySmall),
                 color = Gray3,
-                modifier = Modifier.padding(vertical = 21.dp).align(Alignment.CenterHorizontally),
+                modifier = Modifier
+                    .padding(vertical = 21.dp)
+                    .align(Alignment.CenterHorizontally),
             )
             Button(
                 colors = ButtonDefaults.buttonColors(containerColor = BluePurpleButton),
@@ -99,7 +105,11 @@ fun LockScreen(
                 )
             }
             Text(
-                modifier = Modifier.clickable(onClick = onClickUnLock)
+                modifier = Modifier
+                    .clickable(onClick = {
+                        onClickUnLock()
+                        AmplitudeUtils.trackEventWithProperties("click_unlock_button")
+                    })
                     .padding(top = 22.dp, bottom = 58.dp),
                 text = stringResource(R.string.do_unlock),
                 style = HmhTypography.titleSmall,

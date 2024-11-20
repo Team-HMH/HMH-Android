@@ -24,6 +24,7 @@ import com.hmh.hamyeonham.challenge.goals.ChallengeUsageGoalsAdapter
 import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.model.NewChallenge
 import com.hmh.hamyeonham.challenge.newchallenge.NewChallengeActivity
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.fragment.snackBarWithAction
@@ -67,6 +68,7 @@ class ChallengeFragment : Fragment() {
             if (point != null && point != 0) {
                 activityViewModel.updatePoint(point)
             }
+            activityViewModel.reloadChallengeStatus()
         }
     }
 
@@ -78,7 +80,10 @@ class ChallengeFragment : Fragment() {
         return FragmentChallengeBinding.inflate(inflater, container, false).root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         initAppSelectionResultLauncher()
         initNewChallengeResultLauncher()
@@ -98,6 +103,9 @@ class ChallengeFragment : Fragment() {
 
         activityViewModel.challengeStatusList.flowWithLifecycle(viewLifeCycle).onEach {
             bindChallengeCalendar(it)
+            val pointButtonImg =
+                if (activityViewModel.isPointLeftToCollect) com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24 else com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
+            binding.tvPointButton.setImageResource(pointButtonImg)
         }.launchIn(viewLifeCycleScope)
     }
 
@@ -147,6 +155,7 @@ class ChallengeFragment : Fragment() {
         binding.tvModifierButton.setOnClickListener {
             when (viewModel.challengeState.value.modifierState) {
                 ModifierState.DONE -> {
+                    AmplitudeUtils.trackEventWithProperties("click_edit_button")
                     viewModel.updateModifierState(ModifierState.EDIT)
                 }
 
@@ -169,13 +178,14 @@ class ChallengeFragment : Fragment() {
 
     private fun initChallengeCreateButton() {
         binding.btnChallengeCreate.setOnClickListener {
+            AmplitudeUtils.trackEventWithProperties("click_newchallenge_button")
             if (activityViewModel.isPointLeftToCollect) {
                 snackBarWithAction(
                     anchorView = binding.root,
                     message = getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_create),
                     actionMessage = getString(
-                        com.hmh.hamyeonham.feature.challenge.R.string.all_move
-                    )
+                        com.hmh.hamyeonham.feature.challenge.R.string.all_move,
+                    ),
                 ) {
                     navigateToPointView()
                 }
@@ -226,13 +236,12 @@ class ChallengeFragment : Fragment() {
             tvChallengeStartDate.text = getString(
                 com.hmh.hamyeonham.feature.challenge.R.string.challenge_start_date,
                 startDate.monthNumber,
-                startDate.dayOfMonth
+                startDate.dayOfMonth,
             )
-            tvChallengeDay.text =
-                getString(
-                    com.hmh.hamyeonham.feature.challenge.R.string.challenge_day,
-                    todayIndexAsDate
-                )
+            tvChallengeDay.text = getString(
+                com.hmh.hamyeonham.feature.challenge.R.string.challenge_day,
+                todayIndexAsDate,
+            )
         }
     }
 
@@ -262,8 +271,8 @@ class ChallengeFragment : Fragment() {
                     activityViewModel.generateNewChallenge(
                         NewChallenge(
                             period = period ?: 0,
-                            goalTime = goalTime ?: 0
-                        )
+                            goalTime = goalTime ?: 0,
+                        ),
                     )
                 }
             }
@@ -310,14 +319,18 @@ class ChallengeFragment : Fragment() {
         binding.rvAppUsageGoals.run {
             adapter = ChallengeUsageGoalsAdapter(
                 onAppListAddClicked = {
+                    AmplitudeUtils.trackEventWithProperties("click_add_button")
                     val intent = Intent(requireContext(), AppAddActivity::class.java)
                     appSelectionResultLauncher.launch(intent)
                 },
                 onAppItemClicked = { challengeGoal ->
                     when (viewModel.challengeState.value.modifierState) {
                         ModifierState.EDIT -> {
-                            if (challengeGoal.isDeletable) setDeleteAppDialog(challengeGoal.usageStatusAndGoal)
-                            else toast(getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_delete))
+                            if (challengeGoal.isDeletable) {
+                                setDeleteAppDialog(challengeGoal.usageStatusAndGoal)
+                            } else {
+                                toast(getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_delete))
+                            }
                         }
 
                         else -> Unit

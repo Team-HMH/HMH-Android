@@ -8,6 +8,7 @@ import android.widget.NumberPicker
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.hmh.hamyeonham.challenge.newchallenge.NewChallengeViewModel
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.time.hourToMs
 import com.hmh.hamyeonham.common.view.setupScreentimeGoalRange
 import com.hmh.hamyeonham.common.view.viewBinding
@@ -16,6 +17,11 @@ import com.hmh.hamyeonham.feature.challenge.databinding.FragmentTimeSelectionBin
 class TimeSelectionFragment : Fragment() {
     private val binding by viewBinding(FragmentTimeSelectionBinding::bind)
     private val viewModel by activityViewModels<NewChallengeViewModel>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        AmplitudeUtils.trackEventWithProperties("view_newchallenge_totaltime")
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

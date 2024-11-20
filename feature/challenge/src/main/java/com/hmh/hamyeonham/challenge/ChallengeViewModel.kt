@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.usecase.AddUsageGoalsUseCase
 import com.hmh.hamyeonham.challenge.usecase.DeleteUsageGoalUseCase
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.viewmodel.CalendarToggleState
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
@@ -40,7 +41,8 @@ data class ChallengeUsageGoal(
 }
 
 enum class ModifierState {
-    EDIT, DONE,
+    EDIT,
+    DONE,
 }
 
 @HiltViewModel
@@ -48,9 +50,8 @@ class ChallengeViewModel @Inject constructor(
     private val addUsageGoalsUseCase: AddUsageGoalsUseCase,
     private val deleteUsageGoalUseCase: DeleteUsageGoalUseCase,
     private val deletedAppUsageStoreUseCase: DeletedAppUsageStoreUseCase,
-    private val checkAndDeleteDeletedAppUsageUseCase: CheckAndDeleteDeletedAppUsageUseCase
+    private val checkAndDeleteDeletedAppUsageUseCase: CheckAndDeleteDeletedAppUsageUseCase,
 ) : ViewModel() {
-
     private val _challengeState = MutableStateFlow(ChallengeState())
     val challengeState = _challengeState.asStateFlow()
 
@@ -70,17 +71,25 @@ class ChallengeViewModel @Inject constructor(
 
     fun addApp(apps: Apps) {
         viewModelScope.launch {
-            addUsageGoalsUseCase(apps)
+            runCatching {
+                addUsageGoalsUseCase(apps)
+            }.onSuccess {
+                AmplitudeUtils.trackEventWithProperties("complete_add_new")
+            }
             checkAndDeleteDeletedAppUsageUseCase(apps.apps.map { it.appCode })
         }
     }
 
     fun deleteApp(usageStatusAndGoal: UsageStatusAndGoal.App) {
         viewModelScope.launch {
-            deleteUsageGoalUseCase(usageStatusAndGoal.packageName)
+            runCatching {
+                deleteUsageGoalUseCase(usageStatusAndGoal.packageName)
+            }.onSuccess {
+                AmplitudeUtils.trackEventWithProperties("click_delete_complete")
+            }
             deletedAppUsageStoreUseCase(
                 usageStatusAndGoal.usageTime,
-                usageStatusAndGoal.packageName
+                usageStatusAndGoal.packageName,
             )
         }
     }
@@ -96,5 +105,4 @@ class ChallengeViewModel @Inject constructor(
             }
         }
     }
-
 }
