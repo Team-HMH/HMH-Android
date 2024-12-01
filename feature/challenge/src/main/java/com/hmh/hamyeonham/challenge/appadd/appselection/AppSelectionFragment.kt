@@ -53,7 +53,7 @@ class AppSelectionFragment : Fragment() {
     }
 
     private fun collectState() {
-        viewModel.installedApps.flowWithLifecycle(viewLifeCycle).onEach { installedApps ->
+        viewModel.installedApps.flowWithLifecycle(viewLifeCycle).onEach {
             val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter
             appSelectionAdapter?.submitList(getInstalledAppList(requireContext()))
             delay(300)

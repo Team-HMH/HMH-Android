@@ -18,6 +18,7 @@ import com.hmh.hamyeonham.data.challenge.mapper.toNewChallengeRequest
 import com.hmh.hamyeonham.data.challenge.mapper.toRequestChallengeWithUsage
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatsListUseCase
 import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDate
 import javax.inject.Inject
@@ -101,7 +102,7 @@ class DefaultChallengeRepository @Inject constructor(
     ): Result<List<ChallengeWithUsageInput>> {
         return runCatching {
             challengeDateWithIndex.map { (challengeDate, index) ->
-                val (startTime, endTime) = getDayStartEndEpochMillis(challengeDate.toLocalDate())
+                val (startTime, endTime) = getDayStartEndEpochMillis(LocalDate.parse(challengeDate))
                 val appUsageList = getUsageStatsListUseCase(
                     startTime = startTime,
                     endTime = endTime,
