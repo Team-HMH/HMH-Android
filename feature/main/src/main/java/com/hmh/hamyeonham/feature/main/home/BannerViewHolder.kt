@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.image.setBackgroundColors
+import com.hmh.hamyeonham.common.image.setCornerRadius
 import com.hmh.hamyeonham.core.viewmodel.HomeItem
 import com.hmh.hamyeonham.feature.main.R
 import com.hmh.hamyeonham.feature.main.databinding.ItemBannerBinding
@@ -21,7 +22,9 @@ class BannerViewHolder(
             tvTitle.text = item.title
             tvSubTitle.text = item.subTitle
 
-            ivBackground.setBackgroundColors(item.backgroundColors)
+            ivBackground
+                .setBackgroundColors(item.backgroundColors)
+                .setCornerRadius(100F)
         }
         binding.root.setOnClickListener {
             try {

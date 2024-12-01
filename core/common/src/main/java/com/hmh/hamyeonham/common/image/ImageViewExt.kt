@@ -5,7 +5,7 @@ import android.graphics.drawable.GradientDrawable
 import android.widget.ImageView
 import timber.log.Timber
 
-fun ImageView.setBackgroundColors(backgroundColors: List<String>) {
+fun ImageView.setBackgroundColors(backgroundColors: List<String>): ImageView {
     try {
         val gradientDrawable = GradientDrawable()
 
@@ -30,4 +30,14 @@ fun ImageView.setBackgroundColors(backgroundColors: List<String>) {
     } catch (e: Exception) {
         Timber.e(e)
     }
+
+    return this
+}
+
+fun ImageView.setCornerRadius(radius: Float): ImageView {
+    val gradientDrawable = (this.background as? GradientDrawable) ?: GradientDrawable()
+
+    gradientDrawable.cornerRadius = radius
+    this.background = gradientDrawable
+    return this
 }
