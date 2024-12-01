@@ -19,4 +19,12 @@ sealed class HomeItem {
     data class UsageStaticsModel(
         val usageAppStatusAndGoal: UsageStatusAndGoal.App,
     ) : HomeItem()
+
+    data class BannerModel(
+        val title: String,
+        val subTitle: String,
+        val imageUrl: String,
+        val linkUrl: String,
+        val backgroundColors: List<String>
+    ): HomeItem()
 }

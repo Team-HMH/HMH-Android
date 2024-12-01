@@ -52,6 +52,8 @@ class MainViewModel @Inject constructor(
     private val _usageStatusAndGoals = MutableStateFlow(UsageStatusAndGoal())
     val usageStatusAndGoals = _usageStatusAndGoals.asStateFlow()
 
+    private val banner = MutableStateFlow<HomeItem.BannerModel?>(null)
+
     val homeItems = usageStatusAndGoals.map {
         listOf(
             HomeItem.TotalModel(
