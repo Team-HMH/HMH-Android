@@ -14,15 +14,11 @@ fun ImageView.setBackgroundColors(backgroundColors: List<String>): ImageView {
             1 -> {
                 gradientDrawable.setColor(Color.parseColor(backgroundColors[0]))
             }
-            // 그라데이션 (두 가지 색상)
-            2 -> {
-                gradientDrawable.colors = backgroundColors.map { Color.parseColor(it) }.toIntArray()
-                gradientDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
-            }
-            // 세 가지 이상의 색상 그라데이션
+            // 그라데이션 (두 가지 색상 이상)
             else -> {
                 gradientDrawable.colors = backgroundColors.map { Color.parseColor(it) }.toIntArray()
                 gradientDrawable.gradientType = GradientDrawable.LINEAR_GRADIENT
+                gradientDrawable.orientation = GradientDrawable.Orientation.LEFT_RIGHT
             }
         }
 
