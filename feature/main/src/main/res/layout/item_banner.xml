@@ -12,11 +12,11 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="12dp"
+        app:background="@drawable/shape_background_radius100"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:background="@drawable/shape_background_radius100" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ivImage"
@@ -32,8 +32,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="20dp"
-        android:textAppearance="@style/TextAppearance.Hmh.BodyMedium"
+        android:textAppearance="@style/TextAppearance.Hmh.LabelLarge"
         android:textColor="?white_text"
+        app:layout_constraintBottom_toTopOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="n분 설문조사하고" />
@@ -42,6 +43,8 @@
         android:id="@+id/tvTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@id/tvSubTitle"
         app:layout_constraintTop_toBottomOf="@id/tvSubTitle"

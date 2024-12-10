@@ -249,7 +249,14 @@ class MainViewModel @Inject constructor(
 
     private fun getBanner() {
         viewModelScope.launch {
-            banner.value = mainRepository.getBanner().getOrNull()?.toBannerModel()
+            val bannerData = mainRepository
+                .getBanner()
+                .getOrNull()
+            if (bannerData == null) return@launch
+            if (bannerData.imageUrl.isBlank()) return@launch
+            if (bannerData.title.isBlank()) return@launch
+
+            banner.value = bannerData.toBannerModel()
         }
     }
 
