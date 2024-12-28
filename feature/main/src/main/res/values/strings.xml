@@ -31,4 +31,5 @@
     <string name="require_permission">권한 허용하기</string>
     <string name="require_permission_description">스크린타임 권한을 허용하면 여정이 시작돼요.</string>
 
+    <string name="error_activity_not_found">외부 브라우저가 존재하지 않습니다.</string>
 </resources>

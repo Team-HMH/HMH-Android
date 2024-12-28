@@ -1,7 +1,7 @@
 package com.hmh.hamyeonham.core.network.di
 
 import com.hmh.hamyeonham.common.qualifier.Secured
-import com.hmh.hamyeonham.core.network.mypage.MypageService
+import com.hmh.hamyeonham.core.network.mypage.MyPageService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,8 +12,8 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object MypageModule {
+object MyPageModule {
     @Provides
     @Singleton
-    fun provideUserInfo(@Secured retrofit: Retrofit): MypageService = retrofit.create()
+    fun provideMyPageService(@Secured retrofit: Retrofit): MyPageService = retrofit.create()
 }

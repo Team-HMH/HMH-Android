@@ -1,6 +1,5 @@
 package com.hmh.hamyeonham.core.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.challenge.model.Challenge
@@ -11,6 +10,7 @@ import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
 import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
+import com.hmh.hamyeonham.domain.main.MainRepository
 import com.hmh.hamyeonham.domain.point.repository.PointRepository
 import com.hmh.hamyeonham.lock.SetIsUnLockUseCase
 import com.hmh.hamyeonham.lock.UpdateIsUnLockUseCase
@@ -24,10 +24,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import timber.log.Timber
 import javax.inject.Inject
 
 enum class CalendarToggleState {
@@ -40,6 +41,7 @@ class MainViewModel @Inject constructor(
     private val usageGoalsRepository: UsageGoalsRepository,
     private val userInfoRepository: UserInfoRepository,
     private val pointRepository: PointRepository,
+    private val mainRepository: MainRepository,
     private val getUsageStatsListUseCase: GetUsageStatsListUseCase,
     private val setIsUnLockUseCase: SetIsUnLockUseCase,
     private val updateIsUnLockUseCase: UpdateIsUnLockUseCase,
@@ -52,18 +54,15 @@ class MainViewModel @Inject constructor(
     private val _usageStatusAndGoals = MutableStateFlow(UsageStatusAndGoal())
     val usageStatusAndGoals = _usageStatusAndGoals.asStateFlow()
 
-    val homeItems = usageStatusAndGoals.map {
-        listOf(
-            HomeItem.TotalModel(
-                userName = mainState.value.name,
-                challengeSuccess = mainState.value.challengeSuccess,
-                totalGoalTime = it.totalGoalTime,
-                totalTimeInForeground = it.totalTimeInForeground,
-            )
-        ) + it.apps.map { apps ->
-            HomeItem.UsageStaticsModel(apps)
-        }
+    private val banner = MutableStateFlow<HomeItem.BannerModel?>(null)
+
+    val homeItems = combine(
+        banner,
+        usageStatusAndGoals
+    ) { bannerModel, usageStatusAndGoals ->
+        combineHomeItems(bannerModel, usageStatusAndGoals)
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
 
     private var rawChallengeList: List<ChallengeStatus> = emptyList()
     private val _challengeList = MutableStateFlow<List<ChallengeStatus>>(emptyList())
@@ -81,6 +80,7 @@ class MainViewModel @Inject constructor(
     val effect = _effect.asSharedFlow()
 
     init {
+        getBanner()
         viewModelScope.launch {
             updateIsUnLockUseCase()
         }
@@ -112,8 +112,8 @@ class MainViewModel @Inject constructor(
                 setIsUnLockUseCase(true).onSuccess {
                     getChallengeStatus()
                     sendEffect(MainEffect.SuccessUsePoint)
-                }.onFailure {
-                    Log.e("setIsUnLock error", it.toString())
+                }.onFailure { e ->
+                    Timber.e(e)
                     sendEffect(MainEffect.NetworkError)
                 }
             }.onFailure {
@@ -148,7 +148,7 @@ class MainViewModel @Inject constructor(
             }
 
             CalendarToggleState.COLLAPSED -> {
-                if(challengeStatusList.size == 14)
+                if (challengeStatusList.size == 14)
                     challengeStatusList.take(14)
                 else
                     challengeStatusList.take(7)
@@ -213,7 +213,7 @@ class MainViewModel @Inject constructor(
             updateUserInfo(it)
         }.onFailure {
             sendEffect(MainEffect.NetworkError)
-            Log.e("userInfo error", it.toString())
+            Timber.tag("userInfo error").e(it.toString())
         }
     }
 
@@ -246,6 +246,48 @@ class MainViewModel @Inject constructor(
     private fun setUsageStatsList(usageStatsList: UsageStatusAndGoal) {
         _usageStatusAndGoals.value = usageStatsList
     }
+
+    private fun getBanner() {
+        viewModelScope.launch {
+            val bannerData = mainRepository
+                .getBanner()
+                .getOrNull()
+            if (bannerData == null) return@launch
+            if (bannerData.imageUrl.isBlank()) return@launch
+            if (bannerData.title.isBlank()) return@launch
+
+            banner.value = bannerData.toBannerModel()
+        }
+    }
+
+    private fun combineHomeItems(
+        banner: HomeItem.BannerModel?,
+        usageStatusAndGoal: UsageStatusAndGoal
+    ): List<HomeItem> {
+        val items = mutableListOf<HomeItem>()
+
+        items.add(
+            HomeItem.TotalModel(
+                userName = mainState.value.name,
+                challengeSuccess = mainState.value.challengeSuccess,
+                totalGoalTime = usageStatusAndGoal.totalGoalTime,
+                totalTimeInForeground = usageStatusAndGoal.totalTimeInForeground,
+            )
+        )
+
+        banner?.let {
+            items.add(it)
+        }
+
+        items.addAll(
+            usageStatusAndGoal.apps.map { apps ->
+                HomeItem.UsageStaticsModel(apps)
+            }
+        )
+
+        return items
+    }
+
 
     companion object {
         private const val LACK_POINT_ERROR_CODE = 400

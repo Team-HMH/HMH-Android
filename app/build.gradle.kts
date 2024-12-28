@@ -83,6 +83,7 @@ dependencies {
     implementation(projects.data.onboarding)
     implementation(projects.data.point)
     implementation(projects.data.lock)
+    implementation(projects.data.main)
 
     // Core
     implementation(projects.core.common)

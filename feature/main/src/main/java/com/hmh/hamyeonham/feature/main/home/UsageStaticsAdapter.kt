@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.common.view.ItemDiffCallback
 import com.hmh.hamyeonham.core.viewmodel.HomeItem
+import com.hmh.hamyeonham.feature.main.databinding.ItemBannerBinding
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticBinding
 import com.hmh.hamyeonham.feature.main.databinding.ItemUsagestaticTotalBinding
 
@@ -26,9 +27,14 @@ class UsageStaticsAdapter : ListAdapter<HomeItem, RecyclerView.ViewHolder>(
                 UsageStaticsTotalViewHolder(binding, parent.context)
             }
 
-            else -> {
+            HomeItemViewType.APP_ITEM_TYPE -> {
                 val binding = ItemUsagestaticBinding.inflate(inflater, parent, false)
                 UsageStaticsViewHolder(binding, parent.context)
+            }
+
+            HomeItemViewType.BANNER_ITEM_TYPE -> {
+                val binding = ItemBannerBinding.inflate(inflater, parent, false)
+                BannerViewHolder(binding)
             }
         }
     }
@@ -43,9 +49,14 @@ class UsageStaticsAdapter : ListAdapter<HomeItem, RecyclerView.ViewHolder>(
                 holder.onBind(item)
             }
 
-           is UsageStaticsViewHolder -> {
+            is UsageStaticsViewHolder -> {
                 val item = currentList.getOrNull(position) as? HomeItem.UsageStaticsModel ?: return
-               holder.onBind(item)
+                holder.onBind(item)
+            }
+
+            is BannerViewHolder -> {
+                val item = currentList.getOrNull(position) as? HomeItem.BannerModel ?: return
+                holder.onBind(item)
             }
         }
     }
@@ -55,6 +66,7 @@ class UsageStaticsAdapter : ListAdapter<HomeItem, RecyclerView.ViewHolder>(
         val itemType = when (currentItem) {
             is HomeItem.TotalModel -> HomeItemViewType.TOTAL_ITEM_TYPE
             is HomeItem.UsageStaticsModel -> HomeItemViewType.APP_ITEM_TYPE
+            is HomeItem.BannerModel -> HomeItemViewType.BANNER_ITEM_TYPE
         }
         return HomeItemViewType.getOrdinal(itemType)
     }
@@ -62,6 +74,7 @@ class UsageStaticsAdapter : ListAdapter<HomeItem, RecyclerView.ViewHolder>(
     enum class HomeItemViewType {
         TOTAL_ITEM_TYPE,
         APP_ITEM_TYPE,
+        BANNER_ITEM_TYPE,
         ;
 
         companion object {
