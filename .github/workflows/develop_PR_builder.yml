@@ -39,13 +39,24 @@ jobs:
       - name: Add Local Properties
         env:
           KAKAO_API_KEY: ${{ secrets.KAKAO_API_KEY }}
-          HMH_BASE_URL: ${{ secrets.HMH_BASE_URL }}
+          HMH_DEV_BASE_URL: ${{ secrets.HMH_DEV_BASE_URL }}
+          HMH_PROD_BASE_URL: ${{ secrets.HMH_PROD_BASE_URL }}
+          AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
         run: |
           echo kakaoApiKey=$KAKAO_API_KEY >> ./local.properties
           echo hmhBaseUrl=$HMH_BASE_URL >> ./local.properties
 
       - name: Access Firebase Service
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
+
+      - name: Run Tests
+        run: ./gradlew test
+
+      - name: Verify Lint
+        run: ./gradlew lint
 
       - name: Build debug APK
         run: ./gradlew assembleDebug --stacktrace
