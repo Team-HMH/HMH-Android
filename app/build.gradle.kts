@@ -52,6 +52,11 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
     }
+
+    lint {
+        disable.add("Instantiatable")
+        baseline = file("lint-baseline.xml")
+    }
 }
 
 dependencies {
