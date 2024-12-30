@@ -6,12 +6,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
 import com.hmh.hamyeonham.common.fragment.toast
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
@@ -26,6 +26,7 @@ import com.hmh.hamyeonham.mypage.viewmodel.UserEffect
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.json.JSONObject
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -33,7 +34,6 @@ class MyPageFragment : Fragment() {
     private val binding by viewBinding(FragmentMyPageBinding::bind)
     private val activityViewModel by activityViewModels<MainViewModel>()
     private val viewModel by viewModels<MyPageViewModel>()
-    private lateinit var storeResultLauncher: ActivityResultLauncher<Intent>
 
     @Inject
     lateinit var navigationProvider: NavigationProvider
@@ -52,14 +52,17 @@ class MyPageFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
-        collectMainState()
         initStoreButton()
         initPrivacyButton()
         initTermOfUseButton()
+        collectMainState()
+        collectEffect()
     }
 
     private fun initStoreButton() {
         binding.vStore.setOnClickListener {
+            val property = JSONObject().put("view_type", "mypage")
+            AmplitudeUtils.trackEventWithProperties("view_shop", property)
             val intent = navigationProvider.toStore()
             startActivity(intent)
         }
@@ -74,10 +77,6 @@ class MyPageFragment : Fragment() {
             ).apply {
                 setConfirmButtonClickListener {
                     viewModel.handleLogout()
-                    viewModel.deleteAllDatabase()
-                    handleLogoutSuccess()
-                }
-                setDismissButtonClickListener {
                 }
             }.showAllowingStateLoss(childFragmentManager)
         }
@@ -91,31 +90,18 @@ class MyPageFragment : Fragment() {
             ).apply {
                 setConfirmButtonClickListener {
                     viewModel.handleWithdrawal()
-                    viewModel.deleteAllDatabase()
-                    handleWithdrawalSuccess()
-                }
-                setDismissButtonClickListener {
                 }
             }.showAllowingStateLoss(childFragmentManager)
         }
     }
 
-    private fun handleLogoutSuccess() {
+    private fun collectEffect() {
         viewModel.userEffect.flowWithLifecycle(lifecycle).onEach { state ->
             when (state) {
-                is UserEffect.logoutSuccess -> moveToLoginActivity()
-                is UserEffect.logoutFail -> toast(getString(R.string.logout_fail))
-                else -> Unit
-            }
-        }.launchIn(viewLifecycleOwner.lifecycleScope)
-    }
-
-    private fun handleWithdrawalSuccess() {
-        viewModel.userEffect.flowWithLifecycle(lifecycle).onEach { state ->
-            when (state) {
-                is UserEffect.withdrawalSuccess -> moveToLoginActivity()
-                is UserEffect.withdrawalFail -> toast(getString(R.string.withdrawal_fail))
-                else -> Unit
+                is UserEffect.WithdrawalSuccess -> moveToLoginActivity()
+                is UserEffect.WithdrawalFail -> toast(getString(R.string.withdrawal_fail))
+                is UserEffect.LogoutSuccess -> moveToLoginActivity()
+                is UserEffect.LogoutFail -> toast(getString(R.string.logout_fail))
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
@@ -129,15 +115,12 @@ class MyPageFragment : Fragment() {
 
     private fun collectMainState() {
         activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
-            bindMyPageWithUserInfo(it.name, it.point)
+            binding.tvUserName.text = it.name
         }.launchIn(viewLifeCycleScope)
-    }
 
-    private fun bindMyPageWithUserInfo(name: String, point: Int) {
-        binding.run {
-            tvUserName.text = name
-            tvPoint.text = getString(R.string.mypage_point, point)
-        }
+        activityViewModel.userPoint.flowWithLifecycle(viewLifeCycle).onEach {
+            binding.tvPoint.text = getString(R.string.mypage_point, it)
+        }.launchIn(viewLifeCycleScope)
     }
 
     private fun initPrivacyButton() {

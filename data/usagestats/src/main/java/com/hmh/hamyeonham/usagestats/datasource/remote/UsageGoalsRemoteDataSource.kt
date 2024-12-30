@@ -1,19 +1,15 @@
 package com.hmh.hamyeonham.usagestats.datasource.remote
 
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
-import com.hmh.hamyeonham.core.network.usagegoal.DailyChallengeService
+import com.hmh.hamyeonham.core.network.challenge.ChallengeService
 import com.hmh.hamyeonham.usagestats.mapper.toUsageGoalList
 import javax.inject.Inject
 
 class UsageGoalsRemoteDataSource @Inject constructor(
-    private val dailyChallengeService: DailyChallengeService,
+    private val challengeService: ChallengeService,
 ) {
 
-    suspend fun getUsageGoals(): Result<List<UsageGoal>> {
-        return runCatching { dailyChallengeService.getUsageGoal().data.toUsageGoalList() }
-    }
-
-    suspend fun updateDailyChallengeFailed(): Result<Unit> {
-        return runCatching { dailyChallengeService.updateDailyChallengeFailed().data }
+    suspend fun getUsageGoals(): Result<UsageGoal> {
+        return runCatching { challengeService.getChallengeData().data.toUsageGoalList() }
     }
 }

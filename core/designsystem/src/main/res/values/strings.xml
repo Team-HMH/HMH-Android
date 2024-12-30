@@ -12,9 +12,31 @@
     <string name="all_edit">편집</string>
     <string name="all_done">완료</string>
 
+    <string name="no">아니요</string>
+
+    <string name="dialog_title_network_error">네트워크 에러가 발생했습니다.</string>
+    <string name="dialog_description_network_error">다시 한번 시도해주세요</string>
+
     <string name="use_time_goal_title">선택한 앱의 목표 이용 시간을\n설정해 주세요</string>
     <string name="use_time_goal_description">목표 이용 시간은 최대 1시간 59분까지\n설정할 수 있어요</string>
     <string name="delete_app_dialog_description">집계되고 있던 앱의 사용 시간은\n총 사용 시간에서도 차감돼요</string>
     <string name="delete_app_dialog_title">정말 %1$s 을(를) 삭제하시겠어요?</string>
+
+    <string name="onboarding_request_permission_title">스크린타임 권한 허용이 필요해요</string>
+    <string name="onboarding_request_permission_description">언제든지 설정에서 스크린타임 권한을\n변경할 수 있어요</string>
+    <string name="onboarding_permission_usage_title">사용 정보 접근 허용</string>
+    <string name="onboarding_permission_usage_description">현재 실행 중인 앱을 조회합니다</string>
+    <string name="onboarding_permission_draw_over_title">다른 앱 위에 그리기 허용</string>
+    <string name="onboarding_permission_draw_over_description">잠금 기능 사용 시 화면에 잠금 화면을 표시합니다</string>
+    <string name="onboarding_permission_notification_title">알림 권한 요청</string>
+    <string name="onboarding_permission_notification_description">중요 정보와 업데이트를 실시간으로 받기 위해\n알림 권한을 허용해 주세요.</string>
+
+    <string name="success_accessibility_settings">접근성 허용이 승인되었습니다</string>
+    <string name="success_overlay_permission">다른 앱 위에 그리기 허용이 승인되었습니다</string>
+    <string name="success_usage_stats_permission">사용 정보 접근 허용이 승인되었습니다</string>
+    <string name="success_notification_permission">알림 권한이 승인되었습니다</string>
+    <string name="already_permission_granted">이미 권한이 허용되어 있습니다</string>
+
+    <string name="permission_next">권한 요청하기</string>
 
 </resources>

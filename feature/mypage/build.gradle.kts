@@ -22,7 +22,7 @@ dependencies {
 
     implementation(projects.core.viewmodel.main)
     implementation(projects.core.network)
+    implementation(projects.core.database)
 
-    implementation(projects.feature.store)
     implementation(projects.domain.challenge)
 }

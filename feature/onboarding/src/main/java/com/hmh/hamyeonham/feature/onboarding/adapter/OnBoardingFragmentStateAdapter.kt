@@ -14,11 +14,15 @@ enum class OnBoardingFragmentType {
     SELECT_DATA_TIME,
     SELECT_DATA_PROBLEM,
     SELECT_DATA_PERIOD,
-    SELECT_SCREEN_TIME_GOAL,
     REQUEST_PERMISSION,
     SELECT_APP,
     SELECT_APP_VIEW,
     SELECT_USE_TIME_GOAL,
+    SELECT_SCREEN_TIME_GOAL;
+
+    companion object {
+        fun fromPosition(position: Int): OnBoardingFragmentType = entries.getOrNull(position) ?: SELECT_DATA_TIME
+    }
 }
 
 class OnBoardingFragmentStateAdapter(fragmentActivity: FragmentActivity) :
@@ -28,17 +32,15 @@ class OnBoardingFragmentStateAdapter(fragmentActivity: FragmentActivity) :
     }
 
     override fun createFragment(position: Int): Fragment {
-        return when (val fragmentType = position.toOnBoardingFragmentType()) {
-            OnBoardingFragmentType.SELECT_DATA_TIME -> OnBoardingSelectDataFragment.newInstance(
-                fragmentType,
-            )
+        return when (val fragmentType = OnBoardingFragmentType.fromPosition(position)) {
+            OnBoardingFragmentType.SELECT_DATA_TIME -> OnBoardingSelectDataFragment.newInstance(fragmentType)
 
             OnBoardingFragmentType.SELECT_DATA_PROBLEM -> OnBoardingSelectDataFragment.newInstance(
-                fragmentType,
+                fragmentType
             )
 
             OnBoardingFragmentType.SELECT_DATA_PERIOD -> OnBoardingSelectDataFragment.newInstance(
-                fragmentType,
+                fragmentType
             )
 
             OnBoardingFragmentType.SELECT_SCREEN_TIME_GOAL -> OnBoardingSelectScreenTimeFragment()
@@ -47,10 +49,5 @@ class OnBoardingFragmentStateAdapter(fragmentActivity: FragmentActivity) :
             OnBoardingFragmentType.SELECT_APP_VIEW -> OnBoardingAppAddSelectionFragment()
             OnBoardingFragmentType.SELECT_USE_TIME_GOAL -> OnBoardingSelectUseTimeFragment()
         }
-    }
-
-    private fun Int.toOnBoardingFragmentType(): OnBoardingFragmentType {
-        return OnBoardingFragmentType.entries.getOrNull(this)
-            ?: OnBoardingFragmentType.SELECT_DATA_TIME
     }
 }

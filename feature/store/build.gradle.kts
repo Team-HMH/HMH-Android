@@ -1,13 +1,10 @@
-@Suppress("DSL_SCOPE_VIOLATION") plugins {
+@Suppress("DSL_SCOPE_VIOLATION")
+plugins {
     hmh("feature")
 }
 
 android {
     namespace = "com.hmh.hamyeonham.feature.store"
-
-    defaultConfig {
-        consumerProguardFiles("consumer-rules.pro")
-    }
 }
 
 dependencies {

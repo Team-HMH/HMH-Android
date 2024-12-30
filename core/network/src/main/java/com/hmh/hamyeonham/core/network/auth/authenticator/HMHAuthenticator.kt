@@ -3,8 +3,9 @@ package com.hmh.hamyeonham.core.network.auth.authenticator
 import android.content.Context
 import android.util.Log
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
+import com.hmh.hamyeonham.core.database.manger.DatabaseManager
 import com.hmh.hamyeonham.core.network.auth.api.RefreshService
-import com.hmh.hamyeonham.core.network.auth.datastore.HMHNetworkPreference
+import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -18,9 +19,10 @@ import javax.inject.Singleton
 
 @Singleton
 class HMHAuthenticator @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val dataStore: HMHNetworkPreference,
     private val api: RefreshService,
-    @ApplicationContext private val context: Context,
+    private val databaseManager: DatabaseManager,
     private val navigationProvider: NavigationProvider,
 ) : Authenticator {
     override fun authenticate(route: Route?, response: Response): Request? {
@@ -42,6 +44,7 @@ class HMHAuthenticator @Inject constructor(
                 Log.e("Authenticator", it.toString())
                 runBlocking {
                     dataStore.clear()
+                    databaseManager.deleteAll()
                     UserApiClient.instance.logout { error ->
                         Log.e("Authenticator", error.toString())
                         ProcessPhoenix.triggerRebirth(context, navigationProvider.toLogin())

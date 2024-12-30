@@ -13,7 +13,11 @@ dependencies {
     implementation(projects.core.domain)
 
     implementation(projects.domain.usagestats)
+    implementation(projects.domain.lock)
+    implementation(projects.domain.challenge)
 
     implementation(libs.lifecycle.process)
-    implementation(project(":core:network"))
+    implementation(libs.lifecycle.service)
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.work.runtime.ktx)
 }

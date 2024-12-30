@@ -21,4 +21,22 @@ object DaoModule {
     fun providesUsageTotalGoalDao(
         database: HMHRoomDatabase,
     ) = database.usageTotalGoalDao()
+
+    @Provides
+    @Singleton
+    fun providesChallengeDao(
+        database: HMHRoomDatabase,
+    ) = database.challengeDao()
+
+    @Provides
+    @Singleton
+    fun providesDeletedGoalDao(
+        database: HMHRoomDatabase,
+    ) = database.deletedGoalsDao()
+
+    @Provides
+    @Singleton
+    fun providesLockDao(
+        database: HMHRoomDatabase,
+    ) = database.lockDao()
 }

@@ -16,10 +16,29 @@
     <string name="challenge_today_mark_img">오늘 날짜 마커 이미</string>
     <string name="challenge_status_calendar_img">챌린지 상태 달력 배경 이미지</string>
     <string name="challenge_trash_img">쓰레기통 이미지</string>
+
+    <string name="challenge_cannot_delete">5분 넘게 사용한 앱은 삭제할 수 없어요</string>
     <string name="point_point">+%sP</string>
     <string name="tv_point_what_challenge">%s일 챌린지</string>
     <string name="tv_point_title">%s일차 보상</string>
 
     <string name="challenge_cannot_create">포인트를 다 받은 후 챌린지를 생성하세요</string>
     <string name="all_move">이동</string>
+
+    <string name="new_challenge_next">다음</string>
+    <string name="new_challenge_select_date_question">챌린지 기간을 선택해 주세요</string>
+    <string name="new_challenge_select_date_description">첫 챌린지로 가볍게 도전하기 좋은 7일을 추천해요</string>
+    <string name="new_challenge_seven_days">7일</string>
+    <string name="new_challenge_fourteen_days">14일</string>
+    <string name="new_challenge_twenty_days">20일</string>
+    <string name="new_challenge_thirty_days">30일</string>
+
+    <string name="new_challenge_screentime_goal_title">총 목표 사용 시간을\n설정해 주세요</string>
+    <string name="new_challenge_screentime_goal_description">목표 사용 시간은 최대 6시간까지 설정할 수 있어요</string>
+    <string name="tv_calendar_toggle_collapse">접기 "\u25B2"</string>
+    <string name="tv_calendar_toggle_expand">펼치기 "\u25BC"</string>
+
+    <string name="dialog_title_challengecreated">새로운 챌린지 생성 완료!</string>
+    <string name="dialog_description_challengecreated">별조각을 모아\n블랙홀 탈출에 성공하세요</string>
+    <string name="dialog_button_challengecreated"> 새 챌린지 출발!</string>
 </resources>

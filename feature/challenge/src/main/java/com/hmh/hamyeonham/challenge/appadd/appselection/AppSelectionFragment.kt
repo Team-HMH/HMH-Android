@@ -1,5 +1,6 @@
 package com.hmh.hamyeonham.challenge.appadd.appselection
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,15 +17,12 @@ import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.FrargmentAppSelectionBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class AppSelectionFragment : Fragment() {
-
-    companion object {
-        private const val HMH_PACKAGE_NAME = "com.hmh.hamyeonham"
-    }
 
     private val binding by viewBinding(FrargmentAppSelectionBinding::bind)
     private val viewModel by activityViewModels<AppAddViewModel>()
@@ -49,35 +47,36 @@ class AppSelectionFragment : Fragment() {
     }
 
     private fun initSearchBar() {
-        binding.etSearchbar.doOnTextChanged { text, start, before, count ->
-            setRecyclerViewWithFilter(text.toString())
+        binding.etSearchbar.doOnTextChanged { text, _, _, _ ->
+            viewModel.onQueryChanged(text.toString())
         }
     }
 
-    private fun setRecyclerViewWithFilter(filter: String) {
-        val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter ?: return
-        val appSelectionList = viewModel.state.value.appSelectionList
-        appSelectionList.filter {
-            val packageName = it.packageName
-            val appName = context?.getAppNameFromPackageName(packageName).orEmpty()
-            !packageName.startsWith(HMH_PACKAGE_NAME) && appName.contains(filter)
-        }.also(appSelectionAdapter::submitList)
-    }
-
     private fun collectState() {
-        viewModel.state.flowWithLifecycle(viewLifeCycle).onEach { state ->
+        viewModel.installedApps.flowWithLifecycle(viewLifeCycle).onEach {
             val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter
-            appSelectionAdapter?.submitList(state.appSelectionList)
+            appSelectionAdapter?.submitList(getInstalledAppList(requireContext()))
+            delay(300)
+            binding.rvAppSelection.scrollToPosition(0)
         }.launchIn(viewLifeCycleScope)
     }
 
     private fun initAppSelectionRecyclerAdapter() {
         binding.rvAppSelection.run {
-            adapter = AppSelectionAdapter(
-                onAppChecked = viewModel::checkApp,
-                onAppUnChecked = viewModel::unCheckApp,
-            )
+            adapter = AppSelectionAdapter(onAppCheckedChangeListener = viewModel::appCheckChanged)
             layoutManager = LinearLayoutManager(requireContext())
+            itemAnimator = null
         }
+    }
+
+    private fun getInstalledAppList(context: Context): List<AppSelectionModel> {
+        val installApps = viewModel.installedApps.value
+        val selectedApps = viewModel.state.value.selectedApps
+        return installApps.map {
+            if (it.packageName.contains(context.packageName)) {
+                return@map null
+            }
+            AppSelectionModel(it.packageName, selectedApps.contains(it.packageName))
+        }.sortedBy { context.getAppNameFromPackageName(it?.packageName ?: "") }.filterNotNull()
     }
 }

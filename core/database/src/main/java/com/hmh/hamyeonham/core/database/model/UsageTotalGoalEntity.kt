@@ -6,5 +6,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "usage_total_goal")
 data class UsageTotalGoalEntity(
     @PrimaryKey val id: Int = 1,
-    val goalTime: Long
+    val totalGoalTime: Long,
+    val status: String,
 )

@@ -1,21 +1,43 @@
 package com.hmh.hamyeonham.usagestats.model
 
+import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+
 data class UsageStatusAndGoal(
-    val packageName: String,
-    val totalTimeInForeground: Long,
-    val goalTime: Long,
+    val totalTimeInForeground: Long = 0,
+    val totalGoalTime: Long = 0,
+    val apps: List<App> = emptyList()
 ) {
-    private val challengeSuccess: Boolean = (goalTime - totalTimeInForeground) >= 0
-    val totalTimeInForegroundInMin = msToMin(totalTimeInForeground)
-    val goalTimeInMin = msToMin(goalTime)
-    val timeLeftInMin: Long by lazy {
-        if (challengeSuccess)(goalTimeInMin - totalTimeInForegroundInMin) else 0L
-    }
+    data class App(
+        val packageName: String = "",
+        val usageTime: Long = 0,
+        val goalTime: Long = 0,
+    ) {
+        val timeLeftInMinute = msToMinute(if(goalTime > usageTime) goalTime - usageTime else 0)
+        val goalTimeInMinute = msToMinute(goalTime)
 
-    private fun msToMin(time: Long) = time / 1000 / 60
-    val usedPercentage: Int by lazy {
-        if (challengeSuccess) (totalTimeInForeground * 100 / (goalTime + 0.0001)).toInt() else 100
-    }
+        private fun msToMinute(time: Long): Long {
+            return if (time < 0) {
+                0
+            } else {
+                time / 1000 / 60
+            }
+        }
 
-    val blackHoleLevel = if(challengeSuccess)usedPercentage / 25 else 5
+        val usedPercentage: Int = if (goalTime == 0L || usageTime > goalTime) {
+            100
+        } else {
+            ((usageTime * 100 / goalTime).toInt())
+        }
+
+        companion object {
+            fun List<UsageGoal.App>.toApps(): List<App> {
+                return map {
+                    App(
+                        packageName = it.packageName,
+                        goalTime = it.goalTime,
+                    )
+                }
+            }
+        }
+    }
 }

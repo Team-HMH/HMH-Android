@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
@@ -13,6 +14,9 @@
 
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <application
         android:name=".HMHApplication"
@@ -25,6 +29,12 @@
         android:theme="@style/Base.Theme.HMH"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove" />
+
         <activity
             android:name=".SampleActivity"
             android:exported="true"
@@ -49,5 +59,19 @@
                     android:scheme="kakao${kakaoApiKey}" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".common.permission.PermissionActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".core.service.LockForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="현재 실행 중인 앱을 트래킹하고 사용시간을 측정하기 위해 포그라운드 서비스를 사용합니다." />
+        </service>
+
     </application>
 </manifest>

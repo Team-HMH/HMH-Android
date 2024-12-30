@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginHorizontal="20dp">
 
     <ProgressBar
@@ -42,11 +43,11 @@
         app:layout_constraintTop_toTopOf="@id/iv_appicon" />
 
     <TextView
-        android:id="@+id/tv_app_goal_time"
+        android:id="@+id/tv_goal_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
-        android:text="2시간 30분"
+        tools:text="2시간 30분"
         android:textAppearance="?textAppearanceBodySmall"
         android:textColor="?white_text"
         app:layout_constraintBottom_toBottomOf="@id/iv_appicon"
@@ -57,7 +58,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        android:text="1시간 남음"
+        tools:text="1시간 남음"
         android:textAppearance="?textAppearanceTitleMedium"
         android:textColor="?white_text"
         app:layout_constraintBottom_toBottomOf="@id/pb_app_usage"

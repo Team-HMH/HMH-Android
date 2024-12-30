@@ -3,9 +3,8 @@ package com.hmh.hamyeonham.mypage.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hmh.hamyeonham.challenge.model.Apps
-import com.hmh.hamyeonham.challenge.usecase.DeleteAllDatabaseUseCase
-import com.hmh.hamyeonham.core.network.auth.datastore.DefaultHMHNetworkPreference
+import com.hmh.hamyeonham.core.database.manger.DatabaseManager
+import com.hmh.hamyeonham.core.network.auth.datastore.network.DefaultHMHNetworkPreference
 import com.hmh.hamyeonham.login.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,19 +13,19 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 sealed interface UserEffect {
-    data object logoutSuccess : UserEffect
-    data object logoutFail : UserEffect
+    data object LogoutSuccess : UserEffect
+    data object LogoutFail : UserEffect
 
-    data object withdrawalSuccess : UserEffect
+    data object WithdrawalSuccess : UserEffect
 
-    data object withdrawalFail : UserEffect
+    data object WithdrawalFail : UserEffect
 }
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val hmhPreferenceAccessToken: DefaultHMHNetworkPreference,
-    private val deleteAllDataBaseUseCase: DeleteAllDatabaseUseCase
+    private val hmhPreference: DefaultHMHNetworkPreference,
+    private val databaseManager: DatabaseManager
 ) : ViewModel() {
 
     private val _userEffect = MutableSharedFlow<UserEffect>()
@@ -34,30 +33,36 @@ class MyPageViewModel @Inject constructor(
 
     fun handleLogout() {
         viewModelScope.launch {
-            authRepository.logout(hmhPreferenceAccessToken.accessToken).onSuccess {
-                _userEffect.emit(UserEffect.logoutSuccess)
-                hmhPreferenceAccessToken.clear()
+            authRepository.logout(hmhPreference.accessToken).onSuccess {
+                deleteAllDatabase()
+                clearPreference()
+                _userEffect.emit(UserEffect.LogoutSuccess)
             }.onFailure {
-                _userEffect.emit(UserEffect.logoutFail)
+                _userEffect.emit(UserEffect.LogoutFail)
             }
         }
     }
 
     fun handleWithdrawal() {
         viewModelScope.launch {
-            authRepository.withdrawal(hmhPreferenceAccessToken.accessToken).onSuccess {
-                hmhPreferenceAccessToken.clear()
-                _userEffect.emit(UserEffect.withdrawalSuccess)
-                Log.d("hmhPreferenceAccessToken", hmhPreferenceAccessToken.accessToken)
+            authRepository.withdrawal(hmhPreference.accessToken).onSuccess {
+                deleteAllDatabase()
+                clearPreference()
+                _userEffect.emit(UserEffect.WithdrawalSuccess)
+                Log.d("hmhPreferenceAccessToken", hmhPreference.accessToken)
             }.onFailure {
-                _userEffect.emit(UserEffect.withdrawalFail)
+                _userEffect.emit(UserEffect.WithdrawalFail)
             }
         }
     }
 
-    fun deleteAllDatabase() {
+    private fun clearPreference() {
+        hmhPreference.clear()
+    }
+
+    private fun deleteAllDatabase() {
         viewModelScope.launch {
-            deleteAllDataBaseUseCase()
+            databaseManager.deleteAll()
         }
     }
 }

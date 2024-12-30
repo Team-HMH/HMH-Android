@@ -10,7 +10,10 @@ android {
 dependencies {
     // Domain
     implementation(projects.domain.challenge)
+    implementation(projects.domain.usagestats)
     // Core
     implementation(projects.core.database)
     implementation(projects.core.network)
+    implementation(project(":core:domain"))
+    implementation(project(":core:common"))
 }

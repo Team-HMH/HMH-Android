@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.core.viewmodel.HomeItem
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.main.databinding.FragmentHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,14 +33,15 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        return FragmentHomeBinding.inflate(inflater, container, false).root
-    }
+    ): View = FragmentHomeBinding.inflate(inflater, container, false).root
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         initStaticsRecyclerView()
-        initUsageStatsList()
+        collectState()
     }
 
     override fun onResume() {
@@ -50,18 +53,20 @@ class HomeFragment : Fragment() {
         binding.rvStatics.run {
             adapter = UsageStaticsAdapter()
             layoutManager = LinearLayoutManager(requireContext())
+            itemAnimator = null
         }
     }
 
-    private fun initUsageStatsList() {
-        val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
-        activityViewModel.collectMainState(viewLifeCycle).onEach { mainState ->
-            usageStaticsAdapter?.submitList(
-                mainState.usageStatsList.map {
-                    UsageStaticsModel(mainState.name, mainState.challengeSuccess, it)
-                },
-            )
-        }.launchIn(viewLifeCycleScope)
+    private fun collectState() {
+        activityViewModel.homeItems
+            .flowWithLifecycle(viewLifeCycle)
+            .onEach { homeItems ->
+                updateUsageStatusAndGoal(homeItems)
+            }.launchIn(viewLifeCycleScope)
     }
 
+    private fun updateUsageStatusAndGoal(homeItems: List<HomeItem>) {
+        val usageStaticsAdapter = binding.rvStatics.adapter as? UsageStaticsAdapter
+        usageStaticsAdapter?.submitList(homeItems)
+    }
 }

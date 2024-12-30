@@ -78,7 +78,7 @@
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#17171B</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/hmh_splash_foreground</item>
+        <item name="windowSplashScreenAnimatedIcon">@color/blackground</item>
         <item name="postSplashScreenTheme">@style/Base.Theme.HMH</item>
     </style>
 
@@ -87,10 +87,12 @@
     </style>
 
     <style name="Widget.Hmh.TotalProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
-        <item name="trackColor">?gray3</item>
+        <item name="trackColor">?gray5</item>
         <item name="indicatorColor">?white_btn</item>
         <item name="trackThickness">6dp</item>
-        <item name="trackCornerRadius">6dp</item>
+        <item name="trackCornerRadius">2dp</item>
+        <item name="trackStopIndicatorSize">0dp</item>
+        <item name="indicatorTrackGapSize">0dp</item>
     </style>
 
     <style name="Widget.Hmh.OnBoardingProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
@@ -98,6 +100,9 @@
         <item name="indicatorColor">?blue_purple_progress</item>
         <item name="trackThickness">4dp</item>
         <item name="trackCornerRadius">6dp</item>
+        <item name="trackStopIndicatorSize">0dp</item>
+        <item name="indicatorTrackGapSize">0dp</item>
+
     </style>
 
     <style name="AppTheme.NumberPicker" parent="Base.Theme.HMH">

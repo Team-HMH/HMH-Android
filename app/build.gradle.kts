@@ -71,6 +71,8 @@ dependencies {
     implementation(projects.domain.login)
     implementation(projects.domain.challenge)
     implementation(projects.domain.onboarding)
+    implementation(projects.domain.point)
+    implementation(projects.domain.lock)
 
     // Data
     implementation(projects.data.usagestats)
@@ -79,6 +81,9 @@ dependencies {
     implementation(projects.data.challenge)
     implementation(projects.data.device)
     implementation(projects.data.onboarding)
+    implementation(projects.data.point)
+    implementation(projects.data.lock)
+    implementation(projects.data.main)
 
     // Core
     implementation(projects.core.common)
@@ -87,6 +92,7 @@ dependencies {
     implementation(projects.core.domain)
     implementation(projects.core.network)
     implementation(projects.core.viewmodel.main)
+    implementation(projects.core.service)
 
     // Firebase
     implementation(platform(libs.firebase))
@@ -94,7 +100,14 @@ dependencies {
 
     // Splash
     implementation(libs.splash.screen)
+    implementation(libs.lottie)
 
     // kakao
     implementation(libs.kakao.login)
+
+    // Hilt Worker
+    implementation(libs.androidx.hilt.common)
+
+    // HMH - Usage Stats
+    implementation(libs.hmh.hus)
 }

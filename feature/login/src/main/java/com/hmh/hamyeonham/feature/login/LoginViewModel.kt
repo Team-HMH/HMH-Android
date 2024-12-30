@@ -3,7 +3,9 @@ package com.hmh.hamyeonham.feature.login
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hmh.hamyeonham.core.network.auth.datastore.HMHNetworkPreference
+import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
+import com.hmh.hamyeonham.core.database.manger.DatabaseManager
+import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
 import com.hmh.hamyeonham.login.repository.AuthRepository
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -19,7 +21,9 @@ import javax.inject.Inject
 
 sealed interface LoginEffect {
     data object LoginSuccess : LoginEffect
+
     data object LoginFail : LoginEffect
+
     data class RequireSignUp(val token: String) : LoginEffect
 }
 
@@ -31,8 +35,8 @@ data class LoginState(
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val hmhNetworkPreference: HMHNetworkPreference,
+    private val databaseManager: DatabaseManager,
 ) : ViewModel() {
-
     private val _kakaoLoginEvent = MutableSharedFlow<LoginEffect>()
     val kakaoLoginEvent = _kakaoLoginEvent.asSharedFlow()
 
@@ -60,21 +64,26 @@ class LoginViewModel @Inject constructor(
                     loginWithKakaoAccount(context)
                 } else if (token != null) {
                     viewModelScope.launch {
-                        authRepository.login(token.accessToken).onSuccess {
-                            hmhNetworkPreference.run {
-                                accessToken = it.accessToken
-                                refreshToken = it.refreshToken
-                                userId = it.userId
-                                autoLoginConfigured = true
+                        authRepository
+                            .login(token.accessToken)
+                            .onSuccess {
+                                hmhNetworkPreference.run {
+                                    accessToken = it.accessToken
+                                    refreshToken = it.refreshToken
+                                    userId = it.userId
+                                    autoLoginConfigured = true
+                                }
+                                _kakaoLoginEvent.emit(LoginEffect.LoginSuccess)
+                                AmplitudeUtils.trackEventWithProperties("click_onboarding_kakao")
+                            }.onFailure {
+                                if (it is HttpException && it.code() == 403) {
+                                    hmhNetworkPreference.clear()
+                                    databaseManager.deleteAll()
+                                    _kakaoLoginEvent.emit(LoginEffect.RequireSignUp(token.accessToken))
+                                } else {
+                                    _kakaoLoginEvent.emit(LoginEffect.LoginFail)
+                                }
                             }
-                            _kakaoLoginEvent.emit(LoginEffect.LoginSuccess)
-                        }.onFailure {
-                            if (it is HttpException && it.code() == 403) {
-                                _kakaoLoginEvent.emit(LoginEffect.RequireSignUp(token.accessToken))
-                            } else {
-                                _kakaoLoginEvent.emit(LoginEffect.LoginFail)
-                            }
-                        }
                     }
                 }
             }
@@ -89,21 +98,26 @@ class LoginViewModel @Inject constructor(
                 // 닉네임 정보 얻기 실패 시
             } else if (token != null) {
                 viewModelScope.launch {
-                    authRepository.login(token.accessToken).onSuccess {
-                        hmhNetworkPreference.run {
-                            accessToken = it.accessToken
-                            refreshToken = it.refreshToken
-                            userId = it.userId
-                            autoLoginConfigured = true
+                    authRepository
+                        .login(token.accessToken)
+                        .onSuccess {
+                            hmhNetworkPreference.run {
+                                accessToken = it.accessToken
+                                refreshToken = it.refreshToken
+                                userId = it.userId
+                                autoLoginConfigured = true
+                            }
+                            _kakaoLoginEvent.emit(LoginEffect.LoginSuccess)
+                            AmplitudeUtils.trackEventWithProperties("click_onboarding_kakao")
+                        }.onFailure {
+                            if (it is HttpException && it.code() == 403) {
+                                hmhNetworkPreference.clear()
+                                databaseManager.deleteAll()
+                                _kakaoLoginEvent.emit(LoginEffect.RequireSignUp(token.accessToken))
+                            } else {
+                                _kakaoLoginEvent.emit(LoginEffect.LoginFail)
+                            }
                         }
-                        _kakaoLoginEvent.emit(LoginEffect.LoginSuccess)
-                    }.onFailure {
-                        if (it is HttpException && it.code() == 403) {
-                            _kakaoLoginEvent.emit(LoginEffect.RequireSignUp(token.accessToken))
-                        } else {
-                            _kakaoLoginEvent.emit(LoginEffect.LoginFail)
-                        }
-                    }
                 }
             }
         }

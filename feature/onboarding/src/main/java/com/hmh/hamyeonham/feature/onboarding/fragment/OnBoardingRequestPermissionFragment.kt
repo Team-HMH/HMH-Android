@@ -14,8 +14,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.hmh.hamyeonham.common.fragment.toast
+import com.hmh.hamyeonham.common.permission.hasNotificationPermission
+import com.hmh.hamyeonham.common.permission.requestNotificationPermission
 import com.hmh.hamyeonham.common.view.viewBinding
-import com.hmh.hamyeonham.core.service.lockAccessibilityServiceClassName
 import com.hmh.hamyeonham.feature.onboarding.R
 import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingRequestPermissionBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
@@ -27,21 +28,12 @@ class OnBoardingRequestPermissionFragment : Fragment() {
     private val binding by viewBinding(FragmentOnBoardingRequestPermissionBinding::bind)
     private val activityViewModel by activityViewModels<OnBoardingViewModel>()
 
-    private val accessibilitySettingsLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult(),
-        ) {
-            if (checkAccessibilityServiceEnabled()) {
-                toast(getString(R.string.success_accessibility_settings))
-            }
-        }
-
     private val overlayPermissionLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
         ) {
             if (hasOverlayPermission()) {
-                toast(getString(R.string.success_overlay_permission))
+                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_overlay_permission))
             }
         }
 
@@ -50,7 +42,14 @@ class OnBoardingRequestPermissionFragment : Fragment() {
             ActivityResultContracts.StartActivityForResult(),
         ) {
             if (hasUsageStatsPermission()) {
-                toast(getString(R.string.success_usage_stats_permission))
+                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_usage_stats_permission))
+            }
+        }
+
+    private val requestNotificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (hasNotificationPermission()) {
+                toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.success_notification_permission))
             }
         }
 
@@ -58,53 +57,62 @@ class OnBoardingRequestPermissionFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        return FragmentOnBoardingRequestPermissionBinding.inflate(inflater, container, false).root
-    }
+    ): View = FragmentOnBoardingRequestPermissionBinding.inflate(inflater, container, false).root
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         clickRequireAccessibilityButton()
     }
 
     override fun onResume() {
         super.onResume()
-        activityViewModel.updateState {
-            copy(isNextButtonActive = allPermissionIsGranted())
-        }
-        activityViewModel.sendEvent(OnboardEvent.changeActivityButtonText(getString(R.string.all_next)))
-        activityViewModel.sendEvent(OnboardEvent.visibleProgressbar(true))
+        activityViewModel.sendEvent(OnboardEvent.UpdateNextButtonActive(allPermissionIsGranted()))
+        activityViewModel.sendEvent(OnboardEvent.ChangeActivityButtonText(getString(R.string.all_next)))
+        activityViewModel.sendEvent(OnboardEvent.VisibleProgressbar(true))
+        setPermissionToggleState()
     }
 
     private fun clickRequireAccessibilityButton() {
         binding.run {
-            clOnboardingPermission1.setOnClickListener {
-                if (checkAccessibilityServiceEnabled()) {
-                    toast(getString(R.string.already_accessibility_settings))
-                } else {
-                    requestAccessibilitySettings()
-                }
-            }
-            clOnboardingPermission2.setOnClickListener {
+            clOnboardingUsageinfoPermission.setOnClickListener {
                 if (hasUsageStatsPermission()) {
-                    toast(getString(R.string.already_usage_stats_permission))
+                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_permission_granted))
+                    tgOnboardingUsageinfoPermission.isChecked = true
                 } else {
                     requestUsageAccessPermission()
                 }
             }
-            clOnboardingPermission3.setOnClickListener {
+            clOnboardingDrawoverPermission.setOnClickListener {
                 if (hasOverlayPermission()) {
-                    toast(getString(R.string.already_overlay_permission))
+                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_permission_granted))
+                    tgOnboardingDrawoverPermission.isChecked = true
                 } else {
                     requestOverlayPermission()
+                }
+            }
+
+            clNotificationPermission.setOnClickListener {
+                if (hasNotificationPermission()) {
+                    toast(getString(com.hmh.hamyeonham.core.designsystem.R.string.already_permission_granted))
+                } else {
+                    requestNotificationPermission(requestNotificationPermissionLauncher)
                 }
             }
         }
     }
 
-    private fun requestAccessibilitySettings() {
-        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-        accessibilitySettingsLauncher.launch(intent)
+    private fun setPermissionToggleState() {
+        binding.run {
+            tgOnboardingUsageinfoPermission.isClickable = false
+            tgOnboardingDrawoverPermission.isClickable = false
+            tgNotificationPermission.isClickable = false
+            tgOnboardingUsageinfoPermission.isChecked = hasUsageStatsPermission()
+            tgOnboardingDrawoverPermission.isChecked = hasOverlayPermission()
+            tgNotificationPermission.isChecked = hasNotificationPermission()
+        }
     }
 
     private fun requestOverlayPermission() {
@@ -112,8 +120,8 @@ class OnBoardingRequestPermissionFragment : Fragment() {
         overlayPermissionLauncher.launch(
             Intent(
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                packageUri
-            )
+                packageUri,
+            ),
         )
     }
 
@@ -127,37 +135,24 @@ class OnBoardingRequestPermissionFragment : Fragment() {
         }
     }
 
-    private fun checkAccessibilityServiceEnabled(): Boolean {
-        return context?.let {
-            val service =
-                it.packageName + "/" + lockAccessibilityServiceClassName
-            val enabledServicesSetting = Settings.Secure.getString(
-                it.contentResolver,
-                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
-            )
-            enabledServicesSetting?.contains(service) == true
-        } ?: false
-    }
-
     private fun hasUsageStatsPermission(): Boolean {
         return context?.let {
             val usageStatsManager =
                 it.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
             val time = System.currentTimeMillis()
-            val stats = usageStatsManager.queryUsageStats(
-                UsageStatsManager.INTERVAL_DAILY,
-                time - 1000 * 60,
-                time,
-            )
+            val stats =
+                usageStatsManager.queryUsageStats(
+                    UsageStatsManager.INTERVAL_DAILY,
+                    time - 1000 * 60,
+                    time,
+                )
             return stats != null && stats.isNotEmpty()
         } ?: false
     }
 
-    private fun hasOverlayPermission(): Boolean {
-        return context?.let { Settings.canDrawOverlays(it) } ?: false
-    }
+    private fun hasOverlayPermission(): Boolean =
+        context?.let { Settings.canDrawOverlays(it) } ?: false
 
-    private fun allPermissionIsGranted(): Boolean {
-        return checkAccessibilityServiceEnabled() && hasUsageStatsPermission() && hasOverlayPermission()
-    }
+    private fun allPermissionIsGranted(): Boolean =
+        hasUsageStatsPermission() && hasOverlayPermission() && hasNotificationPermission()
 }

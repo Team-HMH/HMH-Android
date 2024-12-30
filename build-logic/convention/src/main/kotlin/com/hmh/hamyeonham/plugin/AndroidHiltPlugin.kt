@@ -17,6 +17,7 @@ class AndroidHiltPlugin : Plugin<Project> {
         dependencies {
             "implementation"(libs.findLibrary("hilt").get())
             "ksp"(libs.findLibrary("hilt.compiler").get())
+            "ksp"(libs.findLibrary("androidx.hilt-compiler").get())
             "testImplementation"(libs.findLibrary("hilt.testing").get())
             "kspTest"(libs.findLibrary("hilt.testing.compiler").get())
         }
