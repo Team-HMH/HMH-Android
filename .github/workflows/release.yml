@@ -43,6 +43,9 @@ jobs:
           echo hmhDevBaseUrl=$HMH_DEV_BASE_URL >> ./local.properties
           echo hmhProdBaseUrl=$HMH_PROD_BASE_URL >> ./local.properties
 
+      - name: Access Firebase Service
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
+
       - name: Cache Gradle dependencies
         uses: actions/cache@v3
         with:
