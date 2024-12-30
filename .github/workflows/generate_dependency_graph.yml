@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup Graphviz
         uses: ts-graphviz/setup-graphviz@v1
@@ -25,6 +25,6 @@ jobs:
           git diff --quiet && git diff --staged --quiet || git commit -am 'Update dependency graph'
 
       - name: Push
-        uses: ad-m/github-push-action@develop
+        uses: ad-m/github-push-action@0.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
