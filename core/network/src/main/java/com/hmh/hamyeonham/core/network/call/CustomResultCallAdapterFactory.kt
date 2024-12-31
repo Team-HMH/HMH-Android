@@ -5,9 +5,10 @@ import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import javax.inject.Inject
 
 // CallAdapter 객체 생성을 위한 Factory 클래스
-class CustomResultCallAdapterFactory: CallAdapter.Factory() {
+class CustomResultCallAdapterFactory @Inject constructor(): CallAdapter.Factory() {
 
     // retrofit 호출 결과를 변환하기 위해 호출
     override fun get(
