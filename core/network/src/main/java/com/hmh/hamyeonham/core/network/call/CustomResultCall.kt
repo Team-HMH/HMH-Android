@@ -1,5 +1,6 @@
-package com.hmh.hamyeonham.core.network.model
+package com.hmh.hamyeonham.core.network.call
 
+import com.hmh.hamyeonham.core.network.model.BaseResponse
 import okhttp3.Request
 import okio.IOException
 import okio.Timeout
@@ -127,8 +128,3 @@ class CustomResultCall<T>(
         })
     }
 }
-
-class CustomCallException(
-    override val message: String,
-    throwable: Throwable
-): Exception(message, throwable)
