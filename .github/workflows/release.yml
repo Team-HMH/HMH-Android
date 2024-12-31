@@ -1,0 +1,74 @@
+name: Release Firebase Distribution Workflow
+
+on:
+  push:
+    branches:
+      - release/**
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Decode keystore
+        run: echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 --decode > keystore/release.keystore.jks
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Add Local Properties
+        env:
+          KAKAO_API_KEY: ${{ secrets.KAKAO_API_KEY }}
+          HMH_DEV_BASE_URL: ${{ secrets.HMH_DEV_BASE_URL }}
+          HMH_PROD_BASE_URL: ${{ secrets.HMH_PROD_BASE_URL }}
+          AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+        run: |
+          echo kakaoApiKey=$KAKAO_API_KEY >> ./local.properties
+          echo amplitudeApiKey=$AMPLITUDE_API_KEY >> ./local.properties
+          echo keyAlias=$KEY_ALIAS >> ./local.properties
+          echo keyPassword=$KEY_PASSWORD >> ./local.properties
+          echo storePassword=$STORE_PASSWORD >> ./local.properties
+          echo hmhDevBaseUrl=$HMH_DEV_BASE_URL >> ./local.properties
+          echo hmhProdBaseUrl=$HMH_PROD_BASE_URL >> ./local.properties
+
+      - name: Access Firebase Service
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.gradle/caches
+          key: gradle-cache-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-cache-${{ runner.os }}-
+
+      - name: Build APK
+        run: ./gradlew assembleRelease
+
+      - name: Verify APK Existence
+        run: test -f app/build/outputs/apk/release/app-release.apk
+
+      - name: Generate Release Notes
+        id: release-notes
+        run: echo "RELEASE_NOTES=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: hmh-team
+          file: app/build/outputs/apk/release/app-release.apk
+          releaseNotes: ${{ env.RELEASE_NOTES }}

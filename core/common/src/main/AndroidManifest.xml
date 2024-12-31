@@ -5,7 +5,7 @@
 
     <application>
         <activity
-            android:name=".permission.PermissionDescriptionActivity"
+            android:name=".permission.PermissionActivity"
             android:exported="false" />
     </application>
 
