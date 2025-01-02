@@ -26,6 +26,7 @@ plugins {
     alias(libs.plugins.google.services) apply false
     alias(libs.plugins.app.distribution) apply false
     alias(libs.plugins.crashlytics) apply false
+    alias(libs.plugins.compose.compiler) apply false
 }
 
 tasks.register("clean", Delete::class) {
