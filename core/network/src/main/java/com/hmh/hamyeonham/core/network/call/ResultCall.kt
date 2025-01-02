@@ -56,7 +56,7 @@ class ResultCall<T>(
                     else {
                         // errorBody에서 사용자에게 보여줄 메시지 추출
                         // errorBody를 BaseResponse 객체로 변환
-                        val errorBody = retrofit.responseBodyConverter<ErrorResponse<Unit>>(
+                        val errorBody = retrofit.responseBodyConverter<ErrorResponse>(
                             ErrorResponse::class.java,
                             ErrorResponse::class.java.annotations
                         ).convert(response.errorBody() ?: throw NullPointerException("errorBody가 비었습니다."))
