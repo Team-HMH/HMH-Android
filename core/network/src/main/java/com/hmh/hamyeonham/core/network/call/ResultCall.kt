@@ -1,6 +1,6 @@
 package com.hmh.hamyeonham.core.network.call
 
-import com.hmh.hamyeonham.core.network.model.BaseResponse
+import com.hmh.hamyeonham.core.network.model.ErrorResponse
 import okhttp3.Request
 import okio.IOException
 import okio.Timeout
@@ -56,9 +56,9 @@ class ResultCall<T>(
                     else {
                         // errorBody에서 사용자에게 보여줄 메시지 추출
                         // errorBody를 BaseResponse 객체로 변환
-                        val errorBody = retrofit.responseBodyConverter<BaseResponse<Unit>>(
-                            BaseResponse::class.java,
-                            BaseResponse::class.java.annotations
+                        val errorBody = retrofit.responseBodyConverter<ErrorResponse<Unit>>(
+                            ErrorResponse::class.java,
+                            ErrorResponse::class.java.annotations
                         ).convert(response.errorBody() ?: throw NullPointerException("errorBody가 비었습니다."))
 
                         val message: String = errorBody?.message ?: "errorBody가 비었습니다"
