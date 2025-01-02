@@ -28,9 +28,9 @@ class CustomResultCallAdapterFactory @Inject constructor(): CallAdapter.Factory(
             object : CallAdapter<Any, Call<Result<*>>> {
                 override fun responseType(): Type = getParameterUpperBound(0, upperBound)
 
-                // 기존 Call 객체를 CustomResultCall 객체로 변환
+                // 기존 Call 객체를 ResultCall 객체로 변환
                 override fun adapt(call: Call<Any>): Call<Result<*>> =
-                    CustomResultCall(call, retrofit) as Call<Result<*>>
+                    ResultCall(call, retrofit) as Call<Result<*>>
             }
         } else {
             // 반환 객체가 Call<Result<*>>이 아닌 경우 null 반환
