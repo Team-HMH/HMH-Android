@@ -33,13 +33,13 @@ class UsageStaticsTotalViewHolder(
                 )
             tvTotalGoal.text =
                 context.getString(
-                    R.string.total_goal_time,
-                    convertMillisecondToString(totalModel.totalGoalTime),
+                    R.string.total_goal_time_format,
+                    convertMillisecondToString(totalModel.totalGoalTime)
                 )
             tvTotalUsage.text =
                 context.getString(
                     R.string.total_used,
-                    convertMillisecondToString(totalModel.totalTimeInForeground),
+                    convertMillisecondToString(totalModel.totalTimeInForeground)
                 )
             pbTotalUsage.progress = totalModel.totalPercentage
         }
