@@ -8,7 +8,7 @@ import java.lang.reflect.Type
 import javax.inject.Inject
 
 // CallAdapter 객체 생성을 위한 Factory 클래스
-class CustomResultCallAdapterFactory @Inject constructor(): CallAdapter.Factory() {
+class ResultCallAdapterFactory @Inject constructor(): CallAdapter.Factory() {
 
     // retrofit 호출 결과를 변환하기 위해 호출
     override fun get(
