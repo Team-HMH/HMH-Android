@@ -25,51 +25,42 @@ class ResultCall<T>(
 
             // onResponse() : HTTP 요청 성공 시 호출
             override fun onResponse(call: Call<T>, response: Response<T>) {
+                val responseBody = response.body()
 
                 // response.isSuccessful : HTTP 응답 코드가 200~299 사이인지 여부 반환(성공 여부)
                 if (response.isSuccessful) {
-
                     // HTTP 요청은 성공했지만 body가 빈 경우
-                    if(response.body() == null) {
-                        callback.onResponse(
-                            this@ResultCall,
-                            Response.success(Result.failure(ApiException("응답 body가 비었습니다.", HttpException(response))))
-                        )
-                    }
-                    // HTTP 요청 성공
-                    else {
-                        callback.onResponse(
-                            this@ResultCall,
-                            Response.success(response.code(), Result.success(response.body() ?: throw NullPointerException("응답 body가 비었습니다.")))
-                        )
-                    }
+                    if(responseBody == null) {
+                        val errorBody = getTemporaryErrorResponse(response)
 
+                        callback.onResponse(
+                            this@ResultCall,
+                            Response.success(Result.failure(ApiException(errorBody, response.code())))
+                        )
+                    } else { // HTTP 요청 성공
+                        callback.onResponse(
+                            this@ResultCall,
+                            Response.success(response.code(), Result.success(responseBody))
+                        )
+                    }
                 } else { // HTTP 요청 실패
+                    val errorResponse = try {
+                        response.errorBody()?.let {
+                            retrofit.responseBodyConverter<ErrorResponse>(
+                                ErrorResponse::class.java,
+                                ErrorResponse::class.java.annotations
+                            ).convert(it)
+                        }
+                    } catch (e: Exception) {
+                        null
+                    } ?: getTemporaryErrorResponse(response)
 
-                    // errorBody가 비어있는 경우
-                    if(response.errorBody() == null) {
-                        callback.onResponse( this@ResultCall,
-                            Response.success(Result.failure(ApiException("errorBody가 비었습니다.", HttpException(response))))
-                        )
-                    }
-                    // 요청에 실패한 경우
-                    else {
-                        // errorBody에서 사용자에게 보여줄 메시지 추출
-                        // errorBody를 BaseResponse 객체로 변환
-                        val errorBody = retrofit.responseBodyConverter<ErrorResponse>(
-                            ErrorResponse::class.java,
-                            ErrorResponse::class.java.annotations
-                        ).convert(response.errorBody() ?: throw NullPointerException("errorBody가 비었습니다."))
+                    callback.onResponse(
+                        this@ResultCall,
+                        Response.success(Result.failure(ApiException(errorResponse, response.code())))
+                    )
 
-                        val message: String = errorBody?.message ?: "errorBody가 비었습니다"
-
-                        // ApiException 객체 생성
-                        callback.onResponse(this@ResultCall,
-                            Response.success(Result.failure(ApiException(message, HttpException(response))))
-                        )
-
-                        Timber.tag("ResultCall - onResponse").e("${ApiException(message, HttpException(response))}")
-                    }
+                    Timber.tag("ResultCall - onResponse").e("ErrorResponse: $errorResponse")
                 }
             }
 
@@ -84,13 +75,19 @@ class ResultCall<T>(
                 // ApiException 객체 생성
                 callback.onResponse(
                     this@ResultCall,
-                    Response.success(Result.failure(ApiException(message, t)))
+                    Response.success(Result.failure(RuntimeException(message)))
                 )
 
-                Timber.tag("ResultCall - onFailure").e("${ApiException(message, t)}")
+                Timber.tag("ResultCall - onFailure").e("onFailure: $message")
             }
         })
     }
+
+    // errorBody가 null인 경우 임시 ErrorResponse 객체 생성
+    private fun getTemporaryErrorResponse(response: Response<T>) = ErrorResponse(
+        status = response.code(),
+        message = "errorResponse is null"
+    )
 
     // clone() : 동일 요청 수행하는 새로운 Call 객체 반환
     override fun clone(): Call<Result<T>> {
