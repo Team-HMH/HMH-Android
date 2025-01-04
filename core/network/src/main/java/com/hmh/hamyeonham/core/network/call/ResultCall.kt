@@ -31,11 +31,9 @@ class ResultCall<T>(
                 if (response.isSuccessful) {
                     // HTTP 요청은 성공했지만 body가 빈 경우
                     if(responseBody == null) {
-                        val errorBody = getTemporaryErrorResponse(response)
-
                         callback.onResponse(
                             this@ResultCall,
-                            Response.success(Result.failure(ApiException(errorBody, response.code())))
+                            Response.success(Result.failure(ApiException(getBodyNullErrorResponse(response))))
                         )
                     } else { // HTTP 요청 성공
                         callback.onResponse(
@@ -45,19 +43,17 @@ class ResultCall<T>(
                     }
                 } else { // HTTP 요청 실패
                     val errorResponse = try {
-                        response.errorBody()?.let {
-                            retrofit.responseBodyConverter<ErrorResponse>(
-                                ErrorResponse::class.java,
-                                ErrorResponse::class.java.annotations
-                            ).convert(it)
-                        }
+                        retrofit.responseBodyConverter<ErrorResponse>(
+                            ErrorResponse::class.java,
+                            ErrorResponse::class.java.annotations
+                        ).convert(response.errorBody()!!)
                     } catch (e: Exception) {
                         null
-                    } ?: getTemporaryErrorResponse(response)
+                    } ?: getBodyNullErrorResponse(response)
 
                     callback.onResponse(
                         this@ResultCall,
-                        Response.success(Result.failure(ApiException(errorResponse, response.code())))
+                        Response.success(Result.failure(ApiException(errorResponse)))
                     )
 
                     Timber.tag("ResultCall - onResponse").e("ErrorResponse: $errorResponse")
@@ -83,10 +79,10 @@ class ResultCall<T>(
         })
     }
 
-    // errorBody가 null인 경우 임시 ErrorResponse 객체 생성
-    private fun getTemporaryErrorResponse(response: Response<T>) = ErrorResponse(
+    // 응답 Body가 null인 경우 임시 ErrorResponse 객체 생성
+    private fun getBodyNullErrorResponse(response: Response<T>) = ErrorResponse(
         status = response.code(),
-        message = "errorResponse is null"
+        message = "response body is null"
     )
 
     // clone() : 동일 요청 수행하는 새로운 Call 객체 반환
