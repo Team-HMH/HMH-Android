@@ -1,6 +1,9 @@
 package com.hmh.hamyeonham.core.network.call
 
+import com.hmh.hamyeonham.core.network.model.ErrorResponse
+
 class ApiException(
-    override val message: String,
-    throwable: Throwable
-): Exception(message, throwable)
+    val errorResponse: ErrorResponse,
+    //throwable: Throwable
+    val errorCode: Int
+): Exception()
