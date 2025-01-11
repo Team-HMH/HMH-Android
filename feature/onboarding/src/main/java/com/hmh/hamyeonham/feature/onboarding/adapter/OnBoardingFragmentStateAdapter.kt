@@ -3,12 +3,12 @@ package com.hmh.hamyeonham.feature.onboarding.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingAppAddSelectionFragment
-import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingRequestPermissionFragment
-import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingSelectAppFragment
-import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingSelectDataFragment
-import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingSelectScreenTimeFragment
-import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingSelectUseTimeFragment
+import com.hmh.hamyeonham.feature.onboarding.fragment.AppAddSelectionFragment
+import com.hmh.hamyeonham.feature.onboarding.fragment.RequestPermissionFragment
+import com.hmh.hamyeonham.feature.onboarding.fragment.SelectAppFragment
+import com.hmh.hamyeonham.feature.onboarding.fragment.SelectDataFragment
+import com.hmh.hamyeonham.feature.onboarding.fragment.SelectScreenTimeFragment
+import com.hmh.hamyeonham.feature.onboarding.fragment.SelectUseTimeFragment
 
 enum class OnBoardingFragmentType {
     SELECT_DATA_TIME,
@@ -33,21 +33,21 @@ class OnBoardingFragmentStateAdapter(fragmentActivity: FragmentActivity) :
 
     override fun createFragment(position: Int): Fragment {
         return when (val fragmentType = OnBoardingFragmentType.fromPosition(position)) {
-            OnBoardingFragmentType.SELECT_DATA_TIME -> OnBoardingSelectDataFragment.newInstance(fragmentType)
+            OnBoardingFragmentType.SELECT_DATA_TIME -> SelectDataFragment.newInstance(fragmentType)
 
-            OnBoardingFragmentType.SELECT_DATA_PROBLEM -> OnBoardingSelectDataFragment.newInstance(
+            OnBoardingFragmentType.SELECT_DATA_PROBLEM -> SelectDataFragment.newInstance(
                 fragmentType
             )
 
-            OnBoardingFragmentType.SELECT_DATA_PERIOD -> OnBoardingSelectDataFragment.newInstance(
+            OnBoardingFragmentType.SELECT_DATA_PERIOD -> SelectDataFragment.newInstance(
                 fragmentType
             )
 
-            OnBoardingFragmentType.SELECT_SCREEN_TIME_GOAL -> OnBoardingSelectScreenTimeFragment()
-            OnBoardingFragmentType.REQUEST_PERMISSION -> OnBoardingRequestPermissionFragment()
-            OnBoardingFragmentType.SELECT_APP -> OnBoardingSelectAppFragment()
-            OnBoardingFragmentType.SELECT_APP_VIEW -> OnBoardingAppAddSelectionFragment()
-            OnBoardingFragmentType.SELECT_USE_TIME_GOAL -> OnBoardingSelectUseTimeFragment()
+            OnBoardingFragmentType.SELECT_SCREEN_TIME_GOAL -> SelectScreenTimeFragment()
+            OnBoardingFragmentType.REQUEST_PERMISSION -> RequestPermissionFragment()
+            OnBoardingFragmentType.SELECT_APP -> SelectAppFragment()
+            OnBoardingFragmentType.SELECT_APP_VIEW -> AppAddSelectionFragment()
+            OnBoardingFragmentType.SELECT_USE_TIME_GOAL -> SelectUseTimeFragment()
         }
     }
 }

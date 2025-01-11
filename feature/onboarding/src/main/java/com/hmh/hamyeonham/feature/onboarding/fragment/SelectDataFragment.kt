@@ -13,7 +13,7 @@ import com.hmh.hamyeonham.common.primitive.extractDigits
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.R
 import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingFragmentType
-import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingSelectDataBinding
+import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentSelectDataBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingSelectDataViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
@@ -22,8 +22,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
-class OnBoardingSelectDataFragment : Fragment() {
-    private val binding by viewBinding(FragmentOnBoardingSelectDataBinding::bind)
+class SelectDataFragment : Fragment() {
+    private val binding by viewBinding(FragmentSelectDataBinding::bind)
     private val viewModel by viewModels<OnBoardingSelectDataViewModel>()
     private val activityViewModel by activityViewModels<OnBoardingViewModel>()
 
@@ -34,8 +34,8 @@ class OnBoardingSelectDataFragment : Fragment() {
     companion object {
         private const val ARG_FRAGMENT_TYPE = "ARG_FRAGMENT_TYPE"
 
-        fun newInstance(fragmentType: OnBoardingFragmentType): OnBoardingSelectDataFragment {
-            val onBoardingFragment = OnBoardingSelectDataFragment()
+        fun newInstance(fragmentType: OnBoardingFragmentType): SelectDataFragment {
+            val onBoardingFragment = SelectDataFragment()
             val args =
                 Bundle().apply {
                     putString(ARG_FRAGMENT_TYPE, fragmentType.name)
@@ -49,7 +49,7 @@ class OnBoardingSelectDataFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = FragmentOnBoardingSelectDataBinding.inflate(inflater, container, false).root
+    ): View = FragmentSelectDataBinding.inflate(inflater, container, false).root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

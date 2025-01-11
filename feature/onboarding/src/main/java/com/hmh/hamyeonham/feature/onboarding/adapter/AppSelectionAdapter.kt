@@ -11,11 +11,11 @@ import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.view.ItemDiffCallback
 import com.hmh.hamyeonham.feature.onboarding.databinding.ItemAddAppBinding
 
-class OnBoardingAppSelectionAdapter(
+class AppSelectionAdapter(
     private val onAppCheckboxClicked: (String) -> Unit,
     private val onAppCheckboxUnClicked: (String) -> Unit,
 ) :
-    ListAdapter<AppInfo, OnBoardingAppSelectionAdapter.OnBoardingAppSelectionViewHolder>(
+    ListAdapter<AppInfo, AppSelectionAdapter.AppSelectionViewHolder>(
         ItemDiffCallback(
             onItemsTheSame = { oldItem, newItem ->
                 oldItem == newItem
@@ -28,23 +28,23 @@ class OnBoardingAppSelectionAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int,
-    ): OnBoardingAppSelectionViewHolder {
+    ): AppSelectionViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemAddAppBinding.inflate(inflater, parent, false)
-        return OnBoardingAppSelectionViewHolder(
+        return AppSelectionViewHolder(
             binding,
             onAppCheckboxClicked = onAppCheckboxClicked,
             onAppCheckboxUnClicked = onAppCheckboxUnClicked,
         )
     }
 
-    override fun onBindViewHolder(holder: OnBoardingAppSelectionViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AppSelectionViewHolder, position: Int) {
         currentList.getOrNull(position)?.let {
             holder.onBind(it.packageName)
         }
     }
 
-    inner class OnBoardingAppSelectionViewHolder(
+    inner class AppSelectionViewHolder(
         private val binding: ItemAddAppBinding,
         private val onAppCheckboxClicked: (String) -> Unit,
         private val onAppCheckboxUnClicked: (String) -> Unit,

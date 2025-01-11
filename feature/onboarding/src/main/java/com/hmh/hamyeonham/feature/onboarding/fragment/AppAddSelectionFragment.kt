@@ -16,8 +16,8 @@ import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.R
-import com.hmh.hamyeonham.feature.onboarding.adapter.OnBoardingAppSelectionAdapter
-import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingAppAddSelectionBinding
+import com.hmh.hamyeonham.feature.onboarding.adapter.AppSelectionAdapter
+import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentAppAddSelectionBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingAppSelectionEffect
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingAppSelectionViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
@@ -27,8 +27,8 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
-class OnBoardingAppAddSelectionFragment : Fragment() {
-    private val binding by viewBinding(FragmentOnBoardingAppAddSelectionBinding::bind)
+class AppAddSelectionFragment : Fragment() {
+    private val binding by viewBinding(FragmentAppAddSelectionBinding::bind)
     private val viewModel by viewModels<OnBoardingAppSelectionViewModel>()
     private val activityViewModel by activityViewModels<OnBoardingViewModel>()
 
@@ -37,7 +37,7 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        return FragmentOnBoardingAppAddSelectionBinding.inflate(inflater, container, false).root
+        return FragmentAppAddSelectionBinding.inflate(inflater, container, false).root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,7 +54,7 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
 
     private fun initAppSelectionRecyclerAdapter() {
         binding.rvAppSelection.run {
-            adapter = OnBoardingAppSelectionAdapter(
+            adapter = AppSelectionAdapter(
                 onAppCheckboxClicked = ::onAppCheckboxClicked,
                 onAppCheckboxUnClicked = ::onAppCheckboxUnClicked,
             )
@@ -65,7 +65,7 @@ class OnBoardingAppAddSelectionFragment : Fragment() {
     private fun collectState() {
         viewModel.installedApps.flowWithLifecycle(viewLifeCycle).onEach {
             val onboardingAppSelectionAdapter =
-                binding.rvAppSelection.adapter as? OnBoardingAppSelectionAdapter
+                binding.rvAppSelection.adapter as? AppSelectionAdapter
             onboardingAppSelectionAdapter?.submitList(it)
         }.launchIn(viewLifeCycleScope)
 

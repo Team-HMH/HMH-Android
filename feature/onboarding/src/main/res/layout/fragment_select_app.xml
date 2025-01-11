@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.OnBoardingSelectAppFragment">
+    tools:context=".fragment.SelectAppFragment">
 
     <TextView
         android:id="@+id/tv_onboarding_select_app_title"
