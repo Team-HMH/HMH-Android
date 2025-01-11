@@ -6,5 +6,5 @@ import retrofit2.http.GET
 
 interface MainService {
     @GET("api/v2/banner")
-    suspend fun getBanner(): BaseResponse<BannerResponse>
+    suspend fun getBanner(): Result<BaseResponse<BannerResponse>>
 }
