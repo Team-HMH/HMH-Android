@@ -1,5 +1,6 @@
 package com.hmh.hamyeonham.core.network.call
 
+import com.hmh.hamyeonham.core.network.model.BaseResponse
 import com.hmh.hamyeonham.core.network.model.ErrorResponse
 import okhttp3.Request
 import okio.IOException
@@ -12,7 +13,7 @@ import retrofit2.Retrofit
 import timber.log.Timber
 
 class ResultCall<T>(
-    private val call: Call<T>,
+    private val call: Call<BaseResponse<T>>,
     private val retrofit: Retrofit,
 ): Call<Result<T>>{
 
@@ -21,10 +22,10 @@ class ResultCall<T>(
     override fun enqueue(callback: Callback<Result<T>>) {
 
         // Callback<Result<T>> 객체를 인자로 받아 Call 객체의 enqueue() 메서드 호출
-        call.enqueue(object : Callback<T> {
+        call.enqueue(object : Callback<BaseResponse<T>> {
 
             // onResponse() : HTTP 요청 성공 시 호출
-            override fun onResponse(call: Call<T>, response: Response<T>) {
+            override fun onResponse(call: Call<BaseResponse<T>>, response: Response<BaseResponse<T>>) {
                 val responseBody = response.body()
 
                 // response.isSuccessful : HTTP 응답 코드가 200~299 사이인지 여부 반환(성공 여부)
@@ -33,12 +34,12 @@ class ResultCall<T>(
                     if(responseBody == null) {
                         callback.onResponse(
                             this@ResultCall,
-                            Response.success(Result.failure(ApiException(getBodyNullErrorResponse(response))))
+                            Response.success(Result.failure(RuntimeException("응답 body가 비었습니다.")))
                         )
                     } else { // HTTP 요청 성공
                         callback.onResponse(
                             this@ResultCall,
-                            Response.success(response.code(), Result.success(responseBody))
+                            Response.success(Result.success(responseBody.data))
                         )
                     }
                 } else { // HTTP 요청 실패
@@ -61,7 +62,7 @@ class ResultCall<T>(
             }
 
             // onFailure() : HTTP 요청 실패 시 호출
-            override fun onFailure(call: Call<T>, t: Throwable) {
+            override fun onFailure(call: Call<BaseResponse<T>>, t: Throwable) {
                 val message = when (t) {
                     is IOException -> "네트워크 연결이 불안정합니다. 다시 시도해주세요."
                     is HttpException -> "${t.code()} : 서버 통신 중 문제가 발생했습니다. 다시 시도해주세요."
@@ -80,7 +81,7 @@ class ResultCall<T>(
     }
 
     // 응답 Body가 null인 경우 임시 ErrorResponse 객체 생성
-    private fun getBodyNullErrorResponse(response: Response<T>) = ErrorResponse(
+    private fun getBodyNullErrorResponse(response: Response<BaseResponse<T>>) = ErrorResponse(
         status = response.code(),
         message = "response body is null"
     )
@@ -93,7 +94,7 @@ class ResultCall<T>(
     // execute() : HTTP 요청을 동기적으로 실행. 성공 시 Response<Result<T>> 반환, 실패 시 Exception 발생
     // 주로 테스트 용도
     override fun execute(): Response<Result<T>> {
-        return Response.success(Result.success(call.execute().body() ?: throw NullPointerException("응답 body가 비었습니다.")))
+        return Response.success(Result.failure(RuntimeException("execute() 메서드는 사용할 수 없습니다.")))
     }
 
     // isExecuted() : HTTP 요청이 이미 실행되었는지 여부 반환.
