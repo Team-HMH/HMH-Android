@@ -10,19 +10,19 @@ import androidx.fragment.app.activityViewModels
 import com.hmh.hamyeonham.common.view.setupScreentimeGoalRange
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.R
-import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingSelectScreentimeBinding
+import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentSelectScreentimeBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 
-class OnBoardingSelectScreenTimeFragment : Fragment() {
-    private val binding by viewBinding(FragmentOnBoardingSelectScreentimeBinding::bind)
+class SelectScreenTimeFragment : Fragment() {
+    private val binding by viewBinding(FragmentSelectScreentimeBinding::bind)
     private val activityViewModel by activityViewModels<OnBoardingViewModel>()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        return FragmentOnBoardingSelectScreentimeBinding.inflate(
+        return FragmentSelectScreentimeBinding.inflate(
             inflater,
             container,
             false,

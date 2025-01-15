@@ -8,18 +8,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.feature.onboarding.R
-import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingSelectAppBinding
+import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentSelectAppBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 
-class OnBoardingSelectAppFragment : Fragment() {
+class SelectAppFragment : Fragment() {
     private val activityViewModel by activityViewModels<OnBoardingViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = FragmentOnBoardingSelectAppBinding.inflate(inflater, container, false).root
+    ): View = FragmentSelectAppBinding.inflate(inflater, container, false).root
 
     override fun onResume() {
         super.onResume()

@@ -14,14 +14,14 @@ import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.view.setupScreentimeGoalRange
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.R
-import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingSelectUseTimeBinding
+import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentSelectUseTimeBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
-class OnBoardingSelectUseTimeFragment : Fragment() {
-    private val binding by viewBinding(FragmentOnBoardingSelectUseTimeBinding::bind)
+class SelectUseTimeFragment : Fragment() {
+    private val binding by viewBinding(FragmentSelectUseTimeBinding::bind)
     private val activityViewModel by activityViewModels<OnBoardingViewModel>()
 
     override fun onCreateView(
@@ -29,7 +29,7 @@ class OnBoardingSelectUseTimeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        return FragmentOnBoardingSelectUseTimeBinding.inflate(inflater, container, false).root
+        return FragmentSelectUseTimeBinding.inflate(inflater, container, false).root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
