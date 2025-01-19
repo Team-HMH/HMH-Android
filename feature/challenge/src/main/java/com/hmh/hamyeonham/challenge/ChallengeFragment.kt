@@ -230,7 +230,7 @@ class ChallengeFragment : Fragment() {
 
     private fun setChallengeCalendarVisibility(isChallengeExist: Boolean) {
         binding.btnChallengeCreate.isInvisible = isChallengeExist
-        binding.tvChallengeCreateTitle.isInvisible = !isChallengeExist
+        binding.tvChallengeCreateTitle.isInvisible = isChallengeExist
         binding.tvChallengeDay.isInvisible = !isChallengeExist
         binding.tvChallengeStartDate.isInvisible = !isChallengeExist
         binding.rvChallengeCalendar.isInvisible = !isChallengeExist
