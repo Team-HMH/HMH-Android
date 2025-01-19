@@ -5,7 +5,6 @@ plugins {
     hmh("compose")
     hmh("test")
     alias(libs.plugins.google.services)
-    alias(libs.plugins.app.distribution)
     alias(libs.plugins.crashlytics)
 }
 
@@ -43,8 +42,10 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+//            isMinifyEnabled = true
+            isDebuggable = true
+//            isShrinkResources = true
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",

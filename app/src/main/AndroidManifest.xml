@@ -36,7 +36,7 @@
             tools:node="remove" />
 
         <activity
-            android:name=".SampleActivity"
+            android:name=".StartActivity"
             android:exported="true"
             android:theme="@style/Theme.App.Starting">
             <intent-filter>
