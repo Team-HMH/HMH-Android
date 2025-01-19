@@ -35,6 +35,7 @@ import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.view.VerticalSpaceItemDecoration
 import com.hmh.hamyeonham.common.view.dp
+import com.hmh.hamyeonham.common.view.setOnSingleClickListener
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.designsystem.R
 import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
@@ -194,6 +195,14 @@ class ChallengeFragment : Fragment() {
         }
     }
 
+    private fun initAppAddButton() {
+        binding.btGoalAdd.setOnSingleClickListener {
+            AmplitudeUtils.trackEventWithProperties("click_add_button")
+            val intent = Intent(requireContext(), AppAddActivity::class.java)
+            appSelectionResultLauncher.launch(intent)
+        }
+    }
+
     private fun initChallengeCreateButton() {
         binding.btnChallengeCreate.setOnClickListener {
             AmplitudeUtils.trackEventWithProperties("click_newchallenge_button")
@@ -222,6 +231,7 @@ class ChallengeFragment : Fragment() {
     private fun initViews() {
         initModifierButton()
         initPointButton()
+        initAppAddButton()
         initChallengeCreateButton()
         initChallengeGoalsRecyclerView()
         initChallengeCalendarRecyclerView()
@@ -308,11 +318,6 @@ class ChallengeFragment : Fragment() {
     private fun initChallengeGoalsRecyclerView() {
         binding.rvAppUsageGoals.run {
             adapter = ChallengeUsageGoalsAdapter(
-                onAppListAddClicked = {
-                    AmplitudeUtils.trackEventWithProperties("click_add_button")
-                    val intent = Intent(requireContext(), AppAddActivity::class.java)
-                    appSelectionResultLauncher.launch(intent)
-                },
                 onAppItemClicked = { challengeGoal ->
                     when (viewModel.challengeState.value.modifierState) {
                         ModifierState.EDIT -> {
