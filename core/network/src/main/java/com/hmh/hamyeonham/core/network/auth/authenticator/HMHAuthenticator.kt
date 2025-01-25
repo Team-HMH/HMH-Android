@@ -14,6 +14,7 @@ import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,8 +33,8 @@ class HMHAuthenticator @Inject constructor(
 
         if (response.code == 401) {
             val refreshToken = dataStore.refreshToken
-            val newTokens = runCatching {
-                runBlocking {
+            val newTokens = runBlocking {
+                runCatching {
                     api.refreshToken("Bearer $refreshToken")
                 }
             }.onSuccess {
@@ -41,7 +42,7 @@ class HMHAuthenticator @Inject constructor(
                 dataStore.refreshToken = data.refreshToken.orEmpty()
                 dataStore.accessToken = data.accessToken.orEmpty()
             }.onFailure {
-                Log.e("Authenticator", it.toString())
+                Timber.tag("Authenticator").e(it.toString())
                 runBlocking {
                     dataStore.clear()
                     databaseManager.deleteAll()
