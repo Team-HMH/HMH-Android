@@ -20,7 +20,6 @@
 
 ![Alt](https://repobeats.axiom.co/api/embed/d2c401ae723c367a03ed9fb81ea6e6e7cfbee2ea.svg "Repobeats analytics image")
 
-
 <h2>Tech Stack</h2>
 
 - [Android App Architecture](https://developer.android.com/topic/architecture)
