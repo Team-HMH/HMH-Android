@@ -2,8 +2,16 @@ package com.hmh.hamyeonham.challenge.appadd
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.core.view.isVisible
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,7 +23,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
-class AppAddActivity : AppCompatActivity() {
+class AppAddActivity : ComponentActivity() {
     companion object {
         const val SELECTED_APPS = "selected_apps"
         const val GOAL_TIME = "goal_time"
@@ -31,7 +39,13 @@ class AppAddActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+        setContent {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+            ) { innerPadding ->
+                AppSelectionScreen(modifier = Modifier.padding(innerPadding))
+            }
+        }
         initViews()
         collectState()
         collectEffect()
@@ -86,5 +100,12 @@ class AppAddActivity : AppCompatActivity() {
         }
         setResult(RESULT_OK, intent)
         finish()
+    }
+}
+
+@Composable
+fun AppSelectionScreen(modifier: Modifier = Modifier) {
+    Surface(modifier = modifier) {
+
     }
 }
