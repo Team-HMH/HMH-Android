@@ -45,6 +45,7 @@ class AppAddViewModel @Inject constructor(
     val effect = _effect.asSharedFlow()
 
     private val _query = MutableStateFlow("")
+    val query = _query.asStateFlow()
 
     init {
         viewModelScope.launch {

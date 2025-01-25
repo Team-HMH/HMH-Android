@@ -102,10 +102,3 @@ class AppAddActivity : ComponentActivity() {
         finish()
     }
 }
-
-@Composable
-fun AppSelectionScreen(modifier: Modifier = Modifier) {
-    Surface(modifier = modifier) {
-
-    }
-}
