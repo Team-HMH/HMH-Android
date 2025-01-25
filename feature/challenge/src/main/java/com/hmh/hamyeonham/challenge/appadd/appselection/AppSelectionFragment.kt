@@ -55,7 +55,6 @@ import kotlinx.coroutines.flow.onEach
 @AndroidEntryPoint
 class AppSelectionFragment : Fragment() {
 
-    private val binding by viewBinding(FrargmentAppSelectionBinding::bind)
     private val viewModel by activityViewModels<AppAddViewModel>()
 
     override fun onCreateView(
@@ -69,40 +68,6 @@ class AppSelectionFragment : Fragment() {
                     viewModel = viewModel
                 )
             }
-        }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initViews()
-        collectState()
-    }
-
-    private fun initViews() {
-        initAppSelectionRecyclerAdapter()
-        initSearchBar()
-    }
-
-    private fun initSearchBar() {
-        binding.etSearchbar.doOnTextChanged { text, _, _, _ ->
-            viewModel.onQueryChanged(text.toString())
-        }
-    }
-
-    private fun collectState() {
-        viewModel.installedApps.flowWithLifecycle(viewLifeCycle).onEach {
-            val appSelectionAdapter = binding.rvAppSelection.adapter as? AppSelectionAdapter
-            appSelectionAdapter?.submitList(getInstalledAppList(requireContext()))
-            delay(300)
-            binding.rvAppSelection.scrollToPosition(0)
-        }.launchIn(viewLifeCycleScope)
-    }
-
-    private fun initAppSelectionRecyclerAdapter() {
-        binding.rvAppSelection.run {
-            adapter = AppSelectionAdapter(onAppCheckedChangeListener = viewModel::appCheckChanged)
-            layoutManager = LinearLayoutManager(requireContext())
-            itemAnimator = null
         }
     }
 
