@@ -23,14 +23,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
-import com.hmh.hamyeonham.feature.lock.ui.theme.Blackground
-import com.hmh.hamyeonham.feature.lock.ui.theme.BluePurpleButton
-import com.hmh.hamyeonham.feature.lock.ui.theme.Gray1
-import com.hmh.hamyeonham.feature.lock.ui.theme.Gray2
-import com.hmh.hamyeonham.feature.lock.ui.theme.Gray3
-import com.hmh.hamyeonham.feature.lock.ui.theme.HmhTypography
-import com.hmh.hamyeonham.feature.lock.ui.theme.WhiteBtn
-import com.hmh.hamyeonham.feature.lock.ui.theme.WhiteText
+import com.hmh.hamyeonham.core.designsystem.ui.theme.Blackground
+import com.hmh.hamyeonham.core.designsystem.ui.theme.BluePurpleButton
+import com.hmh.hamyeonham.core.designsystem.ui.theme.Gray1
+import com.hmh.hamyeonham.core.designsystem.ui.theme.Gray2
+import com.hmh.hamyeonham.core.designsystem.ui.theme.Gray3
+import com.hmh.hamyeonham.core.designsystem.ui.theme.HmhTypography
+import com.hmh.hamyeonham.core.designsystem.ui.theme.WhiteBtn
+import com.hmh.hamyeonham.core.designsystem.ui.theme.WhiteText
 
 @Composable
 fun LockScreen(

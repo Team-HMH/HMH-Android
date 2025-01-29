@@ -1,4 +1,4 @@
-package com.hmh.hamyeonham.feature.lock.ui.theme
+package com.hmh.hamyeonham.core.designsystem.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
