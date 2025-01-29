@@ -1,5 +1,6 @@
 package com.hmh.hamyeonham.core.designsystem.ui.theme
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
 val Blackground = Color(0xFF17171B)
@@ -22,3 +23,44 @@ val BluePurpleOpacity70 = Color(0xB33D17D3) // 70% opacity
 val BluePurpleOpacity22 = Color(0x382B1DD6) // 22% opacity
 
 val WhiteBtn = Color(0xFFEBECF4)
+
+@Immutable
+data class HMHColor(
+    val blackground: Color,
+    val gray8: Color,
+    val gray7: Color,
+    val gray6: Color,
+    val gray5: Color,
+    val gray4: Color,
+    val gray3: Color,
+    val gray2: Color,
+    val gray1: Color,
+    val whiteText: Color,
+    val bluePurpleButton: Color,
+    val bluePurpleLine: Color,
+    val bluePurpleProgress: Color,
+    val bluePurpleText: Color,
+    val bluePurpleOpacity70: Color,
+    val bluePurpleOpacity22: Color,
+    val whiteBtn: Color,
+)
+
+val hmhColors = HMHColor(
+    blackground = Blackground,
+    gray8 = Gray8,
+    gray7 = Gray7,
+    gray6 = Gray6,
+    gray5 = Gray5,
+    gray4 = Gray4,
+    gray3 = Gray3,
+    gray2 = Gray2,
+    gray1 = Gray1,
+    whiteText = WhiteText,
+    bluePurpleButton = BluePurpleButton,
+    bluePurpleLine = BluePurpleLine,
+    bluePurpleProgress = BluePurpleProgress,
+    bluePurpleText = BluePurpleText,
+    bluePurpleOpacity70 = BluePurpleOpacity70,
+    bluePurpleOpacity22 = BluePurpleOpacity22,
+    whiteBtn = WhiteBtn,
+)

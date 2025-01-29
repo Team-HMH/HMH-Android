@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.hmh.hamyeonham.challenge.appadd.appselection
 
 import android.content.Context
@@ -6,30 +8,46 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
@@ -40,6 +58,8 @@ import com.hmh.hamyeonham.challenge.model.AppInfo
 import com.hmh.hamyeonham.common.context.getAppIconFromPackageName
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.core.designsystem.ui.theme.HMHAndroidTheme
+import com.hmh.hamyeonham.core.designsystem.ui.theme.HmhTypography
+import com.hmh.hamyeonham.core.designsystem.ui.theme.hmhColors
 import com.hmh.hamyeonham.feature.challenge.R
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -90,16 +110,20 @@ fun AppSelectionScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
         ) {
-            TextField(
-                value = query,
-                onValueChange = viewModel::onQueryChanged,
-                label = { },
-                placeholder = { stringResource(R.string.appselection_searchbar) },
-                modifier = Modifier.fillMaxWidth()
+            AppSelectionTextField(
+                modifier = Modifier.padding(horizontal = 20.dp),
+                query = query,
+                onQueryChanged = viewModel::onQueryChanged,
             )
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            Spacer(modifier = Modifier.height(10.dp))
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(
+                    horizontal = 20.dp
+                )
+            ) {
                 items(installedApps) { app ->
                     AppSelectionItem(
                         appAddState = appAddState,
@@ -126,7 +150,12 @@ private fun AppSelectionItem(
     }
     val isChecked by remember { derivedStateOf { appAddState.selectedApps.contains(packageName) } }
 
-    Row(modifier = Modifier.fillMaxWidth()) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         image?.let {
             Image(
                 bitmap = image,
@@ -142,4 +171,75 @@ private fun AppSelectionItem(
             onCheckedChange = { onAppChecked(packageName, it) }
         )
     }
+}
+
+@Preview
+@Composable
+fun TextFieldPreview() {
+    var query by remember { mutableStateOf("") }
+
+    HMHAndroidTheme {
+        AppSelectionTextField(query,
+            onQueryChanged = { query = it })
+    }
+}
+
+@Composable
+private fun AppSelectionTextField(
+    query: String,
+    onQueryChanged: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    BasicTextField(
+        value = query,
+        onValueChange = onQueryChanged,
+        modifier = modifier.fillMaxWidth(),
+        textStyle = HmhTypography.titleSmall.copy(
+            color = hmhColors.gray1
+        ),
+        singleLine = true,
+        cursorBrush = SolidColor(hmhColors.gray1),
+        decorationBox = { innerTextField ->
+            TextFieldDefaults.DecorationBox(
+                value = query,
+                innerTextField = innerTextField,
+                enabled = true,
+                singleLine = true,
+                visualTransformation = VisualTransformation.None,
+                interactionSource = remember { MutableInteractionSource() },
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.appselection_searchbar),
+                        color = hmhColors.gray1,
+                        style = HmhTypography.titleSmall
+                    )
+                },
+                colors = TextFieldDefaults.colors(
+                    focusedTextColor = hmhColors.gray1,
+                    unfocusedTextColor = hmhColors.gray1,
+                    disabledTextColor = hmhColors.gray1,
+                    focusedContainerColor = hmhColors.gray6,
+                    unfocusedContainerColor = hmhColors.gray6,
+                    errorContainerColor = hmhColors.gray6,
+                    disabledContainerColor = hmhColors.gray6,
+                    cursorColor = hmhColors.gray1,
+                    focusedPlaceholderColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    focusedLabelColor = Color.Transparent,
+                    unfocusedLabelColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    errorIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                ),
+                leadingIcon = {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_search_24),
+                        contentDescription = "검색어 입력",
+                        tint = hmhColors.gray1
+                    )
+                },
+                shape = RoundedCornerShape(40.dp),
+            )
+        }
+    )
 }
