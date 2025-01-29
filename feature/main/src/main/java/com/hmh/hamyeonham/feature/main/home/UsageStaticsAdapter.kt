@@ -71,6 +71,11 @@ class UsageStaticsAdapter : ListAdapter<HomeItem, RecyclerView.ViewHolder>(
         return HomeItemViewType.getOrdinal(itemType)
     }
 
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        if (holder is UsageStaticsTotalViewHolder) holder.unbind()
+    }
+
     enum class HomeItemViewType {
         TOTAL_ITEM_TYPE,
         APP_ITEM_TYPE,
