@@ -78,17 +78,31 @@ class AppLockManger @Inject constructor(
         totalUsageStats: Long,
         totalUsageGoal: UsageGoal
     ) {
-        if (usageStats >= currentAppGoal.goalTime || totalUsageStats >= totalUsageGoal.totalGoalTime) {
-            moveToLock(packageName)
-        } else {
-            releaseTimerJob()
-            val appRemainingTime = currentAppGoal.goalTime - usageStats
-            val totalRemainingTime = totalUsageGoal.totalGoalTime - totalUsageStats
-            startTimer(
-                appRemainingTime = appRemainingTime,
-                totalRemainingTime = totalRemainingTime,
-                packageName = packageName
-            )
+        when {
+            usageStats >= currentAppGoal.goalTime -> {
+                moveToLock(packageName)
+            }
+
+            totalUsageStats >= totalUsageGoal.totalGoalTime -> {
+                moveToLockWithTotalUsage()
+            }
+
+            else -> {
+                releaseTimerJob()
+                val appRemainingTime = currentAppGoal.goalTime - usageStats
+                val totalRemainingTime = totalUsageGoal.totalGoalTime - totalUsageStats
+                startTimer(
+                    appRemainingTime = appRemainingTime,
+                    totalRemainingTime = totalRemainingTime,
+                    packageName = packageName
+                )
+            }
+        }
+    }
+
+    private suspend fun moveToLockWithTotalUsage() {
+        withContext(Dispatchers.Main) {
+            // TODO : navigate to lock screen with total usage
         }
     }
 
