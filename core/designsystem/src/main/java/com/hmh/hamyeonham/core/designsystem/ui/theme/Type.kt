@@ -1,4 +1,4 @@
-package com.hmh.hamyeonham.feature.lock.ui.theme
+package com.hmh.hamyeonham.core.designsystem.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -6,22 +6,23 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.hmh.hamyeonham.core.designsystem.R
 
 val PretendardMedium = FontFamily(
     Font(
-        com.hmh.hamyeonham.core.designsystem.R.font.pretendard_medium,
+        R.font.pretendard_medium,
         FontWeight.Medium
     )
 )
 val PretendardRegular = FontFamily(
     Font(
-        com.hmh.hamyeonham.core.designsystem.R.font.pretendard_regular,
+        R.font.pretendard_regular,
         FontWeight.Normal
     )
 )
 val PretendardSemiBold = FontFamily(
     Font(
-        com.hmh.hamyeonham.core.designsystem.R.font.pretendard_semibold,
+        R.font.pretendard_semibold,
         FontWeight.SemiBold
     )
 )
