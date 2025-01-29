@@ -32,25 +32,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.flowWithLifecycle
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.hmh.hamyeonham.challenge.appadd.AppAddState
 import com.hmh.hamyeonham.challenge.appadd.AppAddViewModel
 import com.hmh.hamyeonham.challenge.model.AppInfo
 import com.hmh.hamyeonham.common.context.getAppIconFromPackageName
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
-import com.hmh.hamyeonham.common.fragment.viewLifeCycle
-import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
-import com.hmh.hamyeonham.common.view.viewBinding
+import com.hmh.hamyeonham.core.designsystem.ui.theme.HMHAndroidTheme
 import com.hmh.hamyeonham.feature.challenge.R
-import com.hmh.hamyeonham.feature.challenge.databinding.FrargmentAppSelectionBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class AppSelectionFragment : Fragment() {
@@ -64,9 +55,11 @@ class AppSelectionFragment : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                AppSelectionScreen(
-                    viewModel = viewModel
-                )
+                HMHAndroidTheme {
+                    AppSelectionScreen(
+                        viewModel = viewModel
+                    )
+                }
             }
         }
     }
