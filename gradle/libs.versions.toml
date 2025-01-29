@@ -59,7 +59,7 @@ espressoIntents = "3.6.1"
 runner = "1.5.2"
 
 # gradle
-agp = "8.7.3"
+agp = "8.8.0"
 
 # third party
 okhttp = "4.12.0"
