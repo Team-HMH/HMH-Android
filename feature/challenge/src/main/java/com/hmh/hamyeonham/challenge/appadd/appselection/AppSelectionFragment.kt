@@ -2,7 +2,6 @@
 
 package com.hmh.hamyeonham.challenge.appadd.appselection
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -75,23 +74,10 @@ class AppSelectionFragment : Fragment() {
         return ComposeView(requireContext()).apply {
             setContent {
                 HMHAndroidTheme {
-                    AppSelectionScreen(
-                        viewModel = viewModel
-                    )
+                    AppSelectionScreen(viewModel = viewModel)
                 }
             }
         }
-    }
-
-    private fun getInstalledAppList(context: Context): List<AppSelectionModel> {
-        val installApps = viewModel.installedApps.value
-        val selectedApps = viewModel.state.value.selectedApps
-        return installApps.map {
-            if (it.packageName.contains(context.packageName)) {
-                return@map null
-            }
-            AppSelectionModel(it.packageName, selectedApps.contains(it.packageName))
-        }.sortedBy { context.getAppNameFromPackageName(it?.packageName ?: "") }.filterNotNull()
     }
 }
 

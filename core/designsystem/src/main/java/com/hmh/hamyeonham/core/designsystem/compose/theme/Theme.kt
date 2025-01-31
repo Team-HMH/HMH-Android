@@ -52,7 +52,7 @@ fun HMHAndroidTheme(
             val activity = view.context.findActivity()
             val window = activity.window
             WindowCompat.getInsetsController(window, view)
-                .isAppearanceLightStatusBars = !darkTheme
+                .isAppearanceLightStatusBars = false
             WindowCompat.getInsetsController(window, view)
                 .isAppearanceLightNavigationBars = !darkTheme
         }
