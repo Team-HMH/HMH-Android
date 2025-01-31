@@ -23,7 +23,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -31,7 +30,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,9 +55,10 @@ import com.hmh.hamyeonham.challenge.appadd.AppAddViewModel
 import com.hmh.hamyeonham.challenge.model.AppInfo
 import com.hmh.hamyeonham.common.context.getAppIconFromPackageName
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
-import com.hmh.hamyeonham.core.designsystem.ui.theme.HMHAndroidTheme
-import com.hmh.hamyeonham.core.designsystem.ui.theme.HmhTypography
-import com.hmh.hamyeonham.core.designsystem.ui.theme.hmhColors
+import com.hmh.hamyeonham.core.designsystem.compose.theme.HMHAndroidTheme
+import com.hmh.hamyeonham.core.designsystem.compose.theme.HmhTypography
+import com.hmh.hamyeonham.core.designsystem.compose.theme.hmhColors
+import com.hmh.hamyeonham.core.designsystem.compose.ui.component.HmhCheckBox
 import com.hmh.hamyeonham.feature.challenge.R
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -104,6 +103,7 @@ fun AppSelectionScreen(
     val appAddState by viewModel.state.collectAsState()
     val query by viewModel.query.collectAsState()
     val installedApps by viewModel.installedApps.collectAsState()
+
     Scaffold(
         modifier = modifier,
     ) { innerPadding ->
@@ -122,9 +122,12 @@ fun AppSelectionScreen(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(
                     horizontal = 20.dp
-                )
+                ),
             ) {
-                items(installedApps) { app ->
+                items(
+                    items = installedApps,
+                    key = { it.packageName }
+                ) { app ->
                     AppSelectionItem(
                         appAddState = appAddState,
                         app = app,
@@ -148,7 +151,7 @@ private fun AppSelectionItem(
     val image = remember {
         context.getAppIconFromPackageName(packageName)?.toBitmap()?.asImageBitmap()
     }
-    val isChecked by remember { derivedStateOf { appAddState.selectedApps.contains(packageName) } }
+    val isChecked = appAddState.selectedApps.contains(packageName)
 
     Row(
         modifier = Modifier
@@ -166,21 +169,10 @@ private fun AppSelectionItem(
         Spacer(modifier = Modifier.width(16.dp))
         Text(text = appName)
         Spacer(modifier = Modifier.weight(1f))
-        Checkbox(
-            checked = isChecked,
+        HmhCheckBox(
+            isChecked = isChecked,
             onCheckedChange = { onAppChecked(packageName, it) }
         )
-    }
-}
-
-@Preview
-@Composable
-fun TextFieldPreview() {
-    var query by remember { mutableStateOf("") }
-
-    HMHAndroidTheme {
-        AppSelectionTextField(query,
-            onQueryChanged = { query = it })
     }
 }
 
@@ -234,7 +226,7 @@ private fun AppSelectionTextField(
                 leadingIcon = {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_search_24),
-                        contentDescription = "검색어 입력",
+                        contentDescription = stringResource(R.string.appselection_searchbar),
                         tint = hmhColors.gray1
                     )
                 },
@@ -242,4 +234,16 @@ private fun AppSelectionTextField(
             )
         }
     )
+}
+
+
+@Preview
+@Composable
+fun TextFieldPreview() {
+    var query by remember { mutableStateOf("") }
+
+    HMHAndroidTheme {
+        AppSelectionTextField(query,
+            onQueryChanged = { query = it })
+    }
 }

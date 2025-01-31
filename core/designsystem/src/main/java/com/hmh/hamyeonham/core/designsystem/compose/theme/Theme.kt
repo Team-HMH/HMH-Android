@@ -1,4 +1,4 @@
-package com.hmh.hamyeonham.core.designsystem.ui.theme
+package com.hmh.hamyeonham.core.designsystem.compose.theme
 
 import android.app.Activity
 import android.content.Context

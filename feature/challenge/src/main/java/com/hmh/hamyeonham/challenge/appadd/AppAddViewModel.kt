@@ -24,7 +24,6 @@ sealed interface AppAddEffect {
     data object NONE : AppAddEffect
 }
 
-
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class AppAddViewModel @Inject constructor(
