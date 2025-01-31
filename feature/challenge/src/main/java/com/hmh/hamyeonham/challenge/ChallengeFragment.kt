@@ -342,7 +342,7 @@ class ChallengeFragment : Fragment() {
         TwoButtonCommonDialog.newInstance(
             title = getString(R.string.delete_app_dialog_title, clickedAppNameToDialog),
             description = getString(R.string.delete_app_dialog_description),
-            confirmButtonText = getString(R.string.all_okay),
+            confirmButtonText = getString(R.string.all_delete),
             dismissButtonText = getString(R.string.all_cancel),
         ).apply {
             setConfirmButtonClickListener {
