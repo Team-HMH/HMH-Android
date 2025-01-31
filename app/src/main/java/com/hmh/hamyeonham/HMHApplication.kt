@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import com.amplitude.api.Amplitude
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.hmh.hamyeonham.core.notification.AppNotificationManager
+import com.hmh.hamyeonham.firebase.setFirebaseCrashlyticsEnabled
 import com.hmh.hamyeonham.hus.usagestats.HMHUsageStatsManager
 import com.kakao.sdk.common.KakaoSdk
 import dagger.hilt.EntryPoint
@@ -33,10 +33,8 @@ class HMHApplication : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
-
+        setFirebaseCrashlyticsEnabled(!BuildConfig.DEBUG)
         setAmplitude()
-
-        FirebaseCrashlytics.getInstance().isCrashlyticsCollectionEnabled = !BuildConfig.DEBUG
         KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY)
         HMHUsageStatsManager.init(this)
         notificationManager.setupNotificationChannel()
