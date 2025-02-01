@@ -1,4 +1,4 @@
-package com.hmh.hamyeonham.core.designsystem.ui.theme
+package com.hmh.hamyeonham.core.designsystem.compose.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
