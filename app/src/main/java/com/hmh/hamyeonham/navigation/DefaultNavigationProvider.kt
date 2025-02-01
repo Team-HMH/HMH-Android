@@ -2,7 +2,6 @@ package com.hmh.hamyeonham.navigation
 
 import android.content.Context
 import android.content.Intent
-import androidx.fragment.app.Fragment
 import com.hmh.hamyeonham.challenge.point.PointActivity
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.permission.PermissionActivity
@@ -11,7 +10,6 @@ import com.hmh.hamyeonham.feature.login.LoginActivity
 import com.hmh.hamyeonham.feature.main.MainActivity
 import com.hmh.hamyeonham.feature.onboarding.OnBoardingActivity
 import com.hmh.hamyeonham.feature.onboarding.OnBoardingStoryActivity
-import com.hmh.hamyeonham.feature.onboarding.fragment.OnBoardingRequestPermissionFragment
 import com.hmh.hamyeonham.feature.store.StoreActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject

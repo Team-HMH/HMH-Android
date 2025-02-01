@@ -7,7 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.hmh.hamyeonham.common.app.killAppByPackageName
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
-import com.hmh.hamyeonham.feature.lock.ui.theme.HMHAndroidTheme
+import com.hmh.hamyeonham.core.designsystem.compose.theme.HMHAndroidTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

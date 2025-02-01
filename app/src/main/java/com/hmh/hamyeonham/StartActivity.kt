@@ -14,7 +14,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SampleActivity : AppCompatActivity() {
+class StartActivity : AppCompatActivity() {
     private val binding by viewBinding(ActivitySampleBinding::inflate)
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 

@@ -5,11 +5,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.hmh.hamyeonham.challenge.ChallengeUsageGoal
 import com.hmh.hamyeonham.common.view.ItemDiffCallback
-import com.hmh.hamyeonham.feature.challenge.databinding.ItemGoalAddBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemUsageGoalBinding
 
 class ChallengeUsageGoalsAdapter(
-    private val onAppListAddClicked: () -> Unit,
     private val onAppItemClicked: (ChallengeUsageGoal) -> Unit
 ) : ListAdapter<ChallengeUsageGoal, ChallengeViewHolder>(
     ItemDiffCallback(
@@ -22,37 +20,18 @@ class ChallengeUsageGoalsAdapter(
     )
 ) {
 
-    override fun getItemViewType(position: Int): Int {
-        return if (position == currentList.lastIndex) {
-            ChallengeViewHolder.ChallengeViewHolderType.GOAL_ADD.ordinal
-        } else {
-            ChallengeViewHolder.ChallengeViewHolderType.USAGE_GOALS.ordinal
-        }
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): ChallengeViewHolder {
-        return when (viewType) {
-            ChallengeViewHolder.ChallengeViewHolderType.USAGE_GOALS.ordinal -> ChallengeViewHolder.UsageGoalsViewHolder(
-                ItemUsageGoalBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                ),
-                onAppItemClicked = onAppItemClicked
-            )
-
-            else -> ChallengeViewHolder.GoalAddViewHolder(
-                ItemGoalAddBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                ),
-                onAppListAddClicked = onAppListAddClicked
-            )
-        }
+        return ChallengeViewHolder.UsageGoalsViewHolder(
+            ItemUsageGoalBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            ),
+            onAppItemClicked = onAppItemClicked
+        )
     }
 
     override fun onBindViewHolder(holder: ChallengeViewHolder, position: Int) {

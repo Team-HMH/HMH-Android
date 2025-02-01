@@ -5,8 +5,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.context.hasNotificationPermission
@@ -37,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        initNavHostFragment()
+        initViews()
         collectEffect()
     }
 
@@ -62,11 +60,41 @@ class MainActivity : AppCompatActivity() {
         }.launchIn(lifecycleScope)
     }
 
-    private fun initNavHostFragment() {
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(binding.fcvMain.id) as NavHostFragment
-        val navController = navHostFragment.navController
-        binding.bnvMain.setupWithNavController(navController)
+    private fun initViews() {
+        initViewPager()
+        initBottomNavigation()
+    }
+
+    private fun initViewPager() {
+        binding.vpMain.apply {
+            isUserInputEnabled = false
+            adapter = MainAdapter(this@MainActivity)
+            setCurrentItem(MainScreen.HOME.ordinal, false)
+
+        }
+    }
+
+    private fun initBottomNavigation() {
+        binding.bnvMain.selectedItemId = R.id.home_dest
+        binding.bnvMain.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.challenge_dest -> binding.vpMain.setCurrentItem(
+                    MainScreen.CHALLENGE.ordinal,
+                    false
+                )
+
+                R.id.home_dest -> binding.vpMain.setCurrentItem(
+                    MainScreen.HOME.ordinal,
+                    false
+                )
+
+                R.id.my_page_dest -> binding.vpMain.setCurrentItem(
+                    MainScreen.MY_PAGE.ordinal,
+                    false
+                )
+            }
+            true
+        }
     }
 
     private fun checkUnlockedPackage() {

@@ -18,14 +18,14 @@ import com.hmh.hamyeonham.common.permission.hasNotificationPermission
 import com.hmh.hamyeonham.common.permission.requestNotificationPermission
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.onboarding.R
-import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentOnBoardingRequestPermissionBinding
+import com.hmh.hamyeonham.feature.onboarding.databinding.FragmentRequestPermissionBinding
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnBoardingViewModel
 import com.hmh.hamyeonham.feature.onboarding.viewmodel.OnboardEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class OnBoardingRequestPermissionFragment : Fragment() {
-    private val binding by viewBinding(FragmentOnBoardingRequestPermissionBinding::bind)
+class RequestPermissionFragment : Fragment() {
+    private val binding by viewBinding(FragmentRequestPermissionBinding::bind)
     private val activityViewModel by activityViewModels<OnBoardingViewModel>()
 
     private val overlayPermissionLauncher: ActivityResultLauncher<Intent> =
@@ -57,7 +57,7 @@ class OnBoardingRequestPermissionFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View = FragmentOnBoardingRequestPermissionBinding.inflate(inflater, container, false).root
+    ): View = FragmentRequestPermissionBinding.inflate(inflater, container, false).root
 
     override fun onViewCreated(
         view: View,
