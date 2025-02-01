@@ -28,7 +28,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.hmh.hamyeonham.challenge.appadd.AppAddState
 import com.hmh.hamyeonham.challenge.appadd.AppAddViewModel
 import com.hmh.hamyeonham.challenge.model.AppInfo
@@ -86,9 +86,9 @@ fun AppSelectionScreen(
     viewModel: AppAddViewModel,
     modifier: Modifier = Modifier
 ) {
-    val appAddState by viewModel.state.collectAsState()
-    val query by viewModel.query.collectAsState()
-    val installedApps by viewModel.installedApps.collectAsState()
+    val appAddState by viewModel.state.collectAsStateWithLifecycle()
+    val query by viewModel.query.collectAsStateWithLifecycle()
+    val installedApps by viewModel.installedApps.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = modifier,
@@ -98,7 +98,7 @@ fun AppSelectionScreen(
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            AppSelectionTextField(
+            AppSelectionSearchBar(
                 modifier = Modifier.padding(horizontal = 20.dp),
                 query = query,
                 onQueryChanged = viewModel::onQueryChanged,
@@ -163,7 +163,7 @@ private fun AppSelectionItem(
 }
 
 @Composable
-private fun AppSelectionTextField(
+private fun AppSelectionSearchBar(
     query: String,
     onQueryChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -229,7 +229,7 @@ fun TextFieldPreview() {
     var query by remember { mutableStateOf("") }
 
     HMHAndroidTheme {
-        AppSelectionTextField(query,
+        AppSelectionSearchBar(query,
             onQueryChanged = { query = it })
     }
 }
