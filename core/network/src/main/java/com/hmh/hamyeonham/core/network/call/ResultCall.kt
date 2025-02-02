@@ -13,44 +13,41 @@ import retrofit2.Retrofit
 import timber.log.Timber
 
 class ResultCall<T>(
-    private val call: Call<BaseResponse<T>>,
+    private val call: Call<T>,
     private val retrofit: Retrofit,
-): Call<Result<T>>{
+) : Call<Result<T>> {
 
     // enqueue() : HTTP 요청을 비동기적으로 실행. 요청 결과를 전달받기 위해 Callback<Result<T>>를 인자로 받음
     // enqueue() 메서드를 Custom
     override fun enqueue(callback: Callback<Result<T>>) {
 
         // Callback<Result<T>> 객체를 인자로 받아 Call 객체의 enqueue() 메서드 호출
-        call.enqueue(object : Callback<BaseResponse<T>> {
+        call.enqueue(object : Callback<T> {
 
             // onResponse() : HTTP 요청 성공 시 호출
-            override fun onResponse(call: Call<BaseResponse<T>>, response: Response<BaseResponse<T>>) {
+            override fun onResponse(call: Call<T>, response: Response<T>) {
                 val responseBody = response.body()
 
                 // response.isSuccessful : HTTP 응답 코드가 200~299 사이인지 여부 반환(성공 여부)
                 if (response.isSuccessful) {
                     // HTTP 요청은 성공했지만 body가 빈 경우
-                    if(responseBody == null) {
+                    if (responseBody != null) {
                         callback.onResponse(
                             this@ResultCall,
-                            Response.success(Result.failure(RuntimeException("응답 body가 비었습니다.")))
+                            Response.success(Result.success(responseBody))
                         )
                     } else { // HTTP 요청 성공
                         callback.onResponse(
                             this@ResultCall,
-                            Response.success(Result.success(responseBody.data))
+                            Response.success(Result.failure(RuntimeException("응답 body가 비었습니다.")))
                         )
                     }
                 } else { // HTTP 요청 실패
-                    val errorResponse = try {
+                    val errorResponse =
                         retrofit.responseBodyConverter<ErrorResponse>(
                             ErrorResponse::class.java,
                             ErrorResponse::class.java.annotations
-                        ).convert(response.errorBody()!!)
-                    } catch (e: Exception) {
-                        null
-                    } ?: getBodyNullErrorResponse(response)
+                        ).convert(response.errorBody()!!) ?: getBodyNullErrorResponse(response)
 
                     callback.onResponse(
                         this@ResultCall,
@@ -62,7 +59,7 @@ class ResultCall<T>(
             }
 
             // onFailure() : HTTP 요청 실패 시 호출
-            override fun onFailure(call: Call<BaseResponse<T>>, t: Throwable) {
+            override fun onFailure(call: Call<T>, t: Throwable) {
                 val message = when (t) {
                     is IOException -> "네트워크 연결이 불안정합니다. 다시 시도해주세요."
                     is HttpException -> "${t.code()} : 서버 통신 중 문제가 발생했습니다. 다시 시도해주세요."
@@ -81,7 +78,7 @@ class ResultCall<T>(
     }
 
     // 응답 Body가 null인 경우 임시 ErrorResponse 객체 생성
-    private fun getBodyNullErrorResponse(response: Response<BaseResponse<T>>) = ErrorResponse(
+    private fun getBodyNullErrorResponse(response: Response<T>) = ErrorResponse(
         status = response.code(),
         message = "response body is null"
     )
