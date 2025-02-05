@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -172,8 +172,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_app_usage_goals"
                 android:layout_width="0dp"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
+                android:nestedScrollingEnabled="false"
                 app:layout_constraintBottom_toTopOf="@id/bt_goal_add"
                 app:layout_constraintEnd_toEndOf="@id/tv_modifier_button"
                 app:layout_constraintStart_toStartOf="@id/tv_app_lock"
@@ -195,4 +196,4 @@
                 app:layout_constraintTop_toBottomOf="@id/rv_app_usage_goals" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
