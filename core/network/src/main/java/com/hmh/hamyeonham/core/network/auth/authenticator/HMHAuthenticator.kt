@@ -1,13 +1,8 @@
 package com.hmh.hamyeonham.core.network.auth.authenticator
 
-import android.content.Context
-import com.hmh.hamyeonham.common.navigation.NavigationProvider
-import com.hmh.hamyeonham.core.database.manger.DatabaseManager
 import com.hmh.hamyeonham.core.network.auth.api.RefreshService
 import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
-import com.jakewharton.processphoenix.ProcessPhoenix
-import com.kakao.sdk.user.UserApiClient
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -21,17 +16,16 @@ import javax.inject.Singleton
 
 @Singleton
 class HMHAuthenticator @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val dataStore: HMHNetworkPreference,
     private val api: RefreshService,
-    private val databaseManager: DatabaseManager,
-    private val navigationProvider: NavigationProvider,
+    private val authenticatorUtil: AuthenticatorUtil
 ) : Authenticator {
     private val mutex = Mutex()
 
     override fun authenticate(route: Route?, response: Response): Request? {
         val originalRequest = response.request
-        if (originalRequest.header("Authorization") == null) {
+        val header = originalRequest.header("Authorization")?.replace("Bearer ", "")
+        if (header.isNullOrEmpty()) {
             return null
         }
 
@@ -54,23 +48,13 @@ class HMHAuthenticator @Inject constructor(
                             .build()
                     } catch (e: Exception) {
                         Timber.tag("Authenticator").e("Token refresh failed: ${e.message}")
-                        handleLogout()
+                        authenticatorUtil.handleLogout()
+                        delay(500)
                         null
                     }
                 }
             }
         }
         return null
-    }
-
-    private fun handleLogout() {
-        runBlocking {
-            dataStore.clear()
-            databaseManager.deleteAll()
-            UserApiClient.instance.logout { error ->
-                Timber.tag("Authenticator").e("Logout error: $error")
-                ProcessPhoenix.triggerRebirth(context, navigationProvider.toLogin())
-            }
-        }
     }
 }
