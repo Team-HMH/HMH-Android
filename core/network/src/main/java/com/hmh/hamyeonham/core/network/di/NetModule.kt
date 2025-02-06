@@ -1,11 +1,14 @@
 package com.hmh.hamyeonham.core.network.di
 
 import com.hmh.hamyeonham.common.BuildConfig
-import com.hmh.hamyeonham.common.qualifier.Auth
+import com.hmh.hamyeonham.common.qualifier.Authenticated
+import com.hmh.hamyeonham.common.qualifier.Header
 import com.hmh.hamyeonham.common.qualifier.Log
 import com.hmh.hamyeonham.common.qualifier.Secured
 import com.hmh.hamyeonham.common.qualifier.Unsecured
+import com.hmh.hamyeonham.core.network.auth.authenticator.AuthenticatorUtil
 import com.hmh.hamyeonham.core.network.auth.authenticator.HMHAuthenticator
+import com.hmh.hamyeonham.core.network.auth.interceptor.AuthInterceptor
 import com.hmh.hamyeonham.core.network.auth.interceptor.HeaderInterceptor
 import com.hmh.hamyeonham.core.network.call.ResultCallAdapterFactory
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -57,19 +60,28 @@ object NetModule {
 
     @Singleton
     @Provides
-    @Auth
+    @Header
     fun provideHeaderInterceptor(interceptor: HeaderInterceptor): Interceptor = interceptor
+
+    @Singleton
+    @Provides
+    @Authenticated
+    fun provideAuthInterceptor(
+        authenticatorUtil: AuthenticatorUtil
+    ): AuthInterceptor = AuthInterceptor(authenticatorUtil)
 
     @Singleton
     @Provides
     @Secured
     fun provideOkHttpClient(
         @Log logInterceptor: Interceptor,
-        @Auth authInterceptor: Interceptor,
+        @Header headerInterceptor: Interceptor,
+        @Authenticated authInterceptor: AuthInterceptor,
         authenticator: Authenticator,
     ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(logInterceptor)
         .addInterceptor(authInterceptor)
+        .addInterceptor(logInterceptor)
+        .addInterceptor(headerInterceptor)
         .authenticator(authenticator)
         .connectTimeout(60, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)

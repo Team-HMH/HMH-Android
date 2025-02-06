@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -34,7 +35,7 @@ import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.view.VerticalSpaceItemDecoration
 import com.hmh.hamyeonham.common.view.dp
-import com.hmh.hamyeonham.common.view.mapBooleanToVisibility
+import com.hmh.hamyeonham.common.view.setOnSingleClickListener
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.designsystem.R
 import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
@@ -54,8 +55,25 @@ class ChallengeFragment : Fragment() {
     private val binding by viewBinding(FragmentChallengeBinding::bind)
     private val activityViewModel by activityViewModels<MainViewModel>()
     private val viewModel by viewModels<ChallengeViewModel>()
-    private lateinit var appSelectionResultLauncher: ActivityResultLauncher<Intent>
-    private lateinit var newChallengeResultLauncher: ActivityResultLauncher<Intent>
+    private val appSelectionResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                addSelectedApps(result)
+            }
+        }
+    private val newChallengeResultLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val period = result.data?.getIntExtra(NewChallengeActivity.PERIOD, 0)
+                val goalTime = result.data?.getLongExtra(NewChallengeActivity.GOALTIME, 0)
+                activityViewModel.generateNewChallenge(
+                    NewChallenge(
+                        period = period ?: 0,
+                        goalTime = goalTime ?: 0,
+                    ),
+                )
+            }
+        }
 
     @Inject
     lateinit var navigationProvider: NavigationProvider
@@ -85,8 +103,6 @@ class ChallengeFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        initAppSelectionResultLauncher()
-        initNewChallengeResultLauncher()
         initViews()
         collectMainStateAndProcess()
         collectChallengeStateAndProcess()
@@ -168,11 +184,22 @@ class ChallengeFragment : Fragment() {
 
     private fun initPointButton() {
         val pointButtonImg =
-            if (activityViewModel.isPointLeftToCollect) com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24 else com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
+            if (activityViewModel.isPointLeftToCollect) {
+                com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24
+            } else {
+                com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
+            }
         binding.tvPointButton.setImageResource(pointButtonImg)
-
         binding.tvPointButton.setOnClickListener {
             navigateToPointView()
+        }
+    }
+
+    private fun initAppAddButton() {
+        binding.btGoalAdd.setOnSingleClickListener {
+            AmplitudeUtils.trackEventWithProperties("click_add_button")
+            val intent = Intent(requireContext(), AppAddActivity::class.java)
+            appSelectionResultLauncher.launch(intent)
         }
     }
 
@@ -204,6 +231,7 @@ class ChallengeFragment : Fragment() {
     private fun initViews() {
         initModifierButton()
         initPointButton()
+        initAppAddButton()
         initChallengeCreateButton()
         initChallengeGoalsRecyclerView()
         initChallengeCalendarRecyclerView()
@@ -211,14 +239,11 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun setChallengeCalendarVisibility(isChallengeExist: Boolean) {
-        val challengeCreateVisibility = (!isChallengeExist).mapBooleanToVisibility()
-        val challengeInfoVisibility = (isChallengeExist).mapBooleanToVisibility()
-
-        binding.btnChallengeCreate.visibility = challengeCreateVisibility
-        binding.tvChallengeCreateTitle.visibility = challengeCreateVisibility
-        binding.tvChallengeDay.visibility = challengeInfoVisibility
-        binding.tvChallengeStartDate.visibility = challengeInfoVisibility
-        binding.rvChallengeCalendar.visibility = challengeInfoVisibility
+        binding.btnChallengeCreate.isInvisible = isChallengeExist
+        binding.tvChallengeCreateTitle.isInvisible = isChallengeExist
+        binding.tvChallengeDay.isInvisible = !isChallengeExist
+        binding.tvChallengeStartDate.isInvisible = !isChallengeExist
+        binding.rvChallengeCalendar.isInvisible = !isChallengeExist
     }
 
     private fun bindUsageGoals(challengeUsageGoalList: List<ChallengeUsageGoal>) {
@@ -251,31 +276,6 @@ class ChallengeFragment : Fragment() {
             adapter = ChallengeCalendarAdapter(context)
         }
         initChallengeCalendar()
-    }
-
-    private fun initAppSelectionResultLauncher() {
-        appSelectionResultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    addSelectedApps(result)
-                }
-            }
-    }
-
-    private fun initNewChallengeResultLauncher() {
-        newChallengeResultLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    val period = result.data?.getIntExtra(NewChallengeActivity.PERIOD, 0)
-                    val goalTime = result.data?.getLongExtra(NewChallengeActivity.GOALTIME, 0)
-                    activityViewModel.generateNewChallenge(
-                        NewChallenge(
-                            period = period ?: 0,
-                            goalTime = goalTime ?: 0,
-                        ),
-                    )
-                }
-            }
     }
 
     private fun initChallengeCalendar() {
@@ -318,11 +318,6 @@ class ChallengeFragment : Fragment() {
     private fun initChallengeGoalsRecyclerView() {
         binding.rvAppUsageGoals.run {
             adapter = ChallengeUsageGoalsAdapter(
-                onAppListAddClicked = {
-                    AmplitudeUtils.trackEventWithProperties("click_add_button")
-                    val intent = Intent(requireContext(), AppAddActivity::class.java)
-                    appSelectionResultLauncher.launch(intent)
-                },
                 onAppItemClicked = { challengeGoal ->
                     when (viewModel.challengeState.value.modifierState) {
                         ModifierState.EDIT -> {

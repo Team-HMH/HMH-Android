@@ -19,6 +19,7 @@ import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatsListUseCase
 import com.hmh.hamyeonham.userinfo.model.UserInfo
 import com.hmh.hamyeonham.userinfo.repository.UserInfoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -81,11 +82,11 @@ class MainViewModel @Inject constructor(
 
     init {
         getBanner()
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             updateIsUnLockUseCase()
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             updateGoals()
             getChallengeStatus()
             getUserInfo()
@@ -94,19 +95,19 @@ class MainViewModel @Inject constructor(
     }
 
     fun reloadChallengeStatus() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             getChallengeStatus()
         }
     }
 
     fun reloadUsageStatsList() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             getTodayTimeAndSetUsageStatsList()
         }
     }
 
     fun updateDailyChallengeFailed() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             pointRepository.usePoint().onSuccess {
                 _userPoint.value = it.userPoint
                 setIsUnLockUseCase(true).onSuccess {
@@ -133,7 +134,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun generateNewChallenge(newChallenge: NewChallenge) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             newChallengeUseCase(newChallenge).onSuccess {
                 getChallengeStatus()
             }
@@ -161,7 +162,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun updateState(transform: suspend MainState.() -> MainState) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Main) {
             val currentState = mainState.value
             val newState = currentState.transform()
             _mainState.value = newState
