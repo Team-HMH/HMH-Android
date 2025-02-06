@@ -4,6 +4,7 @@ import com.hmh.hamyeonham.common.BuildConfig
 import com.hmh.hamyeonham.common.qualifier.Authenticated
 import com.hmh.hamyeonham.common.qualifier.Header
 import com.hmh.hamyeonham.common.qualifier.Log
+import com.hmh.hamyeonham.common.qualifier.ResultCall
 import com.hmh.hamyeonham.common.qualifier.Secured
 import com.hmh.hamyeonham.common.qualifier.Unsecured
 import com.hmh.hamyeonham.core.network.auth.authenticator.AuthenticatorUtil
@@ -102,13 +103,21 @@ object NetModule {
 
     @Singleton
     @Provides
-    fun provideResultCallAdapterFactory(): ResultCallAdapterFactory = ResultCallAdapterFactory()
-
-    @Singleton
-    @Provides
     @Secured
     fun provideRetrofit(
         @Secured client: OkHttpClient,
+        converterFactory: Converter.Factory,
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(HMHBaseUrl)
+        .client(client)
+        .addConverterFactory(converterFactory)
+        .build()
+
+    @Singleton
+    @Provides
+    @Unsecured
+    fun provideRetrofitNotNeededAuth(
+        @Unsecured client: OkHttpClient,
         converterFactory: Converter.Factory,
         resultCallAdapterFactory: ResultCallAdapterFactory,
     ): Retrofit = Retrofit.Builder()
@@ -120,9 +129,9 @@ object NetModule {
 
     @Singleton
     @Provides
-    @Unsecured
-    fun provideRetrofitNotNeededAuth(
-        @Unsecured client: OkHttpClient,
+    @ResultCall
+    fun provideResultCallRetrofit(
+        @Secured client: OkHttpClient,
         converterFactory: Converter.Factory,
         resultCallAdapterFactory: ResultCallAdapterFactory,
     ): Retrofit = Retrofit.Builder()

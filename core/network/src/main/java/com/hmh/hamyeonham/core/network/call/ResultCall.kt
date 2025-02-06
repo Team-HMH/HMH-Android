@@ -19,7 +19,10 @@ class ResultCall<T>(
 
     override fun enqueue(callback: Callback<Result<T>>) {
         call.enqueue(object : Callback<T> {
-            override fun onResponse(call: Call<T>, response: Response<T>) {
+            override fun onResponse(
+                call: Call<T>,
+                response: Response<T>
+            ) {
                 val result = parseBaseResponse(response)
                 callback.onResponse(this@ResultCall, Response.success(response.code(), result))
             }
@@ -50,35 +53,33 @@ class ResultCall<T>(
      * BaseResponse<T>를 안전하게 처리하여 Result<T>로 변환
      */
     private fun parseBaseResponse(response: Response<T>): Result<T> {
-        val responseBody = response.body()
-
-        return when {
-            response.isSuccessful -> {
-                if (responseBody == null) {
-                    Result.failure(ApiException(getBodyNullErrorResponse(response)))
-                } else {
-                    try {
-                        val baseResponse = responseBody as BaseResponse<T>
-                        Result.success(baseResponse.data)
-                    } catch (e: ClassCastException) {
-                        Result.failure(
-                            ApiException(
-                                ErrorResponse(
-                                    700,
-                                    "response body is not BaseResponse"
-                                )
-                            )
+        return if (response.isSuccessful) {
+            val baseResponse = response.body() as? BaseResponse<T> ?: return Result.failure(
+                ApiException(
+                    ErrorResponse(
+                        700,
+                        "Response body is null or not in expected BaseResponse format"
+                    )
+                )
+            )
+            try {
+                Result.success(baseResponse.data)
+            } catch (e: Exception) {
+                Result.failure(
+                    ApiException(
+                        ErrorResponse(
+                            700,
+                            "Response body conversion failed: ${e.message}"
                         )
-                    }
-                }
+                    )
+                )
             }
-
-            else -> {
-                val errorResponse = parseErrorResponse(response)
-                Result.failure(ApiException(errorResponse))
-            }
+        } else {
+            val errorResponse = parseErrorResponse(response)
+            Result.failure(ApiException(errorResponse))
         }
     }
+
 
     /**
      * Retrofit을 사용해 errorBody()를 파싱하여 ErrorResponse로 변환

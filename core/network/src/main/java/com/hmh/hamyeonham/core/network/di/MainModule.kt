@@ -1,6 +1,6 @@
 package com.hmh.hamyeonham.core.network.di
 
-import com.hmh.hamyeonham.common.qualifier.Secured
+import com.hmh.hamyeonham.common.qualifier.ResultCall
 import com.hmh.hamyeonham.core.network.main.MainService
 import dagger.Module
 import dagger.Provides
@@ -15,5 +15,5 @@ import javax.inject.Singleton
 object MainModule {
     @Provides
     @Singleton
-    fun provideMainService(@Secured retrofit: Retrofit): MainService = retrofit.create()
+    fun provideMainService(@ResultCall retrofit: Retrofit): MainService = retrofit.create()
 }
