@@ -24,7 +24,6 @@ sealed interface AppAddEffect {
     data object NONE : AppAddEffect
 }
 
-
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class AppAddViewModel @Inject constructor(
@@ -45,6 +44,7 @@ class AppAddViewModel @Inject constructor(
     val effect = _effect.asSharedFlow()
 
     private val _query = MutableStateFlow("")
+    val query = _query.asStateFlow()
 
     init {
         viewModelScope.launch {
