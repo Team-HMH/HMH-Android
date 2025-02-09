@@ -22,19 +22,46 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
+      - name: Create local.properties
+        run: |
+          echo "kakaoApiKey=${{ secrets.KAKAO_API_KEY }}" > local.properties
+          echo "amplitudeApiKey=${{ secrets.AMPLITUDE_API_KEY }}" >> local.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> local.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> local.properties
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> local.properties
+          echo "hmhDevBaseUrl=${{ secrets.HMH_DEV_BASE_URL }}" >> local.properties
+          echo "hmhProdBaseUrl=${{ secrets.HMH_PROD_BASE_URL }}" >> local.properties
+
+      - name: Setup Firebase Service Account
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: gradle-cache-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-cache-${{ runner.os }}-
+
+      - name: Extract Version Information
+        id: version-info
+        run: |
+          VERSION_INFO=$(./gradlew -q printVersionInfo)
+          echo "$VERSION_INFO"
+          echo "$VERSION_INFO" | grep 'VERSION_NAME' | cut -d'=' -f2 | tr -d '\r' >> $GITHUB_ENV
+          echo "$VERSION_INFO" | grep 'VERSION_CODE' | cut -d'=' -f2 | tr -d '\r' >> $GITHUB_ENV
+
       - name: Build APK
         run: ./gradlew assembleRelease
 
       - name: Verify APK Existence
         run: test -f app/build/outputs/apk/release/app-release.apk
 
-      - name: Extract Version Information
-        id: version-info
+      - name: Generate Release Notes
+        id: release-notes
         run: |
-          VERSION_NAME=$(grep 'versionName =' app/build.gradle.kts | sed -E 's/[^0-9.]//g')
-          VERSION_CODE=$(grep 'versionCode =' app/build.gradle.kts | sed -E 's/[^0-9]//g')
-          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
-          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+          RELEASE_NOTES=$(git log --pretty=format:"%h %s" -n 10 | tr '\n' ' ')
+          echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_ENV
 
       - name: Upload to Firebase App Distribution
         id: firebase_upload
@@ -44,7 +71,7 @@ jobs:
           serviceCredentialsFileContent: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
           groups: hmh-team
           file: app/build/outputs/apk/release/app-release.apk
-          releaseNotes: "New version uploaded via GitHub Actions"
+          releaseNotes: "${{ env.RELEASE_NOTES }}"
 
       - name: Get Firebase Download URL (Debug)
         run: |
