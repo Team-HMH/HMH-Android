@@ -116,3 +116,11 @@ dependencies {
     // HMH - Usage Stats
     implementation(libs.hmh.hus)
 }
+
+
+tasks.register("printVersionInfo") {
+    doLast {
+        println("VERSION_NAME=${project.version}")
+        println("VERSION_CODE=${project.extra["androidVersionCode"]}")
+    }
+}
