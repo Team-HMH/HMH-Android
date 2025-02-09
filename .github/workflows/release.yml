@@ -62,7 +62,7 @@ jobs:
 
       - name: Generate Release Notes
         id: release-notes
-        run: echo "RELEASE_NOTES=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+        run: echo "RELEASE_NOTES=$(git log --oneline -n 5)" >> $GITHUB_ENV
 
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -72,3 +72,15 @@ jobs:
           groups: hmh-team
           file: app/build/outputs/apk/release/app-release.apk
           releaseNotes: ${{ env.RELEASE_NOTES }}
+
+      - name: Send Slack Notification
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{
+            "text": "🎉 *Firebase 릴리즈 완료!* 🎉\n
+            📌 *배포 브랜치:* `${{ github.ref_name }}`\n
+            🔖 *릴리즈 노트:*\n
+            ```${{ env.RELEASE_NOTES }}```\n
+            🔍 *커밋 SHA:* `${{ github.sha }}`\n
+            📥 *다운로드 링크:* <${{ env.DOWNLOAD_URL }}|여기를 클릭>"
+          }' ${{ secrets.SLACK_RELEASE_WEBHOOK_URL }}
