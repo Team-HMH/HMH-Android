@@ -109,4 +109,4 @@ jobs:
             🔖 *릴리즈 노트:*\n
             ```${{ env.RELEASE_NOTES }}```\n
             📥 *다운로드 링크:* <${{ env.DOWNLOAD_URL }}|여기를 클릭>"
-          }' ${{ secrets.SLACK_WEBHOOK_URL }}
+          }' ${{ secrets.SLACK_RELEASE_WEBHOOK_URL }}
