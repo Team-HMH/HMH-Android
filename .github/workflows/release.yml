@@ -27,15 +27,23 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Create local.properties
+      - name: Add Local Properties
+        env:
+          KAKAO_API_KEY: ${{ secrets.KAKAO_API_KEY }}
+          HMH_DEV_BASE_URL: ${{ secrets.HMH_DEV_BASE_URL }}
+          HMH_PROD_BASE_URL: ${{ secrets.HMH_PROD_BASE_URL }}
+          AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
         run: |
-          echo "kakaoApiKey=${{ secrets.KAKAO_API_KEY }}" > ./app/local.properties
-          echo "amplitudeApiKey=${{ secrets.AMPLITUDE_API_KEY }}" >> ./app/local.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> ./app/local.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> ./app/local.properties
-          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> ./app/local.properties
-          echo "hmhDevBaseUrl=${{ secrets.HMH_DEV_BASE_URL }}" >> ./app/local.properties
-          echo "hmhProdBaseUrl=${{ secrets.HMH_PROD_BASE_URL }}" >> ./app/local.properties
+          echo kakaoApiKey=$KAKAO_API_KEY >> ./local.properties
+          echo amplitudeApiKey=$AMPLITUDE_API_KEY >> ./local.properties
+          echo keyAlias=$KEY_ALIAS >> ./local.properties
+          echo keyPassword=$KEY_PASSWORD >> ./local.properties
+          echo storePassword=$STORE_PASSWORD >> ./local.properties
+          echo hmhDevBaseUrl=$HMH_DEV_BASE_URL >> ./local.properties
+          echo hmhProdBaseUrl=$HMH_PROD_BASE_URL >> ./local.properties
 
       - name: Setup Firebase Service Account
         run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
