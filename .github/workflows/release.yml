@@ -109,4 +109,9 @@ jobs:
       - name: Send Slack Notification
         if: success()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text": "🎉 *Firebase 릴리즈 완료!* 🎉\n🚀 *배포 버전:* `${{ env.VERSION_NAME }}` (버전 코드: ${{ env.VERSION_CODE }})\n📌 *배포 브랜치:* `${{ github.ref_name }}`\n🔖 *릴리즈 노트:*\n```${{ env.RELEASE_NOTES }}```\n📥 *다운로드 링크:* <${{ steps.firebase_upload.outputs.TESTING_URI }}|여기를 클릭>"}' ${{ secrets.SLACK_RELEASE_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"🎉 *Firebase 릴리즈 완료!* 🎉\\n
+          🚀 *배포 버전:* ${{ env.VERSION_NAME }} (버전 코드: ${{ env.VERSION_CODE }})\\n
+          📌 *배포 브랜치:* ${{ github.ref_name }}\\n
+          🔖 *릴리즈 노트:*\\n
+          ${{ env.RELEASE_NOTES }}\\n
+          📥 *다운로드 링크:* <${{ steps.firebase_upload.outputs.TESTING_URI }}|여기를 클릭>\"}" ${{ secrets.SLACK_RELEASE_WEBHOOK_URL }}
