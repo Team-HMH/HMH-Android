@@ -75,8 +75,21 @@ jobs:
       - name: Generate Release Notes
         id: release-notes
         run: |
-          RELEASE_NOTES=$(git log --pretty=format:"%h %s" -n 10 | tr '\n' ' ')
-          echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_ENV
+          CURRENT_RELEASE_BRANCH=${GITHUB_REF#refs/heads/}
+          echo "Current release branch: ${CURRENT_RELEASE_BRANCH}"
+
+          git fetch --all
+
+          LAST_RELEASE_BRANCH=$(git for-each-ref --sort=-committerdate --format '%(refname:short)' refs/remotes/origin/release/ | grep -v "^origin/${CURRENT_RELEASE_BRANCH}$" | head -n 1)
+
+          if [ -z "$LAST_RELEASE_BRANCH" ]; then
+            echo "No previous release branch found. Using the first commit as baseline."
+            LAST_RELEASE_BRANCH=$(git rev-list --max-parents=0 HEAD)
+          fi
+          echo "Using last release branch: ${LAST_RELEASE_BRANCH}"
+
+          RELEASE_NOTES=$(git log ${LAST_RELEASE_BRANCH}..HEAD --pretty=format:"%h %s" | tr '\n' ' ')
+          echo "RELEASE_NOTES=${RELEASE_NOTES}" >> $GITHUB_ENV
 
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -96,11 +109,4 @@ jobs:
       - name: Send Slack Notification
         if: success()
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{
-            "text": "🎉 *Firebase 릴리즈 완료!* 🎉\n
-            🚀 *배포 버전:* `${{ env.VERSION_NAME }} (버전 코드: ${{ env.VERSION_CODE }})`\n
-            📌 *배포 브랜치:* `${{ github.ref_name }}`\n
-            🔖 *릴리즈 노트:*\n
-            ```${{ env.RELEASE_NOTES }}```\n
-            📥 *다운로드 링크:* <${{ steps.firebase_upload.outputs.TESTING_URI }}|여기를 클릭>"
-          }' ${{ secrets.SLACK_RELEASE_WEBHOOK_URL }}
+          curl -X POST -H 'Content-type: application/json' --data '{"text": "🎉 *Firebase 릴리즈 완료!* 🎉\n🚀 *배포 버전:* `${{ env.VERSION_NAME }}` (버전 코드: ${{ env.VERSION_CODE }})\n📌 *배포 브랜치:* `${{ github.ref_name }}`\n🔖 *릴리즈 노트:*\n```${{ env.RELEASE_NOTES }}```\n📥 *다운로드 링크:* <${{ steps.firebase_upload.outputs.TESTING_URI }}|여기를 클릭>"}' ${{ secrets.SLACK_RELEASE_WEBHOOK_URL }}
