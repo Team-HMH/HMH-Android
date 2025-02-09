@@ -120,7 +120,7 @@ dependencies {
 
 tasks.register("printVersionInfo") {
     doLast {
-        println("VERSION_NAME=${project.version}")
-        println("VERSION_CODE=${project.extra["androidVersionCode"]}")
+        println("VERSION_NAME=${android.defaultConfig.versionName}")
+        println("VERSION_CODE=${android.defaultConfig.versionCode}")
     }
 }
