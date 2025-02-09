@@ -73,14 +73,43 @@ jobs:
           file: app/build/outputs/apk/release/app-release.apk
           releaseNotes: ${{ env.RELEASE_NOTES }}
 
+      - name: Install Firebase CLI
+        run: curl -sL https://firebase.tools | bash
+
+      - name: Get Firebase Download URL
+        id: firebase-url
+        run: |
+          DOWNLOAD_URL=$(firebase appdistribution:releases:list --app ${{ secrets.FIREBASE_APP_ID }} --limit 1 --format json | jq -r '.[0].downloadUrl')
+          echo "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
+
+      - name: Find Latest Release Branch
+        id: previous-release
+        run: |
+          PREV_RELEASE_BRANCH=$(git branch -r --sort=-committerdate | grep 'origin/release/' | grep -v ${{ github.ref_name }} | head -n 1 | sed 's/origin\///')
+          echo "PREV_RELEASE_BRANCH=$PREV_RELEASE_BRANCH" >> $GITHUB_ENV
+
+      - name: Generate Release Notes
+        id: release-notes
+        run: |
+          RELEASE_NOTES=$(git log ${{ env.PREV_RELEASE_BRANCH }}..HEAD --oneline)
+          echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_ENV
+
+      - name: Extract Version Information
+        id: version-info
+        run: |
+          VERSION_NAME=$(grep 'versionName' app/build.gradle.kts | awk '{print $2}' | tr -d '"')
+          VERSION_CODE=$(grep 'versionCode' app/build.gradle.kts | awk '{print $2}')
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+
       - name: Send Slack Notification
         if: success()
         run: |
           curl -X POST -H 'Content-type: application/json' --data '{
             "text": "🎉 *Firebase 릴리즈 완료!* 🎉\n
+            🚀 *배포 버전:* `${{ env.VERSION_NAME }} (버전 코드: ${{ env.VERSION_CODE }})`\n
             📌 *배포 브랜치:* `${{ github.ref_name }}`\n
             🔖 *릴리즈 노트:*\n
             ```${{ env.RELEASE_NOTES }}```\n
-            🔍 *커밋 SHA:* `${{ github.sha }}`\n
             📥 *다운로드 링크:* <${{ env.DOWNLOAD_URL }}|여기를 클릭>"
-          }' ${{ secrets.SLACK_RELEASE_WEBHOOK_URL }}
+          }' ${{ secrets.SLACK_WEBHOOK_URL }}
