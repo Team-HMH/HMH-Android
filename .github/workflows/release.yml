@@ -48,8 +48,10 @@ jobs:
         run: |
           VERSION_INFO=$(./gradlew -q printVersionInfo)
           echo "$VERSION_INFO"
-          echo "$VERSION_INFO" | grep 'VERSION_NAME' | cut -d'=' -f2 | tr -d '\r' >> $GITHUB_ENV
-          echo "$VERSION_INFO" | grep 'VERSION_CODE' | cut -d'=' -f2 | tr -d '\r' >> $GITHUB_ENV
+          VERSION_NAME=$(echo "$VERSION_INFO" | grep 'VERSION_NAME' | cut -d'=' -f2 | tr -d '\r')
+          VERSION_CODE=$(echo "$VERSION_INFO" | grep 'VERSION_CODE' | cut -d'=' -f2 | tr -d '\r')
+          echo "VERSION_NAME=\"$VERSION_NAME\"" >> $GITHUB_ENV
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
 
       - name: Build APK
         run: ./gradlew assembleRelease
