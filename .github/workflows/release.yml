@@ -79,14 +79,13 @@ jobs:
           echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_ENV
 
       - name: Upload to Firebase App Distribution
-        id: firebase_upload
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
-          serviceCredentialsFileContent: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
           groups: hmh-team
           file: app/build/outputs/apk/release/app-release.apk
-          releaseNotes: "${{ env.RELEASE_NOTES }}"
+          releaseNotes: ${{ env.RELEASE_NOTES }}
 
       - name: Get Firebase Download URL (Debug)
         run: |
