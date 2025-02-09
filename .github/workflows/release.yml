@@ -60,9 +60,25 @@ jobs:
       - name: Verify APK Existence
         run: test -f app/build/outputs/apk/release/app-release.apk
 
+      - name: Find Latest Release Branch
+        id: previous-release
+        run: |
+          PREV_RELEASE_BRANCH=$(git branch -r --sort=-committerdate | grep 'origin/release/' | grep -v ${{ github.ref_name }} | head -n 1 | sed 's/origin\///')
+          echo "PREV_RELEASE_BRANCH=$PREV_RELEASE_BRANCH" >> $GITHUB_ENV
+
       - name: Generate Release Notes
-        id: release-notes
-        run: echo "RELEASE_NOTES=$(git log --oneline -n 5)" >> $GITHUB_ENV
+        id: release-notes-latest
+        run: |
+          RELEASE_NOTES=$(git log ${{ env.PREV_RELEASE_BRANCH }}..HEAD --oneline)
+          echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_ENV
+
+      - name: Extract Version Information
+        id: version-info
+        run: |
+          VERSION_NAME=$(grep 'versionName' app/build.gradle.kts | awk '{print $2}' | tr -d '"')
+          VERSION_CODE=$(grep 'versionCode' app/build.gradle.kts | awk '{print $2}')
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
 
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
@@ -79,28 +95,9 @@ jobs:
       - name: Get Firebase Download URL
         id: firebase-url
         run: |
+          sleep 10 # Firebase에 새 릴리즈가 반영될 시간을 확보
           DOWNLOAD_URL=$(firebase appdistribution:releases:list --app ${{ secrets.FIREBASE_APP_ID }} --limit 1 --format json | jq -r '.[0].downloadUrl')
           echo "DOWNLOAD_URL=$DOWNLOAD_URL" >> $GITHUB_ENV
-
-      - name: Find Latest Release Branch
-        id: previous-release
-        run: |
-          PREV_RELEASE_BRANCH=$(git branch -r --sort=-committerdate | grep 'origin/release/' | grep -v ${{ github.ref_name }} | head -n 1 | sed 's/origin\///')
-          echo "PREV_RELEASE_BRANCH=$PREV_RELEASE_BRANCH" >> $GITHUB_ENV
-
-      - name: Generate Release Notes
-        id: release-notes
-        run: |
-          RELEASE_NOTES=$(git log ${{ env.PREV_RELEASE_BRANCH }}..HEAD --oneline)
-          echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_ENV
-
-      - name: Extract Version Information
-        id: version-info
-        run: |
-          VERSION_NAME=$(grep 'versionName' app/build.gradle.kts | awk '{print $2}' | tr -d '"')
-          VERSION_CODE=$(grep 'versionCode' app/build.gradle.kts | awk '{print $2}')
-          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
-          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
 
       - name: Send Slack Notification
         if: success()
