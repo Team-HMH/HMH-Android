@@ -42,7 +42,7 @@
 <table align="center">
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/KwakEuiJin"><img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/887eb00f-69de-4618-9a1c-07b2e1665da4" width="200px;" alt="Kwak EuiJin"/><br/><sub><b>KwakEuiJin</b></sub></a><br /><a href="https://github.com/Team-HMH/HMH-Android/commits?author=KwakEuiJin" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/kez-lab"><img src="https://avatars.githubusercontent.com/u/93872496?v=4" width="200px;" alt="Kez"/><br/><sub><b>kez</b></sub></a><br /><a href="https://github.com/Team-HMH/HMH-Android/commits?author=kez-lab" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/kangyuri1114"><img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/f1d5e563-74c8-4f16-a105-96a639a20f52" width="200px;" alt="Kang Yuri"/><br/><sub><b>KangYuri</b></sub></a><br /><a href="https://github.com/Team-HMH/HMH-Android/assets/84266681/eead72e1-a883-4ed0-a282-12deea8e3782" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jihyun0v0"><img src="https://github.com/Team-HMH/HMH-Android/assets/84266681/3c1e14bd-be7e-435c-9af1-315a73aab13f" width="200px;" alt="Kyoung JiHyun"/><br /><sub><b>JiHyun Kyoung</b></sub></a><br/><a href="https://github.com/Team-HMH/HMH-Android/commits?author=jihyun0v0" title="Code">💻</a></td>
     </tr>
