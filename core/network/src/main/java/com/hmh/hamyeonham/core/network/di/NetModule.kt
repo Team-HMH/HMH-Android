@@ -4,12 +4,14 @@ import com.hmh.hamyeonham.common.BuildConfig
 import com.hmh.hamyeonham.common.qualifier.Authenticated
 import com.hmh.hamyeonham.common.qualifier.Header
 import com.hmh.hamyeonham.common.qualifier.Log
+import com.hmh.hamyeonham.common.qualifier.ResultCall
 import com.hmh.hamyeonham.common.qualifier.Secured
 import com.hmh.hamyeonham.common.qualifier.Unsecured
 import com.hmh.hamyeonham.core.network.auth.authenticator.AuthenticatorUtil
 import com.hmh.hamyeonham.core.network.auth.authenticator.HMHAuthenticator
 import com.hmh.hamyeonham.core.network.auth.interceptor.AuthInterceptor
 import com.hmh.hamyeonham.core.network.auth.interceptor.HeaderInterceptor
+import com.hmh.hamyeonham.core.network.call.ResultCallAdapterFactory
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Binds
 import dagger.Module
@@ -117,10 +119,26 @@ object NetModule {
     fun provideRetrofitNotNeededAuth(
         @Unsecured client: OkHttpClient,
         converterFactory: Converter.Factory,
+        resultCallAdapterFactory: ResultCallAdapterFactory,
     ): Retrofit = Retrofit.Builder()
         .baseUrl(HMHBaseUrl)
         .client(client)
         .addConverterFactory(converterFactory)
+        .addCallAdapterFactory(resultCallAdapterFactory)
+        .build()
+
+    @Singleton
+    @Provides
+    @ResultCall
+    fun provideResultCallRetrofit(
+        @Secured client: OkHttpClient,
+        converterFactory: Converter.Factory,
+        resultCallAdapterFactory: ResultCallAdapterFactory,
+    ): Retrofit = Retrofit.Builder()
+        .baseUrl(HMHBaseUrl)
+        .client(client)
+        .addConverterFactory(converterFactory)
+        .addCallAdapterFactory(resultCallAdapterFactory)
         .build()
 
     @Module

@@ -1,6 +1,7 @@
 package com.hmh.hamyeonham.data.main
 
 import com.hmh.hamyeonham.core.network.main.MainService
+import com.hmh.hamyeonham.core.network.main.model.BannerResponse
 import com.hmh.hamyeonham.domain.main.MainRepository
 import com.hmh.hamyeonham.domain.main.banner.model.Banner
 import com.hmh.hamyeonham.login.mapper.toBanner
@@ -10,8 +11,6 @@ class DefaultMainRepository @Inject constructor(
     private val mainService: MainService
 ) : MainRepository {
     override suspend fun getBanner(): Result<Banner> {
-        return runCatching {
-            mainService.getBanner().data.toBanner()
-        }
+        return mainService.getBanner().mapCatching(BannerResponse::toBanner)
     }
 }
