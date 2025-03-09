@@ -5,9 +5,14 @@
   <br />
 </div>
 
-# 하면함 Android 
-## 스마트폰 중독 탈출, 너도 하면함!
+# 하면함 Android : 스마트폰 중독 탈출, 너도 하면함!
+## HMH Gradle Module Dependency Graph
 <br/>
+
+![](gradle/dependency-graph/project.dot.png)
+
+<br/>
+
 <div align="center">
   <p align="center">
     <img src="https://img.shields.io/badge/Kotlin-1.9.20-7F52FF?style=for-the-badge&logo=Kotlin&logoColor=white"/>
@@ -17,6 +22,7 @@
   </p>
   <br />
 </div>
+<br/>
 
 
 ![Alt](https://repobeats.axiom.co/api/embed/d2c401ae723c367a03ed9fb81ea6e6e7cfbee2ea.svg "Repobeats analytics image")
