@@ -39,7 +39,7 @@ secret-gradle-plugin = "2.0.1"
 google-services = "4.4.2"
 crashlytics = "3.0.3"
 firebase = "33.9.0"
-admob = "23.6.0"
+admob = "24.1.0"
 oss-plugin = "0.10.6"
 oss = "17.1.0"
 
