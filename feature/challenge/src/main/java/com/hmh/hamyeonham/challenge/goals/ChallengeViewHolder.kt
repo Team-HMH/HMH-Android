@@ -9,15 +9,10 @@ import com.hmh.hamyeonham.common.context.getAppIconFromPackageName
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.time.convertTimeToString
 import com.hmh.hamyeonham.feature.challenge.R
-import com.hmh.hamyeonham.feature.challenge.databinding.ItemGoalAddBinding
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemUsageGoalBinding
 
 
 sealed class ChallengeViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
-    enum class ChallengeViewHolderType {
-        USAGE_GOALS, GOAL_ADD
-    }
-
     class UsageGoalsViewHolder(
         private val binding: ItemUsageGoalBinding,
         private val onAppItemClicked: (ChallengeUsageGoal) -> Unit
@@ -76,16 +71,5 @@ sealed class ChallengeViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder
             ivTrash.setImageResource(trashIconId)
         }
     }
-
-    class GoalAddViewHolder(
-        binding: ItemGoalAddBinding, private val onAppListAddClicked: () -> Unit
-    ) : ChallengeViewHolder(binding) {
-        init {
-            binding.root.setOnClickListener {
-                onAppListAddClicked()
-            }
-        }
-    }
-
 }
 

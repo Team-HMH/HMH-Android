@@ -1,0 +1,118 @@
+name: Release Firebase Distribution Workflow
+
+on:
+  push:
+    branches:
+      - release/**
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Decode and Save Keystore File
+        run: |
+          mkdir -p keystore
+          echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 --decode > keystore/release.keystore.jks
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Add Local Properties
+        env:
+          KAKAO_API_KEY: ${{ secrets.KAKAO_API_KEY }}
+          HMH_DEV_BASE_URL: ${{ secrets.HMH_DEV_BASE_URL }}
+          HMH_PROD_BASE_URL: ${{ secrets.HMH_PROD_BASE_URL }}
+          AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+        run: |
+          echo kakaoApiKey=$KAKAO_API_KEY >> ./local.properties
+          echo amplitudeApiKey=$AMPLITUDE_API_KEY >> ./local.properties
+          echo keyAlias=$KEY_ALIAS >> ./local.properties
+          echo keyPassword=$KEY_PASSWORD >> ./local.properties
+          echo storePassword=$STORE_PASSWORD >> ./local.properties
+          echo hmhDevBaseUrl=$HMH_DEV_BASE_URL >> ./local.properties
+          echo hmhProdBaseUrl=$HMH_PROD_BASE_URL >> ./local.properties
+
+      - name: Setup Firebase Service Account
+        run: echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > ./app/google-services.json
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: gradle-cache-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-cache-${{ runner.os }}-
+
+      - name: Extract Version Information
+        id: version-info
+        run: |
+          VERSION_INFO=$(./gradlew -q printVersionInfo)
+          echo "$VERSION_INFO"
+          VERSION_NAME=$(echo "$VERSION_INFO" | grep 'VERSION_NAME' | cut -d'=' -f2 | tr -d '\r' | tr -d '\n')
+          VERSION_CODE=$(echo "$VERSION_INFO" | grep 'VERSION_CODE' | cut -d'=' -f2 | tr -d '\r' | tr -d '\n')
+          echo "VERSION_NAME=\"$VERSION_NAME\"" >> $GITHUB_ENV
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+
+      - name: Build APK
+        run: ./gradlew assembleRelease
+
+      - name: Verify APK Existence
+        run: test -f app/build/outputs/apk/release/app-release.apk
+
+      - name: Generate Release Notes
+        id: release-notes
+        run: |
+          CURRENT_RELEASE_BRANCH=${GITHUB_REF#refs/heads/}
+          echo "Current release branch: ${CURRENT_RELEASE_BRANCH}"
+
+          git fetch --all
+
+          LAST_RELEASE_BRANCH=$(git for-each-ref --sort=-committerdate --format '%(refname:short)' refs/remotes/origin/release/ | grep -v "^origin/${CURRENT_RELEASE_BRANCH}$" | head -n 1)
+
+          if [ -z "$LAST_RELEASE_BRANCH" ]; then
+            echo "No previous release branch found. Using the first commit as baseline."
+            LAST_RELEASE_BRANCH=$(git rev-list --max-parents=0 HEAD)
+          fi
+          echo "Using last release branch: ${LAST_RELEASE_BRANCH}"
+
+          RELEASE_NOTES=$(git log ${LAST_RELEASE_BRANCH}..HEAD --pretty=format:"%h %s" | tr '\n' ' ')
+          echo "RELEASE_NOTES=${RELEASE_NOTES}" >> $GITHUB_ENV
+
+      - name: Upload to Firebase App Distribution
+        id: firebase_upload
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
+          groups: hmh-team
+          file: app/build/outputs/apk/release/app-release.apk
+          releaseNotes: ${{ env.RELEASE_NOTES }}
+
+      - name: Get Firebase Download URL (Debug)
+        run: |
+          echo "Firebase Console URL: ${{ steps.firebase_upload.outputs.FIREBASE_CONSOLE_URI }}"
+          echo "Tester Download URL: ${{ steps.firebase_upload.outputs.TESTING_URI }}"
+          echo "Binary Download URL: ${{ steps.firebase_upload.outputs.BINARY_DOWNLOAD_URI }}"
+
+      - name: Send Slack Notification
+        if: success()
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data "{\"text\": \"🎉 *Firebase 릴리즈 완료!* 🎉\\n
+          🚀 *배포 버전:* ${{ env.VERSION_NAME }} (버전 코드: ${{ env.VERSION_CODE }})\\n
+          📌 *배포 브랜치:* ${{ github.ref_name }}\\n
+          🔖 *릴리즈 노트:*\\n
+          ${{ env.RELEASE_NOTES }}\\n
+          📥 *다운로드 링크:* <${{ steps.firebase_upload.outputs.TESTING_URI }}|여기를 클릭>\"}" ${{ secrets.SLACK_RELEASE_WEBHOOK_URL }}

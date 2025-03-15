@@ -5,7 +5,6 @@ plugins {
     hmh("compose")
     hmh("test")
     alias(libs.plugins.google.services)
-    alias(libs.plugins.app.distribution)
     alias(libs.plugins.crashlytics)
 }
 
@@ -45,12 +44,18 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("release")
         }
+    }
+
+    lint {
+        disable.add("Instantiatable")
+        baseline = file("lint-baseline.xml")
     }
 }
 
@@ -110,4 +115,12 @@ dependencies {
 
     // HMH - Usage Stats
     implementation(libs.hmh.hus)
+}
+
+
+tasks.register("printVersionInfo") {
+    doLast {
+        println("VERSION_NAME=${android.defaultConfig.versionName}")
+        println("VERSION_CODE=${android.defaultConfig.versionCode}")
+    }
 }

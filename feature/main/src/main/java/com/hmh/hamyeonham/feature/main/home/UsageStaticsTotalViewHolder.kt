@@ -20,6 +20,10 @@ class UsageStaticsTotalViewHolder(
         binding.pbTotalUsage.setProgressWithAnimation(totalModel.totalPercentage)
     }
 
+    fun unbind() {
+        binding.lavBlackhole.cancelAnimation()
+    }
+
     private fun bindUsageStaticsInfo(totalModel: HomeItem.TotalModel) {
         binding.run {
             val totalTimeLeft =
@@ -33,13 +37,13 @@ class UsageStaticsTotalViewHolder(
                 )
             tvTotalGoal.text =
                 context.getString(
-                    R.string.total_goal_time,
-                    convertMillisecondToString(totalModel.totalGoalTime),
+                    R.string.total_goal_time_format,
+                    convertMillisecondToString(totalModel.totalGoalTime)
                 )
             tvTotalUsage.text =
                 context.getString(
                     R.string.total_used,
-                    convertMillisecondToString(totalModel.totalTimeInForeground),
+                    convertMillisecondToString(totalModel.totalTimeInForeground)
                 )
             pbTotalUsage.progress = totalModel.totalPercentage
         }
@@ -47,18 +51,17 @@ class UsageStaticsTotalViewHolder(
     }
 
     private fun bindBlackHoleInfo(totalModel: HomeItem.TotalModel) {
-        val blackHoleInfo =
-            when {
-                // 챌린지 성공한 경우
-                totalModel.challengeSuccess -> {
-                    BlackHoleInfo.createByPercentage(totalModel.totalPercentage)
-                        ?: BlackHoleInfo.LEVEL0
-                }
-                // 챌린지 실패한 경우
-                else -> {
-                    BlackHoleInfo.LEVEL5
-                }
+        val blackHoleInfo = when {
+            // 챌린지 성공한 경우
+            totalModel.challengeSuccess -> {
+                BlackHoleInfo.createByPercentage(totalModel.totalPercentage)
+                    ?: BlackHoleInfo.LEVEL0
             }
+            // 챌린지 실패한 경우
+            else -> {
+                BlackHoleInfo.LEVEL5
+            }
+        }
 
         setBlackHoleAnimation(blackHoleInfo)
         bindBlackHoleDescription(blackHoleInfo)

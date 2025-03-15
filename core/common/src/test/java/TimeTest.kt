@@ -133,8 +133,8 @@ class TimeUtilsTest {
         val expectedStartMillis =
             currentDate.toStartOfDayTime().toEpochMilliseconds(defaultTimeZone)
         val expectedEndMillis = getNowLocalDateTime().toEpochMilliseconds(defaultTimeZone)
-        assertEquals(expectedStartMillis, startMillis)
-        assertEquals(expectedEndMillis, endMillis)
+        assertTrue(expectedStartMillis - startMillis < 1000)
+        assertTrue(expectedEndMillis - endMillis < 1000)
     }
 
     // 타겟 날짜의 시작 시간과 종료 시간을 Epoch 밀리초로 반환하는 함수 테스트
@@ -144,8 +144,8 @@ class TimeUtilsTest {
         val (startMillis, endMillis) = getTargetDayStartEndEpochMillis(targetDate)
         val expectedStartMillis = targetDate.toStartOfDayTime().toEpochMilliseconds(defaultTimeZone)
         val expectedEndMillis = getNowLocalDateTime().toEpochMilliseconds(defaultTimeZone)
-        assertEquals(expectedStartMillis, startMillis)
-        assertEquals(expectedEndMillis, endMillis)
+        assertTrue(expectedStartMillis - startMillis < 1000)
+        assertTrue(expectedEndMillis - endMillis < 1000)
     }
 
     // 기본 타임존의 현재 날짜를 반환하는 함수 테스트

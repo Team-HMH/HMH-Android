@@ -44,8 +44,9 @@ class OneButtonCommonDialog : DialogFragment() {
         }
     }
 
-    fun setConfirmButtonClickListener(confirmButtonClickListener: () -> Unit) {
+    fun setConfirmButtonClickListener(confirmButtonClickListener: () -> Unit): OneButtonCommonDialog {
         this.confirmButtonClickListener = confirmButtonClickListener
+        return this
     }
 
     private fun initViews() {
@@ -58,8 +59,10 @@ class OneButtonCommonDialog : DialogFragment() {
         with(binding) {
             tvDialogTitle.text = title
             tvDialogDescription.text = description
-            iconRes?.let { ivDialogIcon.setImageResource(it) } ?: run {
+            if (iconRes == null || iconRes == 0) {
                 ivDialogIcon.isGone = true
+            } else {
+                ivDialogIcon.setImageResource(iconRes)
             }
             tvConfirmButton.text = confirmButtonText
             if (setBlueButton)

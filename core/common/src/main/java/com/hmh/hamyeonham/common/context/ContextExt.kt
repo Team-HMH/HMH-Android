@@ -11,7 +11,6 @@ import android.os.Build
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -22,6 +21,7 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.hmh.hamyeonham.common.R
+import timber.log.Timber
 
 fun Context.toast(message: String) {
     Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
@@ -130,9 +130,10 @@ fun Context.getSecondStrColoredString(
 fun Context.isSystemPackage(packageName: String): Boolean {
     try {
         val packageInfo = packageManager.getPackageInfo(packageName, 0)
-        return packageInfo.applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
+        val applicationInfo = packageInfo.applicationInfo ?: throw Exception("applicationInfo null")
+        return applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
     } catch (e: PackageManager.NameNotFoundException) {
-        Log.e("isSystemPackage", e.toString())
+        Timber.tag("isSystemPackage").e(e.toString())
     }
     return false
 }

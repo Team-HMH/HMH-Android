@@ -8,4 +8,8 @@ annotation class Log
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class Auth
+annotation class Header
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class Authenticated

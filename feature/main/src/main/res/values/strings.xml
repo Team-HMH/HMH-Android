@@ -4,8 +4,8 @@
     <string name="my_usage_statics">내 이용시간</string>
     <string name="my_page">마이페이지</string>
     <string name="hmh">HMH</string>
-    <string name="total_goal_time">목표 사용 시간 %1$s 중</string>
-    <string name="total_used">%1$s 사용</string>
+    <string name="total_goal_time_format">목표 사용 시간 %s 중</string>
+    <string name="total_used">%s 사용</string>
     <string name="all_left">남음</string>
     <string name="item_usagestatic_appicon_description">image of app icon</string>
     <string name="item_usagestatic_total_blackhole_description">image of black hole</string>

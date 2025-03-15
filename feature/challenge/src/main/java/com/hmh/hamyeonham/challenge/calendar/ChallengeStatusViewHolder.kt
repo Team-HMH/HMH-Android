@@ -2,8 +2,8 @@ package com.hmh.hamyeonham.challenge.calendar
 
 import android.content.Context
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.hmh.hamyeonham.common.view.mapBooleanToVisibility
 import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
 import com.hmh.hamyeonham.feature.challenge.R
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemChallengeStatusBinding
@@ -17,12 +17,9 @@ class ChallengeStatusViewHolder(
             tvDate.text = date
             ivChallengeStatus.setImageResource(getDrawableResource(challenge))
             tvDate.setTextColor(getColor(challenge))
-            ivTodayMark.visibility = getChallengeStatusVisibility(challenge)
+            ivTodayMark.isVisible = challenge == ChallengeStatus.TODAY
         }
     }
-
-    private fun getChallengeStatusVisibility(challenge: ChallengeStatus) =
-        (challenge == ChallengeStatus.TODAY).mapBooleanToVisibility()
 
     private fun getColor(challenge: ChallengeStatus?): Int {
         val colorId = when (challenge) {

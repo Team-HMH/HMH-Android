@@ -18,6 +18,7 @@ captures/
 .cxx/
 *.apk
 output.json
+output-metadata.json
 
 # IntelliJ
 *.iml
@@ -184,3 +185,6 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,kotlin
+# kotlin 2.0.0
+.DS_Store
+.kotlin/

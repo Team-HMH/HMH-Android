@@ -26,7 +26,7 @@ data class ChallengeState(
     val usageGoalsAndModifiers: List<ChallengeUsageGoal>
         get() = usageStatusAndGoals.apps.map {
             ChallengeUsageGoal(it, modifierState)
-        } + ChallengeUsageGoal(UsageStatusAndGoal.App(), modifierState)
+        }
 }
 
 data class ChallengeUsageGoal(
