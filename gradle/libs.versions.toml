@@ -77,7 +77,7 @@ javax-inject = "1"
 androidx-hilt = "1.2.0"
 work-runtime-ktx = "2.9.0"
 timber = "5.0.1"
-amplitude = "2.+"
+amplitude = "3.+"
 hus = "0.0.5"
 
 
