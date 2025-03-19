@@ -9,8 +9,9 @@ class DefaultUserInfoRepository @Inject constructor(
     private val myPageService: MyPageService
 ) : UserInfoRepository {
     override suspend fun getUserInfo(): Result<UserInfo> {
-        return runCatching {
-            myPageService.getUserInfo().data.toUserInfo()
-        }
+        return myPageService.getUserInfo()
+            .mapCatching { baseResponse ->
+                baseResponse.data.toUserInfo()
+            }
     }
 }

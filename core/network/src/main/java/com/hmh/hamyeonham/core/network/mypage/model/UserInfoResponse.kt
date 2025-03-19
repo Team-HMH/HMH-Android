@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UserInfoResponse(
     @SerialName("name")
-    val name: String,
+    val name: String = "",
     @SerialName("point")
-    val point: Int
+    val point: Int = 0
 )

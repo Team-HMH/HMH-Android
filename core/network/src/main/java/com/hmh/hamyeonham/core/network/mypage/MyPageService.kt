@@ -6,5 +6,5 @@ import retrofit2.http.GET
 
 interface  MyPageService {
     @GET("api/v1/user")
-    suspend fun getUserInfo(): BaseResponse<UserInfoResponse>
+    suspend fun getUserInfo(): Result<BaseResponse<UserInfoResponse>>
 }
