@@ -1,12 +1,10 @@
 package com.hmh.hamyeonham.mypage.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.core.database.manger.DatabaseManager
 import com.hmh.hamyeonham.core.network.auth.datastore.network.DefaultUserPreference
 import com.hmh.hamyeonham.login.di.AuthProvider
-import com.hmh.hamyeonham.login.repository.AuthRepository
 import com.hmh.hamyeonham.login.usecase.AuthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -35,7 +33,7 @@ class MyPageViewModel @Inject constructor(
 
     fun handleLogout() {
         viewModelScope.launch {
-            authUseCase.logout(hmhPreference.accessToken, AuthProvider.KAKAO).onSuccess {
+            authUseCase.logout(AuthProvider.KAKAO).onSuccess {
                 deleteAllDatabase()
                 clearPreference()
                 _userEffect.emit(UserEffect.LogoutSuccess)
@@ -47,11 +45,10 @@ class MyPageViewModel @Inject constructor(
 
     fun handleWithdrawal() {
         viewModelScope.launch {
-            authUseCase.withdrawal(hmhPreference.accessToken, AuthProvider.KAKAO).onSuccess {
+            authUseCase.withdrawal(AuthProvider.KAKAO).onSuccess {
                 deleteAllDatabase()
                 clearPreference()
                 _userEffect.emit(UserEffect.WithdrawalSuccess)
-                Log.d("hmhPreferenceAccessToken", hmhPreference.accessToken)
             }.onFailure {
                 _userEffect.emit(UserEffect.WithdrawalFail)
             }

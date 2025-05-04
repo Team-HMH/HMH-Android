@@ -1,20 +1,20 @@
 package com.hmh.hamyeonham.login.datasource.kakao
 
 import android.content.Context
-import com.hmh.hamyeonham.login.datasource.AuthDataSource
+import com.hmh.hamyeonham.login.model.User
+import com.hmh.hamyeonham.login.repository.SocialAuthDataStore
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.auth.AuthCodeClient.Companion.DEFAULT_REQUEST_CODE
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
-import com.kakao.sdk.user.model.User
 import dagger.hilt.android.qualifiers.ApplicationContext
 import jakarta.inject.Inject
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 
-class KakaoAuthDataSourceImpl @Inject constructor(
+class KakaoSocialAuthDataStoreImpl @Inject constructor(
     @ApplicationContext private val context: Context
-) : AuthDataSource {
+) : SocialAuthDataStore {
 
     override suspend fun login(): Result<String> =
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
@@ -35,7 +35,7 @@ class KakaoAuthDataSourceImpl @Inject constructor(
             loginWithAccount()
         }
 
-    fun loginWithKakaoTalk(
+    private fun loginWithKakaoTalk(
         context: Context,
         requestCode: Int = DEFAULT_REQUEST_CODE,
         nonce: String? = null,
@@ -79,7 +79,7 @@ class KakaoAuthDataSourceImpl @Inject constructor(
             UserApiClient.instance.me { user, error ->
                 when {
                     error != null -> cont.resume(Result.failure(error))
-                    user != null -> cont.resume(Result.success(user))
+                    user != null -> cont.resume(Result.success(User(user.id)))
                     else -> cont.resume(Result.failure(IllegalStateException("Empty Kakao user")))
                 }
             }

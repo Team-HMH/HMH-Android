@@ -56,7 +56,6 @@ class LoginViewModel @Inject constructor(
                     _kakaoLoginEvent.emit(LoginEffect.LoginSuccess)
                     AmplitudeUtils.trackEventWithProperties("click_onboarding_kakao")
                 }.onFailure {
-                    android.util.Log.e("LoginViewModel","loginWithKakaoApp failed", it)
                     _kakaoLoginEvent.emit(LoginEffect.LoginFail)
                 }
         }

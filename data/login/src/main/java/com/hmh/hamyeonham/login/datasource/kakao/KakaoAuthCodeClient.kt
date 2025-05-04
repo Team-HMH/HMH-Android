@@ -25,6 +25,9 @@ import java.net.HttpURLConnection
 import java.security.MessageDigest
 import java.util.UUID
 
+/**
+ * Kakao SDK 내부의 [AuthCodeClient] 파일
+ * */
 class KakaoAuthCodeClient(
     private val intentResolveClient: IntentResolveClient = IntentResolveClient.instance,
     private val applicationInfo: ApplicationInfo = KakaoSdk.applicationContextInfo,

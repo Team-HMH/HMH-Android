@@ -2,51 +2,44 @@ package com.hmh.hamyeonham.login.repository
 
 import com.hmh.hamyeonham.core.database.manger.DatabaseManager
 import com.hmh.hamyeonham.core.network.auth.datastore.network.UserPreference
-import com.hmh.hamyeonham.login.datasource.AuthDataSource
+import com.hmh.hamyeonham.login.di.AuthProvider
 import com.hmh.hamyeonham.login.model.Login
-import com.hmh.hamyeonham.login.model.SignRequestDomain
-import com.hmh.hamyeonham.login.model.SignUpUser
+import javax.inject.Inject
 
-class LocalAuthRepository(
-    private val authDataSource: AuthDataSource,
-    private val preference: UserPreference,
+class LocalAuthRepository @Inject constructor(
+    private val socialAuthDataStore: Map<AuthProvider, @JvmSuppressWildcards SocialAuthDataStore>,
+    private val userPreference: UserPreference,
     private val db: DatabaseManager,
 ) : AuthRepository {
 
-    override suspend fun login(): Result<Login> = runCatching {
-        val accessToken = authDataSource.login().getOrThrow()
-        val kakaoUser = authDataSource.fetchUserProfile().getOrThrow()
-
-        preference.apply {
-            this.accessToken = accessToken
-            this.userId = kakaoUser.id ?: -1
+    override suspend fun login(provider: AuthProvider): Result<Login> = runCatching {
+        val socialAuthDataSore = getSocialAuthDataStore(provider)
+        val accessToke = socialAuthDataSore.login().getOrThrow()
+        val user = socialAuthDataSore.fetchUserProfile().getOrThrow()
+        userPreference.apply {
+            this.accessToken = accessToke
+            this.userId = user.id ?: -1
             this.autoLoginConfigured = true
         }
 
         Login(
-            accessToken = accessToken,
-            refreshToken = "",
-            userId = kakaoUser.id ?: -1
+            userId = user.id ?: -1,
+            accessToken = accessToke,
+            refreshToken = ""
         )
     }
 
-    override suspend fun signUp(
-        accessToken: String,
-        signUpRequest: SignRequestDomain
-    ): Result<SignUpUser> =
-        Result.success(
-            SignUpUser(
-                userId = preference.userId,
-                accessToken = accessToken,
-                refreshToken = ""
-            )
-        )
-
-    override suspend fun logout(accessToken: String): Result<Unit> = runCatching {
-        authDataSource.logout().getOrThrow()
-        preference.clear()
+    override suspend fun logout(provider: AuthProvider): Result<Unit> = runCatching {
+        val socialAuthDataStore = getSocialAuthDataStore(provider)
+        socialAuthDataStore.logout().getOrThrow()
+        userPreference.clear()
         db.deleteAll()
     }
 
-    override suspend fun withdrawal(accessToken: String): Result<Unit> = logout(accessToken)
+    override suspend fun withdrawal(provider: AuthProvider): Result<Unit> = logout(provider)
+
+    private fun getSocialAuthDataStore(authProvider: AuthProvider): SocialAuthDataStore {
+        return socialAuthDataStore[authProvider]
+            ?: throw IllegalArgumentException("Unsupported auth provider: $authProvider")
+    }
 }

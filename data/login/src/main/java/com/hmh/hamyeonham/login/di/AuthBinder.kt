@@ -1,14 +1,9 @@
 package com.hmh.hamyeonham.login.di
 
-import com.hmh.hamyeonham.login.repository.DefaultAuthRepository
-import com.hmh.hamyeonham.login.repository.LocalAuthRepository
-import com.hmh.hamyeonham.login.datasource.AuthDataSource
-import com.hmh.hamyeonham.login.datasource.kakao.KakaoAuthDataSourceImpl
+import com.hmh.hamyeonham.login.datasource.kakao.KakaoSocialAuthDataStoreImpl
 import com.hmh.hamyeonham.login.repository.AuthRepository
-import com.hmh.hamyeonham.login.repository.AuthRepositorySelector
-import com.hmh.hamyeonham.login.repository.DefaultAuthRepositorySelector
-import com.hmh.hamyeonham.login.repository.LocalAuth
-import com.hmh.hamyeonham.login.repository.RemoteAuth
+import com.hmh.hamyeonham.login.repository.LocalAuthRepository
+import com.hmh.hamyeonham.login.repository.SocialAuthDataStore
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,14 +14,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 interface AuthBinder {
-    @Binds
-    @Singleton
-    @RemoteAuth
-    fun bindDefaultAuthRepository(loginRepository: DefaultAuthRepository): AuthRepository
 
     @Binds
     @Singleton
-    @LocalAuth
     fun bindLocalAuthRepository(
         localAuthRepository: LocalAuthRepository
     ): AuthRepository
@@ -35,11 +25,5 @@ interface AuthBinder {
     @Singleton
     @IntoMap
     @AuthDataSourceKey(AuthProvider.KAKAO)
-    fun bindKakaoAuthDataSource(kakaoAuthDataSourceImpl: KakaoAuthDataSourceImpl): AuthDataSource
-
-    @Binds
-    @Singleton
-    fun bindAuthRepositorySelector(
-        defaultAuthRepositorySelector: DefaultAuthRepositorySelector
-    ): AuthRepositorySelector
+    fun bindKakaoSocialLoginRepositoryImpl(kakaoSocialLoginRepositoryImpl: KakaoSocialAuthDataStoreImpl): SocialAuthDataStore
 }
