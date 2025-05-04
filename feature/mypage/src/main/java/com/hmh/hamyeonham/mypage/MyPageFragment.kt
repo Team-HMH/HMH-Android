@@ -76,7 +76,7 @@ class MyPageFragment : Fragment() {
                 dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
             ).apply {
                 setConfirmButtonClickListener {
-                    viewModel.handleLogout()
+                    viewModel.logout()
                 }
             }.showAllowingStateLoss(childFragmentManager)
         }
@@ -89,19 +89,19 @@ class MyPageFragment : Fragment() {
                 dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
             ).apply {
                 setConfirmButtonClickListener {
-                    viewModel.handleWithdrawal()
+                    viewModel.withdrawal()
                 }
             }.showAllowingStateLoss(childFragmentManager)
         }
     }
 
     private fun collectEffect() {
-        viewModel.userEffect.flowWithLifecycle(lifecycle).onEach { state ->
-            when (state) {
+        viewModel.effect.flowWithLifecycle(lifecycle).onEach { effect ->
+            when (effect) {
                 is UserEffect.WithdrawalSuccess -> moveToLoginActivity()
-                is UserEffect.WithdrawalFail -> toast(getString(R.string.withdrawal_fail))
+                is UserEffect.WithdrawalFail -> toast(effect.message)
                 is UserEffect.LogoutSuccess -> moveToLoginActivity()
-                is UserEffect.LogoutFail -> toast(getString(R.string.logout_fail))
+                is UserEffect.LogoutFail -> toast(effect.message)
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }

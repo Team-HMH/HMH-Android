@@ -34,7 +34,7 @@ class KakaoAuthCodeClient(
     private val contextInfo: ContextInfo = KakaoSdk.applicationContextInfo,
     private val approvalType: ApprovalType = KakaoSdk.approvalType,
 ) {
-    fun isKakaoTalkLoginAvailable(context: Context): Boolean =
+    private fun isKakaoTalkLoginAvailable(context: Context): Boolean =
         intentResolveClient.resolveTalkIntent(context, IntentFactory.talkBase()) != null
 
     @JvmOverloads

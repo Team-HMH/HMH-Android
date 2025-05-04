@@ -1,95 +1,110 @@
 package com.hmh.hamyeonham.login.datasource.kakao
 
 import android.content.Context
-import com.hmh.hamyeonham.login.model.User
+import com.hmh.hamyeonham.login.model.UserInfo
 import com.hmh.hamyeonham.login.repository.SocialAuthDataStore
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.auth.AuthCodeClient.Companion.DEFAULT_REQUEST_CODE
-import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.qualifiers.ApplicationContext
-import jakarta.inject.Inject
 import kotlinx.coroutines.suspendCancellableCoroutine
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.coroutines.resume
 
+@Singleton
 class KakaoSocialAuthDataStoreImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : SocialAuthDataStore {
 
-    override suspend fun login(): Result<String> =
-        if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
-            suspendCancellableCoroutine { cont ->
-                loginWithKakaoTalk(context) { token, error ->
-                    when {
-                        error != null -> cont.resume(Result.failure(error))
-                        token != null -> cont.resume(Result.success(token.accessToken))
-                        else -> cont.resume(
-                            Result.failure(
-                                IllegalStateException("Empty KakaoTalk token")
-                            )
-                        )
-                    }
+    override suspend fun login(): UserInfo? {
+        return try {
+            // 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 계정으로 로그인
+            if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
+                loginWithKakaoTalk()
+            } else {
+                loginWithAccount()
+            }
+
+            // 로그인 성공 후 사용자 정보 조회
+            fetchUserInfo()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override suspend fun isLoggedIn(): Boolean {
+        return AuthApiClient.instance.hasToken()
+    }
+
+    override suspend fun logout() {
+        return suspendCancellableCoroutine { continuation ->
+            UserApiClient.instance.logout { error ->
+                if (error != null) {
+                    continuation.resume(Unit)
+                } else {
+                    continuation.resume(Unit)
                 }
             }
-        } else {
-            loginWithAccount()
         }
+    }
 
-    private fun loginWithKakaoTalk(
-        context: Context,
-        requestCode: Int = DEFAULT_REQUEST_CODE,
-        nonce: String? = null,
-        channelPublicIds: List<String>? = null,
-        serviceTerms: List<String>? = null,
-        callback: (token: OAuthToken?, error: Throwable?) -> Unit,
-    ) {
+    override suspend fun refreshUserInfo(): UserInfo? {
+        return try {
+            fetchUserInfo()
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    private suspend fun loginWithKakaoTalk(): Unit = suspendCancellableCoroutine { continuation ->
         val codeVerifier = KakaoAuthCodeClient.codeVerifier()
         KakaoAuthCodeClient.instance.authorizeWithKakaoTalk(
             context,
             prompts = null,
-            requestCode,
-            nonce = nonce,
-            channelPublicIds = channelPublicIds,
-            serviceTerms = serviceTerms,
+            DEFAULT_REQUEST_CODE,
+            nonce = null,
+            channelPublicIds = null,
+            serviceTerms = null,
             codeVerifier = codeVerifier
         ) { code, codeError ->
             if (codeError != null) {
-                callback(null, codeError)
+                continuation.resume(Unit)
             } else {
-                AuthApiClient.instance.issueAccessToken(code!!, codeVerifier) { token, tokenError ->
-                    callback(token, tokenError)
+                AuthApiClient.instance.issueAccessToken(code!!, codeVerifier) { _, tokenError ->
+                    continuation.resume(Unit)
                 }
             }
         }
     }
 
-
-    private suspend fun loginWithAccount(): Result<String> = suspendCancellableCoroutine { cont ->
-        UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
-            when {
-                error != null -> cont.resume(Result.failure(error))
-                token != null -> cont.resume(Result.success(token.accessToken))
-                else -> cont.resume(Result.failure(IllegalStateException("Empty KakaoAccount token")))
-            }
+    private suspend fun loginWithAccount(): Unit = suspendCancellableCoroutine { continuation ->
+        UserApiClient.instance.loginWithKakaoAccount(context) { _, error ->
+            continuation.resume(Unit)
         }
     }
 
-    override suspend fun fetchUserProfile(): Result<User> =
-        suspendCancellableCoroutine { cont ->
-            UserApiClient.instance.me { user, error ->
-                when {
-                    error != null -> cont.resume(Result.failure(error))
-                    user != null -> cont.resume(Result.success(User(user.id)))
-                    else -> cont.resume(Result.failure(IllegalStateException("Empty Kakao user")))
-                }
+    private suspend fun fetchUserInfo(): UserInfo? = suspendCancellableCoroutine { continuation ->
+        UserApiClient.instance.me { user, error ->
+            if (error != null || user == null) {
+                continuation.resume(null)
+                return@me
             }
-        }
 
-    override suspend fun logout(): Result<Unit> =
-        suspendCancellableCoroutine { cont ->
-            UserApiClient.instance.logout { error ->
-                if (error != null) cont.resume(Result.failure(error))
-                else cont.resume(Result.success(Unit))
-            }
+            val profile = user.kakaoAccount?.profile
+            val userInfo = UserInfo(
+                id = user.id ?: -1,
+                profile = UserInfo.Profile(
+                    userId = user.id ?: -1,
+                    nickname = profile?.nickname,
+                    profileImageUrl = profile?.profileImageUrl,
+                    email = user.kakaoAccount?.email,
+                    ageRange = user.kakaoAccount?.ageRange?.name,
+                    gender = user.kakaoAccount?.gender?.name
+                )
+            )
+
+            continuation.resume(userInfo)
         }
+    }
 }

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.core.database.manger.DatabaseManager
 import com.hmh.hamyeonham.core.network.auth.datastore.network.DefaultUserPreference
-import com.hmh.hamyeonham.login.di.AuthProvider
 import com.hmh.hamyeonham.login.usecase.AuthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -14,54 +13,40 @@ import javax.inject.Inject
 
 sealed interface UserEffect {
     data object LogoutSuccess : UserEffect
-    data object LogoutFail : UserEffect
-
+    data class LogoutFail(val message: String) : UserEffect
     data object WithdrawalSuccess : UserEffect
-
-    data object WithdrawalFail : UserEffect
+    data class WithdrawalFail(val message: String) : UserEffect
 }
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val authUseCase: AuthUseCase,
-    private val hmhPreference: DefaultUserPreference,
-    private val databaseManager: DatabaseManager
 ) : ViewModel() {
 
-    private val _userEffect = MutableSharedFlow<UserEffect>()
-    val userEffect = _userEffect.asSharedFlow()
+    private val _effect = MutableSharedFlow<UserEffect>()
+    val effect = _effect.asSharedFlow()
 
-    fun handleLogout() {
+    fun logout() {
         viewModelScope.launch {
-            authUseCase.logout(AuthProvider.KAKAO).onSuccess {
-                deleteAllDatabase()
-                clearPreference()
-                _userEffect.emit(UserEffect.LogoutSuccess)
-            }.onFailure {
-                _userEffect.emit(UserEffect.LogoutFail)
-            }
+            authUseCase.logout()
+                .onSuccess {
+                    _effect.emit(UserEffect.LogoutSuccess)
+                }
+                .onFailure { exception ->
+                    _effect.emit(UserEffect.LogoutFail(exception.message ?: "로그아웃에 실패했습니다"))
+                }
         }
     }
 
-    fun handleWithdrawal() {
+    fun withdrawal() {
         viewModelScope.launch {
-            authUseCase.withdrawal(AuthProvider.KAKAO).onSuccess {
-                deleteAllDatabase()
-                clearPreference()
-                _userEffect.emit(UserEffect.WithdrawalSuccess)
-            }.onFailure {
-                _userEffect.emit(UserEffect.WithdrawalFail)
-            }
-        }
-    }
-
-    private fun clearPreference() {
-        hmhPreference.clear()
-    }
-
-    private fun deleteAllDatabase() {
-        viewModelScope.launch {
-            databaseManager.deleteAll()
+            authUseCase.withdrawal()
+                .onSuccess {
+                    _effect.emit(UserEffect.WithdrawalSuccess)
+                }
+                .onFailure { exception ->
+                    _effect.emit(UserEffect.WithdrawalFail(exception.message ?: "회원탈퇴에 실패했습니다"))
+                }
         }
     }
 }

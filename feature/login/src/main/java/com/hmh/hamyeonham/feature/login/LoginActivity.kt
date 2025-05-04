@@ -34,27 +34,27 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.ivKakaoLogin.setOnClickListener {
-            viewModel.loginWithKakaoApp()
+            viewModel.loginWithKakao()
         }
         setLoginViewPager()
-        handleKakaoLoginSuccess()
-        handleAutoLoginSuccess()
+        handleLoginEffect()
+        checkLoginState()
     }
 
-    private fun handleAutoLoginSuccess() {
-        viewModel.loginState.flowWithLifecycle(lifecycle).onEach { state ->
-            if (state.autoLogin) {
+    private fun checkLoginState() {
+        viewModel.loginState.flowWithLifecycle(lifecycle).onEach { loginState ->
+            if (loginState.autoLogin) {
                 navigateToMainActivity()
             }
         }.launchIn(lifecycleScope)
     }
 
-    private fun handleKakaoLoginSuccess() {
-        viewModel.kakaoLoginEvent.flowWithLifecycle(lifecycle).onEach { state ->
-            when (state) {
+    private fun handleLoginEffect() {
+        viewModel.effect.flowWithLifecycle(lifecycle).onEach { effect ->
+            when (effect) {
                 is LoginEffect.LoginSuccess -> navigateToMainActivity()
                 is LoginEffect.LoginFail -> toast(getString(R.string.fail_kakao_login))
-                is LoginEffect.RequireSignUp -> navigateToOnBoardingActivity()
+                is LoginEffect.LoginError -> toast(effect.message)
             }
         }.launchIn(lifecycleScope)
     }
@@ -86,12 +86,6 @@ class LoginActivity : AppCompatActivity() {
 
     private fun stopAutoScroll() {
         autoScrollJob.cancel()
-    }
-
-    private fun navigateToOnBoardingActivity() {
-        val intent = navigationProvider.toOnBoarding()
-        startActivity(intent)
-        finish()
     }
 
     private fun navigateToMainActivity() {

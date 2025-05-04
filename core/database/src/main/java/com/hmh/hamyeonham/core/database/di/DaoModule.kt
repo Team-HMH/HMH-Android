@@ -39,4 +39,16 @@ object DaoModule {
     fun providesLockDao(
         database: HMHRoomDatabase,
     ) = database.lockDao()
+
+    @Provides
+    @Singleton
+    fun providesUserAuthDao(
+        database: HMHRoomDatabase,
+    ) = database.userAuthDao()
+
+    @Provides
+    @Singleton
+    fun providesUserProfileDao(
+        database: HMHRoomDatabase,
+    ) = database.userProfileDao()
 }
