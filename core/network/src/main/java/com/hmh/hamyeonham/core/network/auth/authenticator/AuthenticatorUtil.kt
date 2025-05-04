@@ -3,7 +3,7 @@ package com.hmh.hamyeonham.core.network.auth.authenticator
 import android.content.Context
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.core.database.manger.DatabaseManager
-import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
+import com.hmh.hamyeonham.core.network.auth.datastore.network.UserPreference
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.kakao.sdk.user.UserApiClient
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -18,7 +18,7 @@ import kotlin.coroutines.resume
 @Singleton
 class AuthenticatorUtil @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val dataStore: HMHNetworkPreference,
+    private val dataStore: UserPreference,
     private val databaseManager: DatabaseManager,
     private val navigationProvider: NavigationProvider,
 ) {

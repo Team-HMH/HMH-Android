@@ -35,7 +35,7 @@ class StartActivity : AppCompatActivity() {
                 confirmButtonText = "확인",
             )
             .setConfirmButtonClickListener {
-                finish()
+                navigateToLogin()
             }
             .showAllowingStateLoss(supportFragmentManager)
 

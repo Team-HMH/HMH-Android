@@ -9,7 +9,6 @@ import com.hmh.hamyeonham.common.context.toast
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.feature.login.databinding.ActivityLoginBinding
-import com.hmh.hamyeonham.feature.onboarding.OnBoardingActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -35,7 +34,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.ivKakaoLogin.setOnClickListener {
-            viewModel.loginWithKakaoApp(this)
+            viewModel.loginWithKakaoApp()
         }
         setLoginViewPager()
         handleKakaoLoginSuccess()
@@ -55,7 +54,7 @@ class LoginActivity : AppCompatActivity() {
             when (state) {
                 is LoginEffect.LoginSuccess -> navigateToMainActivity()
                 is LoginEffect.LoginFail -> toast(getString(R.string.fail_kakao_login))
-                is LoginEffect.RequireSignUp -> navigateToOnBoardingActivity(state.token)
+                is LoginEffect.RequireSignUp -> navigateToOnBoardingActivity()
             }
         }.launchIn(lifecycleScope)
     }
@@ -89,15 +88,8 @@ class LoginActivity : AppCompatActivity() {
         autoScrollJob.cancel()
     }
 
-    private fun navigateToOnBoardingActivity(accessToken: String? = null) {
-        if (accessToken == null) {
-            toast(getString(R.string.empty_token_retry_login))
-        }
-
+    private fun navigateToOnBoardingActivity() {
         val intent = navigationProvider.toOnBoarding()
-        accessToken?.let {
-            intent.putExtra(OnBoardingActivity.EXTRA_ACCESS_TOKEN, it)
-        }
         startActivity(intent)
         finish()
     }

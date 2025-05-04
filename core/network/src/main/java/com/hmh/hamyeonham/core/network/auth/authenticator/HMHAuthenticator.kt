@@ -1,7 +1,7 @@
 package com.hmh.hamyeonham.core.network.auth.authenticator
 
 import com.hmh.hamyeonham.core.network.auth.api.RefreshService
-import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
+import com.hmh.hamyeonham.core.network.auth.datastore.network.UserPreference
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
@@ -16,7 +16,7 @@ import javax.inject.Singleton
 
 @Singleton
 class HMHAuthenticator @Inject constructor(
-    private val dataStore: HMHNetworkPreference,
+    private val dataStore: UserPreference,
     private val api: RefreshService,
     private val authenticatorUtil: AuthenticatorUtil
 ) : Authenticator {

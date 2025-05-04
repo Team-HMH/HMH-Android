@@ -9,7 +9,7 @@ data class LoginResponse(
     @SerialName("token")
     val token: Token? = null,
     @SerialName("userId")
-    val userId: Int? = null
+    val userId: Long? = null
 ) {
     @Serializable
     data class Token(

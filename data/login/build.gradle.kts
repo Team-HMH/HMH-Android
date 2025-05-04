@@ -11,4 +11,8 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.domain.login)
     implementation(projects.core.network)
+    implementation(projects.core.database)
+
+    // kakao
+    implementation(libs.kakao.login)
 }

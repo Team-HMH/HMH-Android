@@ -5,8 +5,8 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.hmh.hamyeonham.core.network.BuildConfig
-import com.hmh.hamyeonham.core.network.auth.datastore.network.DefaultHMHNetworkPreference
-import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
+import com.hmh.hamyeonham.core.network.auth.datastore.network.DefaultUserPreference
+import com.hmh.hamyeonham.core.network.auth.datastore.network.UserPreference
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -71,6 +71,6 @@ object DataStoreModule {
     interface Binder {
         @Singleton
         @Binds
-        fun bindAppPreferences(dataStore: DefaultHMHNetworkPreference): HMHNetworkPreference
+        fun bindAppPreferences(dataStore: DefaultUserPreference): UserPreference
     }
 }
