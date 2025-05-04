@@ -33,6 +33,6 @@
         app:lottie_autoPlay="true"
         app:lottie_loop="false"
         app:lottie_rawRes="@raw/splash_logo_white"
-        app:lottie_speed="1" />
+        app:lottie_speed="1.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

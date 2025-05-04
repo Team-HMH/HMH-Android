@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.hmh.hamyeonham.common.dialog.OneButtonCommonDialog
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.databinding.ActivitySampleBinding
 import com.hmh.hamyeonham.feature.login.LoginActivity
@@ -27,18 +26,11 @@ class StartActivity : AppCompatActivity() {
 
     private fun initLottieSplash() {
         binding.splashLottieAppLogo.playAnimation()
-        OneButtonCommonDialog
-            .newInstance(
-                title = "서비스를 개선하고 있어요",
-                description = "서비스를 개선하고 있어요 더 나은 모습으로 만나요",
-                iconRes = null,
-                confirmButtonText = "확인",
-            )
-            .setConfirmButtonClickListener {
+        binding.splashLottieAppLogo.addAnimatorUpdateListener {
+            if (it.animatedFraction == 1.0f) {
                 navigateToLogin()
             }
-            .showAllowingStateLoss(supportFragmentManager)
-
+        }
     }
 
     private fun navigateToLogin() {
