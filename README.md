@@ -10,7 +10,7 @@
 <br/>
 <div align="center">
   <p align="center">
-    <img src="https://img.shields.io/badge/Kotlin-1.9.20-7F52FF?style=for-the-badge&logo=Kotlin&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Kotlin-2.1.20-7F52FF?style=for-the-badge&logo=Kotlin&logoColor=white"/>
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
 <img src="https://img.shields.io/badge/all_contributors-3-orange.svg?style=for-the-badge"/>
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
@@ -60,19 +60,6 @@
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-
-# 시연영상
-## 온보딩 및 권한 추가
-https://github.com/Team-HMH/HMH-Android/assets/84266681/d5868d2f-9fc3-4bc8-b764-85877ee8c54f
-
-## 앱 잠금 화면 및 챌린지 실패
-https://github.com/Team-HMH/HMH-Android/assets/93872496/c5fb98b2-6627-42a3-8e3b-796156e3af35
-
-## 챌린지 실패 및 사용 연장
-https://github.com/Team-HMH/HMH-Android/assets/84266681/cacde6a4-b496-4214-a74d-189a02839cc6
-
-## 앱 추가 및 삭제
-https://github.com/Team-HMH/HMH-Android/assets/84266681/a5d16efd-a870-41ba-8896-af3445e474f3
 
 
 ## Folder Tree 📁
