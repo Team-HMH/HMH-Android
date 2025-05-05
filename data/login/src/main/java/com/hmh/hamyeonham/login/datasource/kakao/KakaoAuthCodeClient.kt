@@ -166,7 +166,7 @@ class KakaoAuthCodeClient(
                 val error = uri.getQueryParameter(Constants.ERROR) ?: Constants.UNKNOWN_ERROR
                 val errorDescription = uri.getQueryParameter(Constants.ERROR_DESCRIPTION)
                 val errorCause = runCatching {
-                    KakaoJson.fromJson<AuthErrorCause>(error, AuthErrorCause::class.java)
+                    KakaoJson.decodeFromString<AuthErrorCause>(error)
                 }.getOrDefault(AuthErrorCause.Unknown)
 
                 AuthError(

@@ -2,8 +2,6 @@ package com.hmh.hamyeonham.mypage.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hmh.hamyeonham.core.database.manger.DatabaseManager
-import com.hmh.hamyeonham.core.network.auth.datastore.network.DefaultUserPreference
 import com.hmh.hamyeonham.login.usecase.AuthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
