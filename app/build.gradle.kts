@@ -76,7 +76,6 @@ dependencies {
     implementation(projects.domain.login)
     implementation(projects.domain.challenge)
     implementation(projects.domain.onboarding)
-    implementation(projects.domain.point)
     implementation(projects.domain.lock)
 
     // Data
@@ -86,7 +85,6 @@ dependencies {
     implementation(projects.data.challenge)
     implementation(projects.data.device)
     implementation(projects.data.onboarding)
-    implementation(projects.data.point)
     implementation(projects.data.lock)
     implementation(projects.data.main)
 

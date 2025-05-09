@@ -2,7 +2,6 @@ package com.hmh.hamyeonham.navigation
 
 import android.content.Context
 import android.content.Intent
-import com.hmh.hamyeonham.challenge.point.PointActivity
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.permission.PermissionActivity
 import com.hmh.hamyeonham.feature.lock.LockActivity
@@ -39,10 +38,6 @@ class DefaultNavigationProvider @Inject constructor(
 
     override fun toStore(): Intent {
         return Intent(context, StoreActivity::class.java)
-    }
-
-    override fun toPoint(): Intent {
-        return Intent(context, PointActivity::class.java)
     }
 
     override fun toPermission(): Intent {

@@ -8,13 +8,10 @@ import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.databinding.ActivitySampleBinding
 import com.hmh.hamyeonham.feature.login.LoginActivity
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 
 @AndroidEntryPoint
 class StartActivity : AppCompatActivity() {
     private val binding by viewBinding(ActivitySampleBinding::inflate)
-    private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
