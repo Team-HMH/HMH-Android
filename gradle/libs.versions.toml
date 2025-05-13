@@ -11,7 +11,7 @@ kotlinx-serialization-json = "1.8.1"
 kotlinx-serialization-converter = "1.0.0"
 kotlinx-coroutines = "1.10.2"
 kotlinx-datetime = "0.6.2"
-ksp = "2.1.20-2.0.0"
+ksp = "2.1.21-2.0.1"
 
 # android
 corektx = "1.16.0"
