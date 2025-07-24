@@ -258,9 +258,4 @@ class MainViewModel @Inject constructor(
 
         return items
     }
-
-
-    companion object {
-        private const val LACK_POINT_ERROR_CODE = 400
-    }
 }

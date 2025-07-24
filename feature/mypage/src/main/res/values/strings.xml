@@ -1,7 +1,5 @@
 <resources>
     <string name="mypage_title">마이페이지</string>
-    <string name="mypage_point_title">내 포인트</string>
-    <string name="mypage_point">%dP</string>
     <string name="mypage_badge_collection">배지 컬렉션</string>
     <string name="mypage_journey">지금까지의 여정</string>
     <string name="mypage_store">우주 상점</string>
