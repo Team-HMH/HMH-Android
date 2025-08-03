@@ -108,10 +108,10 @@ class MyPageFragment : Fragment() {
     }
 
     private fun moveToLoginActivity() {
-        val intent = navigationProvider.toLogin()
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        activity?.finish()
+//        val intent = navigationProvider.toLogin()
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+//        startActivity(intent)
+//        activity?.finish()
     }
 
     private fun collectMainState() {

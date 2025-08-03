@@ -73,7 +73,6 @@ dependencies {
     // Domain
     implementation(projects.domain.usagestats)
     implementation(projects.domain.userinfo)
-    implementation(projects.domain.login)
     implementation(projects.domain.challenge)
     implementation(projects.domain.onboarding)
     implementation(projects.domain.lock)
@@ -81,7 +80,6 @@ dependencies {
     // Data
     implementation(projects.data.usagestats)
     implementation(projects.data.userinfo)
-    implementation(projects.data.login)
     implementation(projects.data.challenge)
     implementation(projects.data.device)
     implementation(projects.data.onboarding)
@@ -105,8 +103,6 @@ dependencies {
     implementation(libs.splash.screen)
     implementation(libs.lottie)
 
-    // kakao
-    implementation(libs.kakao.login)
 
     // Hilt Worker
     implementation(libs.androidx.hilt.common)

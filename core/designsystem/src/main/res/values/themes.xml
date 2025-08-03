@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.HMH" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:windowBackground">@color/blackground</item>
@@ -7,6 +7,9 @@
         <item name="colorPrimary">@color/gray7</item>
         <item name="colorPrimaryVariant">@color/gray8</item>
         <item name="colorOnPrimary">@color/white_btn</item>
+
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:ignore="NewApi">true</item>
+
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/blackground</item>
 

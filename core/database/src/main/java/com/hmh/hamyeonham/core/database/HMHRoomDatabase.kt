@@ -9,10 +9,6 @@ import com.hmh.hamyeonham.core.database.dao.DeletedGoalsDao
 import com.hmh.hamyeonham.core.database.dao.LockDao
 import com.hmh.hamyeonham.core.database.dao.UsageGoalsDao
 import com.hmh.hamyeonham.core.database.dao.UsageTotalGoalDao
-import com.hmh.hamyeonham.core.database.dao.UserAuthDao
-import com.hmh.hamyeonham.core.database.dao.UserProfileDao
-import com.hmh.hamyeonham.core.database.entity.UserAuth
-import com.hmh.hamyeonham.core.database.entity.UserProfile
 import com.hmh.hamyeonham.core.database.model.DailyChallengeEntity
 import com.hmh.hamyeonham.core.database.model.DeletedGoalWithUsageEntity
 import com.hmh.hamyeonham.core.database.model.DeletedUsageEntity
@@ -33,8 +29,6 @@ import kotlinx.coroutines.launch
         DeletedGoalWithUsageEntity::class,
         DeletedUsageEntity::class,
         LockWithDateEntity::class,
-        UserAuth::class,
-        UserProfile::class
     ],
     version = 2,
     exportSchema = false
@@ -45,8 +39,6 @@ abstract class HMHRoomDatabase : RoomDatabase() {
     abstract fun challengeDao(): ChallengeDao
     abstract fun deletedGoalsDao(): DeletedGoalsDao
     abstract fun lockDao(): LockDao
-    abstract fun userAuthDao(): UserAuthDao
-    abstract fun userProfileDao(): UserProfileDao
 
     @OptIn(DelicateCoroutinesApi::class)
     fun deleteAll() {
@@ -56,11 +48,9 @@ abstract class HMHRoomDatabase : RoomDatabase() {
             challengeDao().deleteAll()
             deletedGoalsDao().deleteAll()
             lockDao().deleteAll()
-            userAuthDao().clearUserAuth()
-            userProfileDao().clearUserProfile()
         }
     }
-    
+
     companion object {
         // 버전 1에서 버전 2로 마이그레이션
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -78,7 +68,7 @@ abstract class HMHRoomDatabase : RoomDatabase() {
                     )
                     """
                 )
-                
+
                 // UserProfile 테이블 생성
                 database.execSQL(
                     """

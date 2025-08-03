@@ -13,7 +13,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { setUrl("https://devrepo.kakao.com/nexus/content/groups/public/") }
     }
 }
 
@@ -31,7 +30,6 @@ include(":feature:lock")
 include(":data:usagestats")
 include(":data:onboarding")
 include(":data:userinfo")
-include(":data:login")
 include(":data:device")
 include(":data:challenge")
 include(":data:lock")
@@ -40,7 +38,6 @@ include(":data:main")
 include(":domain:userinfo")
 include(":domain:usagestats")
 include(":domain:challenge")
-include(":domain:login")
 include(":domain:onboarding")
 include(":domain:lock")
 include(":domain:main")
