@@ -1,14 +1,11 @@
 package com.hmh.hamyeonham.core.network.di
 
 import com.hmh.hamyeonham.common.BuildConfig
-import com.hmh.hamyeonham.common.qualifier.Authenticated
 import com.hmh.hamyeonham.common.qualifier.Header
 import com.hmh.hamyeonham.common.qualifier.Log
 import com.hmh.hamyeonham.common.qualifier.Secured
 import com.hmh.hamyeonham.common.qualifier.Unsecured
-import com.hmh.hamyeonham.core.network.auth.authenticator.AuthenticatorUtil
 import com.hmh.hamyeonham.core.network.auth.authenticator.HMHAuthenticator
-import com.hmh.hamyeonham.core.network.auth.interceptor.AuthInterceptor
 import com.hmh.hamyeonham.core.network.auth.interceptor.HeaderInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Binds
@@ -64,21 +61,12 @@ object NetModule {
 
     @Singleton
     @Provides
-    @Authenticated
-    fun provideAuthInterceptor(
-        authenticatorUtil: AuthenticatorUtil
-    ): AuthInterceptor = AuthInterceptor(authenticatorUtil)
-
-    @Singleton
-    @Provides
     @Secured
     fun provideOkHttpClient(
         @Log logInterceptor: Interceptor,
         @Header headerInterceptor: Interceptor,
-        @Authenticated authInterceptor: AuthInterceptor,
         authenticator: Authenticator,
     ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(authInterceptor)
         .addInterceptor(logInterceptor)
         .addInterceptor(headerInterceptor)
         .authenticator(authenticator)

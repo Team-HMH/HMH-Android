@@ -1,6 +1,7 @@
 package com.hmh.hamyeonham.common.permission
 
 import android.Manifest
+import android.app.AppOpsManager
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Intent
@@ -38,14 +39,29 @@ fun AppCompatActivity.requestUsageAccessPermission() {
 }
 
 fun AppCompatActivity.hasUsageStatsPermission(): Boolean {
-    val usageStatsManager = getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-    val time = System.currentTimeMillis()
-    val stats = usageStatsManager.queryUsageStats(
-        UsageStatsManager.INTERVAL_DAILY,
-        time - 1000 * 60,
-        time,
-    )
-    return stats != null && stats.isNotEmpty()
+    val ops = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+    val mode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        ops.unsafeCheckOpNoThrow(
+            AppOpsManager.OPSTR_GET_USAGE_STATS,
+            android.os.Process.myUid(),
+            packageName
+        )
+    } else {
+        ops.checkOpNoThrow(
+            AppOpsManager.OPSTR_GET_USAGE_STATS,
+            android.os.Process.myUid(),
+            packageName
+        )
+    }
+
+    return when (mode) {
+        AppOpsManager.MODE_ALLOWED -> true
+        AppOpsManager.MODE_DEFAULT,
+        AppOpsManager.MODE_IGNORED,
+        AppOpsManager.MODE_ERRORED -> false
+
+        else -> false
+    }
 }
 
 fun AppCompatActivity.hasOverlayPermission(): Boolean {

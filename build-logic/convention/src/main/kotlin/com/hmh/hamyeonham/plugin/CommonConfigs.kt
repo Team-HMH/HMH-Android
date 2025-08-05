@@ -22,10 +22,6 @@ internal fun Project.configureAndroidCommonPlugin() {
 
     extensions.getByType<BaseExtension>().apply {
         defaultConfig {
-            val kakaoApiKey = properties["kakaoApiKey"] as? String ?: ""
-            manifestPlaceholders["kakaoApiKey"] = properties["kakaoApiKey"] as String
-            buildConfigField("String", "KAKAO_API_KEY", "\"${kakaoApiKey}\"")
-
             val amplitudeApiKey = properties["amplitudeApiKey"] as? String ?: ""
             buildConfigField("String", "AMPLITUDE_API_KEY", "\"${amplitudeApiKey}\"")
         }

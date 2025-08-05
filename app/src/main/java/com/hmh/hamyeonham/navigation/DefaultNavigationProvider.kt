@@ -5,7 +5,6 @@ import android.content.Intent
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.permission.PermissionActivity
 import com.hmh.hamyeonham.feature.lock.LockActivity
-import com.hmh.hamyeonham.feature.login.LoginActivity
 import com.hmh.hamyeonham.feature.main.MainActivity
 import com.hmh.hamyeonham.feature.onboarding.OnBoardingActivity
 import com.hmh.hamyeonham.feature.onboarding.OnBoardingStoryActivity
@@ -22,10 +21,6 @@ class DefaultNavigationProvider @Inject constructor(
 
     override fun toOnBoardingStory(): Intent {
         return Intent(context, OnBoardingStoryActivity::class.java)
-    }
-
-    override fun toLogin(): Intent {
-        return Intent(context, LoginActivity::class.java)
     }
 
     override fun toMain(): Intent {

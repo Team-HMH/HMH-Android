@@ -18,7 +18,6 @@ import javax.inject.Singleton
 class HMHAuthenticator @Inject constructor(
     private val dataStore: UserPreference,
     private val api: RefreshService,
-    private val authenticatorUtil: AuthenticatorUtil
 ) : Authenticator {
     private val mutex = Mutex()
 
@@ -48,7 +47,6 @@ class HMHAuthenticator @Inject constructor(
                             .build()
                     } catch (e: Exception) {
                         Timber.tag("Authenticator").e("Token refresh failed: ${e.message}")
-                        authenticatorUtil.handleLogout()
                         delay(500)
                         null
                     }

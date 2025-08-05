@@ -71,7 +71,6 @@ ktlint = "12.1.2"
 process-pheonix = "3.0.0"
 constraintlayout = "2.2.1"
 dot-indicator = "5.0"
-kakao = "2.21.2"
 splash-screen = "1.0.1"
 javax-inject = "1"
 androidx-hilt = "1.2.0"
@@ -190,9 +189,6 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }
 
 dot-indicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dot-indicator" }
-
-kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
-
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 

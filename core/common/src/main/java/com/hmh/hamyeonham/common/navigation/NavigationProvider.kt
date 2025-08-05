@@ -10,7 +10,6 @@ interface NavigationProvider {
 
     fun toOnBoarding(): Intent
     fun toOnBoardingStory(): Intent
-    fun toLogin(): Intent
     fun toMain(): Intent
     fun toLock(packageName: String): Intent
     fun toStore(): Intent
