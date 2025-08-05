@@ -28,7 +28,6 @@ import com.hmh.hamyeonham.challenge.newchallenge.NewChallengeActivity
 import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
-import com.hmh.hamyeonham.common.fragment.snackBarWithAction
 import com.hmh.hamyeonham.common.fragment.toast
 import com.hmh.hamyeonham.common.fragment.viewLifeCycle
 import com.hmh.hamyeonham.common.fragment.viewLifeCycleScope
@@ -78,18 +77,6 @@ class ChallengeFragment : Fragment() {
     @Inject
     lateinit var navigationProvider: NavigationProvider
 
-    private val pointResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result: ActivityResult ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val point = result.data?.getIntExtra("point", 0)
-            if (point != null && point != 0) {
-                activityViewModel.updatePoint(point)
-            }
-            activityViewModel.reloadChallengeStatus()
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -119,9 +106,6 @@ class ChallengeFragment : Fragment() {
 
         activityViewModel.challengeStatusList.flowWithLifecycle(viewLifeCycle).onEach {
             bindChallengeCalendar(it)
-            val pointButtonImg =
-                if (activityViewModel.isPointLeftToCollect) com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24 else com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
-            binding.tvPointButton.setImageResource(pointButtonImg)
         }.launchIn(viewLifeCycleScope)
     }
 
@@ -182,19 +166,6 @@ class ChallengeFragment : Fragment() {
         }
     }
 
-    private fun initPointButton() {
-        val pointButtonImg =
-            if (activityViewModel.isPointLeftToCollect) {
-                com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_exist_24
-            } else {
-                com.hmh.hamyeonham.common.R.drawable.ic_chellenge_point_not_exist_24
-            }
-        binding.tvPointButton.setImageResource(pointButtonImg)
-        binding.tvPointButton.setOnClickListener {
-            navigateToPointView()
-        }
-    }
-
     private fun initAppAddButton() {
         binding.btGoalAdd.setOnSingleClickListener {
             AmplitudeUtils.trackEventWithProperties("click_add_button")
@@ -206,31 +177,13 @@ class ChallengeFragment : Fragment() {
     private fun initChallengeCreateButton() {
         binding.btnChallengeCreate.setOnClickListener {
             AmplitudeUtils.trackEventWithProperties("click_newchallenge_button")
-            if (activityViewModel.isPointLeftToCollect) {
-                snackBarWithAction(
-                    anchorView = binding.root,
-                    message = getString(com.hmh.hamyeonham.feature.challenge.R.string.challenge_cannot_create),
-                    actionMessage = getString(
-                        com.hmh.hamyeonham.feature.challenge.R.string.all_move,
-                    ),
-                ) {
-                    navigateToPointView()
-                }
-            } else {
-                val intent = Intent(requireContext(), NewChallengeActivity::class.java)
-                newChallengeResultLauncher.launch(intent)
-            }
+            val intent = Intent(requireContext(), NewChallengeActivity::class.java)
+            newChallengeResultLauncher.launch(intent)
         }
-    }
-
-    private fun navigateToPointView() {
-        val intent = navigationProvider.toPoint()
-        pointResultLauncher.launch(intent)
     }
 
     private fun initViews() {
         initModifierButton()
-        initPointButton()
         initAppAddButton()
         initChallengeCreateButton()
         initChallengeGoalsRecyclerView()

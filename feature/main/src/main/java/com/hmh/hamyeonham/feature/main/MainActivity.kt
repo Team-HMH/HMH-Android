@@ -5,7 +5,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.context.hasNotificationPermission
 import com.hmh.hamyeonham.common.dialog.OneButtonCommonDialog
@@ -49,12 +48,6 @@ class MainActivity : AppCompatActivity() {
     private fun collectEffect() {
         viewModel.effect.flowWithLifecycle(lifecycle).onEach { effect ->
             when (effect) {
-                is MainEffect.SuccessUsePoint -> {
-                    intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
-                    showChallengeFailedDialog()
-                }
-
-                is MainEffect.LackOfPoint -> showPointLackDialog()
                 is MainEffect.NetworkError -> showErrorDialog()
             }
         }.launchIn(lifecycleScope)
@@ -101,10 +94,10 @@ class MainActivity : AppCompatActivity() {
         val packageName = intent.getStringExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME) ?: return
         TwoButtonCommonDialog.newInstance(
             title =
-            getString(
-                R.string.dialog_title_unlock_package,
-                getAppNameFromPackageName(packageName),
-            ),
+                getString(
+                    R.string.dialog_title_unlock_package,
+                    getAppNameFromPackageName(packageName),
+                ),
             description = getString(R.string.dialog_description_unlock_package),
             confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
             dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
@@ -122,38 +115,6 @@ class MainActivity : AppCompatActivity() {
         if (hasNotificationPermission()) {
             LockForegroundService.startService(this)
         }
-    }
-
-    private fun showChallengeFailedDialog() {
-        OneButtonCommonDialog.newInstance(
-            title = getString(R.string.dialog_title_challenge_failed),
-            description = getString(R.string.dialog_description_challenge_failed),
-            iconRes = R.drawable.ic_challenge_failed,
-            confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_done),
-        ).apply {
-            setConfirmButtonClickListener {
-                AmplitudeUtils.trackEventWithProperties("click_unlock_complete_button")
-                dismiss()
-            }
-        }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
-    }
-
-    private fun showPointLackDialog() {
-        TwoButtonCommonDialog.newInstance(
-            title = getString(R.string.dialog_title_point_lack),
-            description = getString(R.string.dialog_description_point_lack),
-            iconRes = R.drawable.ic_point_lack,
-            confirmButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_okay),
-            dismissButtonText = getString(R.string.dialog_button_charge_point)
-        ).apply {
-            setConfirmButtonClickListener {
-                dismiss()
-            }
-            setDismissButtonClickListener {
-                val intent = navigationProvider.toStore()
-                startActivity(intent)
-            }
-        }.showAllowingStateLoss(supportFragmentManager, OneButtonCommonDialog.TAG)
     }
 
     private fun showErrorDialog() {

@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.json.JSONObject
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class MyPageFragment : Fragment() {
@@ -107,26 +108,22 @@ class MyPageFragment : Fragment() {
     }
 
     private fun moveToLoginActivity() {
-        val intent = navigationProvider.toLogin()
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        activity?.finish()
+//        val intent = navigationProvider.toLogin()
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+//        startActivity(intent)
+//        activity?.finish()
     }
 
     private fun collectMainState() {
         activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
             binding.tvUserName.text = it.name
         }.launchIn(viewLifeCycleScope)
-
-        activityViewModel.userPoint.flowWithLifecycle(viewLifeCycle).onEach {
-            binding.tvPoint.text = getString(R.string.mypage_point, it)
-        }.launchIn(viewLifeCycleScope)
     }
 
     private fun initPrivacyButton() {
         binding.vPrivacy.setOnClickListener {
             val privacyRuleUrl = getString(R.string.privacy_url)
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacyRuleUrl))
+            val intent = Intent(Intent.ACTION_VIEW, privacyRuleUrl.toUri())
             startActivity(intent)
         }
     }
@@ -134,7 +131,7 @@ class MyPageFragment : Fragment() {
     private fun initTermOfUseButton() {
         binding.vTermofuse.setOnClickListener {
             val termOfUseUrl = getString(R.string.term_of_use_url)
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(termOfUseUrl))
+            val intent = Intent(Intent.ACTION_VIEW, termOfUseUrl.toUri())
             startActivity(intent)
         }
     }

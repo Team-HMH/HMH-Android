@@ -1,10 +1,8 @@
 package com.hmh.hamyeonham.common.context
 
 import android.Manifest
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.content.ContextWrapper
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Point

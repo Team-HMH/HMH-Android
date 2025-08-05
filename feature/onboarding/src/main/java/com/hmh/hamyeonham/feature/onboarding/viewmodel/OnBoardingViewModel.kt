@@ -3,8 +3,6 @@ package com.hmh.hamyeonham.feature.onboarding.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
-import com.hmh.hamyeonham.common.time.timeToMs
-import com.hmh.hamyeonham.login.model.SignRequestDomain
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -57,10 +55,6 @@ data class OnBoardingState(
     val buttonText: String = "다음",
     val progressbarVisible: Boolean = true,
 ) {
-    val goalTime: Long
-        get() = (screenGoalTime * 60).timeToMs()
-    val appGoalTime: Long
-        get() = ((appGoalTimeHour * 60) + appGoalTimeMinute).timeToMs()
 
     companion object {
         const val DEFAULT_SCREEN_TIME: Int = 1
@@ -174,31 +168,8 @@ class OnBoardingViewModel @Inject constructor() : ViewModel() {
 
     fun signUp() {
         viewModelScope.launch {
-            val state = onBoardingState.value
-            val request = getRequestDomain(state) // TODO 나중에 온보딩 데이터를 쓰고 싶은 경우
             _onboardEffect.emit(OnboardEffect.OnboardSuccess)
             AmplitudeUtils.trackEventWithProperties("complete_onboarding_finish")
         }
     }
-
-    private fun getRequestDomain(state: OnBoardingState) =
-        SignRequestDomain(
-            challenge =
-                SignRequestDomain.Challenge(
-                    period = state.period,
-                    app =
-                        state.appCodeList.map { appCode ->
-                            SignRequestDomain.Challenge.App(
-                                appCode = appCode,
-                                goalTime = state.appGoalTime,
-                            )
-                        },
-                    goalTime = state.goalTime,
-                ),
-            onboarding =
-                SignRequestDomain.Onboarding(
-                    averageUseTime = state.usuallyUseTime,
-                    problem = state.problems,
-                ),
-        )
 }
