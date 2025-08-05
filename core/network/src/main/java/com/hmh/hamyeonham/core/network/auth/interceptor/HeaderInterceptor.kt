@@ -1,13 +1,13 @@
 package com.hmh.hamyeonham.core.network.auth.interceptor
 
-import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
+import com.hmh.hamyeonham.core.network.auth.datastore.network.UserPreference
 import kotlinx.datetime.TimeZone
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
 
 class HeaderInterceptor @Inject constructor(
-    private val dataStore: HMHNetworkPreference
+    private val dataStore: UserPreference
 ) : Interceptor {
     private val encodedToken: String
         get() = "Bearer ${dataStore.accessToken}"

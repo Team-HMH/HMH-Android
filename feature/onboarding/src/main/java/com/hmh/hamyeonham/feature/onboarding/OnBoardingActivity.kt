@@ -27,9 +27,6 @@ import org.json.JSONObject
 
 @AndroidEntryPoint
 class OnBoardingActivity : AppCompatActivity() {
-    companion object {
-        const val EXTRA_ACCESS_TOKEN = "extra_access_token"
-    }
 
     private val binding by viewBinding(ActivityOnBoardingBinding::inflate)
     private val viewModel by viewModels<OnBoardingViewModel>()
@@ -44,7 +41,6 @@ class OnBoardingActivity : AppCompatActivity() {
         collectOnboardingState()
         collectSignUpEffect()
         changeOnBoardingButtonTextState()
-        updateAccessToken()
         changeProgressbarVisibleState()
         updateBackButtonVisibility()
     }
@@ -55,11 +51,6 @@ class OnBoardingActivity : AppCompatActivity() {
             .onEach {
                 binding.ivOnboardingBack.isVisible = it.isBackButtonActive
             }.launchIn(lifecycleScope)
-    }
-
-    private fun updateAccessToken() {
-        val accessToken = intent.getStringExtra(EXTRA_ACCESS_TOKEN)
-        viewModel.sendEvent(OnboardEvent.UpdateAccessToken(accessToken.orEmpty()))
     }
 
     private fun collectSignUpEffect() {
@@ -121,18 +112,38 @@ class OnBoardingActivity : AppCompatActivity() {
                         OnBoardingFragmentType.SELECT_SCREEN_TIME_GOAL -> {
                             AmplitudeUtils.trackEventWithProperties("click_challenge_totaltime")
                         }
+
                         OnBoardingFragmentType.SELECT_DATA_TIME -> {
-                            val property = JSONObject().put("answer_value", viewModel.onBoardingState.value.usuallyUseTimeButtonIndex) // Int
-                            AmplitudeUtils.trackEventWithProperties("click_survey1_answer", property)
+                            val property = JSONObject().put(
+                                "answer_value",
+                                viewModel.onBoardingState.value.usuallyUseTimeButtonIndex
+                            ) // Int
+                            AmplitudeUtils.trackEventWithProperties(
+                                "click_survey1_answer",
+                                property
+                            )
                         }
+
                         OnBoardingFragmentType.SELECT_DATA_PROBLEM -> {
-                            val property = JSONObject().put("answer_value", viewModel.onBoardingState.value.problemsButtonIndex) // List
-                            AmplitudeUtils.trackEventWithProperties("click_survey2_answer", property)
+                            val property = JSONObject().put(
+                                "answer_value",
+                                viewModel.onBoardingState.value.problemsButtonIndex
+                            ) // List
+                            AmplitudeUtils.trackEventWithProperties(
+                                "click_survey2_answer",
+                                property
+                            )
                         }
+
                         OnBoardingFragmentType.SELECT_DATA_PERIOD -> {
-                            val property = JSONObject().put("period", viewModel.onBoardingState.value.period)
-                            AmplitudeUtils.trackEventWithProperties("click_challenge_period_answer", property)
+                            val property =
+                                JSONObject().put("period", viewModel.onBoardingState.value.period)
+                            AmplitudeUtils.trackEventWithProperties(
+                                "click_challenge_period_answer",
+                                property
+                            )
                         }
+
                         else -> Unit
                     }
                     navigateToNextViewPager(viewPager, currentItem)

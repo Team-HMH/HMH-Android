@@ -2,6 +2,7 @@ package com.hmh.hamyeonham.core.database.di
 
 import android.content.Context
 import androidx.room.Room
+import com.hmh.hamyeonham.core.database.BuildConfig
 import com.hmh.hamyeonham.core.database.HMHRoomDatabase
 import dagger.Module
 import dagger.Provides
@@ -17,9 +18,13 @@ object DatabaseModule {
     @Singleton
     fun providesHMHDatabase(
         @ApplicationContext context: Context,
-    ): HMHRoomDatabase = Room.databaseBuilder(
-        context,
-        HMHRoomDatabase::class.java,
-        "hmh-android-database",
-    ).build()
+    ): HMHRoomDatabase {
+        val builder = Room.databaseBuilder(
+            context,
+            HMHRoomDatabase::class.java,
+            "hmh-android-database"
+        )
+        builder.addMigrations(HMHRoomDatabase.MIGRATION_1_2)
+        return builder.build()
+    }
 }

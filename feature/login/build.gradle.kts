@@ -9,14 +9,8 @@ android {
 
 dependencies {
 
-    // Domain
-    implementation(projects.domain.login)
-
     // Common
     implementation(projects.core.common)
-
-    // kakao
-    implementation(libs.kakao.login)
 
     // coil
     implementation(libs.coil.core)

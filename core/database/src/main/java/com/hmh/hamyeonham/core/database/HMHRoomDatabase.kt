@@ -2,6 +2,8 @@ package com.hmh.hamyeonham.core.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.hmh.hamyeonham.core.database.dao.ChallengeDao
 import com.hmh.hamyeonham.core.database.dao.DeletedGoalsDao
 import com.hmh.hamyeonham.core.database.dao.LockDao
@@ -26,9 +28,9 @@ import kotlinx.coroutines.launch
         DailyChallengeEntity::class,
         DeletedGoalWithUsageEntity::class,
         DeletedUsageEntity::class,
-        LockWithDateEntity::class
+        LockWithDateEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class HMHRoomDatabase : RoomDatabase() {
@@ -47,6 +49,42 @@ abstract class HMHRoomDatabase : RoomDatabase() {
             deletedGoalsDao().deleteAll()
             lockDao().deleteAll()
         }
+    }
 
+    companion object {
+        // 버전 1에서 버전 2로 마이그레이션
+        val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // UserAuth 테이블 생성
+                database.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `user_auth` (
+                        `id` INTEGER NOT NULL,
+                        `userId` INTEGER NOT NULL,
+                        `providerType` TEXT NOT NULL,
+                        `isLoggedIn` INTEGER NOT NULL,
+                        `lastLoginTimestamp` INTEGER NOT NULL,
+                        PRIMARY KEY(`id`)
+                    )
+                    """
+                )
+
+                // UserProfile 테이블 생성
+                database.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `user_profile` (
+                        `userId` INTEGER NOT NULL,
+                        `nickname` TEXT,
+                        `profileImageUrl` TEXT,
+                        `email` TEXT,
+                        `ageRange` TEXT,
+                        `gender` TEXT,
+                        `updatedAt` INTEGER NOT NULL,
+                        PRIMARY KEY(`userId`)
+                    )
+                    """
+                )
+            }
+        }
     }
 }

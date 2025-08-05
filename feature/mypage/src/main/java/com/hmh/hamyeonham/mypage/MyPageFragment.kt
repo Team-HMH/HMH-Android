@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.json.JSONObject
 import javax.inject.Inject
+import androidx.core.net.toUri
 
 @AndroidEntryPoint
 class MyPageFragment : Fragment() {
@@ -76,7 +77,7 @@ class MyPageFragment : Fragment() {
                 dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
             ).apply {
                 setConfirmButtonClickListener {
-                    viewModel.handleLogout()
+                    viewModel.logout()
                 }
             }.showAllowingStateLoss(childFragmentManager)
         }
@@ -89,44 +90,40 @@ class MyPageFragment : Fragment() {
                 dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
             ).apply {
                 setConfirmButtonClickListener {
-                    viewModel.handleWithdrawal()
+                    viewModel.withdrawal()
                 }
             }.showAllowingStateLoss(childFragmentManager)
         }
     }
 
     private fun collectEffect() {
-        viewModel.userEffect.flowWithLifecycle(lifecycle).onEach { state ->
-            when (state) {
+        viewModel.effect.flowWithLifecycle(lifecycle).onEach { effect ->
+            when (effect) {
                 is UserEffect.WithdrawalSuccess -> moveToLoginActivity()
-                is UserEffect.WithdrawalFail -> toast(getString(R.string.withdrawal_fail))
+                is UserEffect.WithdrawalFail -> toast(effect.message)
                 is UserEffect.LogoutSuccess -> moveToLoginActivity()
-                is UserEffect.LogoutFail -> toast(getString(R.string.logout_fail))
+                is UserEffect.LogoutFail -> toast(effect.message)
             }
         }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     private fun moveToLoginActivity() {
-        val intent = navigationProvider.toLogin()
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
-        activity?.finish()
+//        val intent = navigationProvider.toLogin()
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+//        startActivity(intent)
+//        activity?.finish()
     }
 
     private fun collectMainState() {
         activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
             binding.tvUserName.text = it.name
         }.launchIn(viewLifeCycleScope)
-
-        activityViewModel.userPoint.flowWithLifecycle(viewLifeCycle).onEach {
-            binding.tvPoint.text = getString(R.string.mypage_point, it)
-        }.launchIn(viewLifeCycleScope)
     }
 
     private fun initPrivacyButton() {
         binding.vPrivacy.setOnClickListener {
             val privacyRuleUrl = getString(R.string.privacy_url)
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(privacyRuleUrl))
+            val intent = Intent(Intent.ACTION_VIEW, privacyRuleUrl.toUri())
             startActivity(intent)
         }
     }
@@ -134,7 +131,7 @@ class MyPageFragment : Fragment() {
     private fun initTermOfUseButton() {
         binding.vTermofuse.setOnClickListener {
             val termOfUseUrl = getString(R.string.term_of_use_url)
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(termOfUseUrl))
+            val intent = Intent(Intent.ACTION_VIEW, termOfUseUrl.toUri())
             startActivity(intent)
         }
     }

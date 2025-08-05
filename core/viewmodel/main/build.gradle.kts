@@ -11,7 +11,6 @@ dependencies {
     implementation(projects.domain.usagestats)
     implementation(projects.domain.challenge)
     implementation(projects.domain.userinfo)
-    implementation(projects.domain.point)
     implementation(projects.domain.lock)
     implementation(projects.domain.main)
 

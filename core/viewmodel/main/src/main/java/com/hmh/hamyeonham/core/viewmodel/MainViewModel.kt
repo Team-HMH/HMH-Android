@@ -11,7 +11,6 @@ import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.domain.main.MainRepository
-import com.hmh.hamyeonham.domain.point.repository.PointRepository
 import com.hmh.hamyeonham.lock.SetIsUnLockUseCase
 import com.hmh.hamyeonham.lock.UpdateIsUnLockUseCase
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
@@ -41,7 +40,6 @@ class MainViewModel @Inject constructor(
     private val challengeRepository: ChallengeRepository,
     private val usageGoalsRepository: UsageGoalsRepository,
     private val userInfoRepository: UserInfoRepository,
-    private val pointRepository: PointRepository,
     private val mainRepository: MainRepository,
     private val getUsageStatsListUseCase: GetUsageStatsListUseCase,
     private val setIsUnLockUseCase: SetIsUnLockUseCase,
@@ -68,13 +66,6 @@ class MainViewModel @Inject constructor(
     private var rawChallengeList: List<ChallengeStatus> = emptyList()
     private val _challengeList = MutableStateFlow<List<ChallengeStatus>>(emptyList())
     val challengeStatusList = _challengeList.asStateFlow()
-
-    private val _userPoint = MutableStateFlow(0)
-    val userPoint = _userPoint.asStateFlow()
-
-    val isPointLeftToCollect
-        get() =
-            challengeStatusList.value.contains(ChallengeStatus.UNEARNED)
 
 
     private val _effect = MutableSharedFlow<MainEffect>()
@@ -107,28 +98,12 @@ class MainViewModel @Inject constructor(
     }
 
     fun updateDailyChallengeFailed() {
-        viewModelScope.launch(Dispatchers.Main) {
-            pointRepository.usePoint().onSuccess {
-                _userPoint.value = it.userPoint
-                setIsUnLockUseCase(true).onSuccess {
-                    getChallengeStatus()
-                    sendEffect(MainEffect.SuccessUsePoint)
-                }.onFailure { e ->
-                    Timber.e(e)
-                    sendEffect(MainEffect.NetworkError)
-                }
-            }.onFailure {
-                if (it is HttpException) {
-                    when (it.code()) {
-                        LACK_POINT_ERROR_CODE -> {
-                            sendEffect(MainEffect.LackOfPoint)
-                        }
-
-                        else -> sendEffect(MainEffect.NetworkError)
-                    }
-                } else {
-                    sendEffect(MainEffect.NetworkError)
-                }
+        viewModelScope.launch {
+            setIsUnLockUseCase(true).onSuccess {
+                getChallengeStatus()
+            }.onFailure { e ->
+                Timber.e(e)
+                sendEffect(MainEffect.NetworkError)
             }
         }
     }
@@ -155,10 +130,6 @@ class MainViewModel @Inject constructor(
                     challengeStatusList.take(7)
             }
         }
-    }
-
-    fun updatePoint(point: Int) {
-        _userPoint.value = point
     }
 
     private fun updateState(transform: suspend MainState.() -> MainState) {
@@ -241,7 +212,6 @@ class MainViewModel @Inject constructor(
         updateState {
             copy(name = userInfo.name)
         }
-        _userPoint.value = userInfo.point
     }
 
     private fun setUsageStatsList(usageStatsList: UsageStatusAndGoal) {
@@ -287,10 +257,5 @@ class MainViewModel @Inject constructor(
         )
 
         return items
-    }
-
-
-    companion object {
-        private const val LACK_POINT_ERROR_CODE = 400
     }
 }

@@ -15,6 +15,5 @@ dependencies {
 
     implementation(projects.feature.main)
 
-    implementation(projects.domain.login)
     implementation(projects.domain.challenge)
 }

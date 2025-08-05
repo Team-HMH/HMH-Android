@@ -29,7 +29,6 @@ jobs:
 
       - name: Add Local Properties
         env:
-          KAKAO_API_KEY: ${{ secrets.KAKAO_API_KEY }}
           HMH_DEV_BASE_URL: ${{ secrets.HMH_DEV_BASE_URL }}
           HMH_PROD_BASE_URL: ${{ secrets.HMH_PROD_BASE_URL }}
           AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}

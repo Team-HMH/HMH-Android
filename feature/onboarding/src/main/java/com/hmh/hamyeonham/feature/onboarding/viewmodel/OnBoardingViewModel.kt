@@ -3,10 +3,6 @@ package com.hmh.hamyeonham.feature.onboarding.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
-import com.hmh.hamyeonham.common.time.timeToMs
-import com.hmh.hamyeonham.core.network.auth.datastore.network.HMHNetworkPreference
-import com.hmh.hamyeonham.login.model.SignRequestDomain
-import com.hmh.hamyeonham.login.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,7 +29,6 @@ sealed interface OnboardEvent {
     data class UpdateAppGoalTimeMinute(val goalTimeMinute: Int) : OnboardEvent
     data class UpdateAppGoalTimeHour(val goalTimeHour: Int) : OnboardEvent
     data class UpdateNextButtonActive(val isNextButtonActive: Boolean) : OnboardEvent
-    data class UpdateAccessToken(val accessToken: String) : OnboardEvent
     data class ChangeActivityButtonText(val buttonText: String) : OnboardEvent
     data class VisibleProgressbar(val progressbarVisible: Boolean) : OnboardEvent
     data class UpdateBackButtonActive(val isBackButtonActive: Boolean) : OnboardEvent
@@ -57,14 +52,9 @@ data class OnBoardingState(
     val appGoalTimeHour: Int = 0,
     val isNextButtonActive: Boolean = false,
     val isBackButtonActive: Boolean = true,
-    val accessToken: String = "",
     val buttonText: String = "다음",
     val progressbarVisible: Boolean = true,
 ) {
-    val goalTime: Long
-        get() = (screenGoalTime * 60).timeToMs()
-    val appGoalTime: Long
-        get() = ((appGoalTimeHour * 60) + appGoalTimeMinute).timeToMs()
 
     companion object {
         const val DEFAULT_SCREEN_TIME: Int = 1
@@ -72,12 +62,7 @@ data class OnBoardingState(
 }
 
 @HiltViewModel
-class OnBoardingViewModel
-@Inject
-constructor(
-    private val authRepository: AuthRepository,
-    private val hmhNetworkPreference: HMHNetworkPreference,
-) : ViewModel() {
+class OnBoardingViewModel @Inject constructor() : ViewModel() {
     private val _onBoardingState = MutableStateFlow(OnBoardingState())
     val onBoardingState = _onBoardingState.asStateFlow()
 
@@ -161,12 +146,6 @@ constructor(
                 }
             }
 
-            is OnboardEvent.UpdateAccessToken -> {
-                updateState {
-                    copy(accessToken = event.accessToken)
-                }
-            }
-
             is OnboardEvent.ChangeActivityButtonText -> {
                 updateState {
                     copy(buttonText = event.buttonText)
@@ -189,48 +168,8 @@ constructor(
 
     fun signUp() {
         viewModelScope.launch {
-            val state = onBoardingState.value
-            val token = state.accessToken
-            val request = getRequestDomain(state)
-            authRepository
-                .signUp(token, request)
-                .onSuccess { signUpUser ->
-                    signUpUser.let {
-                        hmhNetworkPreference.accessToken = it.accessToken
-                        hmhNetworkPreference.refreshToken = it.refreshToken
-                        hmhNetworkPreference.userId = it.userId
-                        hmhNetworkPreference.autoLoginConfigured = true
-                    }
-                    viewModelScope.launch {
-                        _onboardEffect.emit(OnboardEffect.OnboardSuccess)
-                        AmplitudeUtils.trackEventWithProperties("complete_onboarding_finish")
-                    }
-                }.onFailure {
-                    viewModelScope.launch {
-                        _onboardEffect.emit(OnboardEffect.OnboardFail)
-                    }
-                }
+            _onboardEffect.emit(OnboardEffect.OnboardSuccess)
+            AmplitudeUtils.trackEventWithProperties("complete_onboarding_finish")
         }
     }
-
-    private fun getRequestDomain(state: OnBoardingState) =
-        SignRequestDomain(
-            challenge =
-            SignRequestDomain.Challenge(
-                period = state.period,
-                app =
-                state.appCodeList.map { appCode ->
-                    SignRequestDomain.Challenge.App(
-                        appCode = appCode,
-                        goalTime = state.appGoalTime,
-                    )
-                },
-                goalTime = state.goalTime,
-            ),
-            onboarding =
-            SignRequestDomain.Onboarding(
-                averageUseTime = state.usuallyUseTime,
-                problem = state.problems,
-            ),
-        )
 }
