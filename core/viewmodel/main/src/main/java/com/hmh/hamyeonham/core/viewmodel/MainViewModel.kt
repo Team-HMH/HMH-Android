@@ -31,7 +31,6 @@ class MainViewModel @Inject constructor(
     private val userInfoRepository: UserInfoRepository,
     private val mainRepository: MainRepository,
     private val getUsageStatsListUseCase: GetUsageStatsListUseCase,
-    private val setIsUnLockUseCase: SetIsUnLockUseCase,
     private val updateIsUnLockUseCase: UpdateIsUnLockUseCase,
 ) : ViewModel() {
 
