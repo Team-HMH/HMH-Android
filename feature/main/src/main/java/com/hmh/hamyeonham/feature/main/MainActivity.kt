@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
             dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
         ).apply {
             setConfirmButtonClickListener {
-                viewModel.updateDailyChallengeFailed()
+                // viewModel.updateDailyChallengeFailed()
             }
             setDismissButtonClickListener {
                 intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
