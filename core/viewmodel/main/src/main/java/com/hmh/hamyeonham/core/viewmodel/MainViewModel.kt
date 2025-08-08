@@ -61,7 +61,6 @@ class MainViewModel @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.Main) {
-            updateGoals()
             getUserInfo()
             getUsageGoalAndStatList()
         }
@@ -85,13 +84,6 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             _effect.emit(effect)
         }
-    }
-
-    private suspend fun updateGoals() {
-        usageGoalsRepository.updateUsageGoal()
-            .onSuccess {
-                updateState { copy(challengeSuccess = it) }
-            }
     }
 
     private fun getUsageGoalAndStatList() {
