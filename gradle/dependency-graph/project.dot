@@ -1,0 +1,136 @@
+digraph {
+  graph [label="HMH-Android\n ",labelloc=t,fontsize=30,ranksep=1.4];
+  node [style=filled, fillcolor="#bbbbbb"];
+  rankdir=TB;
+
+  # Projects
+
+  ":app" [shape=box, fillcolor="#baffc9"];
+  ":core:common" [fillcolor="#baffc9"];
+  ":core:database" [fillcolor="#baffc9"];
+  ":core:designsystem" [fillcolor="#baffc9"];
+  ":core:domain" [fillcolor="#ffb3ba"];
+  ":core:network" [fillcolor="#baffc9"];
+  ":core:service" [fillcolor="#baffc9"];
+  ":core:viewmodel:main" [fillcolor="#baffc9"];
+  ":data:challenge" [fillcolor="#baffc9"];
+  ":data:device" [fillcolor="#baffc9"];
+  ":data:login" [fillcolor="#baffc9"];
+  ":data:onboarding" [fillcolor="#baffc9"];
+  ":data:usagestats" [fillcolor="#baffc9"];
+  ":data:userinfo" [fillcolor="#baffc9"];
+  ":domain:challenge" [fillcolor="#ffb3ba"];
+  ":domain:login" [fillcolor="#ffb3ba"];
+  ":domain:onboarding" [fillcolor="#ffb3ba"];
+  ":domain:usagestats" [fillcolor="#ffb3ba"];
+  ":domain:userinfo" [fillcolor="#ffb3ba"];
+  ":feature:challenge" [fillcolor="#baffc9"];
+  ":feature:lock" [fillcolor="#baffc9"];
+  ":feature:login" [fillcolor="#baffc9"];
+  ":feature:main" [fillcolor="#baffc9"];
+  ":feature:mypage" [fillcolor="#baffc9"];
+  ":feature:onboarding" [fillcolor="#baffc9"];
+  ":feature:store" [fillcolor="#baffc9"];
+
+  {rank = same; ":app";}
+
+  # Dependencies
+
+  ":app" -> ":feature:login" [style=dotted]
+  ":app" -> ":feature:onboarding" [style=dotted]
+  ":app" -> ":feature:main" [style=dotted]
+  ":app" -> ":feature:mypage" [style=dotted]
+  ":app" -> ":feature:challenge" [style=dotted]
+  ":app" -> ":feature:lock" [style=dotted]
+  ":app" -> ":feature:store" [style=dotted]
+  ":app" -> ":domain:usagestats" [style=dotted]
+  ":app" -> ":domain:userinfo" [style=dotted]
+  ":app" -> ":domain:login" [style=dotted]
+  ":app" -> ":domain:challenge" [style=dotted]
+  ":app" -> ":domain:onboarding" [style=dotted]
+  ":app" -> ":data:usagestats" [style=dotted]
+  ":app" -> ":data:userinfo" [style=dotted]
+  ":app" -> ":data:login" [style=dotted]
+  ":app" -> ":data:challenge" [style=dotted]
+  ":app" -> ":data:device" [style=dotted]
+  ":app" -> ":data:onboarding" [style=dotted]
+  ":app" -> ":core:common" [style=dotted]
+  ":app" -> ":core:designsystem" [style=dotted]
+  ":app" -> ":core:database" [style=dotted]
+  ":app" -> ":core:domain" [style=dotted]
+  ":app" -> ":core:network" [style=dotted]
+  ":app" -> ":core:viewmodel:main" [style=dotted]
+  ":core:common" -> ":core:designsystem" [style=dotted]
+  ":core:service" -> ":core:common" [style=dotted]
+  ":core:service" -> ":core:designsystem" [style=dotted]
+  ":core:service" -> ":core:domain" [style=dotted]
+  ":core:service" -> ":domain:usagestats" [style=dotted]
+  ":core:service" -> ":core:network" [style=dotted]
+  ":core:network" -> ":core:common" [style=dotted]
+  ":core:network" -> ":domain:login" [style=dotted]
+  ":data:usagestats" -> ":domain:usagestats" [style=dotted]
+  ":data:usagestats" -> ":core:database" [style=dotted]
+  ":data:usagestats" -> ":core:network" [style=dotted]
+  ":data:usagestats" -> ":core:domain" [style=dotted]
+  ":data:challenge" -> ":domain:challenge" [style=dotted]
+  ":data:challenge" -> ":core:database" [style=dotted]
+  ":data:challenge" -> ":core:network" [style=dotted]
+  ":data:login" -> ":core:common" [style=dotted]
+  ":data:login" -> ":domain:login" [style=dotted]
+  ":data:login" -> ":core:network" [style=dotted]
+  ":data:device" -> ":domain:challenge" [style=dotted]
+  ":data:device" -> ":core:common" [style=dotted]
+  ":data:device" -> ":core:network" [style=dotted]
+  ":data:userinfo" -> ":domain:userinfo" [style=dotted]
+  ":data:userinfo" -> ":core:network" [style=dotted]
+  ":data:userinfo" -> ":core:common" [style=dotted]
+  ":feature:mypage" -> ":core:common" [style=dotted]
+  ":feature:mypage" -> ":core:designsystem" [style=dotted]
+  ":feature:mypage" -> ":domain:userinfo" [style=dotted]
+  ":feature:mypage" -> ":domain:login" [style=dotted]
+  ":feature:mypage" -> ":core:viewmodel:main" [style=dotted]
+  ":feature:mypage" -> ":core:network" [style=dotted]
+  ":feature:mypage" -> ":feature:store" [style=dotted]
+  ":feature:mypage" -> ":domain:challenge" [style=dotted]
+  ":feature:challenge" -> ":domain:usagestats" [style=dotted]
+  ":feature:challenge" -> ":domain:challenge" [style=dotted]
+  ":feature:challenge" -> ":core:common" [style=dotted]
+  ":feature:challenge" -> ":core:designsystem" [style=dotted]
+  ":feature:challenge" -> ":core:viewmodel:main" [style=dotted]
+  ":feature:challenge" -> ":core:domain" [style=dotted]
+  ":feature:lock" -> ":domain:usagestats" [style=dotted]
+  ":feature:lock" -> ":core:common" [style=dotted]
+  ":feature:lock" -> ":core:designsystem" [style=dotted]
+  ":feature:lock" -> ":core:domain" [style=dotted]
+  ":feature:lock" -> ":core:service" [style=dotted]
+  ":feature:onboarding" -> ":core:common" [style=dotted]
+  ":feature:onboarding" -> ":core:designsystem" [style=dotted]
+  ":feature:onboarding" -> ":core:network" [style=dotted]
+  ":feature:onboarding" -> ":core:service" [style=dotted]
+  ":feature:onboarding" -> ":feature:main" [style=dotted]
+  ":feature:onboarding" -> ":domain:login" [style=dotted]
+  ":feature:onboarding" -> ":domain:challenge" [style=dotted]
+  ":feature:main" -> ":feature:challenge" [style=dotted]
+  ":feature:main" -> ":feature:mypage" [style=dotted]
+  ":feature:main" -> ":core:common" [style=dotted]
+  ":feature:main" -> ":core:designsystem" [style=dotted]
+  ":feature:main" -> ":core:viewmodel:main" [style=dotted]
+  ":feature:main" -> ":core:service" [style=dotted]
+  ":feature:main" -> ":core:network" [style=dotted]
+  ":feature:main" -> ":domain:usagestats" [style=dotted]
+  ":feature:main" -> ":domain:userinfo" [style=dotted]
+  ":feature:store" -> ":core:common" [style=dotted]
+  ":feature:store" -> ":core:designsystem" [style=dotted]
+  ":feature:login" -> ":domain:login" [style=dotted]
+  ":feature:login" -> ":core:common" [style=dotted]
+  ":feature:login" -> ":core:designsystem" [style=dotted]
+  ":feature:login" -> ":core:network" [style=dotted]
+  ":feature:login" -> ":feature:onboarding" [style=dotted]
+  ":domain:usagestats" -> ":core:domain" [style=dotted]
+  ":domain:challenge" -> ":core:domain" [style=dotted]
+  ":core:viewmodel:main" -> ":domain:usagestats" [style=dotted]
+  ":core:viewmodel:main" -> ":domain:challenge" [style=dotted]
+  ":core:viewmodel:main" -> ":domain:userinfo" [style=dotted]
+  ":core:viewmodel:main" -> ":core:common" [style=dotted]
+  ":core:viewmodel:main" -> ":core:domain" [style=dotted]
+}
