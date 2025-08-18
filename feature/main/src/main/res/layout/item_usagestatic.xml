@@ -53,16 +53,16 @@
         app:layout_constraintBottom_toBottomOf="@id/iv_appicon"
         app:layout_constraintStart_toStartOf="@id/tv_appname" />
 
-    <TextView
-        android:id="@+id/tv_app_time_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        tools:text="1시간 남음"
-        android:textAppearance="?textAppearanceTitleMedium"
-        android:textColor="?white_text"
-        app:layout_constraintBottom_toBottomOf="@id/pb_app_usage"
-        app:layout_constraintEnd_toEndOf="@id/pb_app_usage"
-        app:layout_constraintTop_toTopOf="@id/pb_app_usage" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_app_time_left"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="20dp"-->
+<!--        tools:text="1시간 남음"-->
+<!--        android:textAppearance="?textAppearanceTitleMedium"-->
+<!--        android:textColor="?white_text"-->
+<!--        app:layout_constraintBottom_toBottomOf="@id/pb_app_usage"-->
+<!--        app:layout_constraintEnd_toEndOf="@id/pb_app_usage"-->
+<!--        app:layout_constraintTop_toTopOf="@id/pb_app_usage" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

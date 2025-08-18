@@ -40,12 +40,12 @@ class UsageStaticsViewHolder(
         binding.run {
             pbAppUsage.progress = usageStatusAndGoal.usedPercentage
             tvGoalTime.text = convertTimeToString(usageStatusAndGoal.goalTimeInMinute)
-            tvAppTimeLeft.text =
-                context.getSecondStrColoredString(
-                    firstStr = convertTimeToString(usageStatusAndGoal.timeLeftInMinute),
-                    secondStr = getString(context, R.string.all_left),
-                    color = com.hmh.hamyeonham.core.designsystem.R.color.gray1,
-                )
+//            tvAppTimeLeft.text =
+//                context.getSecondStrColoredString(
+//                    firstStr = convertTimeToString(usageStatusAndGoal.timeLeftInMinute),
+//                    secondStr = getString(context, R.string.all_left),
+//                    color = com.hmh.hamyeonham.core.designsystem.R.color.gray1,
+//                )
         }
     }
 }
