@@ -2,7 +2,7 @@
     <item
         android:id="@+id/challenge_dest"
         android:icon="@drawable/ic_bottomnav_challenge_28"
-        android:title="@string/challenge" />
+        android:title="@string/app_setting" />
     <item
         android:id="@+id/home_dest"
         android:icon="@drawable/ic_bottomnav_home_28"

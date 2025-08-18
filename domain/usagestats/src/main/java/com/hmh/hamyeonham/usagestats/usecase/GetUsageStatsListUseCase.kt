@@ -1,6 +1,6 @@
 package com.hmh.hamyeonham.usagestats.usecase
 
-import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.domain.usagegoal.model.AppUsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.model.UsageStatus
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
@@ -31,7 +31,6 @@ class GetUsageStatsListUseCase @Inject constructor(
 
             val usageStatusAndGoal = UsageStatusAndGoal(
                 totalTimeInForeground = totalUsage,
-                totalGoalTime = usageGoal.totalGoalTime,
                 apps = usageGoal.appGoals.map {
                     UsageStatusAndGoal.App(
                         packageName = it.packageName,
@@ -45,12 +44,6 @@ class GetUsageStatsListUseCase @Inject constructor(
         }
     }
 
-    private fun getUsageGoalForPackage(
-        usageGoalsForSelectedPackages: UsageGoal,
-    ): Long {
-        return usageGoalsForSelectedPackages.totalGoalTime
-    }
-
     private suspend fun getUsageStatsAndGoalsForSelectedPackages(
         startTime: Long,
         endTime: Long,
@@ -59,6 +52,6 @@ class GetUsageStatsListUseCase @Inject constructor(
         return usageStatsRepository.getUsageStatForPackages(startTime, endTime, selectedPackages)
     }
 
-    private fun getSelectedPackageList(usageGoalList: UsageGoal): List<String> =
-        usageGoalList.appGoals.map { it.packageName }.distinct()
+    private fun getSelectedPackageList(appUsageGoalList: AppUsageGoal): List<String> =
+        appUsageGoalList.appGoals.map { it.packageName }.distinct()
 }

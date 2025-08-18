@@ -1,10 +1,9 @@
 <resources>
-    <string name="challenge">챌린지</string>
+    <string name="app_setting">앱 설정</string>
     <string name="home">홈</string>
     <string name="my_usage_statics">내 이용시간</string>
     <string name="my_page">마이페이지</string>
     <string name="hmh">HMH</string>
-    <string name="total_goal_time_format">목표 사용 시간 %s 중</string>
     <string name="total_used">%s 사용</string>
     <string name="all_left">남음</string>
     <string name="item_usagestatic_appicon_description">image of app icon</string>

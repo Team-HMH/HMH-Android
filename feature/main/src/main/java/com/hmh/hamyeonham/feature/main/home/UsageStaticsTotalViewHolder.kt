@@ -35,11 +35,7 @@ class UsageStaticsTotalViewHolder(
                     secondStr = getString(context, R.string.all_left),
                     color = com.hmh.hamyeonham.core.designsystem.R.color.gray1,
                 )
-            tvTotalGoal.text =
-                context.getString(
-                    R.string.total_goal_time_format,
-                    convertMillisecondToString(totalModel.totalGoalTime)
-                )
+
             tvTotalUsage.text =
                 context.getString(
                     R.string.total_used,
@@ -53,10 +49,10 @@ class UsageStaticsTotalViewHolder(
     private fun bindBlackHoleInfo(totalModel: HomeItem.TotalModel) {
         val blackHoleInfo = when {
             // 챌린지 성공한 경우
-            totalModel.challengeSuccess -> {
-                BlackHoleInfo.createByPercentage(totalModel.totalPercentage)
-                    ?: BlackHoleInfo.LEVEL0
-            }
+//            totalModel.challengeSuccess -> {
+//                BlackHoleInfo.createByPercentage(totalModel.totalPercentage)
+//                    ?: BlackHoleInfo.LEVEL0
+//            }
             // 챌린지 실패한 경우
             else -> {
                 BlackHoleInfo.LEVEL5

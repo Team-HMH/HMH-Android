@@ -12,11 +12,11 @@ import com.hmh.hamyeonham.feature.challenge.R
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemUsageGoalBinding
 
 
-sealed class ChallengeViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+sealed class AppUsageGoalsViewHolder(binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
     class UsageGoalsViewHolder(
         private val binding: ItemUsageGoalBinding,
         private val onAppItemClicked: (ChallengeUsageGoal) -> Unit
-    ) : ChallengeViewHolder(binding) {
+    ) : AppUsageGoalsViewHolder(binding) {
         private var item: ChallengeUsageGoal? = null
 
         init {

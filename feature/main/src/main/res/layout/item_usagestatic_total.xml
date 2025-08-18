@@ -50,15 +50,15 @@
         app:layout_constraintBottom_toBottomOf="@id/lav_blackhole"
         app:layout_constraintStart_toStartOf="@id/pb_total_usage" />
 
-    <TextView
-        android:id="@+id/tv_total_goal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/total_goal_time"
-        android:textAppearance="?textAppearanceLabelMedium"
-        android:textColor="?gray1"
-        app:layout_constraintBottom_toTopOf="@id/tv_total_usage"
-        app:layout_constraintStart_toStartOf="@id/pb_total_usage" />
+<!--    <TextView-->
+<!--        android:id="@+id/tv_total_goal"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/total_goal_time"-->
+<!--        android:textAppearance="?textAppearanceLabelMedium"-->
+<!--        android:textColor="?gray1"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/tv_total_usage"-->
+<!--        app:layout_constraintStart_toStartOf="@id/pb_total_usage" />-->
 
     <TextView
         android:id="@+id/tv_total_time_left"

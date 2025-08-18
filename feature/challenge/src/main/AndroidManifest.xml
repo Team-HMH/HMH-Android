@@ -3,9 +3,6 @@
 
     <application>
         <activity
-            android:name="com.hmh.hamyeonham.challenge.newchallenge.NewChallengeActivity"
-            android:exported="false" />
-        <activity
             android:name="com.hmh.hamyeonham.challenge.appadd.AppAddActivity"
             android:exported="false"
             android:windowSoftInputMode="stateAlwaysVisible" />
