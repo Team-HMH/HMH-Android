@@ -2,10 +2,8 @@ package com.hmh.hamyeonham.core.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hmh.hamyeonham.challenge.model.Challenge
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
-import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
-import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.domain.usagegoal.model.AppUsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.domain.main.MainRepository
 import com.hmh.hamyeonham.lock.UpdateIsUnLockUseCase
@@ -50,12 +48,6 @@ class MainViewModel @Inject constructor(
         combineHomeItems(bannerModel, usageStatusAndGoals)
     }.stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
 
-
-    private var rawChallengeList: List<ChallengeStatus> = emptyList()
-    private val _challengeList = MutableStateFlow<List<ChallengeStatus>>(emptyList())
-    val challengeStatusList = _challengeList.asStateFlow()
-
-
     private val _effect = MutableSharedFlow<MainEffect>()
     val effect = _effect.asSharedFlow()
 
@@ -66,7 +58,6 @@ class MainViewModel @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.Main) {
-            updateGoals()
             getUserInfo()
             getUsageGoalAndStatList()
         }
@@ -92,13 +83,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private suspend fun updateGoals() {
-        usageGoalsRepository.updateUsageGoal()
-            .onSuccess {
-                updateState { copy(challengeSuccess = it) }
-            }
-    }
-
     private fun getUsageGoalAndStatList() {
         viewModelScope.launch {
             usageGoalsRepository.getUsageGoals().collect {
@@ -122,23 +106,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun setUsageGaols(usageGoals: UsageGoal) {
+    private fun setUsageGaols(appUsageGoals: AppUsageGoal) {
         updateState {
-            copy(usageGoals = usageGoals)
+            copy(appUsageGoals = appUsageGoals)
         }
-    }
-
-    private fun setChallengeStatus(challenge: Challenge) {
-        updateState {
-            copy(
-                appGoals = challenge.appGoals,
-                totalGoalTimeInHour = challenge.goalTimeInHours,
-                period = challenge.period,
-                todayIndex = challenge.todayIndex,
-            )
-        }
-        rawChallengeList = challenge.challengeList
-        _challengeList.value = challenge.challengeList
     }
 
     private fun updateUserInfo(userInfo: UserInfo) {
@@ -173,7 +144,6 @@ class MainViewModel @Inject constructor(
         items.add(
             HomeItem.TotalModel(
                 userName = mainState.value.name,
-                challengeSuccess = mainState.value.challengeSuccess,
                 totalGoalTime = usageStatusAndGoal.totalGoalTime,
                 totalTimeInForeground = usageStatusAndGoal.totalTimeInForeground,
             )

@@ -1,6 +1,6 @@
 package com.hmh.hamyeonham.usagestats.usecase
 
-import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.domain.usagegoal.model.AppUsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.model.UsageStatus
 import com.hmh.hamyeonham.usagestats.model.sumUsageStats
@@ -41,7 +41,7 @@ class GetTotalUsageStatsUseCase @Inject constructor(
         return usageStatsRepository.getUsageStatForPackages(startTime, endTime, packageNames)
     }
 
-    private fun getPackageNamesFromUsageGoals(usageGoals: UsageGoal): List<String> {
-        return usageGoals.appGoals.map { it.packageName }
+    private fun getPackageNamesFromUsageGoals(appUsageGoals: AppUsageGoal): List<String> {
+        return appUsageGoals.appGoals.map { it.packageName }
     }
 }

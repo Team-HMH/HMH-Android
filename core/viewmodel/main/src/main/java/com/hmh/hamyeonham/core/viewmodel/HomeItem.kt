@@ -7,7 +7,6 @@ import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 sealed class HomeItem {
     data class TotalModel(
         val userName: String,
-        val challengeSuccess: Boolean,
         val totalGoalTime: Long,
         val totalTimeInForeground: Long,
     ) : HomeItem() {

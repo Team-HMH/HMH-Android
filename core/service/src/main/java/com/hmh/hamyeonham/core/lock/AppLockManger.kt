@@ -7,10 +7,8 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.hmh.hamyeonham.common.navigation.NavigationProvider
 import com.hmh.hamyeonham.common.time.getCurrentDayStartEndEpochMillis
-import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.domain.usagegoal.model.AppUsageGoal
 import com.hmh.hamyeonham.lock.GetIsUnLockUseCase
-import com.hmh.hamyeonham.usagestats.usecase.GetTotalUsageGoalUseCase
-import com.hmh.hamyeonham.usagestats.usecase.GetTotalUsageStatsUseCase
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageGoalsUseCase
 import com.hmh.hamyeonham.usagestats.usecase.GetUsageStatFromPackageUseCase
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -31,8 +29,6 @@ class AppLockManger @Inject constructor(
     private val getUsageGoalsUseCase: GetUsageGoalsUseCase,
     private val getUsageIsLockUseCase: GetIsUnLockUseCase,
     private val navigationProvider: NavigationProvider,
-    private val getTotalUsageStatsUseCase: GetTotalUsageStatsUseCase,
-    private val getTotalUsageGoalUseCase: GetTotalUsageGoalUseCase,
 ) {
     private var checkUsageJob: Job? = null
     private var timerJob: Job? = null
@@ -52,41 +48,31 @@ class AppLockManger @Inject constructor(
                 endTime = endTime,
                 packageName = packageName
             )
-            val totalUsageStats = getTotalUsageStatsUseCase(
-                startTime = startTime,
-                endTime = endTime,
-            )
+
             Log.d("Usage", "packageName: $packageName, usage: $usageStats")
             val usageGoals = getUsageGoalsUseCase().firstOrNull() ?: return@launch
             val currentAppGoal =
                 usageGoals.appGoals.find { it.packageName == packageName } ?: return@launch
-            val totalUsageGoal = getTotalUsageGoalUseCase()
             checkLockApp(
                 usageStats = usageStats,
                 currentAppGoal = currentAppGoal,
                 packageName = packageName,
-                totalUsageStats = totalUsageStats,
-                totalUsageGoal = totalUsageGoal
             )
         }
     }
 
     private suspend fun checkLockApp(
         usageStats: Long,
-        currentAppGoal: UsageGoal.App,
+        currentAppGoal: AppUsageGoal.App,
         packageName: String,
-        totalUsageStats: Long,
-        totalUsageGoal: UsageGoal
     ) {
-        if (usageStats >= currentAppGoal.goalTime || totalUsageStats >= totalUsageGoal.totalGoalTime) {
+        if (usageStats >= currentAppGoal.goalTime) {
             moveToLock(packageName)
         } else {
             releaseTimerJob()
             val appRemainingTime = currentAppGoal.goalTime - usageStats
-            val totalRemainingTime = totalUsageGoal.totalGoalTime - totalUsageStats
             startTimer(
                 appRemainingTime = appRemainingTime,
-                totalRemainingTime = totalRemainingTime,
                 packageName = packageName
             )
         }
@@ -94,12 +80,10 @@ class AppLockManger @Inject constructor(
 
     private fun startTimer(
         appRemainingTime: Long,
-        totalRemainingTime: Long,
         packageName: String
     ) {
-        val remainingTime = minOf(appRemainingTime, totalRemainingTime)
         timerJob = ProcessLifecycleOwner.get().lifecycleScope.launch {
-            delay(remainingTime)
+            delay(appRemainingTime)
             moveToLock(packageName)
         }
     }

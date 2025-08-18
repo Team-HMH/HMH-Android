@@ -2,7 +2,7 @@ package com.hmh.hamyeonham.challenge.usecase
 
 import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.repository.ChallengeRepository
-import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.domain.usagegoal.model.AppUsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import javax.inject.Inject
 
@@ -14,7 +14,7 @@ class AddUsageGoalsUseCase @Inject constructor(
         challengeRepository.postApps(apps).onSuccess {
             usageGoalsRepository.addUsageGoalList(
                 apps.apps.map {
-                    UsageGoal.App(it.appCode, it.goalTime)
+                    AppUsageGoal.App(it.appCode, it.goalTime)
                 }
             )
         }

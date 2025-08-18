@@ -1,6 +1,6 @@
 package com.hmh.hamyeonham.usagestats.model
 
-import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.domain.usagegoal.model.AppUsageGoal
 
 data class UsageStatusAndGoal(
     val totalTimeInForeground: Long = 0,
@@ -30,7 +30,7 @@ data class UsageStatusAndGoal(
         }
 
         companion object {
-            fun List<UsageGoal.App>.toApps(): List<App> {
+            fun List<AppUsageGoal.App>.toApps(): List<App> {
                 return map {
                     App(
                         packageName = it.packageName,

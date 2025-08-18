@@ -3,8 +3,7 @@ package com.hmh.hamyeonham.usagestats.datasource.local
 import com.hmh.hamyeonham.core.database.dao.UsageGoalsDao
 import com.hmh.hamyeonham.core.database.dao.UsageTotalGoalDao
 import com.hmh.hamyeonham.core.database.model.UsageGoalEntity
-import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
-import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.domain.usagegoal.model.AppUsageGoal
 import com.hmh.hamyeonham.usagestats.mapper.toUsageAppGoal
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -14,17 +13,13 @@ import javax.inject.Inject
 
 class UsageGoalsLocalDataSource @Inject constructor(
     private val usageGoalsDao: UsageGoalsDao,
-    private val usageTotalGoalDao: UsageTotalGoalDao,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    suspend fun getUsageGoal(): Flow<UsageGoal> {
+    fun getUsageGoal(): Flow<AppUsageGoal> {
         return usageGoalsDao.getUsageGoal()
             .flatMapConcat { goalsList ->
                 flow {
-                    val totalGoal = usageTotalGoalDao.getUsageTotalGoal()
-                    val result = UsageGoal(
-                        totalGoalTime = totalGoal?.totalGoalTime ?: 0,
-                        status = ChallengeStatus.fromString(totalGoal?.status.orEmpty()),
+                    val result = AppUsageGoal(
                         appGoals = goalsList.map { it.toUsageAppGoal() }
                     )
                     emit(result)
@@ -32,7 +27,7 @@ class UsageGoalsLocalDataSource @Inject constructor(
             }
     }
 
-    suspend fun addUsageAppGoal(usageAppGoal: UsageGoal.App) {
+    suspend fun addUsageAppGoal(usageAppGoal: AppUsageGoal.App) {
         usageGoalsDao.insertUsageGoal(
             UsageGoalEntity(
                 usageAppGoal.packageName,
@@ -41,7 +36,7 @@ class UsageGoalsLocalDataSource @Inject constructor(
         )
     }
 
-    suspend fun addUsageGoalList(usageAppGoalList: List<UsageGoal.App>) {
+    suspend fun addUsageGoalList(usageAppGoalList: List<AppUsageGoal.App>) {
         usageGoalsDao.insertUsageGoalList(usageAppGoalList.map {
             UsageGoalEntity(
                 it.packageName,

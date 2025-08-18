@@ -6,7 +6,7 @@ import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.usecase.AddUsageGoalsUseCase
 import com.hmh.hamyeonham.challenge.usecase.DeleteUsageGoalUseCase
 import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
-import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
+import com.hmh.hamyeonham.core.domain.usagegoal.model.AppUsageGoal
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import com.hmh.hamyeonham.usagestats.usecase.CheckAndDeleteDeletedAppUsageUseCase
 import com.hmh.hamyeonham.usagestats.usecase.DeletedAppUsageStoreUseCase
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class ChallengeState(
-    val usageGoals: List<UsageGoal> = emptyList(),
+    val appUsageGoals: List<AppUsageGoal> = emptyList(),
     val modifierState: ModifierState = ModifierState.DONE,
     val usageStatusAndGoals: UsageStatusAndGoal = UsageStatusAndGoal(),
 ) {
