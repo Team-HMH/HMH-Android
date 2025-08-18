@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="18dp"
-                android:text="@string/challenge"
+                android:text="@string/app_setting"
                 android:textAppearance="?textAppearanceTitleLarge"
                 android:textColor="?gray1"
                 app:layout_constraintBottom_toBottomOf="parent"
