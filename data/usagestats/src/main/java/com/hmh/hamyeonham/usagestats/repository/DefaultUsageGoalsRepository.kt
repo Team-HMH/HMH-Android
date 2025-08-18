@@ -7,13 +7,12 @@ import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
 import com.hmh.hamyeonham.core.domain.usagegoal.model.UsageGoal
 import com.hmh.hamyeonham.core.domain.usagegoal.repository.UsageGoalsRepository
 import com.hmh.hamyeonham.usagestats.datasource.local.UsageGoalsLocalDataSource
-import com.hmh.hamyeonham.usagestats.datasource.remote.UsageGoalsRemoteDataSource
 import com.hmh.hamyeonham.usagestats.mapper.toUsageGoalEntityList
 import kotlinx.coroutines.flow.Flow
+import timber.log.Timber
 import javax.inject.Inject
 
 class DefaultUsageGoalsRepository @Inject constructor(
-    private val usageGoalsRemoteDataSource: UsageGoalsRemoteDataSource,
     private val usageGoalsLocalDataSource: UsageGoalsLocalDataSource,
     private val usageGoalsDao: UsageGoalsDao,
     private val usageTotalGoalDao: UsageTotalGoalDao,
@@ -21,24 +20,26 @@ class DefaultUsageGoalsRepository @Inject constructor(
 
     override suspend fun updateUsageGoal(): Result<Boolean> {
         return runCatching {
-            usageGoalsRemoteDataSource.getUsageGoals().fold(
-                onSuccess = { usageGoals ->
-                    val totalGoalTime = usageGoals.totalGoalTime
-                    usageTotalGoalDao.insertUsageTotalGoal(
-                        UsageTotalGoalEntity(
-                            totalGoalTime = totalGoalTime,
-                            status = usageGoals.status.name
-                        )
-                    )
-
-                    // 각 앱 목표 시간 저장
-                    usageGoalsDao.insertUsageGoalList(usageGoals.toUsageGoalEntityList())
-                    usageGoals.status.name != ChallengeStatus.FAILURE.name
-                },
-                onFailure = {
-                    false
-                }
-            )
+//            usageGoalsRemoteDataSource.getUsageGoals().fold(
+//                onSuccess = { usageGoals ->
+//                    val totalGoalTime = usageGoals.totalGoalTime
+//                    usageTotalGoalDao.insertUsageTotalGoal(
+//                        UsageTotalGoalEntity(
+//                            totalGoalTime = totalGoalTime,
+//                            status = usageGoals.status.name
+//                        )
+//                    )
+//
+//                    // 각 앱 목표 시간 저장
+//                    usageGoalsDao.insertUsageGoalList(usageGoals.toUsageGoalEntityList())
+//                    usageGoals.status.name != ChallengeStatus.FAILURE.name
+//                },
+//                onFailure = {
+//                    false
+//                }
+//            )
+            Timber.d("Updating usage goals in local data source")
+            return Result.success(true)
         }
     }
 

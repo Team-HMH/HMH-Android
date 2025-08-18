@@ -21,6 +21,7 @@ import com.hmh.hamyeonham.feature.main.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -103,7 +104,7 @@ class MainActivity : AppCompatActivity() {
             dismissButtonText = getString(com.hmh.hamyeonham.core.designsystem.R.string.all_cancel),
         ).apply {
             setConfirmButtonClickListener {
-                viewModel.updateDailyChallengeFailed()
+                Timber.d("Unlock package: $packageName")
             }
             setDismissButtonClickListener {
                 intent.removeExtra(NavigationProvider.UN_LOCK_PACKAGE_NAME)
