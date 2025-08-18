@@ -35,11 +35,7 @@ class UsageStaticsTotalViewHolder(
                     secondStr = getString(context, R.string.all_left),
                     color = com.hmh.hamyeonham.core.designsystem.R.color.gray1,
                 )
-            tvTotalGoal.text =
-                context.getString(
-                    R.string.total_goal_time_format,
-                    convertMillisecondToString(totalModel.totalGoalTime)
-                )
+
             tvTotalUsage.text =
                 context.getString(
                     R.string.total_used,

@@ -1,7 +1,6 @@
 package com.hmh.hamyeonham.usagestats.datasource.local
 
 import com.hmh.hamyeonham.core.database.dao.UsageGoalsDao
-import com.hmh.hamyeonham.core.database.dao.UsageTotalGoalDao
 import com.hmh.hamyeonham.core.database.model.UsageGoalEntity
 import com.hmh.hamyeonham.core.domain.usagegoal.model.AppUsageGoal
 import com.hmh.hamyeonham.usagestats.mapper.toUsageAppGoal
