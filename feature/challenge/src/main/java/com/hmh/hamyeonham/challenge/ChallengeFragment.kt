@@ -16,11 +16,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.challenge.appadd.AppAddActivity
-import com.hmh.hamyeonham.challenge.calendar.ChallengeCalendarAdapter
 import com.hmh.hamyeonham.challenge.goals.ChallengeUsageGoalsAdapter
 import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.challenge.model.NewChallenge
@@ -37,7 +35,6 @@ import com.hmh.hamyeonham.common.view.dp
 import com.hmh.hamyeonham.common.view.setOnSingleClickListener
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.designsystem.R
-import com.hmh.hamyeonham.core.domain.usagegoal.model.ChallengeStatus
 import com.hmh.hamyeonham.core.viewmodel.CalendarToggleState
 import com.hmh.hamyeonham.core.viewmodel.MainState
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
@@ -102,10 +99,6 @@ class ChallengeFragment : Fragment() {
 
         activityViewModel.usageStatusAndGoals.flowWithLifecycle(viewLifeCycle).onEach {
             updateUsageStatusAndGoals(it)
-        }.launchIn(viewLifeCycleScope)
-
-        activityViewModel.challengeStatusList.flowWithLifecycle(viewLifeCycle).onEach {
-            bindChallengeCalendar(it)
         }.launchIn(viewLifeCycleScope)
     }
 
@@ -187,7 +180,6 @@ class ChallengeFragment : Fragment() {
         initAppAddButton()
         initChallengeCreateButton()
         initChallengeGoalsRecyclerView()
-        initChallengeCalendarRecyclerView()
         initChallengeCalendar()
     }
 
@@ -204,11 +196,6 @@ class ChallengeFragment : Fragment() {
         challengeGoalsAdapter?.submitList(challengeUsageGoalList)
     }
 
-    private fun bindChallengeCalendar(challengeList: List<ChallengeStatus>) {
-        val challengeAdapter = binding.rvChallengeCalendar.adapter as? ChallengeCalendarAdapter
-        challengeAdapter?.updateList(challengeList)
-    }
-
     private fun bindChallengeDate(todayIndexAsDate: Int, startDate: LocalDate) {
         binding.run {
             tvChallengeStartDate.text = getString(
@@ -221,14 +208,6 @@ class ChallengeFragment : Fragment() {
                 todayIndexAsDate,
             )
         }
-    }
-
-    private fun initChallengeCalendarRecyclerView() {
-        binding.rvChallengeCalendar.run {
-            layoutManager = GridLayoutManager(requireContext(), 7)
-            adapter = ChallengeCalendarAdapter(context)
-        }
-        initChallengeCalendar()
     }
 
     private fun initChallengeCalendar() {
