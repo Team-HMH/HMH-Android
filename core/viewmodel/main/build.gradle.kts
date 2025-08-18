@@ -12,7 +12,6 @@ dependencies {
     implementation(projects.domain.challenge)
     implementation(projects.domain.userinfo)
     implementation(projects.domain.lock)
-    implementation(projects.domain.main)
 
     implementation(projects.core.network)
     implementation(projects.core.common)
