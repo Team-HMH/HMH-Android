@@ -17,7 +17,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.challenge.appadd.AppAddActivity
-import com.hmh.hamyeonham.challenge.goals.ChallengeUsageGoalsAdapter
+import com.hmh.hamyeonham.challenge.goals.AppUsageGoalsAdapter
 import com.hmh.hamyeonham.challenge.model.Apps
 import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
@@ -40,7 +40,7 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChallengeFragment : Fragment() {
+class AppUsageGoalsFragment : Fragment() {
     private val binding by viewBinding(FragmentChallengeBinding::bind)
     private val activityViewModel by activityViewModels<MainViewModel>()
     private val viewModel by viewModels<ChallengeViewModel>()
@@ -130,7 +130,7 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun initAppAddButton() {
-        binding.btGoalAdd.setOnSingleClickListener {
+        binding.btAppAdd.setOnSingleClickListener {
             AmplitudeUtils.trackEventWithProperties("click_add_button")
             val intent = Intent(requireContext(), AppAddActivity::class.java)
             appSelectionResultLauncher.launch(intent)
@@ -144,7 +144,7 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun bindUsageGoals(challengeUsageGoalList: List<ChallengeUsageGoal>) {
-        val challengeGoalsAdapter = binding.rvAppUsageGoals.adapter as? ChallengeUsageGoalsAdapter
+        val challengeGoalsAdapter = binding.rvAppUsageGoals.adapter as? AppUsageGoalsAdapter
         challengeGoalsAdapter?.submitList(challengeUsageGoalList)
     }
 
@@ -158,7 +158,7 @@ class ChallengeFragment : Fragment() {
 
     private fun initChallengeGoalsRecyclerView() {
         binding.rvAppUsageGoals.run {
-            adapter = ChallengeUsageGoalsAdapter(
+            adapter = AppUsageGoalsAdapter(
                 onAppItemClicked = { challengeGoal ->
                     when (viewModel.challengeState.value.modifierState) {
                         ModifierState.EDIT -> {

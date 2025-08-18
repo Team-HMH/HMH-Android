@@ -75,13 +75,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="14dp"
                 android:nestedScrollingEnabled="false"
-                app:layout_constraintBottom_toTopOf="@id/bt_goal_add"
+                app:layout_constraintBottom_toTopOf="@id/bt_app_add"
                 app:layout_constraintEnd_toEndOf="@id/tv_modifier_button"
                 app:layout_constraintStart_toStartOf="@id/tv_app_lock"
                 app:layout_constraintTop_toBottomOf="@id/tv_modifier_button" />
 
             <ImageView
-                android:id="@+id/bt_goal_add"
+                android:id="@+id/bt_app_add"
                 android:layout_width="0dp"
                 android:layout_height="72dp"
                 android:layout_marginHorizontal="20dp"

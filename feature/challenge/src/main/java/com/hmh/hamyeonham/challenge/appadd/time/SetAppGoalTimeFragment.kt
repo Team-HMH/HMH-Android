@@ -14,7 +14,7 @@ import com.hmh.hamyeonham.feature.challenge.databinding.FragmentSetGoalTimeBindi
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SetGoalTimeFragment : Fragment() {
+class SetAppGoalTimeFragment : Fragment() {
     private val binding by viewBinding(FragmentSetGoalTimeBinding::bind)
     private val viewModel by activityViewModels<AppAddViewModel>()
 

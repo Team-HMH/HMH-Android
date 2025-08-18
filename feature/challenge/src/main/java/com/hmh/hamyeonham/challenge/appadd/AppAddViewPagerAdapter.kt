@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.hmh.hamyeonham.challenge.appadd.appselection.AppSelectionFragment
-import com.hmh.hamyeonham.challenge.appadd.time.SetGoalTimeFragment
+import com.hmh.hamyeonham.challenge.appadd.time.SetAppGoalTimeFragment
 
 class AppAddViewPagerAdapter(fragmentActivity: FragmentActivity) :
     FragmentStateAdapter(fragmentActivity) {
@@ -13,7 +13,7 @@ class AppAddViewPagerAdapter(fragmentActivity: FragmentActivity) :
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> AppSelectionFragment()
-            else -> SetGoalTimeFragment()
+            else -> SetAppGoalTimeFragment()
         }
     }
 }

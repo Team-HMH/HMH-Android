@@ -7,9 +7,9 @@ import com.hmh.hamyeonham.challenge.ChallengeUsageGoal
 import com.hmh.hamyeonham.common.view.ItemDiffCallback
 import com.hmh.hamyeonham.feature.challenge.databinding.ItemUsageGoalBinding
 
-class ChallengeUsageGoalsAdapter(
+class AppUsageGoalsAdapter(
     private val onAppItemClicked: (ChallengeUsageGoal) -> Unit
-) : ListAdapter<ChallengeUsageGoal, ChallengeViewHolder>(
+) : ListAdapter<ChallengeUsageGoal, AppUsageGoalsViewHolder>(
     ItemDiffCallback(
         onItemsTheSame = { oldItem, newItem ->
             oldItem.usageStatusAndGoal.packageName == newItem.usageStatusAndGoal.packageName
@@ -23,8 +23,8 @@ class ChallengeUsageGoalsAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): ChallengeViewHolder {
-        return ChallengeViewHolder.UsageGoalsViewHolder(
+    ): AppUsageGoalsViewHolder {
+        return AppUsageGoalsViewHolder.UsageGoalsViewHolder(
             ItemUsageGoalBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -34,7 +34,7 @@ class ChallengeUsageGoalsAdapter(
         )
     }
 
-    override fun onBindViewHolder(holder: ChallengeViewHolder, position: Int) {
-        (holder as? ChallengeViewHolder.UsageGoalsViewHolder)?.bind(getItem(position))
+    override fun onBindViewHolder(holder: AppUsageGoalsViewHolder, position: Int) {
+        (holder as? AppUsageGoalsViewHolder.UsageGoalsViewHolder)?.bind(getItem(position))
     }
 }
