@@ -31,10 +31,6 @@ import retrofit2.HttpException
 import timber.log.Timber
 import javax.inject.Inject
 
-enum class CalendarToggleState {
-    EXPANDED, COLLAPSED,
-}
-
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val challengeRepository: ChallengeRepository,
@@ -85,12 +81,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun reloadChallengeStatus() {
-        viewModelScope.launch(Dispatchers.Main) {
-            getChallengeStatus()
-        }
-    }
-
     fun reloadUsageStatsList() {
         viewModelScope.launch(Dispatchers.Main) {
             getTodayTimeAndSetUsageStatsList()
@@ -112,22 +102,6 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Main) {
             newChallengeUseCase(newChallenge).onSuccess {
                 getChallengeStatus()
-            }
-        }
-    }
-
-    fun updateChallengeListWithToggleState(calendarToggleState: CalendarToggleState) {
-        val challengeStatusList = challengeStatusList.value
-        _challengeList.value = when (calendarToggleState) {
-            CalendarToggleState.EXPANDED -> {
-                rawChallengeList
-            }
-
-            CalendarToggleState.COLLAPSED -> {
-                if (challengeStatusList.size == 14)
-                    challengeStatusList.take(14)
-                else
-                    challengeStatusList.take(7)
             }
         }
     }

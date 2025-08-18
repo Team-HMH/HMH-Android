@@ -10,8 +10,6 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -21,8 +19,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hmh.hamyeonham.challenge.appadd.AppAddActivity
 import com.hmh.hamyeonham.challenge.goals.ChallengeUsageGoalsAdapter
 import com.hmh.hamyeonham.challenge.model.Apps
-import com.hmh.hamyeonham.challenge.model.NewChallenge
-import com.hmh.hamyeonham.challenge.newchallenge.NewChallengeActivity
 import com.hmh.hamyeonham.common.amplitude.AmplitudeUtils
 import com.hmh.hamyeonham.common.context.getAppNameFromPackageName
 import com.hmh.hamyeonham.common.dialog.TwoButtonCommonDialog
@@ -35,15 +31,12 @@ import com.hmh.hamyeonham.common.view.dp
 import com.hmh.hamyeonham.common.view.setOnSingleClickListener
 import com.hmh.hamyeonham.common.view.viewBinding
 import com.hmh.hamyeonham.core.designsystem.R
-import com.hmh.hamyeonham.core.viewmodel.CalendarToggleState
-import com.hmh.hamyeonham.core.viewmodel.MainState
 import com.hmh.hamyeonham.core.viewmodel.MainViewModel
 import com.hmh.hamyeonham.feature.challenge.databinding.FragmentChallengeBinding
 import com.hmh.hamyeonham.usagestats.model.UsageStatusAndGoal
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.datetime.LocalDate
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -55,19 +48,6 @@ class ChallengeFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 addSelectedApps(result)
-            }
-        }
-    private val newChallengeResultLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val period = result.data?.getIntExtra(NewChallengeActivity.PERIOD, 0)
-                val goalTime = result.data?.getLongExtra(NewChallengeActivity.GOALTIME, 0)
-                activityViewModel.generateNewChallenge(
-                    NewChallenge(
-                        period = period ?: 0,
-                        goalTime = goalTime ?: 0,
-                    ),
-                )
             }
         }
 
@@ -93,18 +73,9 @@ class ChallengeFragment : Fragment() {
     }
 
     private fun collectMainStateAndProcess() {
-        activityViewModel.mainState.flowWithLifecycle(viewLifeCycle).onEach {
-            bindChallengeInfo(it)
-        }.launchIn(viewLifeCycleScope)
-
         activityViewModel.usageStatusAndGoals.flowWithLifecycle(viewLifeCycle).onEach {
             updateUsageStatusAndGoals(it)
         }.launchIn(viewLifeCycleScope)
-    }
-
-    private fun bindChallengeInfo(it: MainState) {
-        setChallengeCalendarVisibility(it.isChallengeExist)
-        bindChallengeDate(it.todayIndexAsDate, it.startDate)
     }
 
     private fun updateUsageStatusAndGoals(usageStatusAndGoals: UsageStatusAndGoal) {
@@ -114,7 +85,6 @@ class ChallengeFragment : Fragment() {
     private fun collectChallengeStateAndProcess() {
         viewModel.challengeState.flowWithLifecycle(viewLifeCycle).onEach {
             handleModifierButtonState(it.modifierState)
-            handleCalendarToggleState(it.calendarToggleState)
             bindUsageGoals(it.usageGoalsAndModifiers)
         }.launchIn(viewLifeCycleScope)
     }
@@ -167,76 +137,15 @@ class ChallengeFragment : Fragment() {
         }
     }
 
-    private fun initChallengeCreateButton() {
-        binding.btnChallengeCreate.setOnClickListener {
-            AmplitudeUtils.trackEventWithProperties("click_newchallenge_button")
-            val intent = Intent(requireContext(), NewChallengeActivity::class.java)
-            newChallengeResultLauncher.launch(intent)
-        }
-    }
-
     private fun initViews() {
         initModifierButton()
         initAppAddButton()
-        initChallengeCreateButton()
         initChallengeGoalsRecyclerView()
-        initChallengeCalendar()
-    }
-
-    private fun setChallengeCalendarVisibility(isChallengeExist: Boolean) {
-        binding.btnChallengeCreate.isInvisible = isChallengeExist
-        binding.tvChallengeCreateTitle.isInvisible = isChallengeExist
-        binding.tvChallengeDay.isInvisible = !isChallengeExist
-        binding.tvChallengeStartDate.isInvisible = !isChallengeExist
-        binding.rvChallengeCalendar.isInvisible = !isChallengeExist
     }
 
     private fun bindUsageGoals(challengeUsageGoalList: List<ChallengeUsageGoal>) {
         val challengeGoalsAdapter = binding.rvAppUsageGoals.adapter as? ChallengeUsageGoalsAdapter
         challengeGoalsAdapter?.submitList(challengeUsageGoalList)
-    }
-
-    private fun bindChallengeDate(todayIndexAsDate: Int, startDate: LocalDate) {
-        binding.run {
-            tvChallengeStartDate.text = getString(
-                com.hmh.hamyeonham.feature.challenge.R.string.challenge_start_date,
-                startDate.monthNumber,
-                startDate.dayOfMonth,
-            )
-            tvChallengeDay.text = getString(
-                com.hmh.hamyeonham.feature.challenge.R.string.challenge_day,
-                todayIndexAsDate,
-            )
-        }
-    }
-
-    private fun initChallengeCalendar() {
-        val period = activityViewModel.mainState.value.period
-        val isPeriodOverTwoWeeks = period > 14
-        binding.tvCalendarToggle.run {
-            isVisible = isPeriodOverTwoWeeks
-            if (!isPeriodOverTwoWeeks) return
-            setOnClickListener {
-                viewModel.toggleCalendarState()
-            }
-            text =
-                getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_expand)
-        }
-    }
-
-    private fun handleCalendarToggleState(calendarToggleState: CalendarToggleState) {
-        activityViewModel.updateChallengeListWithToggleState(calendarToggleState)
-        when (calendarToggleState) {
-            CalendarToggleState.COLLAPSED -> {
-                binding.tvCalendarToggle.text =
-                    getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_expand)
-            }
-
-            CalendarToggleState.EXPANDED -> {
-                binding.tvCalendarToggle.text =
-                    getString(com.hmh.hamyeonham.feature.challenge.R.string.tv_calendar_toggle_collapse)
-            }
-        }
     }
 
     private fun addSelectedApps(result: ActivityResult) {
